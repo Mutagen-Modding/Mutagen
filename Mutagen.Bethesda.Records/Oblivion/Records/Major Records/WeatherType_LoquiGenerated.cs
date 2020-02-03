@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -21,9 +22,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -31,6 +31,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -43,30 +44,29 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public WeatherType()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Sunrise
-        public Color Sunrise { get; set; }
+        public Color Sunrise { get; set; } = default;
         #endregion
         #region Day
-        public Color Day { get; set; }
+        public Color Day { get; set; } = default;
         #endregion
         #region Sunset
-        public Color Sunset { get; set; }
+        public Color Sunset { get; set; } = default;
         #endregion
         #region Night
-        public Color Night { get; set; }
+        public Color Night { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             WeatherTypeMixIn.ToString(
                 item: this,
@@ -79,15 +79,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWeatherTypeGetter rhs)) return false;
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(WeatherType obj)
         {
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()).Equals(this, obj);
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((WeatherTypeCommon)((IWeatherTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -98,9 +98,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((WeatherTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -113,11 +113,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherType CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            WeatherType_TranslationMask translationMask = null)
+            WeatherType_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -127,38 +125,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromXml(
             XElement node,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            WeatherType_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static WeatherType CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new WeatherType() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new WeatherType();
-            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -167,12 +152,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            WeatherType_TranslationMask translationMask = null)
+            WeatherType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -180,12 +163,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromXml(
             string path,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            WeatherType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -193,13 +174,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            WeatherType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -207,12 +186,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            WeatherType_TranslationMask translationMask = null)
+            WeatherType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -220,12 +197,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromXml(
             Stream stream,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            WeatherType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -233,13 +208,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            WeatherType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -248,22 +221,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((WeatherType_FieldIndex)index)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                case WeatherType_FieldIndex.Day:
-                case WeatherType_FieldIndex.Sunset:
-                case WeatherType_FieldIndex.Night:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -273,7 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -296,10 +253,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new WeatherType();
-            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -317,7 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)this).CommonSetterInstance()).Clear(this);
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static WeatherType GetNew()
@@ -334,13 +291,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherType>
     {
         new Color Sunrise { get; set; }
-
         new Color Day { get; set; }
-
         new Color Sunset { get; set; }
-
         new Color Night { get; set; }
-
     }
 
     public partial interface IWeatherTypeGetter :
@@ -352,25 +305,13 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Sunrise
         Color Sunrise { get; }
-
-        #endregion
-        #region Day
         Color Day { get; }
-
-        #endregion
-        #region Sunset
         Color Sunset { get; }
-
-        #endregion
-        #region Night
         Color Night { get; }
-
-        #endregion
 
     }
 
@@ -381,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWeatherType item)
         {
-            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static WeatherType_Mask<bool> GetEqualsMask(
@@ -389,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).GetEqualsMask(
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -397,10 +338,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IWeatherTypeGetter item,
-            string name = null,
-            WeatherType_Mask<bool> printMask = null)
+            string? name = null,
+            WeatherType_Mask<bool>? printMask = null)
         {
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).ToString(
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -409,10 +350,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IWeatherTypeGetter item,
             FileGeneration fg,
-            string name = null,
-            WeatherType_Mask<bool> printMask = null)
+            string? name = null,
+            WeatherType_Mask<bool>? printMask = null)
         {
-            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).ToString(
+            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -423,15 +364,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             WeatherType_Mask<bool?> checkMask)
         {
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).HasBeenSet(
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static WeatherType_Mask<bool> GetHasBeenSetMask(this IWeatherTypeGetter item)
         {
-            var ret = new WeatherType_Mask<bool>();
-            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new WeatherType_Mask<bool>(false);
+            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -441,16 +382,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             IWeatherTypeGetter rhs)
         {
-            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).Equals(
+            return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IWeatherType lhs,
-            IWeatherTypeGetter rhs)
+            IWeatherTypeGetter rhs,
+            WeatherType_TranslationMask? copyMask = null)
         {
-            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -460,23 +402,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IWeatherType lhs,
             IWeatherTypeGetter rhs,
-            WeatherType_TranslationMask copyMask)
-        {
-            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IWeatherType lhs,
-            IWeatherTypeGetter rhs,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask copyMask = null)
+            WeatherType_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -487,10 +417,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IWeatherType lhs,
             IWeatherTypeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -499,9 +429,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType DeepCopy(
             this IWeatherTypeGetter item,
-            WeatherType_TranslationMask copyMask = null)
+            WeatherType_TranslationMask? copyMask = null)
         {
-            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -509,9 +439,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType DeepCopy(
             this IWeatherTypeGetter item,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask copyMask = null)
+            WeatherType_TranslationMask? copyMask = null)
         {
-            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -519,10 +449,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType DeepCopy(
             this IWeatherTypeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -533,12 +463,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            WeatherType_TranslationMask translationMask = null)
+            WeatherType_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -549,29 +477,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             XElement node,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            WeatherType_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IWeatherType item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -580,13 +504,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            WeatherType_TranslationMask translationMask = null)
+            WeatherType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -595,13 +517,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             string path,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            WeatherType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -610,14 +530,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             string path,
-            ErrorMaskBuilder errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            WeatherType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -626,13 +544,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            WeatherType_TranslationMask translationMask = null)
+            WeatherType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -641,13 +557,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             Stream stream,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            WeatherType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -656,14 +570,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            WeatherType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -689,9 +601,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -743,11 +655,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWeatherTypeGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IWeatherType);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.WeatherType";
 
@@ -757,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -901,14 +813,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -932,19 +844,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherType item)
         {
             ClearPartial();
-            item.Sunrise = default(Color);
-            item.Day = default(Color);
-            item.Sunset = default(Color);
-            item.Night = default(Color);
+            item.Sunrise = default;
+            item.Day = default;
+            item.Sunset = default;
+            item.Night = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IWeatherType item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -991,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherType item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1014,8 +925,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WeatherType_Mask<bool>();
-            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new WeatherType_Mask<bool>(false);
+            ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1038,8 +949,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IWeatherTypeGetter item,
-            string name = null,
-            WeatherType_Mask<bool> printMask = null)
+            string? name = null,
+            WeatherType_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1053,8 +964,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IWeatherTypeGetter item,
             FileGeneration fg,
-            string name = null,
-            WeatherType_Mask<bool> printMask = null)
+            string? name = null,
+            WeatherType_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1078,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWeatherTypeGetter item,
             FileGeneration fg,
-            WeatherType_Mask<bool> printMask = null)
+            WeatherType_Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise ?? true)
             {
@@ -1117,8 +1028,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IWeatherTypeGetter lhs,
-            IWeatherTypeGetter rhs)
+            IWeatherTypeGetter? lhs,
+            IWeatherTypeGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1164,8 +1075,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IWeatherType item,
             IWeatherTypeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunrise) ?? true))
             {
@@ -1189,9 +1100,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherType DeepCopy(
             IWeatherTypeGetter item,
-            WeatherType_TranslationMask copyMask = null)
+            WeatherType_TranslationMask? copyMask = null)
         {
-            WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).GetNew();
+            WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1201,9 +1112,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public WeatherType DeepCopy(
             IWeatherTypeGetter item,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask copyMask = null)
+            WeatherType_TranslationMask? copyMask = null)
         {
-            WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).GetNew();
+            WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1213,10 +1124,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherType DeepCopy(
             IWeatherTypeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()).GetNew();
+            WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1269,8 +1180,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IWeatherTypeGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunrise) ?? true))
             {
@@ -1313,9 +1224,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IWeatherTypeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.WeatherType");
             node.Add(elem);
@@ -1333,9 +1244,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IWeatherTypeGetter)item,
@@ -1348,10 +1259,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IWeatherTypeGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1383,8 +1294,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IWeatherType item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1409,8 +1320,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherType item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1503,8 +1414,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             XElement node,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            string name = null)
+            WeatherType_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1520,8 +1431,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             string path,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            string name = null)
+            WeatherType_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1536,9 +1447,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1554,8 +1465,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             Stream stream,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask translationMask = null,
-            string name = null)
+            WeatherType_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1570,9 +1481,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1587,9 +1498,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1602,21 +1513,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             XElement node,
-            string name = null,
-            WeatherType_TranslationMask translationMask = null)
+            string? name = null,
+            WeatherType_TranslationMask? translationMask = null)
         {
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1631,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1653,13 +1564,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class WeatherType_Mask<T> : IMask<T>, IEquatable<WeatherType_Mask<T>>
+    public class WeatherType_Mask<T> :
+        IMask<T>,
+        IEquatable<WeatherType_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public WeatherType_Mask()
-        {
-        }
-
         public WeatherType_Mask(T initialValue)
         {
             this.Sunrise = initialValue;
@@ -1679,6 +1589,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Sunset = Sunset;
             this.Night = Night;
         }
+
+        #pragma warning disable CS8618
+        protected WeatherType_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1750,14 +1667,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(WeatherType_Mask<bool> printMask = null)
+        public string ToString(WeatherType_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, WeatherType_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, WeatherType_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(WeatherType_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1789,8 +1706,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class WeatherType_ErrorMask : IErrorMask, IErrorMask<WeatherType_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1802,14 +1719,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Sunrise;
-        public Exception Day;
-        public Exception Sunset;
-        public Exception Night;
+        public Exception? Sunrise;
+        public Exception? Day;
+        public Exception? Sunset;
+        public Exception? Night;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
             switch (enu)
@@ -1920,8 +1837,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public WeatherType_ErrorMask Combine(WeatherType_ErrorMask rhs)
+        public WeatherType_ErrorMask Combine(WeatherType_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new WeatherType_ErrorMask();
             ret.Sunrise = this.Sunrise.Combine(rhs.Sunrise);
             ret.Day = this.Day.Combine(rhs.Day);
@@ -1929,7 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Night = this.Night.Combine(rhs.Night);
             return ret;
         }
-        public static WeatherType_ErrorMask Combine(WeatherType_ErrorMask lhs, WeatherType_ErrorMask rhs)
+        public static WeatherType_ErrorMask? Combine(WeatherType_ErrorMask? lhs, WeatherType_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1939,7 +1857,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static WeatherType_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new WeatherType_ErrorMask();
         }
         #endregion
@@ -1948,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class WeatherType_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Sunrise;
         public bool Day;
         public bool Sunset;
@@ -1956,10 +1873,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public WeatherType_TranslationMask()
-        {
-        }
-
         public WeatherType_TranslationMask(bool defaultOn)
         {
             this.Sunrise = defaultOn;
@@ -1973,13 +1886,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Sunrise, null));
             ret.Add((Day, null));
@@ -2024,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IWeatherTypeGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -2036,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IWeatherTypeGetter)item,
@@ -2093,7 +2006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IWeatherTypeGetter.CommonSetterInstance() => null;
+        object? IWeatherTypeGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2109,9 +2022,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((WeatherTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2127,7 +2040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((WeatherTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2157,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WeatherTypeBinaryOverlay WeatherTypeFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new WeatherTypeBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 16),

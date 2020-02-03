@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,24 +42,23 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public SkillBoost()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Skill
-        public ActorValue Skill { get; set; }
+        public ActorValue Skill { get; set; } = default;
         #endregion
         #region Boost
-        public SByte Boost { get; set; }
+        public SByte Boost { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             SkillBoostMixIn.ToString(
                 item: this,
@@ -71,15 +71,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ISkillBoostGetter rhs)) return false;
-            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(SkillBoost obj)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()).Equals(this, obj);
+            return ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((SkillBoostCommon)((ISkillBoostGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -90,9 +90,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((SkillBoostXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -105,11 +105,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SkillBoost CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            SkillBoost_TranslationMask translationMask = null)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -119,38 +117,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromXml(
             XElement node,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static SkillBoost CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new SkillBoost() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new SkillBoost();
-            ((SkillBoostSetterCommon)((ISkillBoostGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((SkillBoostSetterCommon)((ISkillBoostGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -159,12 +144,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            SkillBoost_TranslationMask translationMask = null)
+            SkillBoost_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -172,12 +155,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromXml(
             string path,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            SkillBoost_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -185,13 +166,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            SkillBoost_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -199,12 +178,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            SkillBoost_TranslationMask translationMask = null)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -212,12 +189,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromXml(
             Stream stream,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -225,13 +200,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            SkillBoost_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -240,20 +213,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((SkillBoost_FieldIndex)index)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                case SkillBoost_FieldIndex.Boost:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -263,7 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -286,10 +245,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new SkillBoost();
-            ((SkillBoostSetterCommon)((ISkillBoostGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((SkillBoostSetterCommon)((ISkillBoostGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -307,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((SkillBoostSetterCommon)((ISkillBoostGetter)this).CommonSetterInstance()).Clear(this);
+            ((SkillBoostSetterCommon)((ISkillBoostGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static SkillBoost GetNew()
@@ -324,9 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISkillBoost>
     {
         new ActorValue Skill { get; set; }
-
         new SByte Boost { get; set; }
-
     }
 
     public partial interface ISkillBoostGetter :
@@ -338,17 +295,11 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Skill
         ActorValue Skill { get; }
-
-        #endregion
-        #region Boost
         SByte Boost { get; }
-
-        #endregion
 
     }
 
@@ -359,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ISkillBoost item)
         {
-            ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static SkillBoost_Mask<bool> GetEqualsMask(
@@ -367,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillBoostGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).GetEqualsMask(
+            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -375,10 +326,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this ISkillBoostGetter item,
-            string name = null,
-            SkillBoost_Mask<bool> printMask = null)
+            string? name = null,
+            SkillBoost_Mask<bool>? printMask = null)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).ToString(
+            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -387,10 +338,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this ISkillBoostGetter item,
             FileGeneration fg,
-            string name = null,
-            SkillBoost_Mask<bool> printMask = null)
+            string? name = null,
+            SkillBoost_Mask<bool>? printMask = null)
         {
-            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).ToString(
+            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -401,15 +352,15 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             SkillBoost_Mask<bool?> checkMask)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).HasBeenSet(
+            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static SkillBoost_Mask<bool> GetHasBeenSetMask(this ISkillBoostGetter item)
         {
-            var ret = new SkillBoost_Mask<bool>();
-            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new SkillBoost_Mask<bool>(false);
+            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -419,16 +370,17 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             ISkillBoostGetter rhs)
         {
-            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).Equals(
+            return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this ISkillBoost lhs,
-            ISkillBoostGetter rhs)
+            ISkillBoostGetter rhs,
+            SkillBoost_TranslationMask? copyMask = null)
         {
-            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -438,23 +390,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISkillBoost lhs,
             ISkillBoostGetter rhs,
-            SkillBoost_TranslationMask copyMask)
-        {
-            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ISkillBoost lhs,
-            ISkillBoostGetter rhs,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask copyMask = null)
+            SkillBoost_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -465,10 +405,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISkillBoost lhs,
             ISkillBoostGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -477,9 +417,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost DeepCopy(
             this ISkillBoostGetter item,
-            SkillBoost_TranslationMask copyMask = null)
+            SkillBoost_TranslationMask? copyMask = null)
         {
-            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -487,9 +427,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost DeepCopy(
             this ISkillBoostGetter item,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask copyMask = null)
+            SkillBoost_TranslationMask? copyMask = null)
         {
-            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -497,10 +437,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost DeepCopy(
             this ISkillBoostGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -511,12 +451,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            SkillBoost_TranslationMask translationMask = null)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -527,29 +465,25 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             XElement node,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ISkillBoost item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -558,13 +492,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            SkillBoost_TranslationMask translationMask = null)
+            SkillBoost_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -573,13 +505,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             string path,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            SkillBoost_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -588,14 +518,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             string path,
-            ErrorMaskBuilder errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            SkillBoost_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -604,13 +532,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            SkillBoost_TranslationMask translationMask = null)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -619,13 +545,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             Stream stream,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            SkillBoost_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -634,14 +558,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            SkillBoost_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -667,9 +589,9 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -719,11 +641,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ISkillBoostGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ISkillBoost);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.SkillBoost";
 
@@ -733,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -855,14 +777,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -886,17 +808,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ISkillBoost item)
         {
             ClearPartial();
-            item.Skill = default(ActorValue);
-            item.Boost = default(SByte);
+            item.Skill = default;
+            item.Boost = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             ISkillBoost item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -933,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -956,8 +877,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoostGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SkillBoost_Mask<bool>();
-            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new SkillBoost_Mask<bool>(false);
+            ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -978,8 +899,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             ISkillBoostGetter item,
-            string name = null,
-            SkillBoost_Mask<bool> printMask = null)
+            string? name = null,
+            SkillBoost_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -993,8 +914,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             ISkillBoostGetter item,
             FileGeneration fg,
-            string name = null,
-            SkillBoost_Mask<bool> printMask = null)
+            string? name = null,
+            SkillBoost_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1018,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISkillBoostGetter item,
             FileGeneration fg,
-            SkillBoost_Mask<bool> printMask = null)
+            SkillBoost_Mask<bool>? printMask = null)
         {
             if (printMask?.Skill ?? true)
             {
@@ -1047,8 +968,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISkillBoostGetter lhs,
-            ISkillBoostGetter rhs)
+            ISkillBoostGetter? lhs,
+            ISkillBoostGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1090,8 +1011,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ISkillBoost item,
             ISkillBoostGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)SkillBoost_FieldIndex.Skill) ?? true))
             {
@@ -1107,9 +1028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SkillBoost DeepCopy(
             ISkillBoostGetter item,
-            SkillBoost_TranslationMask copyMask = null)
+            SkillBoost_TranslationMask? copyMask = null)
         {
-            SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).GetNew();
+            SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1119,9 +1040,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public SkillBoost DeepCopy(
             ISkillBoostGetter item,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask copyMask = null)
+            SkillBoost_TranslationMask? copyMask = null)
         {
-            SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).GetNew();
+            SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1131,10 +1052,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SkillBoost DeepCopy(
             ISkillBoostGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()).GetNew();
+            SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1187,8 +1108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             ISkillBoostGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)SkillBoost_FieldIndex.Skill) ?? true))
             {
@@ -1213,9 +1134,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             ISkillBoostGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillBoost");
             node.Add(elem);
@@ -1233,9 +1154,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ISkillBoostGetter)item,
@@ -1248,10 +1169,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             ISkillBoostGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1283,8 +1204,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             ISkillBoost item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1309,8 +1230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1367,8 +1288,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             XElement node,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            string name = null)
+            SkillBoost_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1384,8 +1305,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             string path,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            string name = null)
+            SkillBoost_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1400,9 +1321,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1418,8 +1339,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             Stream stream,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask translationMask = null,
-            string name = null)
+            SkillBoost_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1434,9 +1355,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1451,9 +1372,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1466,21 +1387,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             XElement node,
-            string name = null,
-            SkillBoost_TranslationMask translationMask = null)
+            string? name = null,
+            SkillBoost_TranslationMask? translationMask = null)
         {
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this ISkillBoostGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1495,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1517,13 +1438,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class SkillBoost_Mask<T> : IMask<T>, IEquatable<SkillBoost_Mask<T>>
+    public class SkillBoost_Mask<T> :
+        IMask<T>,
+        IEquatable<SkillBoost_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public SkillBoost_Mask()
-        {
-        }
-
         public SkillBoost_Mask(T initialValue)
         {
             this.Skill = initialValue;
@@ -1537,6 +1457,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Skill = Skill;
             this.Boost = Boost;
         }
+
+        #pragma warning disable CS8618
+        protected SkillBoost_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1598,14 +1525,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(SkillBoost_Mask<bool> printMask = null)
+        public string ToString(SkillBoost_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, SkillBoost_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, SkillBoost_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(SkillBoost_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1629,8 +1556,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class SkillBoost_ErrorMask : IErrorMask, IErrorMask<SkillBoost_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1642,12 +1569,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Skill;
-        public Exception Boost;
+        public Exception? Skill;
+        public Exception? Boost;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
             switch (enu)
@@ -1738,14 +1665,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public SkillBoost_ErrorMask Combine(SkillBoost_ErrorMask rhs)
+        public SkillBoost_ErrorMask Combine(SkillBoost_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new SkillBoost_ErrorMask();
             ret.Skill = this.Skill.Combine(rhs.Skill);
             ret.Boost = this.Boost.Combine(rhs.Boost);
             return ret;
         }
-        public static SkillBoost_ErrorMask Combine(SkillBoost_ErrorMask lhs, SkillBoost_ErrorMask rhs)
+        public static SkillBoost_ErrorMask? Combine(SkillBoost_ErrorMask? lhs, SkillBoost_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1755,7 +1683,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static SkillBoost_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new SkillBoost_ErrorMask();
         }
         #endregion
@@ -1764,16 +1691,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class SkillBoost_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Skill;
         public bool Boost;
         #endregion
 
         #region Ctors
-        public SkillBoost_TranslationMask()
-        {
-        }
-
         public SkillBoost_TranslationMask(bool defaultOn)
         {
             this.Skill = defaultOn;
@@ -1785,13 +1708,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Skill, null));
             ret.Add((Boost, null));
@@ -1823,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ISkillBoostGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -1835,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ISkillBoostGetter)item,
@@ -1892,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object ISkillBoostGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ISkillBoostGetter.CommonSetterInstance() => null;
+        object? ISkillBoostGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object ISkillBoostGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -1908,9 +1831,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((SkillBoostXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -1926,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((SkillBoostBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1954,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SkillBoostBinaryOverlay SkillBoostFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new SkillBoostBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 2),

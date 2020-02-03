@@ -341,8 +341,8 @@ namespace Mutagen.Bethesda.UnitTests
             {
                 Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey, out var rec));
                 Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey2, out rec));
-                Assert.True(rec.Name_IsSet);
-                Assert.Equal("A Name", rec.Name);
+                Assert.True(rec.Name.TryGet(out var name));
+                Assert.Equal("A Name", name);
             }
             {
                 Assert.False(package.TryGetMajorRecord<NPC>(TestFileFormKey, out var rec));

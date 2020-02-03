@@ -11,20 +11,10 @@ namespace Mutagen.Bethesda.Oblivion
         public const char TRIGGER_CHAR = 'f';
         public override char TypeChar => TRIGGER_CHAR;
 
-        public override float RawFloat
+        public override float? RawFloat
         {
             get => this.Data;
-            set
-            {
-                if (this.Data != value)
-                {
-                    this.Data = value;
-                }
-                else
-                {
-                    this.Data_IsSet = true;
-                }
-            }
+            set => this.Data = value;
         }
 
         internal static GlobalFloat Factory()
@@ -38,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class GlobalFloatBinaryOverlay
         {
             public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
-            public override float RawFloat => this.Data;
+            public override float? RawFloat => this.Data;
         }
     }
 }

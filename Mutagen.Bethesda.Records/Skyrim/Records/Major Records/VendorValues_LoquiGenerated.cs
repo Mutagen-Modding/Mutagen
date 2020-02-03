@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -41,36 +42,35 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public VendorValues()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region StartHour
-        public UInt16 StartHour { get; set; }
+        public UInt16 StartHour { get; set; } = default;
         #endregion
         #region EndHour
-        public UInt16 EndHour { get; set; }
+        public UInt16 EndHour { get; set; } = default;
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; }
+        public UInt32 Radius { get; set; } = default;
         #endregion
         #region OnlyBuysStolenItems
-        public Boolean OnlyBuysStolenItems { get; set; }
+        public Boolean OnlyBuysStolenItems { get; set; } = default;
         #endregion
         #region NotSellBuy
-        public Boolean NotSellBuy { get; set; }
+        public Boolean NotSellBuy { get; set; } = default;
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; }
+        public UInt16 Unknown { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             VendorValuesMixIn.ToString(
                 item: this,
@@ -83,15 +83,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IVendorValuesGetter rhs)) return false;
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(VendorValues obj)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()).Equals(this, obj);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -102,9 +102,9 @@ namespace Mutagen.Bethesda.Skyrim
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((VendorValuesXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -117,11 +117,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static VendorValues CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            VendorValues_TranslationMask translationMask = null)
+            VendorValues_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -131,38 +129,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues CreateFromXml(
             XElement node,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            VendorValues_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = VendorValues_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static VendorValues CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new VendorValues() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new VendorValues();
-            ((VendorValuesSetterCommon)((IVendorValuesGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((VendorValuesSetterCommon)((IVendorValuesGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -171,12 +156,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            VendorValues_TranslationMask translationMask = null)
+            VendorValues_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -184,12 +167,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues CreateFromXml(
             string path,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            VendorValues_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -197,13 +178,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            VendorValues_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -211,12 +190,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            VendorValues_TranslationMask translationMask = null)
+            VendorValues_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -224,12 +201,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues CreateFromXml(
             Stream stream,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            VendorValues_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -237,13 +212,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            VendorValues_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -252,24 +225,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((VendorValues_FieldIndex)index)
-            {
-                case VendorValues_FieldIndex.StartHour:
-                case VendorValues_FieldIndex.EndHour:
-                case VendorValues_FieldIndex.Radius:
-                case VendorValues_FieldIndex.OnlyBuysStolenItems:
-                case VendorValues_FieldIndex.NotSellBuy:
-                case VendorValues_FieldIndex.Unknown:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = VendorValues_Registration.TRIGGERING_RECORD_TYPE;
@@ -283,7 +238,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((VendorValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -306,10 +261,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new VendorValues();
-            ((VendorValuesSetterCommon)((IVendorValuesGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((VendorValuesSetterCommon)((IVendorValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -327,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((VendorValuesSetterCommon)((IVendorValuesGetter)this).CommonSetterInstance()).Clear(this);
+            ((VendorValuesSetterCommon)((IVendorValuesGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static VendorValues GetNew()
@@ -344,17 +299,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IVendorValues>
     {
         new UInt16 StartHour { get; set; }
-
         new UInt16 EndHour { get; set; }
-
         new UInt32 Radius { get; set; }
-
         new Boolean OnlyBuysStolenItems { get; set; }
-
         new Boolean NotSellBuy { get; set; }
-
         new UInt16 Unknown { get; set; }
-
     }
 
     public partial interface IVendorValuesGetter :
@@ -366,33 +315,15 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region StartHour
         UInt16 StartHour { get; }
-
-        #endregion
-        #region EndHour
         UInt16 EndHour { get; }
-
-        #endregion
-        #region Radius
         UInt32 Radius { get; }
-
-        #endregion
-        #region OnlyBuysStolenItems
         Boolean OnlyBuysStolenItems { get; }
-
-        #endregion
-        #region NotSellBuy
         Boolean NotSellBuy { get; }
-
-        #endregion
-        #region Unknown
         UInt16 Unknown { get; }
-
-        #endregion
 
     }
 
@@ -403,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IVendorValues item)
         {
-            ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static VendorValues_Mask<bool> GetEqualsMask(
@@ -411,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
             IVendorValuesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).GetEqualsMask(
+            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -419,10 +350,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IVendorValuesGetter item,
-            string name = null,
-            VendorValues_Mask<bool> printMask = null)
+            string? name = null,
+            VendorValues_Mask<bool>? printMask = null)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).ToString(
+            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -431,10 +362,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IVendorValuesGetter item,
             FileGeneration fg,
-            string name = null,
-            VendorValues_Mask<bool> printMask = null)
+            string? name = null,
+            VendorValues_Mask<bool>? printMask = null)
         {
-            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).ToString(
+            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -445,15 +376,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             VendorValues_Mask<bool?> checkMask)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).HasBeenSet(
+            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static VendorValues_Mask<bool> GetHasBeenSetMask(this IVendorValuesGetter item)
         {
-            var ret = new VendorValues_Mask<bool>();
-            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new VendorValues_Mask<bool>(false);
+            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -463,16 +394,17 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             IVendorValuesGetter rhs)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).Equals(
+            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IVendorValues lhs,
-            IVendorValuesGetter rhs)
+            IVendorValuesGetter rhs,
+            VendorValues_TranslationMask? copyMask = null)
         {
-            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -482,23 +414,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IVendorValues lhs,
             IVendorValuesGetter rhs,
-            VendorValues_TranslationMask copyMask)
-        {
-            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IVendorValues lhs,
-            IVendorValuesGetter rhs,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask copyMask = null)
+            VendorValues_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -509,10 +429,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IVendorValues lhs,
             IVendorValuesGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -521,9 +441,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues DeepCopy(
             this IVendorValuesGetter item,
-            VendorValues_TranslationMask copyMask = null)
+            VendorValues_TranslationMask? copyMask = null)
         {
-            return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -531,9 +451,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues DeepCopy(
             this IVendorValuesGetter item,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask copyMask = null)
+            VendorValues_TranslationMask? copyMask = null)
         {
-            return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -541,10 +461,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues DeepCopy(
             this IVendorValuesGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -555,12 +475,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            VendorValues_TranslationMask translationMask = null)
+            VendorValues_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -571,29 +489,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValues item,
             XElement node,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            VendorValues_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = VendorValues_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IVendorValues item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -602,13 +516,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            VendorValues_TranslationMask translationMask = null)
+            VendorValues_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -617,13 +529,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValues item,
             string path,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            VendorValues_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -632,14 +542,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             string path,
-            ErrorMaskBuilder errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            VendorValues_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -648,13 +556,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            VendorValues_TranslationMask translationMask = null)
+            VendorValues_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -663,13 +569,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValues item,
             Stream stream,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            VendorValues_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -678,14 +582,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            VendorValues_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -711,9 +613,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValues item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -767,11 +669,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IVendorValuesGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IVendorValues);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.VendorValues";
 
@@ -781,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -949,14 +851,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -980,21 +882,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVendorValues item)
         {
             ClearPartial();
-            item.StartHour = default(UInt16);
-            item.EndHour = default(UInt16);
-            item.Radius = default(UInt32);
-            item.OnlyBuysStolenItems = default(Boolean);
-            item.NotSellBuy = default(Boolean);
-            item.Unknown = default(UInt16);
+            item.StartHour = default;
+            item.EndHour = default;
+            item.Radius = default;
+            item.OnlyBuysStolenItems = default;
+            item.NotSellBuy = default;
+            item.Unknown = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IVendorValues item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1035,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVendorValues item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1061,8 +962,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVendorValuesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new VendorValues_Mask<bool>();
-            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new VendorValues_Mask<bool>(false);
+            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1087,8 +988,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IVendorValuesGetter item,
-            string name = null,
-            VendorValues_Mask<bool> printMask = null)
+            string? name = null,
+            VendorValues_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1102,8 +1003,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IVendorValuesGetter item,
             FileGeneration fg,
-            string name = null,
-            VendorValues_Mask<bool> printMask = null)
+            string? name = null,
+            VendorValues_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1127,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IVendorValuesGetter item,
             FileGeneration fg,
-            VendorValues_Mask<bool> printMask = null)
+            VendorValues_Mask<bool>? printMask = null)
         {
             if (printMask?.StartHour ?? true)
             {
@@ -1176,8 +1077,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IVendorValuesGetter lhs,
-            IVendorValuesGetter rhs)
+            IVendorValuesGetter? lhs,
+            IVendorValuesGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1227,8 +1128,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IVendorValues item,
             IVendorValuesGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.StartHour) ?? true))
             {
@@ -1260,9 +1161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public VendorValues DeepCopy(
             IVendorValuesGetter item,
-            VendorValues_TranslationMask copyMask = null)
+            VendorValues_TranslationMask? copyMask = null)
         {
-            VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).GetNew();
+            VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1272,9 +1173,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public VendorValues DeepCopy(
             IVendorValuesGetter item,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask copyMask = null)
+            VendorValues_TranslationMask? copyMask = null)
         {
-            VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).GetNew();
+            VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1284,10 +1185,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public VendorValues DeepCopy(
             IVendorValuesGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()).GetNew();
+            VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1340,8 +1241,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IVendorValuesGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)VendorValues_FieldIndex.StartHour) ?? true))
             {
@@ -1402,9 +1303,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IVendorValuesGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.VendorValues");
             node.Add(elem);
@@ -1422,9 +1323,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IVendorValuesGetter)item,
@@ -1437,10 +1338,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IVendorValuesGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1472,8 +1373,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IVendorValues item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1498,8 +1399,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVendorValues item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1628,8 +1529,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             XElement node,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            string name = null)
+            VendorValues_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((VendorValuesXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1645,8 +1546,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             string path,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            string name = null)
+            VendorValues_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1661,9 +1562,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1679,8 +1580,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             Stream stream,
             out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask translationMask = null,
-            string name = null)
+            VendorValues_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1695,9 +1596,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1712,9 +1613,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((VendorValuesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1727,21 +1628,21 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             XElement node,
-            string name = null,
-            VendorValues_TranslationMask translationMask = null)
+            string? name = null,
+            VendorValues_TranslationMask? translationMask = null)
         {
             ((VendorValuesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IVendorValuesGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((VendorValuesXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1756,7 +1657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((VendorValuesXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1778,13 +1679,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class VendorValues_Mask<T> : IMask<T>, IEquatable<VendorValues_Mask<T>>
+    public class VendorValues_Mask<T> :
+        IMask<T>,
+        IEquatable<VendorValues_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public VendorValues_Mask()
-        {
-        }
-
         public VendorValues_Mask(T initialValue)
         {
             this.StartHour = initialValue;
@@ -1810,6 +1710,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.NotSellBuy = NotSellBuy;
             this.Unknown = Unknown;
         }
+
+        #pragma warning disable CS8618
+        protected VendorValues_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1891,14 +1798,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(VendorValues_Mask<bool> printMask = null)
+        public string ToString(VendorValues_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, VendorValues_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, VendorValues_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(VendorValues_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1938,8 +1845,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class VendorValues_ErrorMask : IErrorMask, IErrorMask<VendorValues_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1951,16 +1858,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return _warnings;
             }
         }
-        public Exception StartHour;
-        public Exception EndHour;
-        public Exception Radius;
-        public Exception OnlyBuysStolenItems;
-        public Exception NotSellBuy;
-        public Exception Unknown;
+        public Exception? StartHour;
+        public Exception? EndHour;
+        public Exception? Radius;
+        public Exception? OnlyBuysStolenItems;
+        public Exception? NotSellBuy;
+        public Exception? Unknown;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
             switch (enu)
@@ -2091,8 +1998,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public VendorValues_ErrorMask Combine(VendorValues_ErrorMask rhs)
+        public VendorValues_ErrorMask Combine(VendorValues_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new VendorValues_ErrorMask();
             ret.StartHour = this.StartHour.Combine(rhs.StartHour);
             ret.EndHour = this.EndHour.Combine(rhs.EndHour);
@@ -2102,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = this.Unknown.Combine(rhs.Unknown);
             return ret;
         }
-        public static VendorValues_ErrorMask Combine(VendorValues_ErrorMask lhs, VendorValues_ErrorMask rhs)
+        public static VendorValues_ErrorMask? Combine(VendorValues_ErrorMask? lhs, VendorValues_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2112,7 +2020,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static VendorValues_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new VendorValues_ErrorMask();
         }
         #endregion
@@ -2121,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class VendorValues_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool StartHour;
         public bool EndHour;
         public bool Radius;
@@ -2131,10 +2038,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Ctors
-        public VendorValues_TranslationMask()
-        {
-        }
-
         public VendorValues_TranslationMask(bool defaultOn)
         {
             this.StartHour = defaultOn;
@@ -2150,13 +2053,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((StartHour, null));
             ret.Add((EndHour, null));
@@ -2193,7 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IVendorValuesGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2211,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IVendorValuesGetter)item,
@@ -2268,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         object IVendorValuesGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IVendorValuesGetter.CommonSetterInstance() => null;
+        object? IVendorValuesGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IVendorValuesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2284,9 +2187,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((VendorValuesXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2302,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((VendorValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2334,7 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static VendorValuesBinaryOverlay VendorValuesFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new VendorValuesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

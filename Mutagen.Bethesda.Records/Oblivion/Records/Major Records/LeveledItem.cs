@@ -37,12 +37,19 @@ namespace Mutagen.Bethesda.Oblivion
 
             private int? _FlagsLocation;
             bool GetFlagsIsSetCustom() => _FlagsLocation.HasValue || _vestigialMarker;
-            public LeveledFlag GetFlagsCustom()
+            public LeveledFlag? GetFlagsCustom()
             {
-                var ret = _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _FlagsLocation.Value, _package.Meta)[0] : default;
+                var ret = _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _FlagsLocation.Value, _package.Meta)[0] : default(LeveledFlag?);
                 if (_vestigialMarker)
                 {
-                    ret |= LeveledFlag.CalculateForEachItemInCount;
+                    if (ret.HasValue)
+                    {
+                        ret |= LeveledFlag.CalculateForEachItemInCount;
+                    }
+                    else
+                    {
+                        ret = LeveledFlag.CalculateForEachItemInCount;
+                    }
                 }
                 return ret;
             }

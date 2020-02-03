@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 new APILine(
                     nicknameKey: "GroupMask",
-                    resolutionString: "GroupMask importMask = null",
+                    resolutionString: "GroupMask? importMask = null",
                     when: (obj) => obj.GetObjectType() == ObjectType.Mod)
             };
             APILine masterRefs = new APILine(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Generation
                 when: (obj) => obj.GetObjectType() == ObjectType.Mod);
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
-                $"{nameof(RecordTypeConverter)} recordTypeConverter");
+                $"{nameof(RecordTypeConverter)}? recordTypeConverter");
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine("MutagenWriter", "MutagenWriter writer") },
@@ -429,9 +429,9 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("MasterReferences masterReferences");
                     if (data.ObjectType == ObjectType.Mod)
                     {
-                        args.Add($"GroupMask importMask");
+                        args.Add($"GroupMask? importMask");
                     }
-                    args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
+                    args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -1228,10 +1228,6 @@ namespace Mutagen.Bethesda.Generation
                         if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         List<string> conditions = new List<string>();
-                        if (field.HasBeenSet)
-                        {
-                            conditions.Add($"{field.HasBeenSetAccessor(new Accessor(field, "item."))}");
-                        }
                         if (conditions.Count > 0)
                         {
                             using (var args = new IfWrapper(fg, ANDs: true))
@@ -1282,10 +1278,10 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("MutagenWriter writer");
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        args.Add($"GroupMask importMask");
+                        args.Add($"GroupMask? importMask");
                         args.Add($"ModKey modKey");
                     }
-                    args.Add("RecordTypeConverter recordTypeConverter");
+                    args.Add("RecordTypeConverter? recordTypeConverter");
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
                         args.Add($"MasterReferences masterReferences");
@@ -1415,10 +1411,6 @@ namespace Mutagen.Bethesda.Generation
                                 && obj.GetObjectType() == ObjectType.Mod)
                             {
                                 fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
-                            }
-                            else if (field.HasBeenSet)
-                            {
-                                fg.AppendLine($"if ({field.HasBeenSetAccessor(accessor)})");
                             }
                             else
                             {
@@ -1676,7 +1668,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"{nameof(BinaryMemoryReadStream)} stream");
                             args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
-                            args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
+                            args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
                         }
                     }
                     using (new BraceWrapper(fg))
@@ -1947,7 +1939,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");
-                        args.Add("RecordTypeConverter recordTypeConverter");
+                        args.Add("RecordTypeConverter? recordTypeConverter");
                     }
                     using (new BraceWrapper(fg))
                     {
@@ -2005,9 +1997,8 @@ namespace Mutagen.Bethesda.Generation
                                                     && field.Field.Name == "ModHeader")
                                                 {
                                                     using (var args = new ArgsWrapper(fg,
-                                                        "_package.MasterReferences = new MasterReferences"))
+                                                        "_package.MasterReferences.Masters.SetTo"))
                                                     {
-                                                        args.Add("this.ModKey");
                                                         args.Add((subFg) =>
                                                         {
                                                             subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
@@ -2021,7 +2012,6 @@ namespace Mutagen.Bethesda.Generation
                                                                 {
                                                                     subFg.AppendLine("Master = master.Master,");
                                                                     subFg.AppendLine("FileSize = master.FileSize,");
-                                                                    subFg.AppendLine(" FileSize_IsSet = master.FileSize_IsSet");
                                                                 }
                                                             }
                                                         });

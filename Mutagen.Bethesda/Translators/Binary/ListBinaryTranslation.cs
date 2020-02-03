@@ -280,6 +280,20 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
+            IReadOnlySetList<T> items,
+            RecordType recordType,
+            BinarySubWriteDelegate transl)
+        {
+            if (!items.HasBeenSet) return;
+            this.WriteRecordList(
+                writer: writer,
+                items: items,
+                recordType: recordType,
+                transl: transl);
+        }
+
+        public void Write(
+            MutagenWriter writer,
             IReadOnlyList<T> items,
             RecordType recordType,
             BinarySubWriteDelegate transl)

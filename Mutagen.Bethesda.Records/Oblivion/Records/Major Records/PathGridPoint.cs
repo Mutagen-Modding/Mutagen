@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class PathGridPointBinaryOverlay
     {
-        public List<short> Connections;
+        public List<short> Connections = new List<short>();
         IReadOnlyList<short> IPathGridPointGetter.Connections => Connections;
 
         public static PathGridPointBinaryOverlay Factory(

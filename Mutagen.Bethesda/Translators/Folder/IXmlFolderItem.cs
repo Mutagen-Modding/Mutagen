@@ -12,10 +12,10 @@ namespace Mutagen.Bethesda
     public interface IXmlFolderItem
     {
         Task WriteToXmlFolder(
-            DirectoryPath? dir, 
+            DirectoryPath dir, 
             string name, 
             XElement node, 
             int counter,
-            ErrorMaskBuilder errorMask);
+            ErrorMaskBuilder? errorMask);
     }
 }

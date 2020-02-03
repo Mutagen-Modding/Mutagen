@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Oblivion
             string[] mainArgs,
             ModKey outputMod,
             Func<ModKey, ModList<OblivionMod>, Task<OblivionMod>> processor,
-            GroupMask importMask = null)
+            GroupMask? importMask = null)
         {
             return TypicalPatch(
                 dataFolder: new Noggog.DirectoryPath(mainArgs[0]),
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
             DirectoryPath dataFolder,
             ModKey outModKey,
             Func<ModKey, ModList<OblivionMod>, Task<OblivionMod>> processor,
-            GroupMask importMask = null)
+            GroupMask? importMask = null)
         {
             if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))
             {
@@ -48,14 +48,14 @@ namespace Mutagen.Bethesda.Oblivion
                 });
         }
 
-        public static async Task<TryGet<ModList<OblivionMod>>> TryImportUsualLoadOrder(
+        public static async Task<TryGet<ModList<OblivionMod>?>> TryImportUsualLoadOrder(
             DirectoryPath dataFolder,
-            GroupMask importMask = null,
+            GroupMask? importMask = null,
             ModKey? modKeyExclusionHint = null)
         {
             if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))
             {
-                return TryGet<ModList<OblivionMod>>.Fail(null);
+                return TryGet<ModList<OblivionMod>?>.Fail(null);
             }
             if (modKeyExclusionHint != null)
             {
@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Oblivion
                         importMask: importMask).ConfigureAwait(false);
                     return TryGet<OblivionMod>.Succeed(mod);
                 }).ConfigureAwait(false);
-            return TryGet<ModList<OblivionMod>>.Succeed(modList);
+            return TryGet<ModList<OblivionMod>?>.Succeed(modList);
         }
 
-        public static async Task<ModList<OblivionMod>> ImportUsualLoadOrder(
+        public static async Task<ModList<OblivionMod>?> ImportUsualLoadOrder(
             DirectoryPath dataFolder,
-            GroupMask importMask = null,
+            GroupMask? importMask = null,
             ModKey? modKeyExclusionHint = null)
         {
             var tg = await TryImportUsualLoadOrder(

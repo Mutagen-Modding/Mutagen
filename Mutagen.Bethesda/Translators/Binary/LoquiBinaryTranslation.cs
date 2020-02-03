@@ -46,24 +46,6 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<T> item,
-            MasterReferences masterReferences)
-        {
-            if (Parse(
-                frame,
-                item: out T subItem,
-                masterReferences: masterReferences))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
-        }
-
         [DebuggerStepThrough]
         public bool Parse(
             MutagenFrame frame,
@@ -75,26 +57,6 @@ namespace Mutagen.Bethesda.Binary
                 item: out item,
                 masterReferences: masterReferences,
                 recordTypeConverter: null);
-        }
-
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<T> item,
-            MasterReferences masterReferences,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            if (Parse(
-                frame,
-                out T subItem,
-                masterReferences: masterReferences,
-                recordTypeConverter: recordTypeConverter))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
         }
 
         [DebuggerStepThrough]
@@ -140,7 +102,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException();
             }
-            if (method.ReturnType.Equals(tType))
+            if (method.ReturnType == tType)
             {
                 var wrap = LoquiBinaryTranslation<T>.CREATE;
                 return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter? recConv) =>
@@ -151,24 +113,6 @@ namespace Mutagen.Bethesda.Binary
             else
             {
                 return DelegateBuilder.BuildDelegate<CREATE_FUNC>(method);
-            }
-        }
-
-        public async Task ParseInto(
-            MutagenFrame frame,
-            IHasItem<T> item,
-            MasterReferences masterReferences)
-        {
-            var result = await Parse(
-                frame,
-                masterReferences: masterReferences).ConfigureAwait(false);
-            if (result.Succeeded)
-            {
-                item.Item = result.Value;
-            }
-            else
-            {
-                item.Unset();
             }
         }
 
@@ -220,26 +164,6 @@ namespace Mutagen.Bethesda.Binary
 
     public static class LoquiBinaryTranslationExt
     {
-        public static void ParseInto<T, B>(
-            this LoquiBinaryTranslation<T> loquiTrans,
-            MutagenFrame frame,
-            IHasItem<B> item,
-            MasterReferences masterReferences)
-            where T : ILoquiObjectGetter, B
-        {
-            if (loquiTrans.Parse(
-                frame,
-                out T subItem,
-                masterReferences: masterReferences))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
-        }
-
         [DebuggerStepThrough]
         public static bool Parse<T, B>(
             this LoquiBinaryTranslation<T> loquiTrans,

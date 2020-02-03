@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"long finalPos");
                     args.Add($"int offset");
                 }
-                if (typeGen.HasBeenSet)
+                if (typeGen.HasBeenSet && !typeGen.CanBeNullable(getter: true))
                 {
                     fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
                 }
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Generation
                 loc = $"{currentPosition}";
             }
             using (var args = new ArgsWrapper(fg,
-                $"public {typeGen.TypeName(getter: true)} {typeGen.Name} => Get{typeGen.Name}Custom"))
+                $"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet && typeGen.CanBeNullable(getter: true) ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
                 if (!fieldData.HasTrigger && dataType == null)
                 {

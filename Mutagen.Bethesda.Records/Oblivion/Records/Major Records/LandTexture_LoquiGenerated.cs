@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -50,91 +51,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        public bool Icon_IsSet
-        {
-            get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon];
-            set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ILandTextureGetter.Icon_IsSet => Icon_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Icon;
-        public String Icon
+        private String? _Icon;
+        public String? Icon
         {
             get => this._Icon;
-            set => Icon_Set(value);
+            set => this._Icon = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String ILandTextureGetter.Icon => this.Icon;
-        public void Icon_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Icon = value;
-            _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = markSet;
-        }
-        public void Icon_Unset()
-        {
-            this.Icon_Set(default(String), false);
-        }
+        String? ILandTextureGetter.Icon => this.Icon;
         #endregion
         #region Havok
-        public bool Havok_IsSet
-        {
-            get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok];
-            set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ILandTextureGetter.Havok_IsSet => Havok_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private HavokData _Havok;
-        public HavokData Havok
+        private HavokData? _Havok;
+        public HavokData? Havok
         {
             get => _Havok;
-            set => Havok_Set(value);
-        }
-        public void Havok_Set(
-            HavokData value,
-            bool hasBeenSet = true)
-        {
-            _Havok = value;
-            _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = hasBeenSet;
-        }
-        public void Havok_Unset()
-        {
-            this.Havok_Set(default(HavokData), false);
+            set => _Havok = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IHavokDataGetter ILandTextureGetter.Havok => this.Havok;
+        IHavokDataGetter? ILandTextureGetter.Havok => this.Havok;
         #endregion
         #region TextureSpecularExponent
-        public bool TextureSpecularExponent_IsSet
-        {
-            get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent];
-            set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ILandTextureGetter.TextureSpecularExponent_IsSet => TextureSpecularExponent_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _TextureSpecularExponent;
-        public Byte TextureSpecularExponent
+        private Byte? _TextureSpecularExponent;
+        public Byte? TextureSpecularExponent
         {
             get => this._TextureSpecularExponent;
-            set => TextureSpecularExponent_Set(value);
+            set => this._TextureSpecularExponent = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte ILandTextureGetter.TextureSpecularExponent => this.TextureSpecularExponent;
-        public void TextureSpecularExponent_Set(
-            Byte value,
-            bool markSet = true)
-        {
-            _TextureSpecularExponent = value;
-            _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = markSet;
-        }
-        public void TextureSpecularExponent_Unset()
-        {
-            this.TextureSpecularExponent_Set(default(Byte), false);
-        }
+        Byte? ILandTextureGetter.TextureSpecularExponent => this.TextureSpecularExponent;
         #endregion
         #region PotentialGrass
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -153,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             LandTextureMixIn.ToString(
                 item: this,
@@ -166,15 +113,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ILandTextureGetter rhs)) return false;
-            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(LandTexture obj)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()).Equals(this, obj);
+            return ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((LandTextureCommon)((ILandTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -183,9 +130,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((LandTextureXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -198,11 +145,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new LandTexture CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            LandTexture_TranslationMask translationMask = null)
+            LandTexture_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -212,38 +157,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture CreateFromXml(
             XElement node,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LandTexture_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static LandTexture CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new LandTexture() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new LandTexture();
-            ((LandTextureSetterCommon)((ILandTextureGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((LandTextureSetterCommon)((ILandTextureGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -252,12 +184,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            LandTexture_TranslationMask translationMask = null)
+            LandTexture_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -265,12 +195,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture CreateFromXml(
             string path,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LandTexture_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -278,13 +206,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LandTexture_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -292,12 +218,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            LandTexture_TranslationMask translationMask = null)
+            LandTexture_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -305,12 +229,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture CreateFromXml(
             Stream stream,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LandTexture_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -318,13 +240,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LandTexture_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -333,21 +253,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((LandTexture_FieldIndex)index)
-            {
-                case LandTexture_FieldIndex.Icon:
-                case LandTexture_FieldIndex.Havok:
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return _hasBeenSetTracker[index];
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return PotentialGrass.HasBeenSet;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LandTexture_Registration.TRIGGERING_RECORD_TYPE;
@@ -372,7 +277,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -395,10 +300,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static LandTexture CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new LandTexture();
-            ((LandTextureSetterCommon)((ILandTextureGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((LandTextureSetterCommon)((ILandTextureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -416,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((LandTextureSetterCommon)((ILandTextureGetter)this).CommonSetterInstance()).Clear(this);
+            ((LandTextureSetterCommon)((ILandTextureGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new LandTexture GetNew()
@@ -433,21 +338,9 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<ILandTextureInternal>
     {
-        new String Icon { get; set; }
-        new bool Icon_IsSet { get; set; }
-        void Icon_Set(String value, bool hasBeenSet = true);
-        void Icon_Unset();
-
-        new HavokData Havok { get; set; }
-        new bool Havok_IsSet { get; set; }
-        void Havok_Set(HavokData value, bool hasBeenSet = true);
-        void Havok_Unset();
-
-        new Byte TextureSpecularExponent { get; set; }
-        new bool TextureSpecularExponent_IsSet { get; set; }
-        void TextureSpecularExponent_Set(Byte value, bool hasBeenSet = true);
-        void TextureSpecularExponent_Unset();
-
+        new String? Icon { get; set; }
+        new HavokData? Havok { get; set; }
+        new Byte? TextureSpecularExponent { get; set; }
         new ISetList<IFormIDLink<Grass>> PotentialGrass { get; }
     }
 
@@ -465,24 +358,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        #region Icon
-        String Icon { get; }
-        bool Icon_IsSet { get; }
-
-        #endregion
-        #region Havok
-        IHavokDataGetter Havok { get; }
-        bool Havok_IsSet { get; }
-
-        #endregion
-        #region TextureSpecularExponent
-        Byte TextureSpecularExponent { get; }
-        bool TextureSpecularExponent_IsSet { get; }
-
-        #endregion
-        #region PotentialGrass
+        String? Icon { get; }
+        IHavokDataGetter? Havok { get; }
+        Byte? TextureSpecularExponent { get; }
         IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> PotentialGrass { get; }
-        #endregion
 
     }
 
@@ -493,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ILandTextureInternal item)
         {
-            ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static LandTexture_Mask<bool> GetEqualsMask(
@@ -501,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
             ILandTextureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetEqualsMask(
+            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -509,10 +388,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this ILandTextureGetter item,
-            string name = null,
-            LandTexture_Mask<bool> printMask = null)
+            string? name = null,
+            LandTexture_Mask<bool>? printMask = null)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).ToString(
+            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -521,10 +400,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this ILandTextureGetter item,
             FileGeneration fg,
-            string name = null,
-            LandTexture_Mask<bool> printMask = null)
+            string? name = null,
+            LandTexture_Mask<bool>? printMask = null)
         {
-            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).ToString(
+            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -535,15 +414,15 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureGetter item,
             LandTexture_Mask<bool?> checkMask)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).HasBeenSet(
+            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static LandTexture_Mask<bool> GetHasBeenSetMask(this ILandTextureGetter item)
         {
-            var ret = new LandTexture_Mask<bool>();
-            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new LandTexture_Mask<bool>(false);
+            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -553,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureGetter item,
             ILandTextureGetter rhs)
         {
-            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).Equals(
+            return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -561,23 +440,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILandTextureInternal lhs,
             ILandTextureGetter rhs,
-            LandTexture_TranslationMask copyMask)
-        {
-            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ILandTextureInternal lhs,
-            ILandTextureGetter rhs,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask copyMask = null)
+            LandTexture_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -588,10 +455,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILandTextureInternal lhs,
             ILandTextureGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -600,9 +467,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture DeepCopy(
             this ILandTextureGetter item,
-            LandTexture_TranslationMask copyMask = null)
+            LandTexture_TranslationMask? copyMask = null)
         {
-            return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -610,9 +477,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture DeepCopy(
             this ILandTextureGetter item,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask copyMask = null)
+            LandTexture_TranslationMask? copyMask = null)
         {
-            return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -620,10 +487,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture DeepCopy(
             this ILandTextureGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -634,12 +501,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            LandTexture_TranslationMask translationMask = null)
+            LandTexture_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -650,29 +515,25 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternal item,
             XElement node,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LandTexture_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -681,13 +542,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            LandTexture_TranslationMask translationMask = null)
+            LandTexture_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -696,13 +555,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternal item,
             string path,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LandTexture_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -711,14 +568,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LandTexture_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -727,13 +582,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            LandTexture_TranslationMask translationMask = null)
+            LandTexture_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -742,13 +595,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternal item,
             Stream stream,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LandTexture_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -757,14 +608,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LandTexture_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -790,9 +639,9 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -849,11 +698,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ILandTextureGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ILandTexture);
 
-        public static readonly Type InternalSetterType = typeof(ILandTextureInternal);
+        public static readonly Type? InternalSetterType = typeof(ILandTextureInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.LandTexture";
 
@@ -863,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1015,14 +864,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1046,9 +895,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILandTextureInternal item)
         {
             ClearPartial();
-            item.Icon_Unset();
-            item.Havok_Unset();
-            item.TextureSpecularExponent_Unset();
+            item.Icon = default;
+            item.Havok = null;
+            item.TextureSpecularExponent = default;
             item.PotentialGrass.Unset();
             base.Clear(item);
         }
@@ -1068,8 +917,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1087,9 +936,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             ILandTextureInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1137,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1190,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<ILandTextureInternal>(
                 record: item,
@@ -1214,8 +1062,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LandTexture_Mask<bool>();
-            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new LandTexture_Mask<bool>(false);
+            ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1230,15 +1078,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Havok = EqualsMaskHelper.EqualsHelper(
-                item.Havok_IsSet,
-                rhs.Havok_IsSet,
                 item.Havok,
                 rhs.Havok,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.TextureSpecularExponent = item.TextureSpecularExponent_IsSet == rhs.TextureSpecularExponent_IsSet && item.TextureSpecularExponent == rhs.TextureSpecularExponent;
+            ret.TextureSpecularExponent = item.TextureSpecularExponent == rhs.TextureSpecularExponent;
             ret.PotentialGrass = item.PotentialGrass.CollectionEqualsHelper(
                 rhs.PotentialGrass,
                 (l, r) => object.Equals(l, r),
@@ -1248,8 +1094,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             ILandTextureGetter item,
-            string name = null,
-            LandTexture_Mask<bool> printMask = null)
+            string? name = null,
+            LandTexture_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1263,8 +1109,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             ILandTextureGetter item,
             FileGeneration fg,
-            string name = null,
-            LandTexture_Mask<bool> printMask = null)
+            string? name = null,
+            LandTexture_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1288,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILandTextureGetter item,
             FileGeneration fg,
-            LandTexture_Mask<bool> printMask = null)
+            LandTexture_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1330,11 +1176,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter item,
             LandTexture_Mask<bool?> checkMask)
         {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Havok.Overall.HasValue && checkMask.Havok.Overall.Value != item.Havok_IsSet) return false;
-            if (checkMask.Havok.Specific != null && (item.Havok == null || !item.Havok.HasBeenSet(checkMask.Havok.Specific))) return false;
-            if (checkMask.TextureSpecularExponent.HasValue && checkMask.TextureSpecularExponent.Value != item.TextureSpecularExponent_IsSet) return false;
-            if (checkMask.PotentialGrass.Overall.HasValue && checkMask.PotentialGrass.Overall.Value != item.PotentialGrass.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
+            if (checkMask.Havok?.Overall.HasValue ?? false && checkMask.Havok.Overall.Value != (item.Havok != null)) return false;
+            if (checkMask.Havok?.Specific != null && (item.Havok == null || !item.Havok.HasBeenSet(checkMask.Havok.Specific))) return false;
+            if (checkMask.TextureSpecularExponent.HasValue && checkMask.TextureSpecularExponent.Value != (item.TextureSpecularExponent != null)) return false;
+            if (checkMask.PotentialGrass?.Overall.HasValue ?? false && checkMask.PotentialGrass!.Overall.Value != item.PotentialGrass.HasBeenSet) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1344,10 +1190,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter item,
             LandTexture_Mask<bool> mask)
         {
-            mask.Icon = item.Icon_IsSet;
-            mask.Havok = new MaskItem<bool, HavokData_Mask<bool>>(item.Havok_IsSet, item.Havok.GetHasBeenSetMask());
-            mask.TextureSpecularExponent = item.TextureSpecularExponent_IsSet;
-            mask.PotentialGrass = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PotentialGrass.HasBeenSet, null);
+            mask.Icon = (item.Icon != null);
+            var itemHavok = item.Havok;
+            mask.Havok = new MaskItem<bool, HavokData_Mask<bool>?>(itemHavok != null, itemHavok?.GetHasBeenSetMask());
+            mask.TextureSpecularExponent = (item.TextureSpecularExponent != null);
+            mask.PotentialGrass = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PotentialGrass.HasBeenSet, Enumerable.Empty<(int, bool)>());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1391,72 +1238,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILandTextureGetter lhs,
-            ILandTextureGetter rhs)
+            ILandTextureGetter? lhs,
+            ILandTextureGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.Havok_IsSet != rhs.Havok_IsSet) return false;
-            if (lhs.Havok_IsSet)
-            {
-                if (!object.Equals(lhs.Havok, rhs.Havok)) return false;
-            }
-            if (lhs.TextureSpecularExponent_IsSet != rhs.TextureSpecularExponent_IsSet) return false;
-            if (lhs.TextureSpecularExponent_IsSet)
-            {
-                if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
-            }
-            if (lhs.PotentialGrass.HasBeenSet != rhs.PotentialGrass.HasBeenSet) return false;
-            if (lhs.PotentialGrass.HasBeenSet)
-            {
-                if (!lhs.PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
-            }
+            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            if (!object.Equals(lhs.Havok, rhs.Havok)) return false;
+            if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
+            if (!lhs.PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
             return true;
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ILandTextureGetter)lhs,
+                lhs: (ILandTextureGetter?)lhs,
                 rhs: rhs as ILandTextureGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ILandTextureGetter)lhs,
+                lhs: (ILandTextureGetter?)lhs,
                 rhs: rhs as ILandTextureGetter);
         }
         
         public virtual int GetHashCode(ILandTextureGetter item)
         {
             int ret = 0;
-            if (item.Icon_IsSet)
+            if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
             }
-            if (item.Havok_IsSet)
+            if (item.Havok.TryGet(out var Havokitem))
             {
-                ret = HashHelper.GetHashCode(item.Havok).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Havokitem).CombineHashCode(ret);
             }
-            if (item.TextureSpecularExponent_IsSet)
+            if (item.TextureSpecularExponent.TryGet(out var TextureSpecularExponentitem))
             {
-                ret = HashHelper.GetHashCode(item.TextureSpecularExponent).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(TextureSpecularExponentitem).CombineHashCode(ret);
             }
-            if (item.PotentialGrass.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.PotentialGrass).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.PotentialGrass).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1493,9 +1321,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new LandTexture(getNextFormKey());
             ret.DeepCopyFieldsFrom((LandTexture)item);
@@ -1515,8 +1343,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILandTextureInternal item,
             ILandTextureGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1528,8 +1356,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILandTexture item,
             ILandTextureGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1538,44 +1366,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
             {
-                errorMask?.PushIndex((int)LandTexture_FieldIndex.Icon);
-                try
-                {
-                    if (rhs.Icon_IsSet)
-                    {
-                        item.Icon = rhs.Icon;
-                    }
-                    else
-                    {
-                        item.Icon_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Icon = rhs.Icon;
             }
             if ((copyMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
                 errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
                 try
                 {
-                    if(rhs.Havok_IsSet)
+                    if(rhs.Havok.TryGet(out var rhsHavok))
                     {
-                        item.Havok = rhs.Havok.DeepCopy(
+                        item.Havok = rhsHavok.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
                     }
                     else
                     {
-                        item.Havok_Set(
-                            value: default(HavokData),
-                            hasBeenSet: false);
+                        item.Havok = default;
                     }
                 }
                 catch (Exception ex)
@@ -1590,27 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
-                errorMask?.PushIndex((int)LandTexture_FieldIndex.TextureSpecularExponent);
-                try
-                {
-                    if (rhs.TextureSpecularExponent_IsSet)
-                    {
-                        item.TextureSpecularExponent = rhs.TextureSpecularExponent;
-                    }
-                    else
-                    {
-                        item.TextureSpecularExponent_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TextureSpecularExponent = rhs.TextureSpecularExponent;
             }
             if ((copyMask?.GetShouldTranslate((int)LandTexture_FieldIndex.PotentialGrass) ?? true))
             {
@@ -1643,8 +1429,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILandTextureInternal)item,
@@ -1656,8 +1442,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILandTexture)item,
@@ -1669,8 +1455,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILandTextureInternal)item,
@@ -1682,8 +1468,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILandTexture)item,
@@ -1696,9 +1482,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LandTexture DeepCopy(
             ILandTextureGetter item,
-            LandTexture_TranslationMask copyMask = null)
+            LandTexture_TranslationMask? copyMask = null)
         {
-            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetNew();
+            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1708,9 +1494,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public LandTexture DeepCopy(
             ILandTextureGetter item,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask copyMask = null)
+            LandTexture_TranslationMask? copyMask = null)
         {
-            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetNew();
+            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1720,10 +1506,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LandTexture DeepCopy(
             ILandTextureGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetNew();
+            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1772,15 +1558,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             ILandTextureGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Icon_IsSet
+            if ((item.Icon != null)
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1790,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LandTexture_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Havok_IsSet
+            if ((item.Havok != null)
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
                 var loquiItem = item.Havok;
@@ -1802,13 +1588,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
             }
-            if (item.TextureSpecularExponent_IsSet
+            if ((item.TextureSpecularExponent != null)
                 && (translationMask?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TextureSpecularExponent),
-                    item: item.TextureSpecularExponent,
+                    item: item.TextureSpecularExponent.Value,
                     fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                     errorMask: errorMask);
             }
@@ -1822,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.PotentialGrass),
-                    transl: (XElement subNode, IFormIDLinkGetter<IGrassGetter> subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IFormIDLinkGetter<IGrassGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1836,9 +1622,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             ILandTextureGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LandTexture");
             node.Add(elem);
@@ -1856,9 +1642,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -1871,9 +1657,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -1886,9 +1672,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -1907,8 +1693,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             ILandTextureInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1933,8 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2044,8 +1830,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureGetter item,
             XElement node,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            string name = null)
+            LandTexture_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((LandTextureXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2061,8 +1847,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureGetter item,
             string path,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            string name = null)
+            LandTexture_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2078,8 +1864,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureGetter item,
             Stream stream,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask translationMask = null,
-            string name = null)
+            LandTexture_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2101,19 +1887,20 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class LandTexture_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<LandTexture_Mask<T>>
+    public class LandTexture_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<LandTexture_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public LandTexture_Mask()
-        {
-        }
-
         public LandTexture_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Icon = initialValue;
-            this.Havok = new MaskItem<T, HavokData_Mask<T>>(initialValue, new HavokData_Mask<T>(initialValue));
+            this.Havok = new MaskItem<T, HavokData_Mask<T>?>(initialValue, new HavokData_Mask<T>(initialValue));
             this.TextureSpecularExponent = initialValue;
-            this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
         }
 
         public LandTexture_Mask(
@@ -2126,24 +1913,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T Havok,
             T TextureSpecularExponent,
             T PotentialGrass)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
             this.Icon = Icon;
-            this.Havok = new MaskItem<T, HavokData_Mask<T>>(Havok, new HavokData_Mask<T>(Havok));
+            this.Havok = new MaskItem<T, HavokData_Mask<T>?>(Havok, new HavokData_Mask<T>(Havok));
             this.TextureSpecularExponent = TextureSpecularExponent;
-            this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PotentialGrass, null);
+            this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PotentialGrass, Enumerable.Empty<(int Index, T Value)>());
         }
+
+        #pragma warning disable CS8618
+        protected LandTexture_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
         public T Icon;
-        public MaskItem<T, HavokData_Mask<T>> Havok { get; set; }
+        public MaskItem<T, HavokData_Mask<T>?>? Havok { get; set; }
         public T TextureSpecularExponent;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>> PotentialGrass;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>>? PotentialGrass;
         #endregion
 
         #region Equals
@@ -2214,24 +2009,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Icon = eval(this.Icon);
-            if (this.Havok != null)
-            {
-                obj.Havok = new MaskItem<R, HavokData_Mask<R>>(eval(this.Havok.Overall), this.Havok.Specific?.Translate(eval));
-            }
+            obj.Havok = this.Havok == null ? null : new MaskItem<R, HavokData_Mask<R>?>(eval(this.Havok.Overall), this.Havok.Specific?.Translate(eval));
             obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
             if (PotentialGrass != null)
             {
-                obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PotentialGrass.Overall), default);
+                obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PotentialGrass.Overall), Enumerable.Empty<(int Index, R Value)>());
                 if (PotentialGrass.Specific != null)
                 {
-                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
+                    var l = new List<(int Index, R Item)>();
                     obj.PotentialGrass.Specific = l;
                     foreach (var item in PotentialGrass.Specific.WithIndex())
                     {
-                        (int Index, R Item) mask = default;
-                        mask.Index = item.Index;
-                        mask.Item = eval(item.Item.Value);
-                        l.Add(mask);
+                        R mask = eval(item.Item.Value);
+                        l.Add((item.Index, mask));
                     }
                 }
             }
@@ -2244,14 +2034,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(LandTexture_Mask<bool> printMask = null)
+        public string ToString(LandTexture_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, LandTexture_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, LandTexture_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(LandTexture_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2275,20 +2065,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (PotentialGrass.Overall != null)
+                        if (PotentialGrass != null)
                         {
-                            fg.AppendLine(PotentialGrass.Overall.ToString());
-                        }
-                        if (PotentialGrass.Specific != null)
-                        {
-                            foreach (var subItem in PotentialGrass.Specific)
+                            if (PotentialGrass.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                fg.AppendLine(PotentialGrass.Overall.ToString());
+                            }
+                            if (PotentialGrass.Specific != null)
+                            {
+                                foreach (var subItem in PotentialGrass.Specific)
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendLine($" => {subItem}");
+                                    }
+                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
@@ -2304,14 +2097,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class LandTexture_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<LandTexture_ErrorMask>
     {
         #region Members
-        public Exception Icon;
-        public MaskItem<Exception, HavokData_ErrorMask> Havok;
-        public Exception TextureSpecularExponent;
-        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> PotentialGrass;
+        public Exception? Icon;
+        public MaskItem<Exception?, HavokData_ErrorMask?>? Havok;
+        public Exception? TextureSpecularExponent;
+        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PotentialGrass;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
             switch (enu)
@@ -2338,13 +2131,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Icon = ex;
                     break;
                 case LandTexture_FieldIndex.Havok:
-                    this.Havok = new MaskItem<Exception, HavokData_ErrorMask>(ex, null);
+                    this.Havok = new MaskItem<Exception?, HavokData_ErrorMask?>(ex, null);
                     break;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     this.TextureSpecularExponent = ex;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this.PotentialGrass = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
+                    this.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2361,13 +2154,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Icon = (Exception)obj;
                     break;
                 case LandTexture_FieldIndex.Havok:
-                    this.Havok = (MaskItem<Exception, HavokData_ErrorMask>)obj;
+                    this.Havok = (MaskItem<Exception?, HavokData_ErrorMask?>?)obj;
                     break;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     this.TextureSpecularExponent = (Exception)obj;
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this.PotentialGrass = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
+                    this.PotentialGrass = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2424,20 +2217,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (PotentialGrass.Overall != null)
+                if (PotentialGrass != null)
                 {
-                    fg.AppendLine(PotentialGrass.Overall.ToString());
-                }
-                if (PotentialGrass.Specific != null)
-                {
-                    foreach (var subItem in PotentialGrass.Specific)
+                    if (PotentialGrass.Overall != null)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        fg.AppendLine(PotentialGrass.Overall.ToString());
+                    }
+                    if (PotentialGrass.Specific != null)
+                    {
+                        foreach (var subItem in PotentialGrass.Specific)
                         {
-                            fg.AppendLine($" => {subItem}");
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($" => {subItem}");
+                            }
+                            fg.AppendLine("]");
                         }
-                        fg.AppendLine("]");
                     }
                 }
             }
@@ -2446,16 +2242,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public LandTexture_ErrorMask Combine(LandTexture_ErrorMask rhs)
+        public LandTexture_ErrorMask Combine(LandTexture_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new LandTexture_ErrorMask();
             ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Havok = new MaskItem<Exception, HavokData_ErrorMask>(this.Havok.Overall.Combine(rhs.Havok.Overall), ((IErrorMask<HavokData_ErrorMask>)this.Havok.Specific).Combine(rhs.Havok.Specific));
+            ret.Havok = new MaskItem<Exception?, HavokData_ErrorMask?>(ExceptionExt.Combine(this.Havok?.Overall, rhs.Havok?.Overall), (this.Havok?.Specific as IErrorMask<HavokData_ErrorMask>)?.Combine(rhs.Havok?.Specific));
             ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-            ret.PotentialGrass = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.PotentialGrass.Overall.Combine(rhs.PotentialGrass.Overall), new List<(int Index, Exception Value)>(this.PotentialGrass.Specific.And(rhs.PotentialGrass.Specific)));
+            ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
             return ret;
         }
-        public static LandTexture_ErrorMask Combine(LandTexture_ErrorMask lhs, LandTexture_ErrorMask rhs)
+        public static LandTexture_ErrorMask? Combine(LandTexture_ErrorMask? lhs, LandTexture_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2465,7 +2262,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new LandTexture_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new LandTexture_ErrorMask();
         }
         #endregion
@@ -2475,29 +2271,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public bool Icon;
-        public MaskItem<bool, HavokData_TranslationMask> Havok;
+        public MaskItem<bool, HavokData_TranslationMask?> Havok;
         public bool TextureSpecularExponent;
         public bool PotentialGrass;
         #endregion
 
         #region Ctors
-        public LandTexture_TranslationMask()
-            : base()
-        {
-        }
-
         public LandTexture_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
             this.Icon = defaultOn;
-            this.Havok = new MaskItem<bool, HavokData_TranslationMask>(defaultOn, null);
+            this.Havok = new MaskItem<bool, HavokData_TranslationMask?>(defaultOn, null);
             this.TextureSpecularExponent = defaultOn;
             this.PotentialGrass = defaultOn;
         }
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Icon, null));
@@ -2521,7 +2312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             ILandTextureGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -2529,54 +2320,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Icon_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Icon,
-                    header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.ICON_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Havok_IsSet)
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Icon,
+                header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
             {
                 var loquiItem = item.Havok;
-                ((HavokDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((HavokDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
-            if (item.TextureSpecularExponent_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.TextureSpecularExponent,
-                    header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.SNAM_HEADER),
-                    nullable: false);
-            }
-            if (item.PotentialGrass.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IGrassGetter>>.Instance.Write(
-                    writer: writer,
-                    items: item.PotentialGrass,
-                    transl: (MutagenWriter subWriter, IFormIDLinkGetter<IGrassGetter> subItem) =>
-                    {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                            writer: subWriter,
-                            item: subItem,
-                            header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.GNAM_HEADER),
-                            nullable: false,
-                            masterReferences: masterReferences);
-                    });
-            }
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TextureSpecularExponent,
+                header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.SNAM_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormIDLinkGetter<IGrassGetter>>.Instance.Write(
+                writer: writer,
+                items: item.PotentialGrass,
+                transl: (MutagenWriter subWriter, IFormIDLinkGetter<IGrassGetter> subItem) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.GNAM_HEADER),
+                        masterReferences: masterReferences);
+                });
         }
 
         public void Write(
             MutagenWriter writer,
             ILandTextureGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2599,7 +2380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -2612,7 +2393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -2625,7 +2406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ILandTextureGetter)item,
@@ -2679,9 +2460,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((LandTextureXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2695,7 +2476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((LandTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2706,19 +2487,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Icon
         private int? _IconLocation;
-        public bool Icon_IsSet => _IconLocation.HasValue;
-        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Havok
         private RangeInt32? _HavokLocation;
         private bool _Havok_IsSet => _HavokLocation.HasValue;
-        public IHavokDataGetter Havok => _Havok_IsSet ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IHavokDataGetter? Havok => _Havok_IsSet ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Havok_IsSet => _HavokLocation.HasValue;
         #endregion
         #region TextureSpecularExponent
         private int? _TextureSpecularExponentLocation;
-        public bool TextureSpecularExponent_IsSet => _TextureSpecularExponentLocation.HasValue;
-        public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.Meta)[0] : default;
+        public Byte? TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.Meta)[0] : default(Byte?);
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> PotentialGrass { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassGetter>>.Instance;
         partial void CustomCtor(
@@ -2738,7 +2517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LandTextureBinaryOverlay LandTextureFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new LandTextureBinaryOverlay(
@@ -2766,7 +2545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
@@ -2791,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.PotentialGrass = BinaryOverlaySetList<IFormIDLinkGetter<IGrassGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormIDLink<IGrassGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormIDLink<IGrassGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -29,6 +29,11 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+            if (typeGen.HasBeenSet)
+            {
+                fg.AppendLine($"if ({itemAccessor.DirectAccess}_IsSet)");
+            }
+            using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
@@ -42,7 +47,6 @@ namespace Mutagen.Bethesda.Generation
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
-                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
             }
         }
@@ -160,7 +164,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (typeGen.HasBeenSet)
                     {
-                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor()} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)};");
+                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor(getter: true)} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)};");
                     }
                     fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray();");
                 }
@@ -168,10 +172,11 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (typeGen.HasBeenSet)
                     {
-                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor()} => {dataAccessor}.Length >= _{typeGen.Name}Location + {this.ExpectedLength(objGen, typeGen).Value};");
+                        fg.AppendLine($"public bool {typeGen.HasBeenSetAccessor(getter: true)} => {dataAccessor}.Length >= _{typeGen.Name}Location + {this.ExpectedLength(objGen, typeGen).Value};");
                     }
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
                     fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value}).ToArray() : default;");
+                    fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}_IsSet;");
                 }
             }
         }

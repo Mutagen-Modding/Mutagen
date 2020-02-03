@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
-            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location.Value + 0x{pos.Value.ToString("X")};");
+            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location!.Value + 0x{pos.Value.ToString("X")};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:

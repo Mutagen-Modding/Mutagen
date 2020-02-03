@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(0, compositeStream.Remaining());
             Assert.Equal(0, compositeStream.Length);
             Assert.Equal(0, compositeStream.Position);
-            Assert.Equal(0, compositeStream.Read(null, 0, 10));
+            Assert.Equal(0, compositeStream.Read(new byte[0], 0, 10));
         }
 
         [Fact]

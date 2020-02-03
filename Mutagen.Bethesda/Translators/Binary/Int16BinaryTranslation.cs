@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Binary
             return reader.Reader.ReadInt16();
         }
 
-        public override void WriteValue(MutagenWriter writer, short item)
+        public override void Write(MutagenWriter writer, short item)
         {
             writer.Write(item);
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             ItemAbstractMixIn.ToString(
                 item: this,
@@ -67,15 +68,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IItemAbstractGetter rhs)) return false;
-            return ((ItemAbstractCommon)((IItemAbstractGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((ItemAbstractCommon)((IItemAbstractGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(ItemAbstract obj)
         {
-            return ((ItemAbstractCommon)((IItemAbstractGetter)this).CommonInstance()).Equals(this, obj);
+            return ((ItemAbstractCommon)((IItemAbstractGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ItemAbstractCommon)((IItemAbstractGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((ItemAbstractCommon)((IItemAbstractGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -84,9 +85,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => ItemAbstractXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ItemAbstractXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -99,11 +100,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new ItemAbstract CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            ItemAbstract_TranslationMask translationMask = null)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -113,41 +112,28 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemAbstract CreateFromXml(
             XElement node,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = ItemAbstract_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static ItemAbstract CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return null;
-                    break;
-                default:
-                    break;
-            }
             if (!LoquiXmlTranslation.Instance.TryCreate(node, out ItemAbstract ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown ItemAbstract subclass: {node.Name.LocalName}");
             }
-            ((ItemAbstractSetterCommon)((IItemAbstractGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((ItemAbstractSetterCommon)((IItemAbstractGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -156,12 +142,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemAbstract CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            ItemAbstract_TranslationMask translationMask = null)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -169,12 +153,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemAbstract CreateFromXml(
             string path,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -182,13 +164,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemAbstract CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            ItemAbstract_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -196,12 +176,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemAbstract CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            ItemAbstract_TranslationMask translationMask = null)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -209,12 +187,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemAbstract CreateFromXml(
             Stream stream,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -222,13 +198,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemAbstract CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -260,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ItemAbstractBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -276,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((ItemAbstractSetterCommon)((IItemAbstractGetter)this).CommonSetterInstance()).Clear(this);
+            ((ItemAbstractSetterCommon)((IItemAbstractGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new ItemAbstract GetNew()
@@ -319,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IItemAbstractInternal item)
         {
-            ((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static ItemAbstract_Mask<bool> GetEqualsMask(
@@ -327,7 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
             IItemAbstractGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetEqualsMask(
+            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -335,10 +309,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IItemAbstractGetter item,
-            string name = null,
-            ItemAbstract_Mask<bool> printMask = null)
+            string? name = null,
+            ItemAbstract_Mask<bool>? printMask = null)
         {
-            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).ToString(
+            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -347,10 +321,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IItemAbstractGetter item,
             FileGeneration fg,
-            string name = null,
-            ItemAbstract_Mask<bool> printMask = null)
+            string? name = null,
+            ItemAbstract_Mask<bool>? printMask = null)
         {
-            ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).ToString(
+            ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -361,15 +335,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractGetter item,
             ItemAbstract_Mask<bool?> checkMask)
         {
-            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).HasBeenSet(
+            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static ItemAbstract_Mask<bool> GetHasBeenSetMask(this IItemAbstractGetter item)
         {
-            var ret = new ItemAbstract_Mask<bool>();
-            ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new ItemAbstract_Mask<bool>(false);
+            ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -379,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractGetter item,
             IItemAbstractGetter rhs)
         {
-            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).Equals(
+            return ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -387,23 +361,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IItemAbstractInternal lhs,
             IItemAbstractGetter rhs,
-            ItemAbstract_TranslationMask copyMask)
-        {
-            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IItemAbstractInternal lhs,
-            IItemAbstractGetter rhs,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask copyMask = null)
+            ItemAbstract_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -414,10 +376,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IItemAbstractInternal lhs,
             IItemAbstractGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -426,9 +388,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemAbstract DeepCopy(
             this IItemAbstractGetter item,
-            ItemAbstract_TranslationMask copyMask = null)
+            ItemAbstract_TranslationMask? copyMask = null)
         {
-            return ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -436,9 +398,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemAbstract DeepCopy(
             this IItemAbstractGetter item,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask copyMask = null)
+            ItemAbstract_TranslationMask? copyMask = null)
         {
-            return ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -446,10 +408,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemAbstract DeepCopy(
             this IItemAbstractGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -460,12 +422,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemAbstractInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            ItemAbstract_TranslationMask translationMask = null)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -476,29 +436,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractInternal item,
             XElement node,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = ItemAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IItemAbstractInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -507,13 +463,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemAbstractInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            ItemAbstract_TranslationMask translationMask = null)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -522,13 +476,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractInternal item,
             string path,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -537,14 +489,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemAbstractInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            ItemAbstract_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -553,13 +503,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemAbstractInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            ItemAbstract_TranslationMask translationMask = null)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -568,13 +516,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractInternal item,
             Stream stream,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -583,14 +529,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemAbstractInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            ItemAbstract_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -616,9 +560,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -671,11 +615,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IItemAbstractGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IItemAbstract);
 
-        public static readonly Type InternalSetterType = typeof(IItemAbstractInternal);
+        public static readonly Type? InternalSetterType = typeof(IItemAbstractInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.ItemAbstract";
 
@@ -685,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -828,14 +772,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -877,8 +821,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -896,9 +840,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IItemAbstractInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -933,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
         }
         
@@ -949,8 +892,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ItemAbstract_Mask<bool>();
-            ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new ItemAbstract_Mask<bool>(false);
+            ((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -970,8 +913,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IItemAbstractGetter item,
-            string name = null,
-            ItemAbstract_Mask<bool> printMask = null)
+            string? name = null,
+            ItemAbstract_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -985,8 +928,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IItemAbstractGetter item,
             FileGeneration fg,
-            string name = null,
-            ItemAbstract_Mask<bool> printMask = null)
+            string? name = null,
+            ItemAbstract_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1010,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IItemAbstractGetter item,
             FileGeneration fg,
-            ItemAbstract_Mask<bool> printMask = null)
+            ItemAbstract_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1074,8 +1017,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IItemAbstractGetter lhs,
-            IItemAbstractGetter rhs)
+            IItemAbstractGetter? lhs,
+            IItemAbstractGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1084,20 +1027,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IItemAbstractGetter)lhs,
+                lhs: (IItemAbstractGetter?)lhs,
                 rhs: rhs as IItemAbstractGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IItemAbstractGetter)lhs,
+                lhs: (IItemAbstractGetter?)lhs,
                 rhs: rhs as IItemAbstractGetter);
         }
         
@@ -1136,9 +1079,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(ItemAbstract obj, ItemAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(ItemAbstract obj, ItemAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             throw new NotImplementedException();
         }
@@ -1154,8 +1097,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void DeepCopyFieldsFrom(
             IItemAbstractInternal item,
             IItemAbstractGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1167,8 +1110,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void DeepCopyFieldsFrom(
             IItemAbstract item,
             IItemAbstractGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1180,8 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IItemAbstractInternal)item,
@@ -1193,8 +1136,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IItemAbstract)item,
@@ -1206,8 +1149,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IItemAbstractInternal)item,
@@ -1219,8 +1162,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IItemAbstract)item,
@@ -1233,9 +1176,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ItemAbstract DeepCopy(
             IItemAbstractGetter item,
-            ItemAbstract_TranslationMask copyMask = null)
+            ItemAbstract_TranslationMask? copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetNew();
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1245,9 +1188,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ItemAbstract DeepCopy(
             IItemAbstractGetter item,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask copyMask = null)
+            ItemAbstract_TranslationMask? copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetNew();
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1257,10 +1200,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ItemAbstract DeepCopy(
             IItemAbstractGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetNew();
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1309,8 +1252,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IItemAbstractGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
@@ -1322,9 +1265,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             XElement node,
             IItemAbstractGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ItemAbstract");
             node.Add(elem);
@@ -1342,9 +1285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IItemAbstractGetter)item,
@@ -1357,9 +1300,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IItemAbstractGetter)item,
@@ -1372,9 +1315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IItemAbstractGetter)item,
@@ -1393,8 +1336,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IItemAbstractInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1419,8 +1362,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1447,8 +1390,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractGetter item,
             XElement node,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
+            ItemAbstract_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ItemAbstractXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1464,8 +1407,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractGetter item,
             string path,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
+            ItemAbstract_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1481,8 +1424,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemAbstractGetter item,
             Stream stream,
             out ItemAbstract_ErrorMask errorMask,
-            ItemAbstract_TranslationMask translationMask = null,
-            string name = null)
+            ItemAbstract_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1504,14 +1447,15 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class ItemAbstract_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<ItemAbstract_Mask<T>>
+    public class ItemAbstract_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<ItemAbstract_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public ItemAbstract_Mask()
-        {
-        }
-
         public ItemAbstract_Mask(T initialValue)
+        : base(initialValue)
         {
         }
 
@@ -1521,13 +1465,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T Version,
             T EditorID,
             T OblivionMajorRecordFlags)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
         }
+
+        #pragma warning disable CS8618
+        protected ItemAbstract_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Equals
@@ -1580,14 +1532,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(ItemAbstract_Mask<bool> printMask = null)
+        public string ToString(ItemAbstract_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, ItemAbstract_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, ItemAbstract_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(ItemAbstract_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1603,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class ItemAbstract_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<ItemAbstract_ErrorMask>
     {
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
@@ -1677,12 +1629,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public ItemAbstract_ErrorMask Combine(ItemAbstract_ErrorMask rhs)
+        public ItemAbstract_ErrorMask Combine(ItemAbstract_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new ItemAbstract_ErrorMask();
             return ret;
         }
-        public static ItemAbstract_ErrorMask Combine(ItemAbstract_ErrorMask lhs, ItemAbstract_ErrorMask rhs)
+        public static ItemAbstract_ErrorMask? Combine(ItemAbstract_ErrorMask? lhs, ItemAbstract_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1692,7 +1645,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new ItemAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new ItemAbstract_ErrorMask();
         }
         #endregion
@@ -1701,11 +1653,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class ItemAbstract_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Ctors
-        public ItemAbstract_TranslationMask()
-            : base()
-        {
-        }
-
         public ItemAbstract_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -1730,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IItemAbstractGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
@@ -1747,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IItemAbstractGetter)item,
@@ -1760,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IItemAbstractGetter)item,
@@ -1773,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IItemAbstractGetter)item,
@@ -1827,9 +1774,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => ItemAbstractXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ItemAbstractXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -1843,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ItemAbstractBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

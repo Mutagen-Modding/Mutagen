@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,33 +42,32 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public AIPackageSchedule()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Month
-        public Month Month { get; set; }
+        public Month Month { get; set; } = default;
         #endregion
         #region DayOfWeek
-        public Weekday DayOfWeek { get; set; }
+        public Weekday DayOfWeek { get; set; } = default;
         #endregion
         #region Day
-        public Byte Day { get; set; }
+        public Byte Day { get; set; } = default;
         #endregion
         #region Time
-        public Byte Time { get; set; }
+        public Byte Time { get; set; } = default;
         #endregion
         #region Duration
-        public Int32 Duration { get; set; }
+        public Int32 Duration { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             AIPackageScheduleMixIn.ToString(
                 item: this,
@@ -80,15 +80,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAIPackageScheduleGetter rhs)) return false;
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageSchedule obj)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()).Equals(this, obj);
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,9 +99,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((AIPackageScheduleXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -114,11 +114,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageSchedule CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -128,38 +126,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule CreateFromXml(
             XElement node,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static AIPackageSchedule CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new AIPackageSchedule() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new AIPackageSchedule();
-            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -168,12 +153,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -181,12 +164,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule CreateFromXml(
             string path,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -194,13 +175,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -208,12 +187,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -221,12 +198,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule CreateFromXml(
             Stream stream,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -234,13 +209,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -249,23 +222,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((AIPackageSchedule_FieldIndex)index)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                case AIPackageSchedule_FieldIndex.Day:
-                case AIPackageSchedule_FieldIndex.Time:
-                case AIPackageSchedule_FieldIndex.Duration:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageSchedule_Registration.TRIGGERING_RECORD_TYPE;
@@ -279,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -302,10 +258,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new AIPackageSchedule();
-            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -323,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)this).CommonSetterInstance()).Clear(this);
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static AIPackageSchedule GetNew()
@@ -340,15 +296,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageSchedule>
     {
         new Month Month { get; set; }
-
         new Weekday DayOfWeek { get; set; }
-
         new Byte Day { get; set; }
-
         new Byte Time { get; set; }
-
         new Int32 Duration { get; set; }
-
     }
 
     public partial interface IAIPackageScheduleGetter :
@@ -360,29 +311,14 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Month
         Month Month { get; }
-
-        #endregion
-        #region DayOfWeek
         Weekday DayOfWeek { get; }
-
-        #endregion
-        #region Day
         Byte Day { get; }
-
-        #endregion
-        #region Time
         Byte Time { get; }
-
-        #endregion
-        #region Duration
         Int32 Duration { get; }
-
-        #endregion
 
     }
 
@@ -393,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAIPackageSchedule item)
         {
-            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static AIPackageSchedule_Mask<bool> GetEqualsMask(
@@ -401,7 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageScheduleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetEqualsMask(
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -409,10 +345,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IAIPackageScheduleGetter item,
-            string name = null,
-            AIPackageSchedule_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageSchedule_Mask<bool>? printMask = null)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).ToString(
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -421,10 +357,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IAIPackageScheduleGetter item,
             FileGeneration fg,
-            string name = null,
-            AIPackageSchedule_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageSchedule_Mask<bool>? printMask = null)
         {
-            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).ToString(
+            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -435,15 +371,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             AIPackageSchedule_Mask<bool?> checkMask)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).HasBeenSet(
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static AIPackageSchedule_Mask<bool> GetHasBeenSetMask(this IAIPackageScheduleGetter item)
         {
-            var ret = new AIPackageSchedule_Mask<bool>();
-            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new AIPackageSchedule_Mask<bool>(false);
+            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -453,16 +389,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).Equals(
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IAIPackageSchedule lhs,
-            IAIPackageScheduleGetter rhs)
+            IAIPackageScheduleGetter rhs,
+            AIPackageSchedule_TranslationMask? copyMask = null)
         {
-            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -472,23 +409,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IAIPackageSchedule lhs,
             IAIPackageScheduleGetter rhs,
-            AIPackageSchedule_TranslationMask copyMask)
-        {
-            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IAIPackageSchedule lhs,
-            IAIPackageScheduleGetter rhs,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask copyMask = null)
+            AIPackageSchedule_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -499,10 +424,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IAIPackageSchedule lhs,
             IAIPackageScheduleGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -511,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule DeepCopy(
             this IAIPackageScheduleGetter item,
-            AIPackageSchedule_TranslationMask copyMask = null)
+            AIPackageSchedule_TranslationMask? copyMask = null)
         {
-            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -521,9 +446,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule DeepCopy(
             this IAIPackageScheduleGetter item,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask copyMask = null)
+            AIPackageSchedule_TranslationMask? copyMask = null)
         {
-            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -531,10 +456,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule DeepCopy(
             this IAIPackageScheduleGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -545,12 +470,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -561,29 +484,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule item,
             XElement node,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -592,13 +511,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -607,13 +524,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule item,
             string path,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -622,14 +537,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             string path,
-            ErrorMaskBuilder errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -638,13 +551,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -653,13 +564,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule item,
             Stream stream,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -668,14 +577,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -701,9 +608,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -756,11 +663,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IAIPackageScheduleGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IAIPackageSchedule);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AIPackageSchedule";
 
@@ -770,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -927,14 +834,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -958,20 +865,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IAIPackageSchedule item)
         {
             ClearPartial();
-            item.Month = default(Month);
-            item.DayOfWeek = default(Weekday);
-            item.Day = default(Byte);
-            item.Time = default(Byte);
-            item.Duration = default(Int32);
+            item.Month = default;
+            item.DayOfWeek = default;
+            item.Day = default;
+            item.Time = default;
+            item.Duration = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IAIPackageSchedule item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1011,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageSchedule item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1037,8 +943,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackageSchedule_Mask<bool>();
-            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new AIPackageSchedule_Mask<bool>(false);
+            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1062,8 +968,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IAIPackageScheduleGetter item,
-            string name = null,
-            AIPackageSchedule_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageSchedule_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1077,8 +983,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IAIPackageScheduleGetter item,
             FileGeneration fg,
-            string name = null,
-            AIPackageSchedule_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageSchedule_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1102,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAIPackageScheduleGetter item,
             FileGeneration fg,
-            AIPackageSchedule_Mask<bool> printMask = null)
+            AIPackageSchedule_Mask<bool>? printMask = null)
         {
             if (printMask?.Month ?? true)
             {
@@ -1146,8 +1052,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAIPackageScheduleGetter lhs,
-            IAIPackageScheduleGetter rhs)
+            IAIPackageScheduleGetter? lhs,
+            IAIPackageScheduleGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1195,8 +1101,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IAIPackageSchedule item,
             IAIPackageScheduleGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
             {
@@ -1224,9 +1130,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageSchedule DeepCopy(
             IAIPackageScheduleGetter item,
-            AIPackageSchedule_TranslationMask copyMask = null)
+            AIPackageSchedule_TranslationMask? copyMask = null)
         {
-            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1236,9 +1142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AIPackageSchedule DeepCopy(
             IAIPackageScheduleGetter item,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask copyMask = null)
+            AIPackageSchedule_TranslationMask? copyMask = null)
         {
-            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1248,10 +1154,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageSchedule DeepCopy(
             IAIPackageScheduleGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1304,8 +1210,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IAIPackageScheduleGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
             {
@@ -1357,9 +1263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IAIPackageScheduleGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AIPackageSchedule");
             node.Add(elem);
@@ -1377,9 +1283,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IAIPackageScheduleGetter)item,
@@ -1392,10 +1298,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IAIPackageScheduleGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1427,8 +1333,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IAIPackageSchedule item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1453,8 +1359,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageSchedule item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1565,8 +1471,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             XElement node,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            string name = null)
+            AIPackageSchedule_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageScheduleXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1582,8 +1488,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             string path,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            string name = null)
+            AIPackageSchedule_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1598,9 +1504,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1616,8 +1522,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             Stream stream,
             out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask translationMask = null,
-            string name = null)
+            AIPackageSchedule_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1632,9 +1538,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1649,9 +1555,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((AIPackageScheduleXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1664,21 +1570,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             XElement node,
-            string name = null,
-            AIPackageSchedule_TranslationMask translationMask = null)
+            string? name = null,
+            AIPackageSchedule_TranslationMask? translationMask = null)
         {
             ((AIPackageScheduleXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((AIPackageScheduleXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1693,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((AIPackageScheduleXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1715,13 +1621,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class AIPackageSchedule_Mask<T> : IMask<T>, IEquatable<AIPackageSchedule_Mask<T>>
+    public class AIPackageSchedule_Mask<T> :
+        IMask<T>,
+        IEquatable<AIPackageSchedule_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public AIPackageSchedule_Mask()
-        {
-        }
-
         public AIPackageSchedule_Mask(T initialValue)
         {
             this.Month = initialValue;
@@ -1744,6 +1649,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Time = Time;
             this.Duration = Duration;
         }
+
+        #pragma warning disable CS8618
+        protected AIPackageSchedule_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1820,14 +1732,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(AIPackageSchedule_Mask<bool> printMask = null)
+        public string ToString(AIPackageSchedule_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, AIPackageSchedule_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, AIPackageSchedule_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(AIPackageSchedule_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1863,8 +1775,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class AIPackageSchedule_ErrorMask : IErrorMask, IErrorMask<AIPackageSchedule_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1876,15 +1788,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Month;
-        public Exception DayOfWeek;
-        public Exception Day;
-        public Exception Time;
-        public Exception Duration;
+        public Exception? Month;
+        public Exception? DayOfWeek;
+        public Exception? Day;
+        public Exception? Time;
+        public Exception? Duration;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
             switch (enu)
@@ -2005,8 +1917,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public AIPackageSchedule_ErrorMask Combine(AIPackageSchedule_ErrorMask rhs)
+        public AIPackageSchedule_ErrorMask Combine(AIPackageSchedule_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new AIPackageSchedule_ErrorMask();
             ret.Month = this.Month.Combine(rhs.Month);
             ret.DayOfWeek = this.DayOfWeek.Combine(rhs.DayOfWeek);
@@ -2015,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = this.Duration.Combine(rhs.Duration);
             return ret;
         }
-        public static AIPackageSchedule_ErrorMask Combine(AIPackageSchedule_ErrorMask lhs, AIPackageSchedule_ErrorMask rhs)
+        public static AIPackageSchedule_ErrorMask? Combine(AIPackageSchedule_ErrorMask? lhs, AIPackageSchedule_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2025,7 +1938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static AIPackageSchedule_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new AIPackageSchedule_ErrorMask();
         }
         #endregion
@@ -2034,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class AIPackageSchedule_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Month;
         public bool DayOfWeek;
         public bool Day;
@@ -2043,10 +1955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public AIPackageSchedule_TranslationMask()
-        {
-        }
-
         public AIPackageSchedule_TranslationMask(bool defaultOn)
         {
             this.Month = defaultOn;
@@ -2061,13 +1969,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Month, null));
             ret.Add((DayOfWeek, null));
@@ -2108,7 +2016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IAIPackageScheduleGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2126,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IAIPackageScheduleGetter)item,
@@ -2183,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IAIPackageScheduleGetter.CommonSetterInstance() => null;
+        object? IAIPackageScheduleGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2199,9 +2107,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((AIPackageScheduleXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2217,7 +2125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2248,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AIPackageScheduleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

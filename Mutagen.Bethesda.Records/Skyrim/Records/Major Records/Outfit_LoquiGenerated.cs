@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             OutfitMixIn.ToString(
                 item: this,
@@ -67,15 +68,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IOutfitGetter rhs)) return false;
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Outfit obj)
         {
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()).Equals(this, obj);
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -84,9 +85,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => OutfitXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((OutfitXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -99,11 +100,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new Outfit CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Outfit_TranslationMask translationMask = null)
+            Outfit_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -113,38 +112,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static Outfit CreateFromXml(
             XElement node,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Outfit_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Outfit_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Outfit CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Outfit() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Outfit();
-            ((OutfitSetterCommon)((IOutfitGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((OutfitSetterCommon)((IOutfitGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -153,12 +139,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Outfit CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Outfit_TranslationMask translationMask = null)
+            Outfit_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -166,12 +150,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Outfit CreateFromXml(
             string path,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Outfit_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -179,13 +161,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Outfit CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Outfit_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -193,12 +173,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Outfit CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Outfit_TranslationMask translationMask = null)
+            Outfit_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -206,12 +184,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Outfit CreateFromXml(
             Stream stream,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Outfit_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -219,13 +195,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Outfit CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Outfit_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -256,7 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((OutfitBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -279,10 +253,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static Outfit CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Outfit();
-            ((OutfitSetterCommon)((IOutfitGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((OutfitSetterCommon)((IOutfitGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -300,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((OutfitSetterCommon)((IOutfitGetter)this).CommonSetterInstance()).Clear(this);
+            ((OutfitSetterCommon)((IOutfitGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Outfit GetNew()
@@ -342,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IOutfitInternal item)
         {
-            ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Outfit_Mask<bool> GetEqualsMask(
@@ -350,7 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
             IOutfitGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).GetEqualsMask(
+            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -358,10 +332,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IOutfitGetter item,
-            string name = null,
-            Outfit_Mask<bool> printMask = null)
+            string? name = null,
+            Outfit_Mask<bool>? printMask = null)
         {
-            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).ToString(
+            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -370,10 +344,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IOutfitGetter item,
             FileGeneration fg,
-            string name = null,
-            Outfit_Mask<bool> printMask = null)
+            string? name = null,
+            Outfit_Mask<bool>? printMask = null)
         {
-            ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).ToString(
+            ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -384,15 +358,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitGetter item,
             Outfit_Mask<bool?> checkMask)
         {
-            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).HasBeenSet(
+            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Outfit_Mask<bool> GetHasBeenSetMask(this IOutfitGetter item)
         {
-            var ret = new Outfit_Mask<bool>();
-            ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Outfit_Mask<bool>(false);
+            ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -402,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitGetter item,
             IOutfitGetter rhs)
         {
-            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).Equals(
+            return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -410,23 +384,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IOutfitInternal lhs,
             IOutfitGetter rhs,
-            Outfit_TranslationMask copyMask)
-        {
-            ((OutfitSetterTranslationCommon)((IOutfitGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IOutfitInternal lhs,
-            IOutfitGetter rhs,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask copyMask = null)
+            Outfit_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((OutfitSetterTranslationCommon)((IOutfitGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((OutfitSetterTranslationCommon)((IOutfitGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -437,10 +399,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IOutfitInternal lhs,
             IOutfitGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((OutfitSetterTranslationCommon)((IOutfitGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((OutfitSetterTranslationCommon)((IOutfitGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -449,9 +411,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Outfit DeepCopy(
             this IOutfitGetter item,
-            Outfit_TranslationMask copyMask = null)
+            Outfit_TranslationMask? copyMask = null)
         {
-            return ((OutfitSetterTranslationCommon)((IOutfitGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((OutfitSetterTranslationCommon)((IOutfitGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -459,9 +421,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static Outfit DeepCopy(
             this IOutfitGetter item,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask copyMask = null)
+            Outfit_TranslationMask? copyMask = null)
         {
-            return ((OutfitSetterTranslationCommon)((IOutfitGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((OutfitSetterTranslationCommon)((IOutfitGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -469,10 +431,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Outfit DeepCopy(
             this IOutfitGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((OutfitSetterTranslationCommon)((IOutfitGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((OutfitSetterTranslationCommon)((IOutfitGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -483,12 +445,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IOutfitInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Outfit_TranslationMask translationMask = null)
+            Outfit_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -499,29 +459,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitInternal item,
             XElement node,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Outfit_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Outfit_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IOutfitInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -530,13 +486,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IOutfitInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Outfit_TranslationMask translationMask = null)
+            Outfit_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -545,13 +499,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitInternal item,
             string path,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Outfit_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -560,14 +512,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IOutfitInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Outfit_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -576,13 +526,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IOutfitInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Outfit_TranslationMask translationMask = null)
+            Outfit_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -591,13 +539,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitInternal item,
             Stream stream,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Outfit_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -606,14 +552,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IOutfitInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Outfit_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Outfit_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -639,9 +583,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((OutfitSetterCommon)((IOutfitGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -696,11 +640,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IOutfitGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IOutfit);
 
-        public static readonly Type InternalSetterType = typeof(IOutfitInternal);
+        public static readonly Type? InternalSetterType = typeof(IOutfitInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Outfit";
 
@@ -710,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -807,14 +751,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -856,8 +800,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IOutfitInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -875,9 +819,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             IOutfitInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -923,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IOutfitInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IOutfitInternal>(
                 record: item,
@@ -947,8 +890,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IOutfitGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Outfit_Mask<bool>();
-            ((OutfitCommon)((IOutfitGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Outfit_Mask<bool>(false);
+            ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -968,8 +911,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IOutfitGetter item,
-            string name = null,
-            Outfit_Mask<bool> printMask = null)
+            string? name = null,
+            Outfit_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -983,8 +926,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IOutfitGetter item,
             FileGeneration fg,
-            string name = null,
-            Outfit_Mask<bool> printMask = null)
+            string? name = null,
+            Outfit_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1008,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IOutfitGetter item,
             FileGeneration fg,
-            Outfit_Mask<bool> printMask = null)
+            Outfit_Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1076,8 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IOutfitGetter lhs,
-            IOutfitGetter rhs)
+            IOutfitGetter? lhs,
+            IOutfitGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1086,20 +1029,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            ISkyrimMajorRecordGetter lhs,
-            ISkyrimMajorRecordGetter rhs)
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IOutfitGetter)lhs,
+                lhs: (IOutfitGetter?)lhs,
                 rhs: rhs as IOutfitGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IOutfitGetter)lhs,
+                lhs: (IOutfitGetter?)lhs,
                 rhs: rhs as IOutfitGetter);
         }
         
@@ -1138,9 +1081,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Outfit obj, Outfit rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Outfit obj, Outfit rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Outfit(getNextFormKey());
             ret.DeepCopyFieldsFrom((Outfit)item);
@@ -1160,8 +1103,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IOutfitInternal item,
             IOutfitGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1173,8 +1116,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IOutfit item,
             IOutfitGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1186,8 +1129,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IOutfitInternal)item,
@@ -1199,8 +1142,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IOutfit)item,
@@ -1212,8 +1155,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IOutfitInternal)item,
@@ -1225,8 +1168,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IOutfit)item,
@@ -1239,9 +1182,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Outfit DeepCopy(
             IOutfitGetter item,
-            Outfit_TranslationMask copyMask = null)
+            Outfit_TranslationMask? copyMask = null)
         {
-            Outfit ret = (Outfit)((OutfitCommon)((IOutfitGetter)item).CommonInstance()).GetNew();
+            Outfit ret = (Outfit)((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1251,9 +1194,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Outfit DeepCopy(
             IOutfitGetter item,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask copyMask = null)
+            Outfit_TranslationMask? copyMask = null)
         {
-            Outfit ret = (Outfit)((OutfitCommon)((IOutfitGetter)item).CommonInstance()).GetNew();
+            Outfit ret = (Outfit)((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1263,10 +1206,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Outfit DeepCopy(
             IOutfitGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Outfit ret = (Outfit)((OutfitCommon)((IOutfitGetter)item).CommonInstance()).GetNew();
+            Outfit ret = (Outfit)((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1315,8 +1258,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IOutfitGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
@@ -1328,9 +1271,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IOutfitGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Outfit");
             node.Add(elem);
@@ -1348,9 +1291,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1363,9 +1306,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1378,9 +1321,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1399,8 +1342,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IOutfitInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1425,8 +1368,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IOutfitInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1453,8 +1396,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitGetter item,
             XElement node,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            string name = null)
+            Outfit_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((OutfitXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1470,8 +1413,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitGetter item,
             string path,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            string name = null)
+            Outfit_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1487,8 +1430,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IOutfitGetter item,
             Stream stream,
             out Outfit_ErrorMask errorMask,
-            Outfit_TranslationMask translationMask = null,
-            string name = null)
+            Outfit_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1510,14 +1453,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Outfit_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<Outfit_Mask<T>>
+    public class Outfit_Mask<T> :
+        SkyrimMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Outfit_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Outfit_Mask()
-        {
-        }
-
         public Outfit_Mask(T initialValue)
+        : base(initialValue)
         {
         }
 
@@ -1529,15 +1473,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T SkyrimMajorRecordFlags,
             T FormVersion,
             T Version2)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+            FormVersion: FormVersion,
+            Version2: Version2)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
-            this.FormVersion = FormVersion;
-            this.Version2 = Version2;
         }
+
+        #pragma warning disable CS8618
+        protected Outfit_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Equals
@@ -1590,14 +1542,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Outfit_Mask<bool> printMask = null)
+        public string ToString(Outfit_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Outfit_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Outfit_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Outfit_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1613,7 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Outfit_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<Outfit_ErrorMask>
     {
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Outfit_FieldIndex enu = (Outfit_FieldIndex)index;
             switch (enu)
@@ -1687,12 +1639,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Outfit_ErrorMask Combine(Outfit_ErrorMask rhs)
+        public Outfit_ErrorMask Combine(Outfit_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Outfit_ErrorMask();
             return ret;
         }
-        public static Outfit_ErrorMask Combine(Outfit_ErrorMask lhs, Outfit_ErrorMask rhs)
+        public static Outfit_ErrorMask? Combine(Outfit_ErrorMask? lhs, Outfit_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1702,7 +1655,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new Outfit_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Outfit_ErrorMask();
         }
         #endregion
@@ -1711,11 +1663,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Outfit_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Ctors
-        public Outfit_TranslationMask()
-            : base()
-        {
-        }
-
         public Outfit_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -1740,7 +1687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IOutfitGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1763,7 +1710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1776,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1789,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IOutfitGetter)item,
@@ -1842,9 +1789,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => OutfitXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((OutfitXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -1858,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((OutfitBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1884,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static OutfitBinaryOverlay OutfitFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new OutfitBinaryOverlay(

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -20,9 +21,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -30,6 +30,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -43,20 +44,19 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetEventData()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Unknown2
-        public UInt16 Unknown2 { get; set; }
+        public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region EventFunction
-        public UInt16 EventFunction { get; set; }
+        public UInt16 EventFunction { get; set; } = default;
         #endregion
         #region EventMember
-        public UInt16 EventMember { get; set; }
+        public UInt16 EventMember { get; set; } = default;
         #endregion
         #region Parameter3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3;
         #endregion
         #region RunOnType
-        public Condition.RunOnType RunOnType { get; set; }
+        public Condition.RunOnType RunOnType { get; set; } = default;
         #endregion
         #region Reference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -77,14 +77,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown3
         public readonly static Int32 _Unknown3_Default = -1;
-        public Int32 Unknown3 { get; set; }
+        public Int32 Unknown3 { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             GetEventDataMixIn.ToString(
                 item: this,
@@ -97,15 +97,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IGetEventDataGetter rhs)) return false;
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(GetEventData obj)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()).Equals(this, obj);
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -114,9 +114,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => GetEventDataXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((GetEventDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -129,11 +129,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new GetEventData CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            GetEventData_TranslationMask translationMask = null)
+            GetEventData_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -143,38 +141,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static GetEventData CreateFromXml(
             XElement node,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            GetEventData_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static GetEventData CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new GetEventData() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new GetEventData();
-            ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -183,12 +168,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            GetEventData_TranslationMask translationMask = null)
+            GetEventData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -196,12 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static GetEventData CreateFromXml(
             string path,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            GetEventData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -209,13 +190,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            GetEventData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -223,12 +202,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            GetEventData_TranslationMask translationMask = null)
+            GetEventData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -236,12 +213,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static GetEventData CreateFromXml(
             Stream stream,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            GetEventData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -249,13 +224,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            GetEventData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -264,25 +237,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((GetEventData_FieldIndex)index)
-            {
-                case GetEventData_FieldIndex.Unknown2:
-                case GetEventData_FieldIndex.EventFunction:
-                case GetEventData_FieldIndex.EventMember:
-                case GetEventData_FieldIndex.Parameter3:
-                case GetEventData_FieldIndex.RunOnType:
-                case GetEventData_FieldIndex.Reference:
-                case GetEventData_FieldIndex.Unknown3:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -295,7 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -318,10 +272,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static GetEventData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new GetEventData();
-            ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -339,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((GetEventDataSetterCommon)((IGetEventDataGetter)this).CommonSetterInstance()).Clear(this);
+            ((GetEventDataSetterCommon)((IGetEventDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new GetEventData GetNew()
@@ -357,17 +311,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IGetEventData>
     {
         new UInt16 Unknown2 { get; set; }
-
         new UInt16 EventFunction { get; set; }
-
         new UInt16 EventMember { get; set; }
-
         new IFormIDLink<SkyrimMajorRecord> Parameter3 { get; }
         new Condition.RunOnType RunOnType { get; set; }
-
         new IFormIDLink<SkyrimMajorRecord> Reference { get; }
         new Int32 Unknown3 { get; set; }
-
     }
 
     public partial interface IGetEventDataGetter :
@@ -377,32 +326,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        #region Unknown2
         UInt16 Unknown2 { get; }
-
-        #endregion
-        #region EventFunction
         UInt16 EventFunction { get; }
-
-        #endregion
-        #region EventMember
         UInt16 EventMember { get; }
-
-        #endregion
-        #region Parameter3
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> Parameter3 { get; }
-        #endregion
-        #region RunOnType
         Condition.RunOnType RunOnType { get; }
-
-        #endregion
-        #region Reference
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
-        #endregion
-        #region Unknown3
         Int32 Unknown3 { get; }
-
-        #endregion
 
     }
 
@@ -413,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IGetEventData item)
         {
-            ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static GetEventData_Mask<bool> GetEqualsMask(
@@ -421,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetEventDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).GetEqualsMask(
+            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -429,10 +359,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IGetEventDataGetter item,
-            string name = null,
-            GetEventData_Mask<bool> printMask = null)
+            string? name = null,
+            GetEventData_Mask<bool>? printMask = null)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).ToString(
+            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -441,10 +371,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IGetEventDataGetter item,
             FileGeneration fg,
-            string name = null,
-            GetEventData_Mask<bool> printMask = null)
+            string? name = null,
+            GetEventData_Mask<bool>? printMask = null)
         {
-            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).ToString(
+            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -455,15 +385,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventDataGetter item,
             GetEventData_Mask<bool?> checkMask)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).HasBeenSet(
+            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static GetEventData_Mask<bool> GetHasBeenSetMask(this IGetEventDataGetter item)
         {
-            var ret = new GetEventData_Mask<bool>();
-            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new GetEventData_Mask<bool>(false);
+            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -473,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventDataGetter item,
             IGetEventDataGetter rhs)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).Equals(
+            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -481,23 +411,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IGetEventData lhs,
             IGetEventDataGetter rhs,
-            GetEventData_TranslationMask copyMask)
-        {
-            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IGetEventData lhs,
-            IGetEventDataGetter rhs,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask copyMask = null)
+            GetEventData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -508,10 +426,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IGetEventData lhs,
             IGetEventDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -520,9 +438,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData DeepCopy(
             this IGetEventDataGetter item,
-            GetEventData_TranslationMask copyMask = null)
+            GetEventData_TranslationMask? copyMask = null)
         {
-            return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -530,9 +448,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static GetEventData DeepCopy(
             this IGetEventDataGetter item,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask copyMask = null)
+            GetEventData_TranslationMask? copyMask = null)
         {
-            return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -540,10 +458,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData DeepCopy(
             this IGetEventDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -554,12 +472,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            GetEventData_TranslationMask translationMask = null)
+            GetEventData_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -570,29 +486,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventData item,
             XElement node,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            GetEventData_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IGetEventData item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -601,13 +513,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            GetEventData_TranslationMask translationMask = null)
+            GetEventData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -616,13 +526,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventData item,
             string path,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            GetEventData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -631,14 +539,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             string path,
-            ErrorMaskBuilder errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            GetEventData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -647,13 +553,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            GetEventData_TranslationMask translationMask = null)
+            GetEventData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -662,13 +566,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventData item,
             Stream stream,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            GetEventData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -677,14 +579,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            GetEventData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -710,9 +610,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -767,11 +667,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IGetEventDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IGetEventData);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.GetEventData";
 
@@ -781,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -958,14 +858,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -989,11 +889,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IGetEventData item)
         {
             ClearPartial();
-            item.Unknown2 = default(UInt16);
-            item.EventFunction = default(UInt16);
-            item.EventMember = default(UInt16);
+            item.Unknown2 = default;
+            item.EventFunction = default;
+            item.EventMember = default;
             item.Parameter3.Unset();
-            item.RunOnType = default(Condition.RunOnType);
+            item.RunOnType = default;
             item.Reference.Unset();
             item.Unknown3 = GetEventData._Unknown3_Default;
             base.Clear(item);
@@ -1008,9 +908,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             IGetEventData item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1058,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGetEventData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1081,8 +980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGetEventDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GetEventData_Mask<bool>();
-            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new GetEventData_Mask<bool>(false);
+            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1109,8 +1008,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IGetEventDataGetter item,
-            string name = null,
-            GetEventData_Mask<bool> printMask = null)
+            string? name = null,
+            GetEventData_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1124,8 +1023,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IGetEventDataGetter item,
             FileGeneration fg,
-            string name = null,
-            GetEventData_Mask<bool> printMask = null)
+            string? name = null,
+            GetEventData_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1149,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IGetEventDataGetter item,
             FileGeneration fg,
-            GetEventData_Mask<bool> printMask = null)
+            GetEventData_Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
@@ -1221,8 +1120,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGetEventDataGetter lhs,
-            IGetEventDataGetter rhs)
+            IGetEventDataGetter? lhs,
+            IGetEventDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1238,11 +1137,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            IConditionDataGetter lhs,
-            IConditionDataGetter rhs)
+            IConditionDataGetter? lhs,
+            IConditionDataGetter? rhs)
         {
             return Equals(
-                lhs: (IGetEventDataGetter)lhs,
+                lhs: (IGetEventDataGetter?)lhs,
                 rhs: rhs as IGetEventDataGetter);
         }
         
@@ -1296,8 +1195,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IGetEventData item,
             IGetEventDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1338,8 +1237,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IConditionData item,
             IConditionDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IGetEventData)item,
@@ -1352,9 +1251,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public GetEventData DeepCopy(
             IGetEventDataGetter item,
-            GetEventData_TranslationMask copyMask = null)
+            GetEventData_TranslationMask? copyMask = null)
         {
-            GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).GetNew();
+            GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1364,9 +1263,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public GetEventData DeepCopy(
             IGetEventDataGetter item,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask copyMask = null)
+            GetEventData_TranslationMask? copyMask = null)
         {
-            GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).GetNew();
+            GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1376,10 +1275,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public GetEventData DeepCopy(
             IGetEventDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()).GetNew();
+            GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1428,8 +1327,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IGetEventDataGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             ConditionDataXmlWriteTranslation.WriteToNodeXml(
                 item: item,
@@ -1504,9 +1403,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IGetEventDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.GetEventData");
             node.Add(elem);
@@ -1524,9 +1423,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -1539,9 +1438,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IConditionDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -1560,8 +1459,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IGetEventData item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1586,8 +1485,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGetEventData item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1742,8 +1641,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventDataGetter item,
             XElement node,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            string name = null)
+            GetEventData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GetEventDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1759,8 +1658,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventDataGetter item,
             string path,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            string name = null)
+            GetEventData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1776,8 +1675,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventDataGetter item,
             Stream stream,
             out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask translationMask = null,
-            string name = null)
+            GetEventData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1799,14 +1698,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class GetEventData_Mask<T> : ConditionData_Mask<T>, IMask<T>, IEquatable<GetEventData_Mask<T>>
+    public class GetEventData_Mask<T> :
+        ConditionData_Mask<T>,
+        IMask<T>,
+        IEquatable<GetEventData_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public GetEventData_Mask()
-        {
-        }
-
         public GetEventData_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Unknown2 = initialValue;
             this.EventFunction = initialValue;
@@ -1825,6 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T RunOnType,
             T Reference,
             T Unknown3)
+        : base()
         {
             this.Unknown2 = Unknown2;
             this.EventFunction = EventFunction;
@@ -1834,6 +1735,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Reference = Reference;
             this.Unknown3 = Unknown3;
         }
+
+        #pragma warning disable CS8618
+        protected GetEventData_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1924,14 +1832,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(GetEventData_Mask<bool> printMask = null)
+        public string ToString(GetEventData_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, GetEventData_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, GetEventData_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(GetEventData_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1975,17 +1883,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class GetEventData_ErrorMask : ConditionData_ErrorMask, IErrorMask<GetEventData_ErrorMask>
     {
         #region Members
-        public Exception Unknown2;
-        public Exception EventFunction;
-        public Exception EventMember;
-        public Exception Parameter3;
-        public Exception RunOnType;
-        public Exception Reference;
-        public Exception Unknown3;
+        public Exception? Unknown2;
+        public Exception? EventFunction;
+        public Exception? EventMember;
+        public Exception? Parameter3;
+        public Exception? RunOnType;
+        public Exception? Reference;
+        public Exception? Unknown3;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
             switch (enu)
@@ -2129,8 +2037,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public GetEventData_ErrorMask Combine(GetEventData_ErrorMask rhs)
+        public GetEventData_ErrorMask Combine(GetEventData_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new GetEventData_ErrorMask();
             ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
             ret.EventFunction = this.EventFunction.Combine(rhs.EventFunction);
@@ -2141,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
             return ret;
         }
-        public static GetEventData_ErrorMask Combine(GetEventData_ErrorMask lhs, GetEventData_ErrorMask rhs)
+        public static GetEventData_ErrorMask? Combine(GetEventData_ErrorMask? lhs, GetEventData_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2151,7 +2060,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new GetEventData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new GetEventData_ErrorMask();
         }
         #endregion
@@ -2170,11 +2078,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Ctors
-        public GetEventData_TranslationMask()
-            : base()
-        {
-        }
-
         public GetEventData_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -2189,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Unknown2, null));
@@ -2240,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IGetEventDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -2252,7 +2155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -2265,7 +2168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IConditionDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -2319,9 +2222,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => GetEventDataXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((GetEventDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2335,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2347,9 +2250,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0, 2));
         public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(2, 2));
         public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
-        public IFormIDLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(6, 4))));
+        public IFormIDLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(6, 4))));
         public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(10, 4));
-        public IFormIDLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(14, 4))));
+        public IFormIDLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(14, 4))));
         public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(18, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2368,7 +2271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static GetEventDataBinaryOverlay GetEventDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new GetEventDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 22),

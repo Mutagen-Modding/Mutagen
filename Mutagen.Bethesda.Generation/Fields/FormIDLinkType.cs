@@ -59,8 +59,6 @@ namespace Mutagen.Bethesda.Generation
             _rawFormID.SetObjectGeneration(this.ObjectGen, false);
             this.NotifyingProperty.Subscribe(i => LoquiType.NotifyingProperty.OnNext(i));
             this.NotifyingProperty.Subscribe(i => _rawFormID.NotifyingProperty.OnNext(i));
-            this.ObjectCentralizedProperty.Subscribe(i => LoquiType.ObjectCentralizedProperty.OnNext(i));
-            this.ObjectCentralizedProperty.Subscribe(i => _rawFormID.ObjectCentralizedProperty.OnNext(i));
             this.HasBeenSetProperty.Subscribe(i => LoquiType.HasBeenSetProperty.OnNext(i));
             this.HasBeenSetProperty.Subscribe(i => _rawFormID.HasBeenSetProperty.OnNext(i));
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
@@ -206,7 +204,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override string HasBeenSetAccessor(Accessor accessor = null)
+        public override string HasBeenSetAccessor(bool getter, Accessor accessor = null)
         {
             return $"{(accessor?.DirectAccess ?? $"this.{this.Name}")}.HasBeenSet";
         }

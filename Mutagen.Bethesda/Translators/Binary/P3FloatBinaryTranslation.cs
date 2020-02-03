@@ -17,11 +17,11 @@ namespace Mutagen.Bethesda.Binary
                 FloatBinaryTranslation.Instance.ParseValue(reader));
         }
 
-        public override void WriteValue(MutagenWriter writer, P3Float item)
+        public override void Write(MutagenWriter writer, P3Float item)
         {
-            FloatBinaryTranslation.Instance.WriteValue(writer, item.X);
-            FloatBinaryTranslation.Instance.WriteValue(writer, item.Y);
-            FloatBinaryTranslation.Instance.WriteValue(writer, item.Z);
+            FloatBinaryTranslation.Instance.Write(writer, item.X);
+            FloatBinaryTranslation.Instance.Write(writer, item.Y);
+            FloatBinaryTranslation.Instance.Write(writer, item.Z);
         }
 
         public static P3Float Read(ReadOnlySpan<byte> span)

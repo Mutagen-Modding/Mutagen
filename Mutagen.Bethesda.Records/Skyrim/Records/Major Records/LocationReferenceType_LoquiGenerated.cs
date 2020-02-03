@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -24,15 +25,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -52,40 +53,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Color
-        public bool Color_IsSet
-        {
-            get => _hasBeenSetTracker[(int)LocationReferenceType_FieldIndex.Color];
-            set => _hasBeenSetTracker[(int)LocationReferenceType_FieldIndex.Color] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ILocationReferenceTypeGetter.Color_IsSet => Color_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _Color;
-        public Color Color
+        private Color? _Color;
+        public Color? Color
         {
             get => this._Color;
-            set => Color_Set(value);
+            set => this._Color = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color ILocationReferenceTypeGetter.Color => this.Color;
-        public void Color_Set(
-            Color value,
-            bool markSet = true)
-        {
-            _Color = value;
-            _hasBeenSetTracker[(int)LocationReferenceType_FieldIndex.Color] = markSet;
-        }
-        public void Color_Unset()
-        {
-            this.Color_Set(default(Color), false);
-        }
+        Color? ILocationReferenceTypeGetter.Color => this.Color;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             LocationReferenceTypeMixIn.ToString(
                 item: this,
@@ -98,15 +81,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is ILocationReferenceTypeGetter rhs)) return false;
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(LocationReferenceType obj)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()).Equals(this, obj);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -115,9 +98,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => LocationReferenceTypeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((LocationReferenceTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -130,11 +113,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new LocationReferenceType CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            LocationReferenceType_TranslationMask translationMask = null)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -144,38 +125,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static LocationReferenceType CreateFromXml(
             XElement node,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static LocationReferenceType CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new LocationReferenceType() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new LocationReferenceType();
-            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -184,12 +152,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static LocationReferenceType CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            LocationReferenceType_TranslationMask translationMask = null)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -197,12 +163,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static LocationReferenceType CreateFromXml(
             string path,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -210,13 +174,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static LocationReferenceType CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -224,12 +186,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static LocationReferenceType CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            LocationReferenceType_TranslationMask translationMask = null)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -237,12 +197,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static LocationReferenceType CreateFromXml(
             Stream stream,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -250,13 +208,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static LocationReferenceType CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -265,17 +221,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((LocationReferenceType_FieldIndex)index)
-            {
-                case LocationReferenceType_FieldIndex.Color:
-                    return _hasBeenSetTracker[index];
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LocationReferenceType_Registration.TRIGGERING_RECORD_TYPE;
@@ -298,7 +243,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -321,10 +266,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static LocationReferenceType CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new LocationReferenceType();
-            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -342,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)this).CommonSetterInstance()).Clear(this);
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new LocationReferenceType GetNew()
@@ -359,11 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>
     {
-        new Color Color { get; set; }
-        new bool Color_IsSet { get; set; }
-        void Color_Set(Color value, bool hasBeenSet = true);
-        void Color_Unset();
-
+        new Color? Color { get; set; }
     }
 
     public partial interface ILocationReferenceTypeInternal :
@@ -379,11 +320,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        #region Color
-        Color Color { get; }
-        bool Color_IsSet { get; }
-
-        #endregion
+        Color? Color { get; }
 
     }
 
@@ -394,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this ILocationReferenceTypeInternal item)
         {
-            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static LocationReferenceType_Mask<bool> GetEqualsMask(
@@ -402,7 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
             ILocationReferenceTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).GetEqualsMask(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -410,10 +347,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this ILocationReferenceTypeGetter item,
-            string name = null,
-            LocationReferenceType_Mask<bool> printMask = null)
+            string? name = null,
+            LocationReferenceType_Mask<bool>? printMask = null)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).ToString(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -422,10 +359,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this ILocationReferenceTypeGetter item,
             FileGeneration fg,
-            string name = null,
-            LocationReferenceType_Mask<bool> printMask = null)
+            string? name = null,
+            LocationReferenceType_Mask<bool>? printMask = null)
         {
-            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).ToString(
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -436,15 +373,15 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeGetter item,
             LocationReferenceType_Mask<bool?> checkMask)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).HasBeenSet(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static LocationReferenceType_Mask<bool> GetHasBeenSetMask(this ILocationReferenceTypeGetter item)
         {
-            var ret = new LocationReferenceType_Mask<bool>();
-            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new LocationReferenceType_Mask<bool>(false);
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -454,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeGetter item,
             ILocationReferenceTypeGetter rhs)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).Equals(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -462,23 +399,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ILocationReferenceTypeInternal lhs,
             ILocationReferenceTypeGetter rhs,
-            LocationReferenceType_TranslationMask copyMask)
-        {
-            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ILocationReferenceTypeInternal lhs,
-            ILocationReferenceTypeGetter rhs,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask copyMask = null)
+            LocationReferenceType_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -489,10 +414,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ILocationReferenceTypeInternal lhs,
             ILocationReferenceTypeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -501,9 +426,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static LocationReferenceType DeepCopy(
             this ILocationReferenceTypeGetter item,
-            LocationReferenceType_TranslationMask copyMask = null)
+            LocationReferenceType_TranslationMask? copyMask = null)
         {
-            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -511,9 +436,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static LocationReferenceType DeepCopy(
             this ILocationReferenceTypeGetter item,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask copyMask = null)
+            LocationReferenceType_TranslationMask? copyMask = null)
         {
-            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -521,10 +446,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static LocationReferenceType DeepCopy(
             this ILocationReferenceTypeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -535,12 +460,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            LocationReferenceType_TranslationMask translationMask = null)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -551,29 +474,25 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternal item,
             XElement node,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -582,13 +501,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            LocationReferenceType_TranslationMask translationMask = null)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -597,13 +514,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternal item,
             string path,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -612,14 +527,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -628,13 +541,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            LocationReferenceType_TranslationMask translationMask = null)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -643,13 +554,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternal item,
             Stream stream,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -658,14 +567,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            LocationReferenceType_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -691,9 +598,9 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -749,11 +656,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(ILocationReferenceTypeGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ILocationReferenceType);
 
-        public static readonly Type InternalSetterType = typeof(ILocationReferenceTypeInternal);
+        public static readonly Type? InternalSetterType = typeof(ILocationReferenceTypeInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.LocationReferenceType";
 
@@ -763,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -877,14 +784,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -908,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationReferenceTypeInternal item)
         {
             ClearPartial();
-            item.Color_Unset();
+            item.Color = default;
             base.Clear(item);
         }
         
@@ -927,8 +834,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -946,9 +853,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             ILocationReferenceTypeInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -996,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1024,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<ILocationReferenceTypeInternal>(
                 record: item,
@@ -1048,8 +954,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocationReferenceType_Mask<bool>();
-            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new LocationReferenceType_Mask<bool>(false);
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1064,14 +970,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Color = item.Color_IsSet == rhs.Color_IsSet && item.Color.ColorOnlyEquals(rhs.Color);
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
             ILocationReferenceTypeGetter item,
-            string name = null,
-            LocationReferenceType_Mask<bool> printMask = null)
+            string? name = null,
+            LocationReferenceType_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1085,8 +991,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             ILocationReferenceTypeGetter item,
             FileGeneration fg,
-            string name = null,
-            LocationReferenceType_Mask<bool> printMask = null)
+            string? name = null,
+            LocationReferenceType_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1110,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             ILocationReferenceTypeGetter item,
             FileGeneration fg,
-            LocationReferenceType_Mask<bool> printMask = null)
+            LocationReferenceType_Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1126,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeGetter item,
             LocationReferenceType_Mask<bool?> checkMask)
         {
-            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_IsSet) return false;
+            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1136,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeGetter item,
             LocationReferenceType_Mask<bool> mask)
         {
-            mask.Color = item.Color_IsSet;
+            mask.Color = (item.Color != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1184,44 +1090,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocationReferenceTypeGetter lhs,
-            ILocationReferenceTypeGetter rhs)
+            ILocationReferenceTypeGetter? lhs,
+            ILocationReferenceTypeGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Color_IsSet != rhs.Color_IsSet) return false;
-            if (lhs.Color_IsSet)
-            {
-                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            }
+            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             return true;
         }
         
         public override bool Equals(
-            ISkyrimMajorRecordGetter lhs,
-            ISkyrimMajorRecordGetter rhs)
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ILocationReferenceTypeGetter)lhs,
+                lhs: (ILocationReferenceTypeGetter?)lhs,
                 rhs: rhs as ILocationReferenceTypeGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ILocationReferenceTypeGetter)lhs,
+                lhs: (ILocationReferenceTypeGetter?)lhs,
                 rhs: rhs as ILocationReferenceTypeGetter);
         }
         
         public virtual int GetHashCode(ILocationReferenceTypeGetter item)
         {
             int ret = 0;
-            if (item.Color_IsSet)
+            if (item.Color.TryGet(out var Coloritem))
             {
-                ret = HashHelper.GetHashCode(item.Color).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Coloritem).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1255,9 +1157,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(LocationReferenceType obj, LocationReferenceType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(LocationReferenceType obj, LocationReferenceType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new LocationReferenceType(getNextFormKey());
             ret.DeepCopyFieldsFrom((LocationReferenceType)item);
@@ -1277,8 +1179,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             ILocationReferenceTypeInternal item,
             ILocationReferenceTypeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1290,8 +1192,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             ILocationReferenceType item,
             ILocationReferenceTypeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1300,35 +1202,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
-                errorMask?.PushIndex((int)LocationReferenceType_FieldIndex.Color);
-                try
-                {
-                    if (rhs.Color_IsSet)
-                    {
-                        item.Color = rhs.Color;
-                    }
-                    else
-                    {
-                        item.Color_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Color = rhs.Color;
             }
         }
         
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILocationReferenceTypeInternal)item,
@@ -1340,8 +1222,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILocationReferenceType)item,
@@ -1353,8 +1235,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILocationReferenceTypeInternal)item,
@@ -1366,8 +1248,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ILocationReferenceType)item,
@@ -1380,9 +1262,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public LocationReferenceType DeepCopy(
             ILocationReferenceTypeGetter item,
-            LocationReferenceType_TranslationMask copyMask = null)
+            LocationReferenceType_TranslationMask? copyMask = null)
         {
-            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).GetNew();
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1392,9 +1274,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public LocationReferenceType DeepCopy(
             ILocationReferenceTypeGetter item,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask copyMask = null)
+            LocationReferenceType_TranslationMask? copyMask = null)
         {
-            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).GetNew();
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1404,10 +1286,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public LocationReferenceType DeepCopy(
             ILocationReferenceTypeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()).GetNew();
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1456,21 +1338,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             ILocationReferenceTypeGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Color_IsSet
+            if ((item.Color != null)
                 && (translationMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Color),
-                    item: item.Color,
+                    item: item.Color.Value,
                     fieldIndex: (int)LocationReferenceType_FieldIndex.Color,
                     errorMask: errorMask);
             }
@@ -1479,9 +1361,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             ILocationReferenceTypeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.LocationReferenceType");
             node.Add(elem);
@@ -1499,9 +1381,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1514,9 +1396,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1529,9 +1411,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1550,8 +1432,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             ILocationReferenceTypeInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1576,8 +1458,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceTypeInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1622,8 +1504,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeGetter item,
             XElement node,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            string name = null)
+            LocationReferenceType_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((LocationReferenceTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1639,8 +1521,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeGetter item,
             string path,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            string name = null)
+            LocationReferenceType_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1656,8 +1538,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeGetter item,
             Stream stream,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_TranslationMask translationMask = null,
-            string name = null)
+            LocationReferenceType_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1679,14 +1561,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class LocationReferenceType_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<LocationReferenceType_Mask<T>>
+    public class LocationReferenceType_Mask<T> :
+        SkyrimMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<LocationReferenceType_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public LocationReferenceType_Mask()
-        {
-        }
-
         public LocationReferenceType_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Color = initialValue;
         }
@@ -1700,16 +1583,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T FormVersion,
             T Version2,
             T Color)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+            FormVersion: FormVersion,
+            Version2: Version2)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
-            this.FormVersion = FormVersion;
-            this.Version2 = Version2;
             this.Color = Color;
         }
+
+        #pragma warning disable CS8618
+        protected LocationReferenceType_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1770,14 +1661,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(LocationReferenceType_Mask<bool> printMask = null)
+        public string ToString(LocationReferenceType_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, LocationReferenceType_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, LocationReferenceType_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(LocationReferenceType_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1797,11 +1688,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class LocationReferenceType_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<LocationReferenceType_ErrorMask>
     {
         #region Members
-        public Exception Color;
+        public Exception? Color;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             LocationReferenceType_FieldIndex enu = (LocationReferenceType_FieldIndex)index;
             switch (enu)
@@ -1885,13 +1776,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public LocationReferenceType_ErrorMask Combine(LocationReferenceType_ErrorMask rhs)
+        public LocationReferenceType_ErrorMask Combine(LocationReferenceType_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new LocationReferenceType_ErrorMask();
             ret.Color = this.Color.Combine(rhs.Color);
             return ret;
         }
-        public static LocationReferenceType_ErrorMask Combine(LocationReferenceType_ErrorMask lhs, LocationReferenceType_ErrorMask rhs)
+        public static LocationReferenceType_ErrorMask? Combine(LocationReferenceType_ErrorMask? lhs, LocationReferenceType_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1901,7 +1793,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new LocationReferenceType_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new LocationReferenceType_ErrorMask();
         }
         #endregion
@@ -1914,11 +1805,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Ctors
-        public LocationReferenceType_TranslationMask()
-            : base()
-        {
-        }
-
         public LocationReferenceType_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -1927,7 +1813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Color, null));
@@ -1948,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_RecordTypes(
             ILocationReferenceTypeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -1956,22 +1842,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Color_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Color,
-                    header: recordTypeConverter.ConvertToCustom(LocationReferenceType_Registration.CNAM_HEADER),
-                    nullable: false,
-                    extraByte: true);
-            }
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Color,
+                header: recordTypeConverter.ConvertToCustom(LocationReferenceType_Registration.CNAM_HEADER),
+                extraByte: true);
         }
 
         public void Write(
             MutagenWriter writer,
             ILocationReferenceTypeGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1994,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -2007,7 +1889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -2020,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -2073,9 +1955,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => LocationReferenceTypeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((LocationReferenceTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2089,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2100,8 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Color
         private int? _ColorLocation;
-        public bool Color_IsSet => _ColorLocation.HasValue;
-        public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.Meta).ReadColor() : default;
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2120,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new LocationReferenceTypeBinaryOverlay(
@@ -2148,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

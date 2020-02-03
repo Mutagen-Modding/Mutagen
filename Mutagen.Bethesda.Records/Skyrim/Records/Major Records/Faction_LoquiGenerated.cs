@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -51,33 +52,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        public bool Name_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Faction_FieldIndex.Name];
-            set => _hasBeenSetTracker[(int)Faction_FieldIndex.Name] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFactionGetter.Name_IsSet => Name_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Name;
-        public String Name
+        private String? _Name;
+        public String? Name
         {
             get => this._Name;
-            set => Name_Set(value);
+            set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IFactionGetter.Name => this.Name;
-        public void Name_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Name = value;
-            _hasBeenSetTracker[(int)Faction_FieldIndex.Name] = markSet;
-        }
-        public void Name_Unset()
-        {
-            this.Name_Set(default(String), false);
-        }
+        String? IFactionGetter.Name => this.Name;
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,33 +75,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Flags
-        public bool Flags_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Faction_FieldIndex.Flags];
-            set => _hasBeenSetTracker[(int)Faction_FieldIndex.Flags] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFactionGetter.Flags_IsSet => Flags_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Faction.FactionFlag _Flags;
-        public Faction.FactionFlag Flags
+        private Faction.FactionFlag? _Flags;
+        public Faction.FactionFlag? Flags
         {
             get => this._Flags;
-            set => Flags_Set(value);
+            set => this._Flags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Faction.FactionFlag IFactionGetter.Flags => this.Flags;
-        public void Flags_Set(
-            Faction.FactionFlag value,
-            bool markSet = true)
-        {
-            _Flags = value;
-            _hasBeenSetTracker[(int)Faction_FieldIndex.Flags] = markSet;
-        }
-        public void Flags_Unset()
-        {
-            this.Flags_Set(default(Faction.FactionFlag), false);
-        }
+        Faction.FactionFlag? IFactionGetter.Flags => this.Flags;
         #endregion
         #region PrisonMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -324,62 +289,26 @@ namespace Mutagen.Bethesda.Skyrim
         IFormIDSetLinkGetter<IPlacedObjectGetter> IFactionGetter.VendorChest => this.VendorChest;
         #endregion
         #region VendorValues
-        public bool VendorValues_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Faction_FieldIndex.VendorValues];
-            set => _hasBeenSetTracker[(int)Faction_FieldIndex.VendorValues] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFactionGetter.VendorValues_IsSet => VendorValues_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private VendorValues _VendorValues;
-        public VendorValues VendorValues
+        private VendorValues? _VendorValues;
+        public VendorValues? VendorValues
         {
             get => _VendorValues;
-            set => VendorValues_Set(value);
-        }
-        public void VendorValues_Set(
-            VendorValues value,
-            bool hasBeenSet = true)
-        {
-            _VendorValues = value;
-            _hasBeenSetTracker[(int)Faction_FieldIndex.VendorValues] = hasBeenSet;
-        }
-        public void VendorValues_Unset()
-        {
-            this.VendorValues_Set(default(VendorValues), false);
+            set => _VendorValues = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IVendorValuesGetter IFactionGetter.VendorValues => this.VendorValues;
+        IVendorValuesGetter? IFactionGetter.VendorValues => this.VendorValues;
         #endregion
         #region VendorLocation
-        public bool VendorLocation_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Faction_FieldIndex.VendorLocation];
-            set => _hasBeenSetTracker[(int)Faction_FieldIndex.VendorLocation] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFactionGetter.VendorLocation_IsSet => VendorLocation_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private VendorLocation _VendorLocation;
-        public VendorLocation VendorLocation
+        private VendorLocation? _VendorLocation;
+        public VendorLocation? VendorLocation
         {
             get => _VendorLocation;
-            set => VendorLocation_Set(value);
-        }
-        public void VendorLocation_Set(
-            VendorLocation value,
-            bool hasBeenSet = true)
-        {
-            _VendorLocation = value;
-            _hasBeenSetTracker[(int)Faction_FieldIndex.VendorLocation] = hasBeenSet;
-        }
-        public void VendorLocation_Unset()
-        {
-            this.VendorLocation_Set(default(VendorLocation), false);
+            set => _VendorLocation = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IVendorLocationGetter IFactionGetter.VendorLocation => this.VendorLocation;
+        IVendorLocationGetter? IFactionGetter.VendorLocation => this.VendorLocation;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -394,14 +323,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region CRVADataTypeState
-        public Faction.CRVADataType CRVADataTypeState { get; set; }
+        public Faction.CRVADataType CRVADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             FactionMixIn.ToString(
                 item: this,
@@ -414,15 +343,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IFactionGetter rhs)) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Faction obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()).Equals(this, obj);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -431,9 +360,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -446,11 +375,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new Faction CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Faction_TranslationMask translationMask = null)
+            Faction_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -460,38 +387,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction CreateFromXml(
             XElement node,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Faction_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Faction CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Faction() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Faction();
-            ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -500,12 +414,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Faction_TranslationMask translationMask = null)
+            Faction_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -513,12 +425,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction CreateFromXml(
             string path,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Faction_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -526,13 +436,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Faction_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -540,12 +448,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Faction_TranslationMask translationMask = null)
+            Faction_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -553,12 +459,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction CreateFromXml(
             Stream stream,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Faction_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -566,13 +470,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Faction_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -581,46 +483,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Faction_FieldIndex)index)
-            {
-                case Faction_FieldIndex.Name:
-                case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.PrisonMarker:
-                case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.EvidenceChest:
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                case Faction_FieldIndex.CrimeGroup:
-                case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.VendorList:
-                case Faction_FieldIndex.VendorChest:
-                case Faction_FieldIndex.VendorValues:
-                case Faction_FieldIndex.VendorLocation:
-                    return _hasBeenSetTracker[index];
-                case Faction_FieldIndex.Relations:
-                    return Relations.HasBeenSet;
-                case Faction_FieldIndex.Ranks:
-                    return Ranks.HasBeenSet;
-                case Faction_FieldIndex.Conditions:
-                    return Conditions.HasBeenSet;
-                case Faction_FieldIndex.ArrestCrimeValue:
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                case Faction_FieldIndex.MurderCrimeValue:
-                case Faction_FieldIndex.AssaultCrimeValue:
-                case Faction_FieldIndex.TrespassCrimeValue:
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                case Faction_FieldIndex.UnknownCrimeValue:
-                case Faction_FieldIndex.StealMultCrimeValue:
-                case Faction_FieldIndex.EscapeCrimeValue:
-                case Faction_FieldIndex.WerewolfCrimeValue:
-                case Faction_FieldIndex.CRVADataTypeState:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Faction_Registration.TRIGGERING_RECORD_TYPE;
@@ -652,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -675,10 +537,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static Faction CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Faction();
-            ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -696,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((FactionSetterCommon)((IFactionGetter)this).CommonSetterInstance()).Clear(this);
+            ((FactionSetterCommon)((IFactionGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Faction GetNew()
@@ -713,17 +575,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IFactionInternal>
     {
-        new String Name { get; set; }
-        new bool Name_IsSet { get; set; }
-        void Name_Set(String value, bool hasBeenSet = true);
-        void Name_Unset();
-
+        new String? Name { get; set; }
         new ISetList<Relation> Relations { get; }
-        new Faction.FactionFlag Flags { get; set; }
-        new bool Flags_IsSet { get; set; }
-        void Flags_Set(Faction.FactionFlag value, bool hasBeenSet = true);
-        void Flags_Unset();
-
+        new Faction.FactionFlag? Flags { get; set; }
         new IFormIDSetLink<PlacedObject> PrisonMarker { get; }
         new IFormIDSetLink<PlacedObject> FollowerWaitMarker { get; }
         new IFormIDSetLink<PlacedObject> EvidenceChest { get; }
@@ -731,41 +585,22 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormIDSetLink<FormList> CrimeGroup { get; }
         new IFormIDSetLink<Outfit> JailOutfit { get; }
         new Boolean ArrestCrimeValue { get; set; }
-
         new Boolean AttackOnSightCrimeValue { get; set; }
-
         new UInt16 MurderCrimeValue { get; set; }
-
         new UInt16 AssaultCrimeValue { get; set; }
-
         new UInt16 TrespassCrimeValue { get; set; }
-
         new UInt16 PickpocketCrimeValue { get; set; }
-
         new UInt16 UnknownCrimeValue { get; set; }
-
         new Single StealMultCrimeValue { get; set; }
-
         new UInt16 EscapeCrimeValue { get; set; }
-
         new UInt16 WerewolfCrimeValue { get; set; }
-
         new ISetList<Rank> Ranks { get; }
         new IFormIDSetLink<FormList> VendorList { get; }
         new IFormIDSetLink<PlacedObject> VendorChest { get; }
-        new VendorValues VendorValues { get; set; }
-        new bool VendorValues_IsSet { get; set; }
-        void VendorValues_Set(VendorValues value, bool hasBeenSet = true);
-        void VendorValues_Unset();
-
-        new VendorLocation VendorLocation { get; set; }
-        new bool VendorLocation_IsSet { get; set; }
-        void VendorLocation_Set(VendorLocation value, bool hasBeenSet = true);
-        void VendorLocation_Unset();
-
+        new VendorValues? VendorValues { get; set; }
+        new VendorLocation? VendorLocation { get; set; }
         new ISetList<Condition> Conditions { get; }
         new Faction.CRVADataType CRVADataTypeState { get; set; }
-
     }
 
     public partial interface IFactionInternal :
@@ -782,103 +617,32 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        #region Name
-        String Name { get; }
-        bool Name_IsSet { get; }
-
-        #endregion
-        #region Relations
+        String? Name { get; }
         IReadOnlySetList<IRelationGetter> Relations { get; }
-        #endregion
-        #region Flags
-        Faction.FactionFlag Flags { get; }
-        bool Flags_IsSet { get; }
-
-        #endregion
-        #region PrisonMarker
+        Faction.FactionFlag? Flags { get; }
         IFormIDSetLinkGetter<IPlacedObjectGetter> PrisonMarker { get; }
-        #endregion
-        #region FollowerWaitMarker
         IFormIDSetLinkGetter<IPlacedObjectGetter> FollowerWaitMarker { get; }
-        #endregion
-        #region EvidenceChest
         IFormIDSetLinkGetter<IPlacedObjectGetter> EvidenceChest { get; }
-        #endregion
-        #region PlayerBelongingsChest
         IFormIDSetLinkGetter<IPlacedObjectGetter> PlayerBelongingsChest { get; }
-        #endregion
-        #region CrimeGroup
         IFormIDSetLinkGetter<IFormListGetter> CrimeGroup { get; }
-        #endregion
-        #region JailOutfit
         IFormIDSetLinkGetter<IOutfitGetter> JailOutfit { get; }
-        #endregion
-        #region ArrestCrimeValue
         Boolean ArrestCrimeValue { get; }
-
-        #endregion
-        #region AttackOnSightCrimeValue
         Boolean AttackOnSightCrimeValue { get; }
-
-        #endregion
-        #region MurderCrimeValue
         UInt16 MurderCrimeValue { get; }
-
-        #endregion
-        #region AssaultCrimeValue
         UInt16 AssaultCrimeValue { get; }
-
-        #endregion
-        #region TrespassCrimeValue
         UInt16 TrespassCrimeValue { get; }
-
-        #endregion
-        #region PickpocketCrimeValue
         UInt16 PickpocketCrimeValue { get; }
-
-        #endregion
-        #region UnknownCrimeValue
         UInt16 UnknownCrimeValue { get; }
-
-        #endregion
-        #region StealMultCrimeValue
         Single StealMultCrimeValue { get; }
-
-        #endregion
-        #region EscapeCrimeValue
         UInt16 EscapeCrimeValue { get; }
-
-        #endregion
-        #region WerewolfCrimeValue
         UInt16 WerewolfCrimeValue { get; }
-
-        #endregion
-        #region Ranks
         IReadOnlySetList<IRankGetter> Ranks { get; }
-        #endregion
-        #region VendorList
         IFormIDSetLinkGetter<IFormListGetter> VendorList { get; }
-        #endregion
-        #region VendorChest
         IFormIDSetLinkGetter<IPlacedObjectGetter> VendorChest { get; }
-        #endregion
-        #region VendorValues
-        IVendorValuesGetter VendorValues { get; }
-        bool VendorValues_IsSet { get; }
-
-        #endregion
-        #region VendorLocation
-        IVendorLocationGetter VendorLocation { get; }
-        bool VendorLocation_IsSet { get; }
-
-        #endregion
-        #region Conditions
+        IVendorValuesGetter? VendorValues { get; }
+        IVendorLocationGetter? VendorLocation { get; }
         IReadOnlySetList<IConditionGetter> Conditions { get; }
-        #endregion
-        #region CRVADataTypeState
         Faction.CRVADataType CRVADataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -889,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IFactionInternal item)
         {
-            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Faction_Mask<bool> GetEqualsMask(
@@ -897,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             IFactionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()).GetEqualsMask(
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -905,10 +669,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IFactionGetter item,
-            string name = null,
-            Faction_Mask<bool> printMask = null)
+            string? name = null,
+            Faction_Mask<bool>? printMask = null)
         {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()).ToString(
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -917,10 +681,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IFactionGetter item,
             FileGeneration fg,
-            string name = null,
-            Faction_Mask<bool> printMask = null)
+            string? name = null,
+            Faction_Mask<bool>? printMask = null)
         {
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()).ToString(
+            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -931,15 +695,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             Faction_Mask<bool?> checkMask)
         {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()).HasBeenSet(
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Faction_Mask<bool> GetHasBeenSetMask(this IFactionGetter item)
         {
-            var ret = new Faction_Mask<bool>();
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Faction_Mask<bool>(false);
+            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -949,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             IFactionGetter rhs)
         {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()).Equals(
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -957,23 +721,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IFactionInternal lhs,
             IFactionGetter rhs,
-            Faction_TranslationMask copyMask)
-        {
-            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IFactionInternal lhs,
-            IFactionGetter rhs,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask copyMask = null)
+            Faction_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -984,10 +736,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IFactionInternal lhs,
             IFactionGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -996,9 +748,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction DeepCopy(
             this IFactionGetter item,
-            Faction_TranslationMask copyMask = null)
+            Faction_TranslationMask? copyMask = null)
         {
-            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -1006,9 +758,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction DeepCopy(
             this IFactionGetter item,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask copyMask = null)
+            Faction_TranslationMask? copyMask = null)
         {
-            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -1016,10 +768,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction DeepCopy(
             this IFactionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1030,12 +782,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Faction_TranslationMask translationMask = null)
+            Faction_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -1046,29 +796,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             XElement node,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Faction_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IFactionInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1077,13 +823,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Faction_TranslationMask translationMask = null)
+            Faction_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1092,13 +836,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             string path,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Faction_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1107,14 +849,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Faction_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1123,13 +863,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Faction_TranslationMask translationMask = null)
+            Faction_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1138,13 +876,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             Stream stream,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Faction_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1153,14 +889,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Faction_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Faction_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1186,9 +920,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -1269,11 +1003,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IFactionGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IFaction);
 
-        public static readonly Type InternalSetterType = typeof(IFactionInternal);
+        public static readonly Type? InternalSetterType = typeof(IFactionInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Faction";
 
@@ -1283,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1692,14 +1426,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1723,32 +1457,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFactionInternal item)
         {
             ClearPartial();
-            item.Name_Unset();
+            item.Name = default;
             item.Relations.Unset();
-            item.Flags_Unset();
+            item.Flags = default;
             item.PrisonMarker.Unset();
             item.FollowerWaitMarker.Unset();
             item.EvidenceChest.Unset();
             item.PlayerBelongingsChest.Unset();
             item.CrimeGroup.Unset();
             item.JailOutfit.Unset();
-            item.ArrestCrimeValue = default(Boolean);
-            item.AttackOnSightCrimeValue = default(Boolean);
-            item.MurderCrimeValue = default(UInt16);
-            item.AssaultCrimeValue = default(UInt16);
-            item.TrespassCrimeValue = default(UInt16);
-            item.PickpocketCrimeValue = default(UInt16);
-            item.UnknownCrimeValue = default(UInt16);
-            item.StealMultCrimeValue = default(Single);
-            item.EscapeCrimeValue = default(UInt16);
-            item.WerewolfCrimeValue = default(UInt16);
+            item.ArrestCrimeValue = default;
+            item.AttackOnSightCrimeValue = default;
+            item.MurderCrimeValue = default;
+            item.AssaultCrimeValue = default;
+            item.TrespassCrimeValue = default;
+            item.PickpocketCrimeValue = default;
+            item.UnknownCrimeValue = default;
+            item.StealMultCrimeValue = default;
+            item.EscapeCrimeValue = default;
+            item.WerewolfCrimeValue = default;
             item.Ranks.Unset();
             item.VendorList.Unset();
             item.VendorChest.Unset();
-            item.VendorValues_Unset();
-            item.VendorLocation_Unset();
+            item.VendorValues = null;
+            item.VendorLocation = null;
             item.Conditions.Unset();
-            item.CRVADataTypeState = default(Faction.CRVADataType);
+            item.CRVADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1767,8 +1501,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1789,9 +1523,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             IFactionInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1841,7 +1574,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2035,7 +1768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IFactionInternal>(
                 record: item,
@@ -2059,8 +1792,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Faction_Mask<bool>();
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Faction_Mask<bool>(false);
+            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2075,12 +1808,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Relations = item.Relations.CollectionEqualsHelper(
                 rhs.Relations,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.PrisonMarker = object.Equals(item.PrisonMarker, rhs.PrisonMarker);
             ret.FollowerWaitMarker = object.Equals(item.FollowerWaitMarker, rhs.FollowerWaitMarker);
             ret.EvidenceChest = object.Equals(item.EvidenceChest, rhs.EvidenceChest);
@@ -2104,15 +1837,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.VendorList = object.Equals(item.VendorList, rhs.VendorList);
             ret.VendorChest = object.Equals(item.VendorChest, rhs.VendorChest);
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
-                item.VendorValues_IsSet,
-                rhs.VendorValues_IsSet,
                 item.VendorValues,
                 rhs.VendorValues,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.VendorLocation = EqualsMaskHelper.EqualsHelper(
-                item.VendorLocation_IsSet,
-                rhs.VendorLocation_IsSet,
                 item.VendorLocation,
                 rhs.VendorLocation,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
@@ -2127,8 +1856,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IFactionGetter item,
-            string name = null,
-            Faction_Mask<bool> printMask = null)
+            string? name = null,
+            Faction_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2142,8 +1871,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IFactionGetter item,
             FileGeneration fg,
-            string name = null,
-            Faction_Mask<bool> printMask = null)
+            string? name = null,
+            Faction_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2167,7 +1896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IFactionGetter item,
             FileGeneration fg,
-            Faction_Mask<bool> printMask = null)
+            Faction_Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -2325,23 +2054,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionGetter item,
             Faction_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != item.Relations.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.PrisonMarker.HasValue && checkMask.PrisonMarker.Value != item.PrisonMarker.HasBeenSet) return false;
             if (checkMask.FollowerWaitMarker.HasValue && checkMask.FollowerWaitMarker.Value != item.FollowerWaitMarker.HasBeenSet) return false;
             if (checkMask.EvidenceChest.HasValue && checkMask.EvidenceChest.Value != item.EvidenceChest.HasBeenSet) return false;
             if (checkMask.PlayerBelongingsChest.HasValue && checkMask.PlayerBelongingsChest.Value != item.PlayerBelongingsChest.HasBeenSet) return false;
             if (checkMask.CrimeGroup.HasValue && checkMask.CrimeGroup.Value != item.CrimeGroup.HasBeenSet) return false;
             if (checkMask.JailOutfit.HasValue && checkMask.JailOutfit.Value != item.JailOutfit.HasBeenSet) return false;
-            if (checkMask.Ranks.Overall.HasValue && checkMask.Ranks.Overall.Value != item.Ranks.HasBeenSet) return false;
+            if (checkMask.Ranks?.Overall.HasValue ?? false && checkMask.Ranks!.Overall.Value != item.Ranks.HasBeenSet) return false;
             if (checkMask.VendorList.HasValue && checkMask.VendorList.Value != item.VendorList.HasBeenSet) return false;
             if (checkMask.VendorChest.HasValue && checkMask.VendorChest.Value != item.VendorChest.HasBeenSet) return false;
-            if (checkMask.VendorValues.Overall.HasValue && checkMask.VendorValues.Overall.Value != item.VendorValues_IsSet) return false;
-            if (checkMask.VendorValues.Specific != null && (item.VendorValues == null || !item.VendorValues.HasBeenSet(checkMask.VendorValues.Specific))) return false;
-            if (checkMask.VendorLocation.Overall.HasValue && checkMask.VendorLocation.Overall.Value != item.VendorLocation_IsSet) return false;
-            if (checkMask.VendorLocation.Specific != null && (item.VendorLocation == null || !item.VendorLocation.HasBeenSet(checkMask.VendorLocation.Specific))) return false;
-            if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
+            if (checkMask.VendorValues?.Overall.HasValue ?? false && checkMask.VendorValues.Overall.Value != (item.VendorValues != null)) return false;
+            if (checkMask.VendorValues?.Specific != null && (item.VendorValues == null || !item.VendorValues.HasBeenSet(checkMask.VendorValues.Specific))) return false;
+            if (checkMask.VendorLocation?.Overall.HasValue ?? false && checkMask.VendorLocation.Overall.Value != (item.VendorLocation != null)) return false;
+            if (checkMask.VendorLocation?.Specific != null && (item.VendorLocation == null || !item.VendorLocation.HasBeenSet(checkMask.VendorLocation.Specific))) return false;
+            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != item.Conditions.HasBeenSet) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2351,9 +2080,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionGetter item,
             Faction_Mask<bool> mask)
         {
-            mask.Name = item.Name_IsSet;
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Flags = item.Flags_IsSet;
+            mask.Name = (item.Name != null);
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation_Mask<bool>?>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Flags = (item.Flags != null);
             mask.PrisonMarker = item.PrisonMarker.HasBeenSet;
             mask.FollowerWaitMarker = item.FollowerWaitMarker.HasBeenSet;
             mask.EvidenceChest = item.EvidenceChest.HasBeenSet;
@@ -2370,12 +2099,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.StealMultCrimeValue = true;
             mask.EscapeCrimeValue = true;
             mask.WerewolfCrimeValue = true;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank_Mask<bool>>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank_Mask<bool>?>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.VendorList = item.VendorList.HasBeenSet;
             mask.VendorChest = item.VendorChest.HasBeenSet;
-            mask.VendorValues = new MaskItem<bool, VendorValues_Mask<bool>>(item.VendorValues_IsSet, item.VendorValues.GetHasBeenSetMask());
-            mask.VendorLocation = new MaskItem<bool, VendorLocation_Mask<bool>>(item.VendorLocation_IsSet, item.VendorLocation.GetHasBeenSetMask());
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var itemVendorValues = item.VendorValues;
+            mask.VendorValues = new MaskItem<bool, VendorValues_Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
+            var itemVendorLocation = item.VendorLocation;
+            mask.VendorLocation = new MaskItem<bool, VendorLocation_Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.CRVADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2424,57 +2155,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFactionGetter lhs,
-            IFactionGetter rhs)
+            IFactionGetter? lhs,
+            IFactionGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (lhs.Relations.HasBeenSet)
-            {
-                if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.PrisonMarker.HasBeenSet != rhs.PrisonMarker.HasBeenSet) return false;
-            if (lhs.PrisonMarker.HasBeenSet)
-            {
-                if (!lhs.PrisonMarker.Equals(rhs.PrisonMarker)) return false;
-            }
-            if (lhs.FollowerWaitMarker.HasBeenSet != rhs.FollowerWaitMarker.HasBeenSet) return false;
-            if (lhs.FollowerWaitMarker.HasBeenSet)
-            {
-                if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
-            }
-            if (lhs.EvidenceChest.HasBeenSet != rhs.EvidenceChest.HasBeenSet) return false;
-            if (lhs.EvidenceChest.HasBeenSet)
-            {
-                if (!lhs.EvidenceChest.Equals(rhs.EvidenceChest)) return false;
-            }
-            if (lhs.PlayerBelongingsChest.HasBeenSet != rhs.PlayerBelongingsChest.HasBeenSet) return false;
-            if (lhs.PlayerBelongingsChest.HasBeenSet)
-            {
-                if (!lhs.PlayerBelongingsChest.Equals(rhs.PlayerBelongingsChest)) return false;
-            }
-            if (lhs.CrimeGroup.HasBeenSet != rhs.CrimeGroup.HasBeenSet) return false;
-            if (lhs.CrimeGroup.HasBeenSet)
-            {
-                if (!lhs.CrimeGroup.Equals(rhs.CrimeGroup)) return false;
-            }
-            if (lhs.JailOutfit.HasBeenSet != rhs.JailOutfit.HasBeenSet) return false;
-            if (lhs.JailOutfit.HasBeenSet)
-            {
-                if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
-            }
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.PrisonMarker.Equals(rhs.PrisonMarker)) return false;
+            if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
+            if (!lhs.EvidenceChest.Equals(rhs.EvidenceChest)) return false;
+            if (!lhs.PlayerBelongingsChest.Equals(rhs.PlayerBelongingsChest)) return false;
+            if (!lhs.CrimeGroup.Equals(rhs.CrimeGroup)) return false;
+            if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
             if (lhs.ArrestCrimeValue != rhs.ArrestCrimeValue) return false;
             if (lhs.AttackOnSightCrimeValue != rhs.AttackOnSightCrimeValue) return false;
             if (lhs.MurderCrimeValue != rhs.MurderCrimeValue) return false;
@@ -2485,96 +2180,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.StealMultCrimeValue.EqualsWithin(rhs.StealMultCrimeValue)) return false;
             if (lhs.EscapeCrimeValue != rhs.EscapeCrimeValue) return false;
             if (lhs.WerewolfCrimeValue != rhs.WerewolfCrimeValue) return false;
-            if (lhs.Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
-            if (lhs.Ranks.HasBeenSet)
-            {
-                if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
-            }
-            if (lhs.VendorList.HasBeenSet != rhs.VendorList.HasBeenSet) return false;
-            if (lhs.VendorList.HasBeenSet)
-            {
-                if (!lhs.VendorList.Equals(rhs.VendorList)) return false;
-            }
-            if (lhs.VendorChest.HasBeenSet != rhs.VendorChest.HasBeenSet) return false;
-            if (lhs.VendorChest.HasBeenSet)
-            {
-                if (!lhs.VendorChest.Equals(rhs.VendorChest)) return false;
-            }
-            if (lhs.VendorValues_IsSet != rhs.VendorValues_IsSet) return false;
-            if (lhs.VendorValues_IsSet)
-            {
-                if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
-            }
-            if (lhs.VendorLocation_IsSet != rhs.VendorLocation_IsSet) return false;
-            if (lhs.VendorLocation_IsSet)
-            {
-                if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
-            }
-            if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
-            if (lhs.Conditions.HasBeenSet)
-            {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            }
+            if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
+            if (!lhs.VendorList.Equals(rhs.VendorList)) return false;
+            if (!lhs.VendorChest.Equals(rhs.VendorChest)) return false;
+            if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
+            if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
+            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
             if (lhs.CRVADataTypeState != rhs.CRVADataTypeState) return false;
             return true;
         }
         
         public override bool Equals(
-            ISkyrimMajorRecordGetter lhs,
-            ISkyrimMajorRecordGetter rhs)
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IFactionGetter)lhs,
+                lhs: (IFactionGetter?)lhs,
                 rhs: rhs as IFactionGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IFactionGetter)lhs,
+                lhs: (IFactionGetter?)lhs,
                 rhs: rhs as IFactionGetter);
         }
         
         public virtual int GetHashCode(IFactionGetter item)
         {
             int ret = 0;
-            if (item.Name_IsSet)
+            if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
             }
-            if (item.Relations.HasBeenSet)
+            ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+            if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(item.Relations).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
             }
-            if (item.Flags_IsSet)
+            if (item.PrisonMarker.TryGet(out var PrisonMarkeritem))
             {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(PrisonMarkeritem).CombineHashCode(ret);
             }
-            if (item.PrisonMarker.HasBeenSet)
+            if (item.FollowerWaitMarker.TryGet(out var FollowerWaitMarkeritem))
             {
-                ret = HashHelper.GetHashCode(item.PrisonMarker).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(FollowerWaitMarkeritem).CombineHashCode(ret);
             }
-            if (item.FollowerWaitMarker.HasBeenSet)
+            if (item.EvidenceChest.TryGet(out var EvidenceChestitem))
             {
-                ret = HashHelper.GetHashCode(item.FollowerWaitMarker).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(EvidenceChestitem).CombineHashCode(ret);
             }
-            if (item.EvidenceChest.HasBeenSet)
+            if (item.PlayerBelongingsChest.TryGet(out var PlayerBelongingsChestitem))
             {
-                ret = HashHelper.GetHashCode(item.EvidenceChest).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(PlayerBelongingsChestitem).CombineHashCode(ret);
             }
-            if (item.PlayerBelongingsChest.HasBeenSet)
+            if (item.CrimeGroup.TryGet(out var CrimeGroupitem))
             {
-                ret = HashHelper.GetHashCode(item.PlayerBelongingsChest).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(CrimeGroupitem).CombineHashCode(ret);
             }
-            if (item.CrimeGroup.HasBeenSet)
+            if (item.JailOutfit.TryGet(out var JailOutfititem))
             {
-                ret = HashHelper.GetHashCode(item.CrimeGroup).CombineHashCode(ret);
-            }
-            if (item.JailOutfit.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.JailOutfit).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(JailOutfititem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.ArrestCrimeValue).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.AttackOnSightCrimeValue).CombineHashCode(ret);
@@ -2586,30 +2254,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.StealMultCrimeValue).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.EscapeCrimeValue).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.WerewolfCrimeValue).CombineHashCode(ret);
-            if (item.Ranks.HasBeenSet)
+            ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
+            if (item.VendorList.TryGet(out var VendorListitem))
             {
-                ret = HashHelper.GetHashCode(item.Ranks).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(VendorListitem).CombineHashCode(ret);
             }
-            if (item.VendorList.HasBeenSet)
+            if (item.VendorChest.TryGet(out var VendorChestitem))
             {
-                ret = HashHelper.GetHashCode(item.VendorList).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(VendorChestitem).CombineHashCode(ret);
             }
-            if (item.VendorChest.HasBeenSet)
+            if (item.VendorValues.TryGet(out var VendorValuesitem))
             {
-                ret = HashHelper.GetHashCode(item.VendorChest).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(VendorValuesitem).CombineHashCode(ret);
             }
-            if (item.VendorValues_IsSet)
+            if (item.VendorLocation.TryGet(out var VendorLocationitem))
             {
-                ret = HashHelper.GetHashCode(item.VendorValues).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(VendorLocationitem).CombineHashCode(ret);
             }
-            if (item.VendorLocation_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.VendorLocation).CombineHashCode(ret);
-            }
-            if (item.Conditions.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.Conditions).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.CRVADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -2667,9 +2329,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Faction(getNextFormKey());
             ret.DeepCopyFieldsFrom((Faction)item);
@@ -2689,8 +2351,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IFactionInternal item,
             IFactionGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -2702,8 +2364,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IFaction item,
             IFactionGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -2712,27 +2374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.Name);
-                try
-                {
-                    if (rhs.Name_IsSet)
-                    {
-                        item.Name = rhs.Name;
-                    }
-                    else
-                    {
-                        item.Name_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Name = rhs.Name;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
@@ -2767,129 +2409,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
-                try
-                {
-                    if (rhs.Flags_IsSet)
-                    {
-                        item.Flags = rhs.Flags;
-                    }
-                    else
-                    {
-                        item.Flags_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PrisonMarker) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.PrisonMarker);
-                try
-                {
-                    item.PrisonMarker.SetToFormKey(rhs: rhs.PrisonMarker);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PrisonMarker.SetToFormKey(rhs: rhs.PrisonMarker);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
-                try
-                {
-                    item.FollowerWaitMarker.SetToFormKey(rhs: rhs.FollowerWaitMarker);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FollowerWaitMarker.SetToFormKey(rhs: rhs.FollowerWaitMarker);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.EvidenceChest) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.EvidenceChest);
-                try
-                {
-                    item.EvidenceChest.SetToFormKey(rhs: rhs.EvidenceChest);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EvidenceChest.SetToFormKey(rhs: rhs.EvidenceChest);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerBelongingsChest) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.PlayerBelongingsChest);
-                try
-                {
-                    item.PlayerBelongingsChest.SetToFormKey(rhs: rhs.PlayerBelongingsChest);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.PlayerBelongingsChest.SetToFormKey(rhs: rhs.PlayerBelongingsChest);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGroup) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGroup);
-                try
-                {
-                    item.CrimeGroup.SetToFormKey(rhs: rhs.CrimeGroup);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.CrimeGroup.SetToFormKey(rhs: rhs.CrimeGroup);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
-                try
-                {
-                    item.JailOutfit.SetToFormKey(rhs: rhs.JailOutfit);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.JailOutfit.SetToFormKey(rhs: rhs.JailOutfit);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ArrestCrimeValue) ?? true))
             {
@@ -2964,54 +2508,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorList) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.VendorList);
-                try
-                {
-                    item.VendorList.SetToFormKey(rhs: rhs.VendorList);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VendorList.SetToFormKey(rhs: rhs.VendorList);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorChest) ?? true))
             {
-                errorMask?.PushIndex((int)Faction_FieldIndex.VendorChest);
-                try
-                {
-                    item.VendorChest.SetToFormKey(rhs: rhs.VendorChest);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.VendorChest.SetToFormKey(rhs: rhs.VendorChest);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
                 try
                 {
-                    if(rhs.VendorValues_IsSet)
+                    if(rhs.VendorValues.TryGet(out var rhsVendorValues))
                     {
-                        item.VendorValues = rhs.VendorValues.DeepCopy(
+                        item.VendorValues = rhsVendorValues.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
                     }
                     else
                     {
-                        item.VendorValues_Set(
-                            value: default(VendorValues),
-                            hasBeenSet: false);
+                        item.VendorValues = default;
                     }
                 }
                 catch (Exception ex)
@@ -3029,17 +2545,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
                 try
                 {
-                    if(rhs.VendorLocation_IsSet)
+                    if(rhs.VendorLocation.TryGet(out var rhsVendorLocation))
                     {
-                        item.VendorLocation = rhs.VendorLocation.DeepCopy(
+                        item.VendorLocation = rhsVendorLocation.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
                     }
                     else
                     {
-                        item.VendorLocation_Set(
-                            value: default(VendorLocation),
-                            hasBeenSet: false);
+                        item.VendorLocation = default;
                     }
                 }
                 catch (Exception ex)
@@ -3092,8 +2606,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFactionInternal)item,
@@ -3105,8 +2619,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFaction)item,
@@ -3118,8 +2632,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFactionInternal)item,
@@ -3131,8 +2645,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFaction)item,
@@ -3145,9 +2659,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Faction DeepCopy(
             IFactionGetter item,
-            Faction_TranslationMask copyMask = null)
+            Faction_TranslationMask? copyMask = null)
         {
-            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()).GetNew();
+            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -3157,9 +2671,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Faction DeepCopy(
             IFactionGetter item,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask copyMask = null)
+            Faction_TranslationMask? copyMask = null)
         {
-            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()).GetNew();
+            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -3169,10 +2683,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Faction DeepCopy(
             IFactionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()).GetNew();
+            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -3221,15 +2735,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IFactionGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Name_IsSet
+            if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -3249,7 +2763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.Relations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
-                    transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RelationXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3260,7 +2774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.Flags_IsSet
+            if ((item.Flags != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
@@ -3443,7 +2957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.Ranks,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
-                    transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((RankXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3474,7 +2988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.VendorChest,
                     errorMask: errorMask);
             }
-            if (item.VendorValues_IsSet
+            if ((item.VendorValues != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
                 var loquiItem = item.VendorValues;
@@ -3486,7 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
             }
-            if (item.VendorLocation_IsSet
+            if ((item.VendorLocation != null)
                 && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
             {
                 var loquiItem = item.VendorLocation;
@@ -3508,7 +3022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.Conditions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var loquiItem = subItem;
                         ((ConditionXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3533,9 +3047,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IFactionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Faction");
             node.Add(elem);
@@ -3553,9 +3067,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -3568,9 +3082,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -3583,9 +3097,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -3604,8 +3118,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IFactionInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -3630,8 +3144,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -4169,8 +3683,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             XElement node,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            string name = null)
+            Faction_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FactionXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -4186,8 +3700,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             string path,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            string name = null)
+            Faction_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -4203,8 +3717,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             Stream stream,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask translationMask = null,
-            string name = null)
+            Faction_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -4226,17 +3740,18 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Faction_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<Faction_Mask<T>>
+    public class Faction_Mask<T> :
+        SkyrimMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Faction_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Faction_Mask()
-        {
-        }
-
         public Faction_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Name = initialValue;
-            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>>>>(initialValue, null);
+            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Relation_Mask<T>?>>());
             this.Flags = initialValue;
             this.PrisonMarker = initialValue;
             this.FollowerWaitMarker = initialValue;
@@ -4254,12 +3769,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.StealMultCrimeValue = initialValue;
             this.EscapeCrimeValue = initialValue;
             this.WerewolfCrimeValue = initialValue;
-            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>>>>(initialValue, null);
+            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Rank_Mask<T>?>>());
             this.VendorList = initialValue;
             this.VendorChest = initialValue;
-            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>>(initialValue, new VendorValues_Mask<T>(initialValue));
-            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>>(initialValue, new VendorLocation_Mask<T>(initialValue));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
+            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>?>(initialValue, new VendorValues_Mask<T>(initialValue));
+            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>?>(initialValue, new VendorLocation_Mask<T>(initialValue));
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
             this.CRVADataTypeState = initialValue;
         }
 
@@ -4297,16 +3812,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T VendorLocation,
             T Conditions,
             T CRVADataTypeState)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+            FormVersion: FormVersion,
+            Version2: Version2)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
-            this.FormVersion = FormVersion;
-            this.Version2 = Version2;
             this.Name = Name;
-            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>>>>(Relations, null);
+            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<T, Relation_Mask<T>?>>());
             this.Flags = Flags;
             this.PrisonMarker = PrisonMarker;
             this.FollowerWaitMarker = FollowerWaitMarker;
@@ -4324,19 +3840,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.StealMultCrimeValue = StealMultCrimeValue;
             this.EscapeCrimeValue = EscapeCrimeValue;
             this.WerewolfCrimeValue = WerewolfCrimeValue;
-            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>>>>(Ranks, null);
+            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<T, Rank_Mask<T>?>>());
             this.VendorList = VendorList;
             this.VendorChest = VendorChest;
-            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>>(VendorValues, new VendorValues_Mask<T>(VendorValues));
-            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>>(VendorLocation, new VendorLocation_Mask<T>(VendorLocation));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(Conditions, null);
+            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>?>(VendorValues, new VendorValues_Mask<T>(VendorValues));
+            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>?>(VendorLocation, new VendorLocation_Mask<T>(VendorLocation));
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
             this.CRVADataTypeState = CRVADataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected Faction_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
         public T Name;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>>>> Relations;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>?>>>? Relations;
         public T Flags;
         public T PrisonMarker;
         public T FollowerWaitMarker;
@@ -4354,12 +3877,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public T StealMultCrimeValue;
         public T EscapeCrimeValue;
         public T WerewolfCrimeValue;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>>>> Ranks;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>?>>>? Ranks;
         public T VendorList;
         public T VendorChest;
-        public MaskItem<T, VendorValues_Mask<T>> VendorValues { get; set; }
-        public MaskItem<T, VendorLocation_Mask<T>> VendorLocation { get; set; }
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>> Conditions;
+        public MaskItem<T, VendorValues_Mask<T>?>? VendorValues { get; set; }
+        public MaskItem<T, VendorLocation_Mask<T>?>? VendorLocation { get; set; }
+        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>? Conditions;
         public T CRVADataTypeState;
         #endregion
 
@@ -4526,19 +4049,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Name = eval(this.Name);
             if (Relations != null)
             {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation_Mask<R>>>>(eval(this.Relations.Overall), default);
+                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation_Mask<R>?>>>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation_Mask<R>?>>());
                 if (Relations.Specific != null)
                 {
-                    List<MaskItemIndexed<R, Relation_Mask<R>>> l = new List<MaskItemIndexed<R, Relation_Mask<R>>>();
+                    var l = new List<MaskItemIndexed<R, Relation_Mask<R>?>>();
                     obj.Relations.Specific = l;
                     foreach (var item in Relations.Specific.WithIndex())
                     {
-                        MaskItemIndexed<R, Relation_Mask<R>> mask = default;
-                        mask.Index = item.Index;
-                        if (item.Item != null)
-                        {
-                            mask = new MaskItemIndexed<R, Relation_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        }
+                        MaskItemIndexed<R, Relation_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Relation_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                        if (mask == null) continue;
                         l.Add(mask);
                     }
                 }
@@ -4562,48 +4081,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.WerewolfCrimeValue = eval(this.WerewolfCrimeValue);
             if (Ranks != null)
             {
-                obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank_Mask<R>>>>(eval(this.Ranks.Overall), default);
+                obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank_Mask<R>?>>>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank_Mask<R>?>>());
                 if (Ranks.Specific != null)
                 {
-                    List<MaskItemIndexed<R, Rank_Mask<R>>> l = new List<MaskItemIndexed<R, Rank_Mask<R>>>();
+                    var l = new List<MaskItemIndexed<R, Rank_Mask<R>?>>();
                     obj.Ranks.Specific = l;
                     foreach (var item in Ranks.Specific.WithIndex())
                     {
-                        MaskItemIndexed<R, Rank_Mask<R>> mask = default;
-                        mask.Index = item.Index;
-                        if (item.Item != null)
-                        {
-                            mask = new MaskItemIndexed<R, Rank_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        }
+                        MaskItemIndexed<R, Rank_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Rank_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                        if (mask == null) continue;
                         l.Add(mask);
                     }
                 }
             }
             obj.VendorList = eval(this.VendorList);
             obj.VendorChest = eval(this.VendorChest);
-            if (this.VendorValues != null)
-            {
-                obj.VendorValues = new MaskItem<R, VendorValues_Mask<R>>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
-            }
-            if (this.VendorLocation != null)
-            {
-                obj.VendorLocation = new MaskItem<R, VendorLocation_Mask<R>>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
-            }
+            obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues_Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
+            obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, VendorLocation_Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>(eval(this.Conditions.Overall), default);
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition_Mask<R>?>>());
                 if (Conditions.Specific != null)
                 {
-                    List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
+                    var l = new List<MaskItemIndexed<R, Condition_Mask<R>?>>();
                     obj.Conditions.Specific = l;
                     foreach (var item in Conditions.Specific.WithIndex())
                     {
-                        MaskItemIndexed<R, Condition_Mask<R>> mask = default;
-                        mask.Index = item.Index;
-                        if (item.Item != null)
-                        {
-                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        }
+                        MaskItemIndexed<R, Condition_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                        if (mask == null) continue;
                         l.Add(mask);
                     }
                 }
@@ -4618,14 +4123,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Faction_Mask<bool> printMask = null)
+        public string ToString(Faction_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Faction_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Faction_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Faction_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -4641,20 +4146,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Relations.Overall != null)
+                        if (Relations != null)
                         {
-                            fg.AppendLine(Relations.Overall.ToString());
-                        }
-                        if (Relations.Specific != null)
-                        {
-                            foreach (var subItem in Relations.Specific)
+                            if (Relations.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                fg.AppendLine(Relations.Overall.ToString());
+                            }
+                            if (Relations.Specific != null)
+                            {
+                                foreach (var subItem in Relations.Specific)
                                 {
-                                    subItem?.ToString(fg);
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
@@ -4734,20 +4242,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Ranks.Overall != null)
+                        if (Ranks != null)
                         {
-                            fg.AppendLine(Ranks.Overall.ToString());
-                        }
-                        if (Ranks.Specific != null)
-                        {
-                            foreach (var subItem in Ranks.Specific)
+                            if (Ranks.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                fg.AppendLine(Ranks.Overall.ToString());
+                            }
+                            if (Ranks.Specific != null)
+                            {
+                                foreach (var subItem in Ranks.Specific)
                                 {
-                                    subItem?.ToString(fg);
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
@@ -4775,20 +4286,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Conditions.Overall != null)
+                        if (Conditions != null)
                         {
-                            fg.AppendLine(Conditions.Overall.ToString());
-                        }
-                        if (Conditions.Specific != null)
-                        {
-                            foreach (var subItem in Conditions.Specific)
+                            if (Conditions.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                fg.AppendLine(Conditions.Overall.ToString());
+                            }
+                            if (Conditions.Specific != null)
+                            {
+                                foreach (var subItem in Conditions.Specific)
                                 {
-                                    subItem?.ToString(fg);
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
@@ -4808,36 +4322,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Faction_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<Faction_ErrorMask>
     {
         #region Members
-        public Exception Name;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> Relations;
-        public Exception Flags;
-        public Exception PrisonMarker;
-        public Exception FollowerWaitMarker;
-        public Exception EvidenceChest;
-        public Exception PlayerBelongingsChest;
-        public Exception CrimeGroup;
-        public Exception JailOutfit;
-        public Exception ArrestCrimeValue;
-        public Exception AttackOnSightCrimeValue;
-        public Exception MurderCrimeValue;
-        public Exception AssaultCrimeValue;
-        public Exception TrespassCrimeValue;
-        public Exception PickpocketCrimeValue;
-        public Exception UnknownCrimeValue;
-        public Exception StealMultCrimeValue;
-        public Exception EscapeCrimeValue;
-        public Exception WerewolfCrimeValue;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>> Ranks;
-        public Exception VendorList;
-        public Exception VendorChest;
-        public MaskItem<Exception, VendorValues_ErrorMask> VendorValues;
-        public MaskItem<Exception, VendorLocation_ErrorMask> VendorLocation;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>> Conditions;
-        public Exception CRVADataTypeState;
+        public Exception? Name;
+        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>? Relations;
+        public Exception? Flags;
+        public Exception? PrisonMarker;
+        public Exception? FollowerWaitMarker;
+        public Exception? EvidenceChest;
+        public Exception? PlayerBelongingsChest;
+        public Exception? CrimeGroup;
+        public Exception? JailOutfit;
+        public Exception? ArrestCrimeValue;
+        public Exception? AttackOnSightCrimeValue;
+        public Exception? MurderCrimeValue;
+        public Exception? AssaultCrimeValue;
+        public Exception? TrespassCrimeValue;
+        public Exception? PickpocketCrimeValue;
+        public Exception? UnknownCrimeValue;
+        public Exception? StealMultCrimeValue;
+        public Exception? EscapeCrimeValue;
+        public Exception? WerewolfCrimeValue;
+        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>? Ranks;
+        public Exception? VendorList;
+        public Exception? VendorChest;
+        public MaskItem<Exception?, VendorValues_ErrorMask?>? VendorValues;
+        public MaskItem<Exception?, VendorLocation_ErrorMask?>? VendorLocation;
+        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>? Conditions;
+        public Exception? CRVADataTypeState;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Faction_FieldIndex enu = (Faction_FieldIndex)index;
             switch (enu)
@@ -4908,7 +4422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Name = ex;
                     break;
                 case Faction_FieldIndex.Relations:
-                    this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(ex, null);
+                    this.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>(ex, null);
                     break;
                 case Faction_FieldIndex.Flags:
                     this.Flags = ex;
@@ -4962,7 +4476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.WerewolfCrimeValue = ex;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    this.Ranks = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>>(ex, null);
+                    this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>(ex, null);
                     break;
                 case Faction_FieldIndex.VendorList:
                     this.VendorList = ex;
@@ -4971,13 +4485,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.VendorChest = ex;
                     break;
                 case Faction_FieldIndex.VendorValues:
-                    this.VendorValues = new MaskItem<Exception, VendorValues_ErrorMask>(ex, null);
+                    this.VendorValues = new MaskItem<Exception?, VendorValues_ErrorMask?>(ex, null);
                     break;
                 case Faction_FieldIndex.VendorLocation:
-                    this.VendorLocation = new MaskItem<Exception, VendorLocation_ErrorMask>(ex, null);
+                    this.VendorLocation = new MaskItem<Exception?, VendorLocation_ErrorMask?>(ex, null);
                     break;
                 case Faction_FieldIndex.Conditions:
-                    this.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(ex, null);
+                    this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ex, null);
                     break;
                 case Faction_FieldIndex.CRVADataTypeState:
                     this.CRVADataTypeState = ex;
@@ -4997,7 +4511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Name = (Exception)obj;
                     break;
                 case Faction_FieldIndex.Relations:
-                    this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>)obj;
+                    this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>)obj;
                     break;
                 case Faction_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
@@ -5051,7 +4565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.WerewolfCrimeValue = (Exception)obj;
                     break;
                 case Faction_FieldIndex.Ranks:
-                    this.Ranks = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>>)obj;
+                    this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>)obj;
                     break;
                 case Faction_FieldIndex.VendorList:
                     this.VendorList = (Exception)obj;
@@ -5060,13 +4574,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.VendorChest = (Exception)obj;
                     break;
                 case Faction_FieldIndex.VendorValues:
-                    this.VendorValues = (MaskItem<Exception, VendorValues_ErrorMask>)obj;
+                    this.VendorValues = (MaskItem<Exception?, VendorValues_ErrorMask?>?)obj;
                     break;
                 case Faction_FieldIndex.VendorLocation:
-                    this.VendorLocation = (MaskItem<Exception, VendorLocation_ErrorMask>)obj;
+                    this.VendorLocation = (MaskItem<Exception?, VendorLocation_ErrorMask?>?)obj;
                     break;
                 case Faction_FieldIndex.Conditions:
-                    this.Conditions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>)obj;
+                    this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>)obj;
                     break;
                 case Faction_FieldIndex.CRVADataTypeState:
                     this.CRVADataTypeState = (Exception)obj;
@@ -5146,20 +4660,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Relations.Overall != null)
+                if (Relations != null)
                 {
-                    fg.AppendLine(Relations.Overall.ToString());
-                }
-                if (Relations.Specific != null)
-                {
-                    foreach (var subItem in Relations.Specific)
+                    if (Relations.Overall != null)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        fg.AppendLine(Relations.Overall.ToString());
+                    }
+                    if (Relations.Specific != null)
+                    {
+                        foreach (var subItem in Relations.Specific)
                         {
-                            subItem?.ToString(fg);
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg);
+                            }
+                            fg.AppendLine("]");
                         }
-                        fg.AppendLine("]");
                     }
                 }
             }
@@ -5185,20 +4702,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Ranks.Overall != null)
+                if (Ranks != null)
                 {
-                    fg.AppendLine(Ranks.Overall.ToString());
-                }
-                if (Ranks.Specific != null)
-                {
-                    foreach (var subItem in Ranks.Specific)
+                    if (Ranks.Overall != null)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        fg.AppendLine(Ranks.Overall.ToString());
+                    }
+                    if (Ranks.Specific != null)
+                    {
+                        foreach (var subItem in Ranks.Specific)
                         {
-                            subItem?.ToString(fg);
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg);
+                            }
+                            fg.AppendLine("]");
                         }
-                        fg.AppendLine("]");
                     }
                 }
             }
@@ -5211,20 +4731,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Conditions.Overall != null)
+                if (Conditions != null)
                 {
-                    fg.AppendLine(Conditions.Overall.ToString());
-                }
-                if (Conditions.Specific != null)
-                {
-                    foreach (var subItem in Conditions.Specific)
+                    if (Conditions.Overall != null)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        fg.AppendLine(Conditions.Overall.ToString());
+                    }
+                    if (Conditions.Specific != null)
+                    {
+                        foreach (var subItem in Conditions.Specific)
                         {
-                            subItem?.ToString(fg);
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg);
+                            }
+                            fg.AppendLine("]");
                         }
-                        fg.AppendLine("]");
                     }
                 }
             }
@@ -5234,11 +4757,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Faction_ErrorMask Combine(Faction_ErrorMask rhs)
+        public Faction_ErrorMask Combine(Faction_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Faction_ErrorMask();
             ret.Name = this.Name.Combine(rhs.Name);
-            ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, Relation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
+            ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.PrisonMarker = this.PrisonMarker.Combine(rhs.PrisonMarker);
             ret.FollowerWaitMarker = this.FollowerWaitMarker.Combine(rhs.FollowerWaitMarker);
@@ -5256,16 +4780,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.StealMultCrimeValue = this.StealMultCrimeValue.Combine(rhs.StealMultCrimeValue);
             ret.EscapeCrimeValue = this.EscapeCrimeValue.Combine(rhs.EscapeCrimeValue);
             ret.WerewolfCrimeValue = this.WerewolfCrimeValue.Combine(rhs.WerewolfCrimeValue);
-            ret.Ranks = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>>(this.Ranks.Overall.Combine(rhs.Ranks.Overall), new List<MaskItem<Exception, Rank_ErrorMask>>(this.Ranks.Specific.And(rhs.Ranks.Specific)));
+            ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
             ret.VendorList = this.VendorList.Combine(rhs.VendorList);
             ret.VendorChest = this.VendorChest.Combine(rhs.VendorChest);
-            ret.VendorValues = new MaskItem<Exception, VendorValues_ErrorMask>(this.VendorValues.Overall.Combine(rhs.VendorValues.Overall), ((IErrorMask<VendorValues_ErrorMask>)this.VendorValues.Specific).Combine(rhs.VendorValues.Specific));
-            ret.VendorLocation = new MaskItem<Exception, VendorLocation_ErrorMask>(this.VendorLocation.Overall.Combine(rhs.VendorLocation.Overall), ((IErrorMask<VendorLocation_ErrorMask>)this.VendorLocation.Specific).Combine(rhs.VendorLocation.Specific));
-            ret.Conditions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Condition_ErrorMask>>>(this.Conditions.Overall.Combine(rhs.Conditions.Overall), new List<MaskItem<Exception, Condition_ErrorMask>>(this.Conditions.Specific.And(rhs.Conditions.Specific)));
+            ret.VendorValues = new MaskItem<Exception?, VendorValues_ErrorMask?>(ExceptionExt.Combine(this.VendorValues?.Overall, rhs.VendorValues?.Overall), (this.VendorValues?.Specific as IErrorMask<VendorValues_ErrorMask>)?.Combine(rhs.VendorValues?.Specific));
+            ret.VendorLocation = new MaskItem<Exception?, VendorLocation_ErrorMask?>(ExceptionExt.Combine(this.VendorLocation?.Overall, rhs.VendorLocation?.Overall), (this.VendorLocation?.Specific as IErrorMask<VendorLocation_ErrorMask>)?.Combine(rhs.VendorLocation?.Specific));
+            ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
             ret.CRVADataTypeState = this.CRVADataTypeState.Combine(rhs.CRVADataTypeState);
             return ret;
         }
-        public static Faction_ErrorMask Combine(Faction_ErrorMask lhs, Faction_ErrorMask rhs)
+        public static Faction_ErrorMask? Combine(Faction_ErrorMask? lhs, Faction_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -5275,7 +4799,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new Faction_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Faction_ErrorMask();
         }
         #endregion
@@ -5285,7 +4808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         #region Members
         public bool Name;
-        public MaskItem<bool, Relation_TranslationMask> Relations;
+        public MaskItem<bool, Relation_TranslationMask?> Relations;
         public bool Flags;
         public bool PrisonMarker;
         public bool FollowerWaitMarker;
@@ -5303,26 +4826,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool StealMultCrimeValue;
         public bool EscapeCrimeValue;
         public bool WerewolfCrimeValue;
-        public MaskItem<bool, Rank_TranslationMask> Ranks;
+        public MaskItem<bool, Rank_TranslationMask?> Ranks;
         public bool VendorList;
         public bool VendorChest;
-        public MaskItem<bool, VendorValues_TranslationMask> VendorValues;
-        public MaskItem<bool, VendorLocation_TranslationMask> VendorLocation;
-        public MaskItem<bool, Condition_TranslationMask> Conditions;
+        public MaskItem<bool, VendorValues_TranslationMask?> VendorValues;
+        public MaskItem<bool, VendorLocation_TranslationMask?> VendorLocation;
+        public MaskItem<bool, Condition_TranslationMask?> Conditions;
         public bool CRVADataTypeState;
         #endregion
 
         #region Ctors
-        public Faction_TranslationMask()
-            : base()
-        {
-        }
-
         public Faction_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
             this.Name = defaultOn;
-            this.Relations = new MaskItem<bool, Relation_TranslationMask>(defaultOn, null);
+            this.Relations = new MaskItem<bool, Relation_TranslationMask?>(defaultOn, null);
             this.Flags = defaultOn;
             this.PrisonMarker = defaultOn;
             this.FollowerWaitMarker = defaultOn;
@@ -5340,18 +4858,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.StealMultCrimeValue = defaultOn;
             this.EscapeCrimeValue = defaultOn;
             this.WerewolfCrimeValue = defaultOn;
-            this.Ranks = new MaskItem<bool, Rank_TranslationMask>(defaultOn, null);
+            this.Ranks = new MaskItem<bool, Rank_TranslationMask?>(defaultOn, null);
             this.VendorList = defaultOn;
             this.VendorChest = defaultOn;
-            this.VendorValues = new MaskItem<bool, VendorValues_TranslationMask>(defaultOn, null);
-            this.VendorLocation = new MaskItem<bool, VendorLocation_TranslationMask>(defaultOn, null);
-            this.Conditions = new MaskItem<bool, Condition_TranslationMask>(defaultOn, null);
+            this.VendorValues = new MaskItem<bool, VendorValues_TranslationMask?>(defaultOn, null);
+            this.VendorLocation = new MaskItem<bool, VendorLocation_TranslationMask?>(defaultOn, null);
+            this.Conditions = new MaskItem<bool, Condition_TranslationMask?>(defaultOn, null);
             this.CRVADataTypeState = defaultOn;
         }
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Name, null));
@@ -5424,7 +4942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_RecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -5432,93 +4950,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.FULL_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Relations.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationGetter>.Instance.Write(
-                    writer: writer,
-                    items: item.Relations,
-                    transl: (MutagenWriter subWriter, IRelationGetter subItem) =>
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationGetter>.Instance.Write(
+                writer: writer,
+                items: item.Relations,
+                transl: (MutagenWriter subWriter, IRelationGetter subItem) =>
+                {
                     {
                         var loquiItem = subItem;
-                        ((RelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                            item: loquiItem,
-                            writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    });
-            }
-            if (item.Flags_IsSet)
-            {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.DATA_HEADER),
-                    nullable: false);
-            }
-            if (item.PrisonMarker.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PrisonMarker,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.JAIL_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.FollowerWaitMarker.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FollowerWaitMarker,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.WAIT_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.EvidenceChest.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EvidenceChest,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.STOL_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.PlayerBelongingsChest.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.PlayerBelongingsChest,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.PLCN_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.CrimeGroup.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CrimeGroup,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.CRGR_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.JailOutfit.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.JailOutfit,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.JOUT_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
+                        if (loquiItem != null)
+                        {
+                            ((RelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                item: loquiItem,
+                                writer: subWriter,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
+                    }
+                });
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.DATA_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PrisonMarker,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.JAIL_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FollowerWaitMarker,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.WAIT_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EvidenceChest,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.STOL_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PlayerBelongingsChest,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.PLCN_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CrimeGroup,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.CRGR_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.JailOutfit,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.JOUT_HEADER),
+                masterReferences: masterReferences);
             if (item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Faction_Registration.CRVA_HEADER)))
@@ -5543,56 +5031,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-            if (item.Ranks.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
-                    writer: writer,
-                    items: item.Ranks,
-                    transl: (MutagenWriter subWriter, IRankGetter subItem) =>
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
+                writer: writer,
+                items: item.Ranks,
+                transl: (MutagenWriter subWriter, IRankGetter subItem) =>
+                {
                     {
                         var loquiItem = subItem;
-                        ((RankBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                            item: loquiItem,
-                            writer: subWriter,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    });
-            }
-            if (item.VendorList.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.VendorList,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.VEND_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.VendorChest.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.VendorChest,
-                    header: recordTypeConverter.ConvertToCustom(Faction_Registration.VENC_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.VendorValues_IsSet)
+                        if (loquiItem != null)
+                        {
+                            ((RankBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                                item: loquiItem,
+                                writer: subWriter,
+                                masterReferences: masterReferences,
+                                recordTypeConverter: null);
+                        }
+                    }
+                });
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.VendorList,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.VEND_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.VendorChest,
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.VENC_HEADER),
+                masterReferences: masterReferences);
             {
                 var loquiItem = item.VendorValues;
-                ((VendorValuesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((VendorValuesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
-            if (item.VendorLocation_IsSet)
             {
                 var loquiItem = item.VendorLocation;
-                ((VendorLocationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((VendorLocationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
             FactionBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
@@ -5604,7 +5090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IFactionGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -5627,7 +5113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -5640,7 +5126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -5653,7 +5139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -5723,9 +5209,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -5739,7 +5225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -5750,94 +5236,93 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public bool Name_IsSet => _NameLocation.HasValue;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlySetList<IRelationGetter> Relations { get; private set; } = EmptySetList<RelationBinaryOverlay>.Instance;
         #region Flags
         private int? _FlagsLocation;
-        public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Faction.FactionFlag Flags => (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta));
+        private bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Faction.FactionFlag? Flags => Flags_IsSet ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(Faction.FactionFlag?);
         #endregion
         #region PrisonMarker
         private int? _PrisonMarkerLocation;
         public bool PrisonMarker_IsSet => _PrisonMarkerLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedObjectGetter> PrisonMarker => _PrisonMarkerLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrisonMarkerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
+        public IFormIDSetLinkGetter<IPlacedObjectGetter> PrisonMarker => _PrisonMarkerLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrisonMarkerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
         public bool FollowerWaitMarker_IsSet => _FollowerWaitMarkerLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
+        public IFormIDSetLinkGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
         #endregion
         #region EvidenceChest
         private int? _EvidenceChestLocation;
         public bool EvidenceChest_IsSet => _EvidenceChestLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedObjectGetter> EvidenceChest => _EvidenceChestLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EvidenceChestLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
+        public IFormIDSetLinkGetter<IPlacedObjectGetter> EvidenceChest => _EvidenceChestLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EvidenceChestLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
         #endregion
         #region PlayerBelongingsChest
         private int? _PlayerBelongingsChestLocation;
         public bool PlayerBelongingsChest_IsSet => _PlayerBelongingsChestLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedObjectGetter> PlayerBelongingsChest => _PlayerBelongingsChestLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerBelongingsChestLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
+        public IFormIDSetLinkGetter<IPlacedObjectGetter> PlayerBelongingsChest => _PlayerBelongingsChestLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerBelongingsChestLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
         #endregion
         #region CrimeGroup
         private int? _CrimeGroupLocation;
         public bool CrimeGroup_IsSet => _CrimeGroupLocation.HasValue;
-        public IFormIDSetLinkGetter<IFormListGetter> CrimeGroup => _CrimeGroupLocation.HasValue ? new FormIDSetLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGroupLocation.Value, _package.Meta)))) : FormIDSetLink<IFormListGetter>.Empty;
+        public IFormIDSetLinkGetter<IFormListGetter> CrimeGroup => _CrimeGroupLocation.HasValue ? new FormIDSetLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGroupLocation.Value, _package.Meta)))) : FormIDSetLink<IFormListGetter>.Empty;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
         public bool JailOutfit_IsSet => _JailOutfitLocation.HasValue;
-        public IFormIDSetLinkGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormIDSetLink<IOutfitGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormIDSetLink<IOutfitGetter>.Empty;
+        public IFormIDSetLinkGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormIDSetLink<IOutfitGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormIDSetLink<IOutfitGetter>.Empty;
         #endregion
         private int? _CRVALocation;
         public Faction.CRVADataType CRVADataTypeState { get; private set; }
         #region ArrestCrimeValue
-        private int _ArrestCrimeValueLocation => _CRVALocation.Value + 0x0;
+        private int _ArrestCrimeValueLocation => _CRVALocation!.Value + 0x0;
         private bool _ArrestCrimeValue_IsSet => _CRVALocation.HasValue;
         public Boolean ArrestCrimeValue => _ArrestCrimeValue_IsSet ? _data.Span.Slice(_ArrestCrimeValueLocation, 1)[0] == 1 : default;
         #endregion
         #region AttackOnSightCrimeValue
-        private int _AttackOnSightCrimeValueLocation => _CRVALocation.Value + 0x1;
+        private int _AttackOnSightCrimeValueLocation => _CRVALocation!.Value + 0x1;
         private bool _AttackOnSightCrimeValue_IsSet => _CRVALocation.HasValue;
         public Boolean AttackOnSightCrimeValue => _AttackOnSightCrimeValue_IsSet ? _data.Span.Slice(_AttackOnSightCrimeValueLocation, 1)[0] == 1 : default;
         #endregion
         #region MurderCrimeValue
-        private int _MurderCrimeValueLocation => _CRVALocation.Value + 0x2;
+        private int _MurderCrimeValueLocation => _CRVALocation!.Value + 0x2;
         private bool _MurderCrimeValue_IsSet => _CRVALocation.HasValue;
         public UInt16 MurderCrimeValue => _MurderCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_MurderCrimeValueLocation, 2)) : default;
         #endregion
         #region AssaultCrimeValue
-        private int _AssaultCrimeValueLocation => _CRVALocation.Value + 0x4;
+        private int _AssaultCrimeValueLocation => _CRVALocation!.Value + 0x4;
         private bool _AssaultCrimeValue_IsSet => _CRVALocation.HasValue;
         public UInt16 AssaultCrimeValue => _AssaultCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_AssaultCrimeValueLocation, 2)) : default;
         #endregion
         #region TrespassCrimeValue
-        private int _TrespassCrimeValueLocation => _CRVALocation.Value + 0x6;
+        private int _TrespassCrimeValueLocation => _CRVALocation!.Value + 0x6;
         private bool _TrespassCrimeValue_IsSet => _CRVALocation.HasValue;
         public UInt16 TrespassCrimeValue => _TrespassCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_TrespassCrimeValueLocation, 2)) : default;
         #endregion
         #region PickpocketCrimeValue
-        private int _PickpocketCrimeValueLocation => _CRVALocation.Value + 0x8;
+        private int _PickpocketCrimeValueLocation => _CRVALocation!.Value + 0x8;
         private bool _PickpocketCrimeValue_IsSet => _CRVALocation.HasValue;
         public UInt16 PickpocketCrimeValue => _PickpocketCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_PickpocketCrimeValueLocation, 2)) : default;
         #endregion
         #region UnknownCrimeValue
-        private int _UnknownCrimeValueLocation => _CRVALocation.Value + 0xA;
+        private int _UnknownCrimeValueLocation => _CRVALocation!.Value + 0xA;
         private bool _UnknownCrimeValue_IsSet => _CRVALocation.HasValue;
         public UInt16 UnknownCrimeValue => _UnknownCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UnknownCrimeValueLocation, 2)) : default;
         #endregion
         #region StealMultCrimeValue
-        private int _StealMultCrimeValueLocation => _CRVALocation.Value + 0xC;
+        private int _StealMultCrimeValueLocation => _CRVALocation!.Value + 0xC;
         private bool _StealMultCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break0);
         public Single StealMultCrimeValue => _StealMultCrimeValue_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_StealMultCrimeValueLocation, 4)) : default;
         #endregion
         #region EscapeCrimeValue
-        private int _EscapeCrimeValueLocation => _CRVALocation.Value + 0x10;
+        private int _EscapeCrimeValueLocation => _CRVALocation!.Value + 0x10;
         private bool _EscapeCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1);
         public UInt16 EscapeCrimeValue => _EscapeCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_EscapeCrimeValueLocation, 2)) : default;
         #endregion
         #region WerewolfCrimeValue
-        private int _WerewolfCrimeValueLocation => _CRVALocation.Value + 0x12;
+        private int _WerewolfCrimeValueLocation => _CRVALocation!.Value + 0x12;
         private bool _WerewolfCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1);
         public UInt16 WerewolfCrimeValue => _WerewolfCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_WerewolfCrimeValueLocation, 2)) : default;
         #endregion
@@ -5845,23 +5330,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VendorList
         private int? _VendorListLocation;
         public bool VendorList_IsSet => _VendorListLocation.HasValue;
-        public IFormIDSetLinkGetter<IFormListGetter> VendorList => _VendorListLocation.HasValue ? new FormIDSetLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorListLocation.Value, _package.Meta)))) : FormIDSetLink<IFormListGetter>.Empty;
+        public IFormIDSetLinkGetter<IFormListGetter> VendorList => _VendorListLocation.HasValue ? new FormIDSetLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorListLocation.Value, _package.Meta)))) : FormIDSetLink<IFormListGetter>.Empty;
         #endregion
         #region VendorChest
         private int? _VendorChestLocation;
         public bool VendorChest_IsSet => _VendorChestLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedObjectGetter> VendorChest => _VendorChestLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorChestLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
+        public IFormIDSetLinkGetter<IPlacedObjectGetter> VendorChest => _VendorChestLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorChestLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
         private bool _VendorValues_IsSet => _VendorValuesLocation.HasValue;
-        public IVendorValuesGetter VendorValues => _VendorValues_IsSet ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVendorValuesGetter? VendorValues => _VendorValues_IsSet ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
         #region VendorLocation
         private RangeInt32? _VendorLocationLocation;
         private bool _VendorLocation_IsSet => _VendorLocationLocation.HasValue;
-        public IVendorLocationGetter VendorLocation => _VendorLocation_IsSet ? VendorLocationBinaryOverlay.VendorLocationFactory(new BinaryMemoryReadStream(_data.Slice(_VendorLocationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVendorLocationGetter? VendorLocation => _VendorLocation_IsSet ? VendorLocationBinaryOverlay.VendorLocationFactory(new BinaryMemoryReadStream(_data.Slice(_VendorLocationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VendorLocation_IsSet => _VendorLocationLocation.HasValue;
         #endregion
         #region Conditions
@@ -5889,7 +5374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FactionBinaryOverlay FactionFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new FactionBinaryOverlay(
@@ -5917,7 +5402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -24,15 +25,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -52,62 +53,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region FillTexture
-        public bool FillTexture_IsSet
-        {
-            get => _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture];
-            set => _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IEffectShaderGetter.FillTexture_IsSet => FillTexture_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _FillTexture;
-        public String FillTexture
+        private String? _FillTexture;
+        public String? FillTexture
         {
             get => this._FillTexture;
-            set => FillTexture_Set(value);
+            set => this._FillTexture = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IEffectShaderGetter.FillTexture => this.FillTexture;
-        public void FillTexture_Set(
-            String value,
-            bool markSet = true)
-        {
-            _FillTexture = value;
-            _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture] = markSet;
-        }
-        public void FillTexture_Unset()
-        {
-            this.FillTexture_Set(default(String), false);
-        }
+        String? IEffectShaderGetter.FillTexture => this.FillTexture;
         #endregion
         #region ParticleShaderTexture
-        public bool ParticleShaderTexture_IsSet
-        {
-            get => _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture];
-            set => _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IEffectShaderGetter.ParticleShaderTexture_IsSet => ParticleShaderTexture_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _ParticleShaderTexture;
-        public String ParticleShaderTexture
+        private String? _ParticleShaderTexture;
+        public String? ParticleShaderTexture
         {
             get => this._ParticleShaderTexture;
-            set => ParticleShaderTexture_Set(value);
+            set => this._ParticleShaderTexture = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
-        public void ParticleShaderTexture_Set(
-            String value,
-            bool markSet = true)
-        {
-            _ParticleShaderTexture = value;
-            _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture] = markSet;
-        }
-        public void ParticleShaderTexture_Unset()
-        {
-            this.ParticleShaderTexture_Set(default(String), false);
-        }
+        String? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -870,14 +835,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        public EffectShader.DATADataType DATADataTypeState { get; set; }
+        public EffectShader.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             EffectShaderMixIn.ToString(
                 item: this,
@@ -890,15 +855,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEffectShaderGetter rhs)) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(EffectShader obj)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()).Equals(this, obj);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -907,9 +872,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((EffectShaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -922,11 +887,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new EffectShader CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            EffectShader_TranslationMask translationMask = null)
+            EffectShader_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -936,38 +899,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader CreateFromXml(
             XElement node,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            EffectShader_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static EffectShader CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new EffectShader() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new EffectShader();
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -976,12 +926,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            EffectShader_TranslationMask translationMask = null)
+            EffectShader_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -989,12 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader CreateFromXml(
             string path,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            EffectShader_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1002,13 +948,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            EffectShader_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1016,12 +960,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            EffectShader_TranslationMask translationMask = null)
+            EffectShader_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1029,12 +971,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader CreateFromXml(
             Stream stream,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            EffectShader_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1042,13 +982,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            EffectShader_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1057,76 +995,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((EffectShader_FieldIndex)index)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return _hasBeenSetTracker[index];
-                case EffectShader_FieldIndex.Flags:
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                case EffectShader_FieldIndex.ColorKey1Color:
-                case EffectShader_FieldIndex.ColorKey2Color:
-                case EffectShader_FieldIndex.ColorKey3Color:
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                case EffectShader_FieldIndex.DATADataTypeState:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = EffectShader_Registration.TRIGGERING_RECORD_TYPE;
@@ -1155,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((EffectShaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1178,10 +1046,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static EffectShader CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new EffectShader();
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -1199,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)this).CommonSetterInstance()).Clear(this);
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new EffectShader GetNew()
@@ -1216,130 +1084,65 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IEffectShaderInternal>
     {
-        new String FillTexture { get; set; }
-        new bool FillTexture_IsSet { get; set; }
-        void FillTexture_Set(String value, bool hasBeenSet = true);
-        void FillTexture_Unset();
-
-        new String ParticleShaderTexture { get; set; }
-        new bool ParticleShaderTexture_IsSet { get; set; }
-        void ParticleShaderTexture_Set(String value, bool hasBeenSet = true);
-        void ParticleShaderTexture_Unset();
-
+        new String? FillTexture { get; set; }
+        new String? ParticleShaderTexture { get; set; }
         new EffectShader.Flag Flags { get; set; }
-
         new EffectShader.SourceBlendMode MembraneShaderSourceBlendMode { get; set; }
-
         new EffectShader.BlendOperation MembraneShaderBlendOperation { get; set; }
-
         new EffectShader.ZTestFunction MembraneShaderZTestFunction { get; set; }
-
         new Color FillTextureEffectColor { get; set; }
-
         new Single FillTextureEffectAlphaFadeInTime { get; set; }
-
         new Single FillTextureEffectFullAlphaTime { get; set; }
-
         new Single FillTextureEffectAlphaFadeOutTime { get; set; }
-
         new Single FillTextureEffectPersistentAlphaRatio { get; set; }
-
         new Single FillTextureEffectAlphaPulseAmplitude { get; set; }
-
         new Single FillTextureEffectAlphaPulseFrequency { get; set; }
-
         new Single FillTextureEffectTextureAnimationSpeedU { get; set; }
-
         new Single FillTextureEffectTextureAnimationSpeedV { get; set; }
-
         new Single EdgeEffectFallOff { get; set; }
-
         new Color EdgeEffectColor { get; set; }
-
         new Single EdgeEffectAlphaFadeInTime { get; set; }
-
         new Single EdgeEffectFullAlphaTime { get; set; }
-
         new Single EdgeEffectAlphaFadeOutTime { get; set; }
-
         new Single EdgeEffectPersistentAlphaRatio { get; set; }
-
         new Single EdgeEffectAlphaPulseAmplitude { get; set; }
-
         new Single EdgeEffectAlphaPulseFrequency { get; set; }
-
         new Single FillTextureEffectFullAlphaRatio { get; set; }
-
         new Single EdgeEffectFullAlphaRatio { get; set; }
-
         new EffectShader.SourceBlendMode MembraneShaderDestBlendMode { get; set; }
-
         new EffectShader.SourceBlendMode ParticleShaderSourceBlendMode { get; set; }
-
         new EffectShader.BlendOperation ParticleShaderBlendOperation { get; set; }
-
         new EffectShader.ZTestFunction ParticleShaderZTestFunction { get; set; }
-
         new EffectShader.SourceBlendMode ParticleShaderDestBlendMode { get; set; }
-
         new Single ParticleShaderParticleBirthRampUpTime { get; set; }
-
         new Single ParticleShaderFullParticleBirthTime { get; set; }
-
         new Single ParticleShaderParticleBirthRampDownTime { get; set; }
-
         new Single ParticleShaderFullParticleBirthRatio { get; set; }
-
         new Single ParticleShaderPersistentParticleBirthRatio { get; set; }
-
         new Single ParticleShaderParticleLifetime { get; set; }
-
         new Single ParticleShaderParticleLifetimePlusMinus { get; set; }
-
         new Single ParticleShaderInitialSpeedAlongNormal { get; set; }
-
         new Single ParticleShaderAccelerationAlongNormal { get; set; }
-
         new Single ParticleShaderInitialVelocity1 { get; set; }
-
         new Single ParticleShaderInitialVelocity2 { get; set; }
-
         new Single ParticleShaderInitialVelocity3 { get; set; }
-
         new Single ParticleShaderAcceleration1 { get; set; }
-
         new Single ParticleShaderAcceleration2 { get; set; }
-
         new Single ParticleShaderAcceleration3 { get; set; }
-
         new Single ParticleShaderScaleKey1 { get; set; }
-
         new Single ParticleShaderScaleKey2 { get; set; }
-
         new Single ParticleShaderScaleKey1Time { get; set; }
-
         new Single ParticleShaderScaleKey2Time { get; set; }
-
         new Color ColorKey1Color { get; set; }
-
         new Color ColorKey2Color { get; set; }
-
         new Color ColorKey3Color { get; set; }
-
         new Single ColorKey1ColorAlpha { get; set; }
-
         new Single ColorKey2ColorAlpha { get; set; }
-
         new Single ColorKey3ColorAlpha { get; set; }
-
         new Single ColorKey1ColorKeyTime { get; set; }
-
         new Single ColorKey2ColorKeyTime { get; set; }
-
         new Single ColorKey3ColorKeyTime { get; set; }
-
         new EffectShader.DATADataType DATADataTypeState { get; set; }
-
     }
 
     public partial interface IEffectShaderInternal :
@@ -1355,244 +1158,65 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        #region FillTexture
-        String FillTexture { get; }
-        bool FillTexture_IsSet { get; }
-
-        #endregion
-        #region ParticleShaderTexture
-        String ParticleShaderTexture { get; }
-        bool ParticleShaderTexture_IsSet { get; }
-
-        #endregion
-        #region Flags
+        String? FillTexture { get; }
+        String? ParticleShaderTexture { get; }
         EffectShader.Flag Flags { get; }
-
-        #endregion
-        #region MembraneShaderSourceBlendMode
         EffectShader.SourceBlendMode MembraneShaderSourceBlendMode { get; }
-
-        #endregion
-        #region MembraneShaderBlendOperation
         EffectShader.BlendOperation MembraneShaderBlendOperation { get; }
-
-        #endregion
-        #region MembraneShaderZTestFunction
         EffectShader.ZTestFunction MembraneShaderZTestFunction { get; }
-
-        #endregion
-        #region FillTextureEffectColor
         Color FillTextureEffectColor { get; }
-
-        #endregion
-        #region FillTextureEffectAlphaFadeInTime
         Single FillTextureEffectAlphaFadeInTime { get; }
-
-        #endregion
-        #region FillTextureEffectFullAlphaTime
         Single FillTextureEffectFullAlphaTime { get; }
-
-        #endregion
-        #region FillTextureEffectAlphaFadeOutTime
         Single FillTextureEffectAlphaFadeOutTime { get; }
-
-        #endregion
-        #region FillTextureEffectPersistentAlphaRatio
         Single FillTextureEffectPersistentAlphaRatio { get; }
-
-        #endregion
-        #region FillTextureEffectAlphaPulseAmplitude
         Single FillTextureEffectAlphaPulseAmplitude { get; }
-
-        #endregion
-        #region FillTextureEffectAlphaPulseFrequency
         Single FillTextureEffectAlphaPulseFrequency { get; }
-
-        #endregion
-        #region FillTextureEffectTextureAnimationSpeedU
         Single FillTextureEffectTextureAnimationSpeedU { get; }
-
-        #endregion
-        #region FillTextureEffectTextureAnimationSpeedV
         Single FillTextureEffectTextureAnimationSpeedV { get; }
-
-        #endregion
-        #region EdgeEffectFallOff
         Single EdgeEffectFallOff { get; }
-
-        #endregion
-        #region EdgeEffectColor
         Color EdgeEffectColor { get; }
-
-        #endregion
-        #region EdgeEffectAlphaFadeInTime
         Single EdgeEffectAlphaFadeInTime { get; }
-
-        #endregion
-        #region EdgeEffectFullAlphaTime
         Single EdgeEffectFullAlphaTime { get; }
-
-        #endregion
-        #region EdgeEffectAlphaFadeOutTime
         Single EdgeEffectAlphaFadeOutTime { get; }
-
-        #endregion
-        #region EdgeEffectPersistentAlphaRatio
         Single EdgeEffectPersistentAlphaRatio { get; }
-
-        #endregion
-        #region EdgeEffectAlphaPulseAmplitude
         Single EdgeEffectAlphaPulseAmplitude { get; }
-
-        #endregion
-        #region EdgeEffectAlphaPulseFrequency
         Single EdgeEffectAlphaPulseFrequency { get; }
-
-        #endregion
-        #region FillTextureEffectFullAlphaRatio
         Single FillTextureEffectFullAlphaRatio { get; }
-
-        #endregion
-        #region EdgeEffectFullAlphaRatio
         Single EdgeEffectFullAlphaRatio { get; }
-
-        #endregion
-        #region MembraneShaderDestBlendMode
         EffectShader.SourceBlendMode MembraneShaderDestBlendMode { get; }
-
-        #endregion
-        #region ParticleShaderSourceBlendMode
         EffectShader.SourceBlendMode ParticleShaderSourceBlendMode { get; }
-
-        #endregion
-        #region ParticleShaderBlendOperation
         EffectShader.BlendOperation ParticleShaderBlendOperation { get; }
-
-        #endregion
-        #region ParticleShaderZTestFunction
         EffectShader.ZTestFunction ParticleShaderZTestFunction { get; }
-
-        #endregion
-        #region ParticleShaderDestBlendMode
         EffectShader.SourceBlendMode ParticleShaderDestBlendMode { get; }
-
-        #endregion
-        #region ParticleShaderParticleBirthRampUpTime
         Single ParticleShaderParticleBirthRampUpTime { get; }
-
-        #endregion
-        #region ParticleShaderFullParticleBirthTime
         Single ParticleShaderFullParticleBirthTime { get; }
-
-        #endregion
-        #region ParticleShaderParticleBirthRampDownTime
         Single ParticleShaderParticleBirthRampDownTime { get; }
-
-        #endregion
-        #region ParticleShaderFullParticleBirthRatio
         Single ParticleShaderFullParticleBirthRatio { get; }
-
-        #endregion
-        #region ParticleShaderPersistentParticleBirthRatio
         Single ParticleShaderPersistentParticleBirthRatio { get; }
-
-        #endregion
-        #region ParticleShaderParticleLifetime
         Single ParticleShaderParticleLifetime { get; }
-
-        #endregion
-        #region ParticleShaderParticleLifetimePlusMinus
         Single ParticleShaderParticleLifetimePlusMinus { get; }
-
-        #endregion
-        #region ParticleShaderInitialSpeedAlongNormal
         Single ParticleShaderInitialSpeedAlongNormal { get; }
-
-        #endregion
-        #region ParticleShaderAccelerationAlongNormal
         Single ParticleShaderAccelerationAlongNormal { get; }
-
-        #endregion
-        #region ParticleShaderInitialVelocity1
         Single ParticleShaderInitialVelocity1 { get; }
-
-        #endregion
-        #region ParticleShaderInitialVelocity2
         Single ParticleShaderInitialVelocity2 { get; }
-
-        #endregion
-        #region ParticleShaderInitialVelocity3
         Single ParticleShaderInitialVelocity3 { get; }
-
-        #endregion
-        #region ParticleShaderAcceleration1
         Single ParticleShaderAcceleration1 { get; }
-
-        #endregion
-        #region ParticleShaderAcceleration2
         Single ParticleShaderAcceleration2 { get; }
-
-        #endregion
-        #region ParticleShaderAcceleration3
         Single ParticleShaderAcceleration3 { get; }
-
-        #endregion
-        #region ParticleShaderScaleKey1
         Single ParticleShaderScaleKey1 { get; }
-
-        #endregion
-        #region ParticleShaderScaleKey2
         Single ParticleShaderScaleKey2 { get; }
-
-        #endregion
-        #region ParticleShaderScaleKey1Time
         Single ParticleShaderScaleKey1Time { get; }
-
-        #endregion
-        #region ParticleShaderScaleKey2Time
         Single ParticleShaderScaleKey2Time { get; }
-
-        #endregion
-        #region ColorKey1Color
         Color ColorKey1Color { get; }
-
-        #endregion
-        #region ColorKey2Color
         Color ColorKey2Color { get; }
-
-        #endregion
-        #region ColorKey3Color
         Color ColorKey3Color { get; }
-
-        #endregion
-        #region ColorKey1ColorAlpha
         Single ColorKey1ColorAlpha { get; }
-
-        #endregion
-        #region ColorKey2ColorAlpha
         Single ColorKey2ColorAlpha { get; }
-
-        #endregion
-        #region ColorKey3ColorAlpha
         Single ColorKey3ColorAlpha { get; }
-
-        #endregion
-        #region ColorKey1ColorKeyTime
         Single ColorKey1ColorKeyTime { get; }
-
-        #endregion
-        #region ColorKey2ColorKeyTime
         Single ColorKey2ColorKeyTime { get; }
-
-        #endregion
-        #region ColorKey3ColorKeyTime
         Single ColorKey3ColorKeyTime { get; }
-
-        #endregion
-        #region DATADataTypeState
         EffectShader.DATADataType DATADataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -1603,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEffectShaderInternal item)
         {
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static EffectShader_Mask<bool> GetEqualsMask(
@@ -1611,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEffectShaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetEqualsMask(
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1619,10 +1243,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IEffectShaderGetter item,
-            string name = null,
-            EffectShader_Mask<bool> printMask = null)
+            string? name = null,
+            EffectShader_Mask<bool>? printMask = null)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).ToString(
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1631,10 +1255,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IEffectShaderGetter item,
             FileGeneration fg,
-            string name = null,
-            EffectShader_Mask<bool> printMask = null)
+            string? name = null,
+            EffectShader_Mask<bool>? printMask = null)
         {
-            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).ToString(
+            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1645,15 +1269,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             EffectShader_Mask<bool?> checkMask)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).HasBeenSet(
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static EffectShader_Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
         {
-            var ret = new EffectShader_Mask<bool>();
-            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new EffectShader_Mask<bool>(false);
+            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1663,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             IEffectShaderGetter rhs)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).Equals(
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1671,23 +1295,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
-            EffectShader_TranslationMask copyMask)
-        {
-            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IEffectShaderInternal lhs,
-            IEffectShaderGetter rhs,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask copyMask = null)
+            EffectShader_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -1698,10 +1310,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1710,9 +1322,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader DeepCopy(
             this IEffectShaderGetter item,
-            EffectShader_TranslationMask copyMask = null)
+            EffectShader_TranslationMask? copyMask = null)
         {
-            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -1720,9 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader DeepCopy(
             this IEffectShaderGetter item,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask copyMask = null)
+            EffectShader_TranslationMask? copyMask = null)
         {
-            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -1730,10 +1342,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader DeepCopy(
             this IEffectShaderGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1744,12 +1356,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            EffectShader_TranslationMask translationMask = null)
+            EffectShader_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -1760,29 +1370,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             XElement node,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            EffectShader_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1791,13 +1397,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            EffectShader_TranslationMask translationMask = null)
+            EffectShader_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1806,13 +1410,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             string path,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            EffectShader_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1821,14 +1423,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            EffectShader_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1837,13 +1437,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            EffectShader_TranslationMask translationMask = null)
+            EffectShader_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1852,13 +1450,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             Stream stream,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            EffectShader_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1867,14 +1463,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            EffectShader_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1900,9 +1494,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -2014,11 +1608,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IEffectShaderGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IEffectShader);
 
-        public static readonly Type InternalSetterType = typeof(IEffectShaderInternal);
+        public static readonly Type? InternalSetterType = typeof(IEffectShaderInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.EffectShader";
 
@@ -2028,7 +1622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -2782,14 +2376,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -2813,65 +2407,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffectShaderInternal item)
         {
             ClearPartial();
-            item.FillTexture_Unset();
-            item.ParticleShaderTexture_Unset();
-            item.Flags = default(EffectShader.Flag);
-            item.MembraneShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
-            item.MembraneShaderBlendOperation = default(EffectShader.BlendOperation);
-            item.MembraneShaderZTestFunction = default(EffectShader.ZTestFunction);
-            item.FillTextureEffectColor = default(Color);
-            item.FillTextureEffectAlphaFadeInTime = default(Single);
-            item.FillTextureEffectFullAlphaTime = default(Single);
-            item.FillTextureEffectAlphaFadeOutTime = default(Single);
-            item.FillTextureEffectPersistentAlphaRatio = default(Single);
-            item.FillTextureEffectAlphaPulseAmplitude = default(Single);
-            item.FillTextureEffectAlphaPulseFrequency = default(Single);
-            item.FillTextureEffectTextureAnimationSpeedU = default(Single);
-            item.FillTextureEffectTextureAnimationSpeedV = default(Single);
-            item.EdgeEffectFallOff = default(Single);
-            item.EdgeEffectColor = default(Color);
-            item.EdgeEffectAlphaFadeInTime = default(Single);
-            item.EdgeEffectFullAlphaTime = default(Single);
-            item.EdgeEffectAlphaFadeOutTime = default(Single);
-            item.EdgeEffectPersistentAlphaRatio = default(Single);
-            item.EdgeEffectAlphaPulseAmplitude = default(Single);
-            item.EdgeEffectAlphaPulseFrequency = default(Single);
-            item.FillTextureEffectFullAlphaRatio = default(Single);
-            item.EdgeEffectFullAlphaRatio = default(Single);
-            item.MembraneShaderDestBlendMode = default(EffectShader.SourceBlendMode);
-            item.ParticleShaderSourceBlendMode = default(EffectShader.SourceBlendMode);
-            item.ParticleShaderBlendOperation = default(EffectShader.BlendOperation);
-            item.ParticleShaderZTestFunction = default(EffectShader.ZTestFunction);
-            item.ParticleShaderDestBlendMode = default(EffectShader.SourceBlendMode);
-            item.ParticleShaderParticleBirthRampUpTime = default(Single);
-            item.ParticleShaderFullParticleBirthTime = default(Single);
-            item.ParticleShaderParticleBirthRampDownTime = default(Single);
-            item.ParticleShaderFullParticleBirthRatio = default(Single);
-            item.ParticleShaderPersistentParticleBirthRatio = default(Single);
-            item.ParticleShaderParticleLifetime = default(Single);
-            item.ParticleShaderParticleLifetimePlusMinus = default(Single);
-            item.ParticleShaderInitialSpeedAlongNormal = default(Single);
-            item.ParticleShaderAccelerationAlongNormal = default(Single);
-            item.ParticleShaderInitialVelocity1 = default(Single);
-            item.ParticleShaderInitialVelocity2 = default(Single);
-            item.ParticleShaderInitialVelocity3 = default(Single);
-            item.ParticleShaderAcceleration1 = default(Single);
-            item.ParticleShaderAcceleration2 = default(Single);
-            item.ParticleShaderAcceleration3 = default(Single);
-            item.ParticleShaderScaleKey1 = default(Single);
-            item.ParticleShaderScaleKey2 = default(Single);
-            item.ParticleShaderScaleKey1Time = default(Single);
-            item.ParticleShaderScaleKey2Time = default(Single);
-            item.ColorKey1Color = default(Color);
-            item.ColorKey2Color = default(Color);
-            item.ColorKey3Color = default(Color);
-            item.ColorKey1ColorAlpha = default(Single);
-            item.ColorKey2ColorAlpha = default(Single);
-            item.ColorKey3ColorAlpha = default(Single);
-            item.ColorKey1ColorKeyTime = default(Single);
-            item.ColorKey2ColorKeyTime = default(Single);
-            item.ColorKey3ColorKeyTime = default(Single);
-            item.DATADataTypeState = default(EffectShader.DATADataType);
+            item.FillTexture = default;
+            item.ParticleShaderTexture = default;
+            item.Flags = default;
+            item.MembraneShaderSourceBlendMode = default;
+            item.MembraneShaderBlendOperation = default;
+            item.MembraneShaderZTestFunction = default;
+            item.FillTextureEffectColor = default;
+            item.FillTextureEffectAlphaFadeInTime = default;
+            item.FillTextureEffectFullAlphaTime = default;
+            item.FillTextureEffectAlphaFadeOutTime = default;
+            item.FillTextureEffectPersistentAlphaRatio = default;
+            item.FillTextureEffectAlphaPulseAmplitude = default;
+            item.FillTextureEffectAlphaPulseFrequency = default;
+            item.FillTextureEffectTextureAnimationSpeedU = default;
+            item.FillTextureEffectTextureAnimationSpeedV = default;
+            item.EdgeEffectFallOff = default;
+            item.EdgeEffectColor = default;
+            item.EdgeEffectAlphaFadeInTime = default;
+            item.EdgeEffectFullAlphaTime = default;
+            item.EdgeEffectAlphaFadeOutTime = default;
+            item.EdgeEffectPersistentAlphaRatio = default;
+            item.EdgeEffectAlphaPulseAmplitude = default;
+            item.EdgeEffectAlphaPulseFrequency = default;
+            item.FillTextureEffectFullAlphaRatio = default;
+            item.EdgeEffectFullAlphaRatio = default;
+            item.MembraneShaderDestBlendMode = default;
+            item.ParticleShaderSourceBlendMode = default;
+            item.ParticleShaderBlendOperation = default;
+            item.ParticleShaderZTestFunction = default;
+            item.ParticleShaderDestBlendMode = default;
+            item.ParticleShaderParticleBirthRampUpTime = default;
+            item.ParticleShaderFullParticleBirthTime = default;
+            item.ParticleShaderParticleBirthRampDownTime = default;
+            item.ParticleShaderFullParticleBirthRatio = default;
+            item.ParticleShaderPersistentParticleBirthRatio = default;
+            item.ParticleShaderParticleLifetime = default;
+            item.ParticleShaderParticleLifetimePlusMinus = default;
+            item.ParticleShaderInitialSpeedAlongNormal = default;
+            item.ParticleShaderAccelerationAlongNormal = default;
+            item.ParticleShaderInitialVelocity1 = default;
+            item.ParticleShaderInitialVelocity2 = default;
+            item.ParticleShaderInitialVelocity3 = default;
+            item.ParticleShaderAcceleration1 = default;
+            item.ParticleShaderAcceleration2 = default;
+            item.ParticleShaderAcceleration3 = default;
+            item.ParticleShaderScaleKey1 = default;
+            item.ParticleShaderScaleKey2 = default;
+            item.ParticleShaderScaleKey1Time = default;
+            item.ParticleShaderScaleKey2Time = default;
+            item.ColorKey1Color = default;
+            item.ColorKey2Color = default;
+            item.ColorKey3Color = default;
+            item.ColorKey1ColorAlpha = default;
+            item.ColorKey2ColorAlpha = default;
+            item.ColorKey3ColorAlpha = default;
+            item.ColorKey1ColorKeyTime = default;
+            item.ColorKey2ColorKeyTime = default;
+            item.ColorKey3ColorKeyTime = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2890,8 +2484,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2912,9 +2506,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IEffectShaderInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -2963,7 +2556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3080,7 +2673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IEffectShaderInternal>(
                 record: item,
@@ -3104,8 +2697,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EffectShader_Mask<bool>();
-            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new EffectShader_Mask<bool>(false);
+            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -3120,8 +2713,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FillTexture = item.FillTexture_IsSet == rhs.FillTexture_IsSet && string.Equals(item.FillTexture, rhs.FillTexture);
-            ret.ParticleShaderTexture = item.ParticleShaderTexture_IsSet == rhs.ParticleShaderTexture_IsSet && string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
+            ret.FillTexture = string.Equals(item.FillTexture, rhs.FillTexture);
+            ret.ParticleShaderTexture = string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
             ret.Flags = item.Flags == rhs.Flags;
             ret.MembraneShaderSourceBlendMode = item.MembraneShaderSourceBlendMode == rhs.MembraneShaderSourceBlendMode;
             ret.MembraneShaderBlendOperation = item.MembraneShaderBlendOperation == rhs.MembraneShaderBlendOperation;
@@ -3184,8 +2777,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IEffectShaderGetter item,
-            string name = null,
-            EffectShader_Mask<bool> printMask = null)
+            string? name = null,
+            EffectShader_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -3199,8 +2792,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IEffectShaderGetter item,
             FileGeneration fg,
-            string name = null,
-            EffectShader_Mask<bool> printMask = null)
+            string? name = null,
+            EffectShader_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -3224,7 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IEffectShaderGetter item,
             FileGeneration fg,
-            EffectShader_Mask<bool> printMask = null)
+            EffectShader_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -3472,8 +3065,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter item,
             EffectShader_Mask<bool?> checkMask)
         {
-            if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != item.FillTexture_IsSet) return false;
-            if (checkMask.ParticleShaderTexture.HasValue && checkMask.ParticleShaderTexture.Value != item.ParticleShaderTexture_IsSet) return false;
+            if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != (item.FillTexture != null)) return false;
+            if (checkMask.ParticleShaderTexture.HasValue && checkMask.ParticleShaderTexture.Value != (item.ParticleShaderTexture != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -3483,8 +3076,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter item,
             EffectShader_Mask<bool> mask)
         {
-            mask.FillTexture = item.FillTexture_IsSet;
-            mask.ParticleShaderTexture = item.ParticleShaderTexture_IsSet;
+            mask.FillTexture = (item.FillTexture != null);
+            mask.ParticleShaderTexture = (item.ParticleShaderTexture != null);
             mask.Flags = true;
             mask.MembraneShaderSourceBlendMode = true;
             mask.MembraneShaderBlendOperation = true;
@@ -3585,22 +3178,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IEffectShaderGetter lhs,
-            IEffectShaderGetter rhs)
+            IEffectShaderGetter? lhs,
+            IEffectShaderGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.FillTexture_IsSet != rhs.FillTexture_IsSet) return false;
-            if (lhs.FillTexture_IsSet)
-            {
-                if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
-            }
-            if (lhs.ParticleShaderTexture_IsSet != rhs.ParticleShaderTexture_IsSet) return false;
-            if (lhs.ParticleShaderTexture_IsSet)
-            {
-                if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
-            }
+            if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
+            if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.MembraneShaderSourceBlendMode != rhs.MembraneShaderSourceBlendMode) return false;
             if (lhs.MembraneShaderBlendOperation != rhs.MembraneShaderBlendOperation) return false;
@@ -3662,33 +3247,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEffectShaderGetter)lhs,
+                lhs: (IEffectShaderGetter?)lhs,
                 rhs: rhs as IEffectShaderGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEffectShaderGetter)lhs,
+                lhs: (IEffectShaderGetter?)lhs,
                 rhs: rhs as IEffectShaderGetter);
         }
         
         public virtual int GetHashCode(IEffectShaderGetter item)
         {
             int ret = 0;
-            if (item.FillTexture_IsSet)
+            if (item.FillTexture.TryGet(out var FillTextureitem))
             {
-                ret = HashHelper.GetHashCode(item.FillTexture).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(FillTextureitem).CombineHashCode(ret);
             }
-            if (item.ParticleShaderTexture_IsSet)
+            if (item.ParticleShaderTexture.TryGet(out var ParticleShaderTextureitem))
             {
-                ret = HashHelper.GetHashCode(item.ParticleShaderTexture).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ParticleShaderTextureitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.MembraneShaderSourceBlendMode).CombineHashCode(ret);
@@ -3779,9 +3364,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new EffectShader(getNextFormKey());
             ret.DeepCopyFieldsFrom((EffectShader)item);
@@ -3801,8 +3386,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEffectShaderInternal item,
             IEffectShaderGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -3814,8 +3399,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEffectShader item,
             IEffectShaderGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -3824,51 +3409,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
-                errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
-                try
-                {
-                    if (rhs.FillTexture_IsSet)
-                    {
-                        item.FillTexture = rhs.FillTexture;
-                    }
-                    else
-                    {
-                        item.FillTexture_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FillTexture = rhs.FillTexture;
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
-                errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
-                try
-                {
-                    if (rhs.ParticleShaderTexture_IsSet)
-                    {
-                        item.ParticleShaderTexture = rhs.ParticleShaderTexture;
-                    }
-                    else
-                    {
-                        item.ParticleShaderTexture_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParticleShaderTexture = rhs.ParticleShaderTexture;
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
@@ -4103,8 +3648,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEffectShaderInternal)item,
@@ -4116,8 +3661,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEffectShader)item,
@@ -4129,8 +3674,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEffectShaderInternal)item,
@@ -4142,8 +3687,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEffectShader)item,
@@ -4156,9 +3701,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public EffectShader DeepCopy(
             IEffectShaderGetter item,
-            EffectShader_TranslationMask copyMask = null)
+            EffectShader_TranslationMask? copyMask = null)
         {
-            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetNew();
+            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -4168,9 +3713,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public EffectShader DeepCopy(
             IEffectShaderGetter item,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask copyMask = null)
+            EffectShader_TranslationMask? copyMask = null)
         {
-            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetNew();
+            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -4180,10 +3725,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public EffectShader DeepCopy(
             IEffectShaderGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetNew();
+            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -4232,15 +3777,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IEffectShaderGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.FillTexture_IsSet
+            if ((item.FillTexture != null)
                 && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -4250,7 +3795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)EffectShader_FieldIndex.FillTexture,
                     errorMask: errorMask);
             }
-            if (item.ParticleShaderTexture_IsSet
+            if ((item.ParticleShaderTexture != null)
                 && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -4788,9 +4333,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IEffectShaderGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.EffectShader");
             node.Add(elem);
@@ -4808,9 +4353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -4823,9 +4368,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -4838,9 +4383,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -4859,8 +4404,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IEffectShaderInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -4885,8 +4430,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -5977,8 +5522,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             XElement node,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            string name = null)
+            EffectShader_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((EffectShaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -5994,8 +5539,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             string path,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            string name = null)
+            EffectShader_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -6011,8 +5556,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             Stream stream,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask translationMask = null,
-            string name = null)
+            EffectShader_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -6034,14 +5579,15 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class EffectShader_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<EffectShader_Mask<T>>
+    public class EffectShader_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<EffectShader_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public EffectShader_Mask()
-        {
-        }
-
         public EffectShader_Mask(T initialValue)
+        : base(initialValue)
         {
             this.FillTexture = initialValue;
             this.ParticleShaderTexture = initialValue;
@@ -6169,12 +5715,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T ColorKey2ColorKeyTime,
             T ColorKey3ColorKeyTime,
             T DATADataTypeState)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
             this.FillTexture = FillTexture;
             this.ParticleShaderTexture = ParticleShaderTexture;
             this.Flags = Flags;
@@ -6235,6 +5782,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorKey3ColorKeyTime = ColorKey3ColorKeyTime;
             this.DATADataTypeState = DATADataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected EffectShader_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -6585,14 +6139,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(EffectShader_Mask<bool> printMask = null)
+        public string ToString(EffectShader_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, EffectShader_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, EffectShader_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(EffectShader_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -6844,69 +6398,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class EffectShader_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<EffectShader_ErrorMask>
     {
         #region Members
-        public Exception FillTexture;
-        public Exception ParticleShaderTexture;
-        public Exception Flags;
-        public Exception MembraneShaderSourceBlendMode;
-        public Exception MembraneShaderBlendOperation;
-        public Exception MembraneShaderZTestFunction;
-        public Exception FillTextureEffectColor;
-        public Exception FillTextureEffectAlphaFadeInTime;
-        public Exception FillTextureEffectFullAlphaTime;
-        public Exception FillTextureEffectAlphaFadeOutTime;
-        public Exception FillTextureEffectPersistentAlphaRatio;
-        public Exception FillTextureEffectAlphaPulseAmplitude;
-        public Exception FillTextureEffectAlphaPulseFrequency;
-        public Exception FillTextureEffectTextureAnimationSpeedU;
-        public Exception FillTextureEffectTextureAnimationSpeedV;
-        public Exception EdgeEffectFallOff;
-        public Exception EdgeEffectColor;
-        public Exception EdgeEffectAlphaFadeInTime;
-        public Exception EdgeEffectFullAlphaTime;
-        public Exception EdgeEffectAlphaFadeOutTime;
-        public Exception EdgeEffectPersistentAlphaRatio;
-        public Exception EdgeEffectAlphaPulseAmplitude;
-        public Exception EdgeEffectAlphaPulseFrequency;
-        public Exception FillTextureEffectFullAlphaRatio;
-        public Exception EdgeEffectFullAlphaRatio;
-        public Exception MembraneShaderDestBlendMode;
-        public Exception ParticleShaderSourceBlendMode;
-        public Exception ParticleShaderBlendOperation;
-        public Exception ParticleShaderZTestFunction;
-        public Exception ParticleShaderDestBlendMode;
-        public Exception ParticleShaderParticleBirthRampUpTime;
-        public Exception ParticleShaderFullParticleBirthTime;
-        public Exception ParticleShaderParticleBirthRampDownTime;
-        public Exception ParticleShaderFullParticleBirthRatio;
-        public Exception ParticleShaderPersistentParticleBirthRatio;
-        public Exception ParticleShaderParticleLifetime;
-        public Exception ParticleShaderParticleLifetimePlusMinus;
-        public Exception ParticleShaderInitialSpeedAlongNormal;
-        public Exception ParticleShaderAccelerationAlongNormal;
-        public Exception ParticleShaderInitialVelocity1;
-        public Exception ParticleShaderInitialVelocity2;
-        public Exception ParticleShaderInitialVelocity3;
-        public Exception ParticleShaderAcceleration1;
-        public Exception ParticleShaderAcceleration2;
-        public Exception ParticleShaderAcceleration3;
-        public Exception ParticleShaderScaleKey1;
-        public Exception ParticleShaderScaleKey2;
-        public Exception ParticleShaderScaleKey1Time;
-        public Exception ParticleShaderScaleKey2Time;
-        public Exception ColorKey1Color;
-        public Exception ColorKey2Color;
-        public Exception ColorKey3Color;
-        public Exception ColorKey1ColorAlpha;
-        public Exception ColorKey2ColorAlpha;
-        public Exception ColorKey3ColorAlpha;
-        public Exception ColorKey1ColorKeyTime;
-        public Exception ColorKey2ColorKeyTime;
-        public Exception ColorKey3ColorKeyTime;
-        public Exception DATADataTypeState;
+        public Exception? FillTexture;
+        public Exception? ParticleShaderTexture;
+        public Exception? Flags;
+        public Exception? MembraneShaderSourceBlendMode;
+        public Exception? MembraneShaderBlendOperation;
+        public Exception? MembraneShaderZTestFunction;
+        public Exception? FillTextureEffectColor;
+        public Exception? FillTextureEffectAlphaFadeInTime;
+        public Exception? FillTextureEffectFullAlphaTime;
+        public Exception? FillTextureEffectAlphaFadeOutTime;
+        public Exception? FillTextureEffectPersistentAlphaRatio;
+        public Exception? FillTextureEffectAlphaPulseAmplitude;
+        public Exception? FillTextureEffectAlphaPulseFrequency;
+        public Exception? FillTextureEffectTextureAnimationSpeedU;
+        public Exception? FillTextureEffectTextureAnimationSpeedV;
+        public Exception? EdgeEffectFallOff;
+        public Exception? EdgeEffectColor;
+        public Exception? EdgeEffectAlphaFadeInTime;
+        public Exception? EdgeEffectFullAlphaTime;
+        public Exception? EdgeEffectAlphaFadeOutTime;
+        public Exception? EdgeEffectPersistentAlphaRatio;
+        public Exception? EdgeEffectAlphaPulseAmplitude;
+        public Exception? EdgeEffectAlphaPulseFrequency;
+        public Exception? FillTextureEffectFullAlphaRatio;
+        public Exception? EdgeEffectFullAlphaRatio;
+        public Exception? MembraneShaderDestBlendMode;
+        public Exception? ParticleShaderSourceBlendMode;
+        public Exception? ParticleShaderBlendOperation;
+        public Exception? ParticleShaderZTestFunction;
+        public Exception? ParticleShaderDestBlendMode;
+        public Exception? ParticleShaderParticleBirthRampUpTime;
+        public Exception? ParticleShaderFullParticleBirthTime;
+        public Exception? ParticleShaderParticleBirthRampDownTime;
+        public Exception? ParticleShaderFullParticleBirthRatio;
+        public Exception? ParticleShaderPersistentParticleBirthRatio;
+        public Exception? ParticleShaderParticleLifetime;
+        public Exception? ParticleShaderParticleLifetimePlusMinus;
+        public Exception? ParticleShaderInitialSpeedAlongNormal;
+        public Exception? ParticleShaderAccelerationAlongNormal;
+        public Exception? ParticleShaderInitialVelocity1;
+        public Exception? ParticleShaderInitialVelocity2;
+        public Exception? ParticleShaderInitialVelocity3;
+        public Exception? ParticleShaderAcceleration1;
+        public Exception? ParticleShaderAcceleration2;
+        public Exception? ParticleShaderAcceleration3;
+        public Exception? ParticleShaderScaleKey1;
+        public Exception? ParticleShaderScaleKey2;
+        public Exception? ParticleShaderScaleKey1Time;
+        public Exception? ParticleShaderScaleKey2Time;
+        public Exception? ColorKey1Color;
+        public Exception? ColorKey2Color;
+        public Exception? ColorKey3Color;
+        public Exception? ColorKey1ColorAlpha;
+        public Exception? ColorKey2ColorAlpha;
+        public Exception? ColorKey3ColorAlpha;
+        public Exception? ColorKey1ColorKeyTime;
+        public Exception? ColorKey2ColorKeyTime;
+        public Exception? ColorKey3ColorKeyTime;
+        public Exception? DATADataTypeState;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
             switch (enu)
@@ -7570,8 +7124,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public EffectShader_ErrorMask Combine(EffectShader_ErrorMask rhs)
+        public EffectShader_ErrorMask Combine(EffectShader_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new EffectShader_ErrorMask();
             ret.FillTexture = this.FillTexture.Combine(rhs.FillTexture);
             ret.ParticleShaderTexture = this.ParticleShaderTexture.Combine(rhs.ParticleShaderTexture);
@@ -7634,7 +7189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
-        public static EffectShader_ErrorMask Combine(EffectShader_ErrorMask lhs, EffectShader_ErrorMask rhs)
+        public static EffectShader_ErrorMask? Combine(EffectShader_ErrorMask? lhs, EffectShader_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -7644,7 +7199,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new EffectShader_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new EffectShader_ErrorMask();
         }
         #endregion
@@ -7715,11 +7269,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public EffectShader_TranslationMask()
-            : base()
-        {
-        }
-
         public EffectShader_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -7786,7 +7335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((FillTexture, null));
@@ -7876,7 +7425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IEffectShaderGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -7884,24 +7433,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.FillTexture_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FillTexture,
-                    header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.ParticleShaderTexture_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ParticleShaderTexture,
-                    header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FillTexture,
+                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParticleShaderTexture,
+                header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(EffectShader_Registration.DATA_HEADER)))
@@ -8099,7 +7640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IEffectShaderGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -8122,7 +7663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -8135,7 +7676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -8148,7 +7689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -8201,9 +7742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((EffectShaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -8217,7 +7758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((EffectShaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -8228,293 +7769,291 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region FillTexture
         private int? _FillTextureLocation;
-        public bool FillTexture_IsSet => _FillTextureLocation.HasValue;
-        public String FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FillTextureLocation.Value, _package.Meta)) : default;
+        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FillTextureLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region ParticleShaderTexture
         private int? _ParticleShaderTextureLocation;
-        public bool ParticleShaderTexture_IsSet => _ParticleShaderTextureLocation.HasValue;
-        public String ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ParticleShaderTextureLocation.Value, _package.Meta)) : default;
+        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ParticleShaderTextureLocation.Value, _package.Meta)) : default(string?);
         #endregion
         private int? _DATALocation;
         public EffectShader.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation.Value + 0x0;
+        private int _FlagsLocation => _DATALocation!.Value + 0x0;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
         #region MembraneShaderSourceBlendMode
-        private int _MembraneShaderSourceBlendModeLocation => _DATALocation.Value + 0x4;
+        private int _MembraneShaderSourceBlendModeLocation => _DATALocation!.Value + 0x4;
         private bool _MembraneShaderSourceBlendMode_IsSet => _DATALocation.HasValue;
         public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode => _MembraneShaderSourceBlendMode_IsSet ? (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneShaderSourceBlendModeLocation, 4)) : default;
         #endregion
         #region MembraneShaderBlendOperation
-        private int _MembraneShaderBlendOperationLocation => _DATALocation.Value + 0x8;
+        private int _MembraneShaderBlendOperationLocation => _DATALocation!.Value + 0x8;
         private bool _MembraneShaderBlendOperation_IsSet => _DATALocation.HasValue;
         public EffectShader.BlendOperation MembraneShaderBlendOperation => _MembraneShaderBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneShaderBlendOperationLocation, 4)) : default;
         #endregion
         #region MembraneShaderZTestFunction
-        private int _MembraneShaderZTestFunctionLocation => _DATALocation.Value + 0xC;
+        private int _MembraneShaderZTestFunctionLocation => _DATALocation!.Value + 0xC;
         private bool _MembraneShaderZTestFunction_IsSet => _DATALocation.HasValue;
         public EffectShader.ZTestFunction MembraneShaderZTestFunction => _MembraneShaderZTestFunction_IsSet ? (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneShaderZTestFunctionLocation, 4)) : default;
         #endregion
         #region FillTextureEffectColor
-        private int _FillTextureEffectColorLocation => _DATALocation.Value + 0x10;
+        private int _FillTextureEffectColorLocation => _DATALocation!.Value + 0x10;
         private bool _FillTextureEffectColor_IsSet => _DATALocation.HasValue;
         public Color FillTextureEffectColor => _FillTextureEffectColor_IsSet ? _data.Span.Slice(_FillTextureEffectColorLocation, 4).ReadColor() : default;
         #endregion
         #region FillTextureEffectAlphaFadeInTime
-        private int _FillTextureEffectAlphaFadeInTimeLocation => _DATALocation.Value + 0x14;
+        private int _FillTextureEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x14;
         private bool _FillTextureEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectAlphaFadeInTime => _FillTextureEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaFadeInTimeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectFullAlphaTime
-        private int _FillTextureEffectFullAlphaTimeLocation => _DATALocation.Value + 0x18;
+        private int _FillTextureEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x18;
         private bool _FillTextureEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectFullAlphaTime => _FillTextureEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectFullAlphaTimeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectAlphaFadeOutTime
-        private int _FillTextureEffectAlphaFadeOutTimeLocation => _DATALocation.Value + 0x1C;
+        private int _FillTextureEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x1C;
         private bool _FillTextureEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectAlphaFadeOutTime => _FillTextureEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaFadeOutTimeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectPersistentAlphaRatio
-        private int _FillTextureEffectPersistentAlphaRatioLocation => _DATALocation.Value + 0x20;
+        private int _FillTextureEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x20;
         private bool _FillTextureEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectPersistentAlphaRatio => _FillTextureEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectPersistentAlphaRatioLocation, 4)) : default;
         #endregion
         #region FillTextureEffectAlphaPulseAmplitude
-        private int _FillTextureEffectAlphaPulseAmplitudeLocation => _DATALocation.Value + 0x24;
+        private int _FillTextureEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x24;
         private bool _FillTextureEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectAlphaPulseAmplitude => _FillTextureEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaPulseAmplitudeLocation, 4)) : default;
         #endregion
         #region FillTextureEffectAlphaPulseFrequency
-        private int _FillTextureEffectAlphaPulseFrequencyLocation => _DATALocation.Value + 0x28;
+        private int _FillTextureEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x28;
         private bool _FillTextureEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectAlphaPulseFrequency => _FillTextureEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectAlphaPulseFrequencyLocation, 4)) : default;
         #endregion
         #region FillTextureEffectTextureAnimationSpeedU
-        private int _FillTextureEffectTextureAnimationSpeedULocation => _DATALocation.Value + 0x2C;
+        private int _FillTextureEffectTextureAnimationSpeedULocation => _DATALocation!.Value + 0x2C;
         private bool _FillTextureEffectTextureAnimationSpeedU_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectTextureAnimationSpeedU => _FillTextureEffectTextureAnimationSpeedU_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectTextureAnimationSpeedULocation, 4)) : default;
         #endregion
         #region FillTextureEffectTextureAnimationSpeedV
-        private int _FillTextureEffectTextureAnimationSpeedVLocation => _DATALocation.Value + 0x30;
+        private int _FillTextureEffectTextureAnimationSpeedVLocation => _DATALocation!.Value + 0x30;
         private bool _FillTextureEffectTextureAnimationSpeedV_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectTextureAnimationSpeedV => _FillTextureEffectTextureAnimationSpeedV_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectTextureAnimationSpeedVLocation, 4)) : default;
         #endregion
         #region EdgeEffectFallOff
-        private int _EdgeEffectFallOffLocation => _DATALocation.Value + 0x34;
+        private int _EdgeEffectFallOffLocation => _DATALocation!.Value + 0x34;
         private bool _EdgeEffectFallOff_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectFallOffLocation, 4)) : default;
         #endregion
         #region EdgeEffectColor
-        private int _EdgeEffectColorLocation => _DATALocation.Value + 0x38;
+        private int _EdgeEffectColorLocation => _DATALocation!.Value + 0x38;
         private bool _EdgeEffectColor_IsSet => _DATALocation.HasValue;
         public Color EdgeEffectColor => _EdgeEffectColor_IsSet ? _data.Span.Slice(_EdgeEffectColorLocation, 4).ReadColor() : default;
         #endregion
         #region EdgeEffectAlphaFadeInTime
-        private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation.Value + 0x3C;
+        private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x3C;
         private bool _EdgeEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4)) : default;
         #endregion
         #region EdgeEffectFullAlphaTime
-        private int _EdgeEffectFullAlphaTimeLocation => _DATALocation.Value + 0x40;
+        private int _EdgeEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x40;
         private bool _EdgeEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectFullAlphaTimeLocation, 4)) : default;
         #endregion
         #region EdgeEffectAlphaFadeOutTime
-        private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation.Value + 0x44;
+        private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x44;
         private bool _EdgeEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4)) : default;
         #endregion
         #region EdgeEffectPersistentAlphaRatio
-        private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation.Value + 0x48;
+        private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x48;
         private bool _EdgeEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4)) : default;
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
-        private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation.Value + 0x4C;
+        private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x4C;
         private bool _EdgeEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4)) : default;
         #endregion
         #region EdgeEffectAlphaPulseFrequency
-        private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation.Value + 0x50;
+        private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x50;
         private bool _EdgeEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4)) : default;
         #endregion
         #region FillTextureEffectFullAlphaRatio
-        private int _FillTextureEffectFullAlphaRatioLocation => _DATALocation.Value + 0x54;
+        private int _FillTextureEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x54;
         private bool _FillTextureEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
         public Single FillTextureEffectFullAlphaRatio => _FillTextureEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FillTextureEffectFullAlphaRatioLocation, 4)) : default;
         #endregion
         #region EdgeEffectFullAlphaRatio
-        private int _EdgeEffectFullAlphaRatioLocation => _DATALocation.Value + 0x58;
+        private int _EdgeEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x58;
         private bool _EdgeEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
         public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_EdgeEffectFullAlphaRatioLocation, 4)) : default;
         #endregion
         #region MembraneShaderDestBlendMode
-        private int _MembraneShaderDestBlendModeLocation => _DATALocation.Value + 0x5C;
+        private int _MembraneShaderDestBlendModeLocation => _DATALocation!.Value + 0x5C;
         private bool _MembraneShaderDestBlendMode_IsSet => _DATALocation.HasValue;
         public EffectShader.SourceBlendMode MembraneShaderDestBlendMode => _MembraneShaderDestBlendMode_IsSet ? (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneShaderDestBlendModeLocation, 4)) : default;
         #endregion
         #region ParticleShaderSourceBlendMode
-        private int _ParticleShaderSourceBlendModeLocation => _DATALocation.Value + 0x60;
+        private int _ParticleShaderSourceBlendModeLocation => _DATALocation!.Value + 0x60;
         private bool _ParticleShaderSourceBlendMode_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode => _ParticleShaderSourceBlendMode_IsSet ? (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleShaderSourceBlendModeLocation, 4)) : default;
         #endregion
         #region ParticleShaderBlendOperation
-        private int _ParticleShaderBlendOperationLocation => _DATALocation.Value + 0x64;
+        private int _ParticleShaderBlendOperationLocation => _DATALocation!.Value + 0x64;
         private bool _ParticleShaderBlendOperation_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public EffectShader.BlendOperation ParticleShaderBlendOperation => _ParticleShaderBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleShaderBlendOperationLocation, 4)) : default;
         #endregion
         #region ParticleShaderZTestFunction
-        private int _ParticleShaderZTestFunctionLocation => _DATALocation.Value + 0x68;
+        private int _ParticleShaderZTestFunctionLocation => _DATALocation!.Value + 0x68;
         private bool _ParticleShaderZTestFunction_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public EffectShader.ZTestFunction ParticleShaderZTestFunction => _ParticleShaderZTestFunction_IsSet ? (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleShaderZTestFunctionLocation, 4)) : default;
         #endregion
         #region ParticleShaderDestBlendMode
-        private int _ParticleShaderDestBlendModeLocation => _DATALocation.Value + 0x6C;
+        private int _ParticleShaderDestBlendModeLocation => _DATALocation!.Value + 0x6C;
         private bool _ParticleShaderDestBlendMode_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public EffectShader.SourceBlendMode ParticleShaderDestBlendMode => _ParticleShaderDestBlendMode_IsSet ? (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleShaderDestBlendModeLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleBirthRampUpTime
-        private int _ParticleShaderParticleBirthRampUpTimeLocation => _DATALocation.Value + 0x70;
+        private int _ParticleShaderParticleBirthRampUpTimeLocation => _DATALocation!.Value + 0x70;
         private bool _ParticleShaderParticleBirthRampUpTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderParticleBirthRampUpTime => _ParticleShaderParticleBirthRampUpTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleBirthRampUpTimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderFullParticleBirthTime
-        private int _ParticleShaderFullParticleBirthTimeLocation => _DATALocation.Value + 0x74;
+        private int _ParticleShaderFullParticleBirthTimeLocation => _DATALocation!.Value + 0x74;
         private bool _ParticleShaderFullParticleBirthTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderFullParticleBirthTime => _ParticleShaderFullParticleBirthTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderFullParticleBirthTimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleBirthRampDownTime
-        private int _ParticleShaderParticleBirthRampDownTimeLocation => _DATALocation.Value + 0x78;
+        private int _ParticleShaderParticleBirthRampDownTimeLocation => _DATALocation!.Value + 0x78;
         private bool _ParticleShaderParticleBirthRampDownTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderParticleBirthRampDownTime => _ParticleShaderParticleBirthRampDownTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleBirthRampDownTimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderFullParticleBirthRatio
-        private int _ParticleShaderFullParticleBirthRatioLocation => _DATALocation.Value + 0x7C;
+        private int _ParticleShaderFullParticleBirthRatioLocation => _DATALocation!.Value + 0x7C;
         private bool _ParticleShaderFullParticleBirthRatio_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderFullParticleBirthRatio => _ParticleShaderFullParticleBirthRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderFullParticleBirthRatioLocation, 4)) : default;
         #endregion
         #region ParticleShaderPersistentParticleBirthRatio
-        private int _ParticleShaderPersistentParticleBirthRatioLocation => _DATALocation.Value + 0x80;
+        private int _ParticleShaderPersistentParticleBirthRatioLocation => _DATALocation!.Value + 0x80;
         private bool _ParticleShaderPersistentParticleBirthRatio_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderPersistentParticleBirthRatio => _ParticleShaderPersistentParticleBirthRatio_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderPersistentParticleBirthRatioLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleLifetime
-        private int _ParticleShaderParticleLifetimeLocation => _DATALocation.Value + 0x84;
+        private int _ParticleShaderParticleLifetimeLocation => _DATALocation!.Value + 0x84;
         private bool _ParticleShaderParticleLifetime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderParticleLifetime => _ParticleShaderParticleLifetime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleLifetimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderParticleLifetimePlusMinus
-        private int _ParticleShaderParticleLifetimePlusMinusLocation => _DATALocation.Value + 0x88;
+        private int _ParticleShaderParticleLifetimePlusMinusLocation => _DATALocation!.Value + 0x88;
         private bool _ParticleShaderParticleLifetimePlusMinus_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderParticleLifetimePlusMinus => _ParticleShaderParticleLifetimePlusMinus_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderParticleLifetimePlusMinusLocation, 4)) : default;
         #endregion
         #region ParticleShaderInitialSpeedAlongNormal
-        private int _ParticleShaderInitialSpeedAlongNormalLocation => _DATALocation.Value + 0x8C;
+        private int _ParticleShaderInitialSpeedAlongNormalLocation => _DATALocation!.Value + 0x8C;
         private bool _ParticleShaderInitialSpeedAlongNormal_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderInitialSpeedAlongNormal => _ParticleShaderInitialSpeedAlongNormal_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialSpeedAlongNormalLocation, 4)) : default;
         #endregion
         #region ParticleShaderAccelerationAlongNormal
-        private int _ParticleShaderAccelerationAlongNormalLocation => _DATALocation.Value + 0x90;
+        private int _ParticleShaderAccelerationAlongNormalLocation => _DATALocation!.Value + 0x90;
         private bool _ParticleShaderAccelerationAlongNormal_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderAccelerationAlongNormal => _ParticleShaderAccelerationAlongNormal_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAccelerationAlongNormalLocation, 4)) : default;
         #endregion
         #region ParticleShaderInitialVelocity1
-        private int _ParticleShaderInitialVelocity1Location => _DATALocation.Value + 0x94;
+        private int _ParticleShaderInitialVelocity1Location => _DATALocation!.Value + 0x94;
         private bool _ParticleShaderInitialVelocity1_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderInitialVelocity1 => _ParticleShaderInitialVelocity1_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialVelocity1Location, 4)) : default;
         #endregion
         #region ParticleShaderInitialVelocity2
-        private int _ParticleShaderInitialVelocity2Location => _DATALocation.Value + 0x98;
+        private int _ParticleShaderInitialVelocity2Location => _DATALocation!.Value + 0x98;
         private bool _ParticleShaderInitialVelocity2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderInitialVelocity2 => _ParticleShaderInitialVelocity2_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialVelocity2Location, 4)) : default;
         #endregion
         #region ParticleShaderInitialVelocity3
-        private int _ParticleShaderInitialVelocity3Location => _DATALocation.Value + 0x9C;
+        private int _ParticleShaderInitialVelocity3Location => _DATALocation!.Value + 0x9C;
         private bool _ParticleShaderInitialVelocity3_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderInitialVelocity3 => _ParticleShaderInitialVelocity3_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderInitialVelocity3Location, 4)) : default;
         #endregion
         #region ParticleShaderAcceleration1
-        private int _ParticleShaderAcceleration1Location => _DATALocation.Value + 0xA0;
+        private int _ParticleShaderAcceleration1Location => _DATALocation!.Value + 0xA0;
         private bool _ParticleShaderAcceleration1_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderAcceleration1 => _ParticleShaderAcceleration1_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAcceleration1Location, 4)) : default;
         #endregion
         #region ParticleShaderAcceleration2
-        private int _ParticleShaderAcceleration2Location => _DATALocation.Value + 0xA4;
+        private int _ParticleShaderAcceleration2Location => _DATALocation!.Value + 0xA4;
         private bool _ParticleShaderAcceleration2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderAcceleration2 => _ParticleShaderAcceleration2_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAcceleration2Location, 4)) : default;
         #endregion
         #region ParticleShaderAcceleration3
-        private int _ParticleShaderAcceleration3Location => _DATALocation.Value + 0xA8;
+        private int _ParticleShaderAcceleration3Location => _DATALocation!.Value + 0xA8;
         private bool _ParticleShaderAcceleration3_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderAcceleration3 => _ParticleShaderAcceleration3_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderAcceleration3Location, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey1
-        private int _ParticleShaderScaleKey1Location => _DATALocation.Value + 0xAC;
+        private int _ParticleShaderScaleKey1Location => _DATALocation!.Value + 0xAC;
         private bool _ParticleShaderScaleKey1_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderScaleKey1 => _ParticleShaderScaleKey1_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey1Location, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey2
-        private int _ParticleShaderScaleKey2Location => _DATALocation.Value + 0xB0;
+        private int _ParticleShaderScaleKey2Location => _DATALocation!.Value + 0xB0;
         private bool _ParticleShaderScaleKey2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderScaleKey2 => _ParticleShaderScaleKey2_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey2Location, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey1Time
-        private int _ParticleShaderScaleKey1TimeLocation => _DATALocation.Value + 0xB4;
+        private int _ParticleShaderScaleKey1TimeLocation => _DATALocation!.Value + 0xB4;
         private bool _ParticleShaderScaleKey1Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderScaleKey1Time => _ParticleShaderScaleKey1Time_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey1TimeLocation, 4)) : default;
         #endregion
         #region ParticleShaderScaleKey2Time
-        private int _ParticleShaderScaleKey2TimeLocation => _DATALocation.Value + 0xB8;
+        private int _ParticleShaderScaleKey2TimeLocation => _DATALocation!.Value + 0xB8;
         private bool _ParticleShaderScaleKey2Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ParticleShaderScaleKey2Time => _ParticleShaderScaleKey2Time_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ParticleShaderScaleKey2TimeLocation, 4)) : default;
         #endregion
         #region ColorKey1Color
-        private int _ColorKey1ColorLocation => _DATALocation.Value + 0xBC;
+        private int _ColorKey1ColorLocation => _DATALocation!.Value + 0xBC;
         private bool _ColorKey1Color_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Color ColorKey1Color => _ColorKey1Color_IsSet ? _data.Span.Slice(_ColorKey1ColorLocation, 4).ReadColor() : default;
         #endregion
         #region ColorKey2Color
-        private int _ColorKey2ColorLocation => _DATALocation.Value + 0xC0;
+        private int _ColorKey2ColorLocation => _DATALocation!.Value + 0xC0;
         private bool _ColorKey2Color_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Color ColorKey2Color => _ColorKey2Color_IsSet ? _data.Span.Slice(_ColorKey2ColorLocation, 4).ReadColor() : default;
         #endregion
         #region ColorKey3Color
-        private int _ColorKey3ColorLocation => _DATALocation.Value + 0xC4;
+        private int _ColorKey3ColorLocation => _DATALocation!.Value + 0xC4;
         private bool _ColorKey3Color_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Color ColorKey3Color => _ColorKey3Color_IsSet ? _data.Span.Slice(_ColorKey3ColorLocation, 4).ReadColor() : default;
         #endregion
         #region ColorKey1ColorAlpha
-        private int _ColorKey1ColorAlphaLocation => _DATALocation.Value + 0xC8;
+        private int _ColorKey1ColorAlphaLocation => _DATALocation!.Value + 0xC8;
         private bool _ColorKey1ColorAlpha_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ColorKey1ColorAlpha => _ColorKey1ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey1ColorAlphaLocation, 4)) : default;
         #endregion
         #region ColorKey2ColorAlpha
-        private int _ColorKey2ColorAlphaLocation => _DATALocation.Value + 0xCC;
+        private int _ColorKey2ColorAlphaLocation => _DATALocation!.Value + 0xCC;
         private bool _ColorKey2ColorAlpha_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ColorKey2ColorAlpha => _ColorKey2ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey2ColorAlphaLocation, 4)) : default;
         #endregion
         #region ColorKey3ColorAlpha
-        private int _ColorKey3ColorAlphaLocation => _DATALocation.Value + 0xD0;
+        private int _ColorKey3ColorAlphaLocation => _DATALocation!.Value + 0xD0;
         private bool _ColorKey3ColorAlpha_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ColorKey3ColorAlpha => _ColorKey3ColorAlpha_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey3ColorAlphaLocation, 4)) : default;
         #endregion
         #region ColorKey1ColorKeyTime
-        private int _ColorKey1ColorKeyTimeLocation => _DATALocation.Value + 0xD4;
+        private int _ColorKey1ColorKeyTimeLocation => _DATALocation!.Value + 0xD4;
         private bool _ColorKey1ColorKeyTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ColorKey1ColorKeyTime => _ColorKey1ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey1ColorKeyTimeLocation, 4)) : default;
         #endregion
         #region ColorKey2ColorKeyTime
-        private int _ColorKey2ColorKeyTimeLocation => _DATALocation.Value + 0xD8;
+        private int _ColorKey2ColorKeyTimeLocation => _DATALocation!.Value + 0xD8;
         private bool _ColorKey2ColorKeyTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ColorKey2ColorKeyTime => _ColorKey2ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey2ColorKeyTimeLocation, 4)) : default;
         #endregion
         #region ColorKey3ColorKeyTime
-        private int _ColorKey3ColorKeyTimeLocation => _DATALocation.Value + 0xDC;
+        private int _ColorKey3ColorKeyTimeLocation => _DATALocation!.Value + 0xDC;
         private bool _ColorKey3ColorKeyTime_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
         public Single ColorKey3ColorKeyTime => _ColorKey3ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey3ColorKeyTimeLocation, 4)) : default;
         #endregion
@@ -8535,7 +8074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EffectShaderBinaryOverlay EffectShaderFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new EffectShaderBinaryOverlay(
@@ -8563,7 +8102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

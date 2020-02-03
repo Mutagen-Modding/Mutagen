@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -50,127 +51,55 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
-        public bool ObjectBounds_IsSet
-        {
-            get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds];
-            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ITextureSetGetter.ObjectBounds_IsSet => ObjectBounds_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds;
-        public ObjectBounds ObjectBounds
+        private ObjectBounds? _ObjectBounds;
+        public ObjectBounds? ObjectBounds
         {
             get => _ObjectBounds;
-            set => ObjectBounds_Set(value);
-        }
-        public void ObjectBounds_Set(
-            ObjectBounds value,
-            bool hasBeenSet = true)
-        {
-            _ObjectBounds = value;
-            _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds] = hasBeenSet;
-        }
-        public void ObjectBounds_Unset()
-        {
-            this.ObjectBounds_Set(default(ObjectBounds), false);
+            set => _ObjectBounds = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ITextureSetGetter.ObjectBounds => this.ObjectBounds;
+        IObjectBoundsGetter? ITextureSetGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #region Textures
-        public bool Textures_IsSet
-        {
-            get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures];
-            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ITextureSetGetter.Textures_IsSet => Textures_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Textures _Textures;
-        public Textures Textures
+        private Textures? _Textures;
+        public Textures? Textures
         {
             get => _Textures;
-            set => Textures_Set(value);
-        }
-        public void Textures_Set(
-            Textures value,
-            bool hasBeenSet = true)
-        {
-            _Textures = value;
-            _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures] = hasBeenSet;
-        }
-        public void Textures_Unset()
-        {
-            this.Textures_Set(default(Textures), false);
+            set => _Textures = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITexturesGetter ITextureSetGetter.Textures => this.Textures;
+        ITexturesGetter? ITextureSetGetter.Textures => this.Textures;
         #endregion
         #region Decal
-        public bool Decal_IsSet
-        {
-            get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal];
-            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ITextureSetGetter.Decal_IsSet => Decal_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Decal _Decal;
-        public Decal Decal
+        private Decal? _Decal;
+        public Decal? Decal
         {
             get => _Decal;
-            set => Decal_Set(value);
-        }
-        public void Decal_Set(
-            Decal value,
-            bool hasBeenSet = true)
-        {
-            _Decal = value;
-            _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal] = hasBeenSet;
-        }
-        public void Decal_Unset()
-        {
-            this.Decal_Set(default(Decal), false);
+            set => _Decal = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDecalGetter ITextureSetGetter.Decal => this.Decal;
+        IDecalGetter? ITextureSetGetter.Decal => this.Decal;
         #endregion
         #region Flags
-        public bool Flags_IsSet
-        {
-            get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags];
-            set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ITextureSetGetter.Flags_IsSet => Flags_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TextureSet.Flag _Flags;
-        public TextureSet.Flag Flags
+        private TextureSet.Flag? _Flags;
+        public TextureSet.Flag? Flags
         {
             get => this._Flags;
-            set => Flags_Set(value);
+            set => this._Flags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TextureSet.Flag ITextureSetGetter.Flags => this.Flags;
-        public void Flags_Set(
-            TextureSet.Flag value,
-            bool markSet = true)
-        {
-            _Flags = value;
-            _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags] = markSet;
-        }
-        public void Flags_Unset()
-        {
-            this.Flags_Set(default(TextureSet.Flag), false);
-        }
+        TextureSet.Flag? ITextureSetGetter.Flags => this.Flags;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             TextureSetMixIn.ToString(
                 item: this,
@@ -183,15 +112,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is ITextureSetGetter rhs)) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(TextureSet obj)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()).Equals(this, obj);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -200,9 +129,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((TextureSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -215,11 +144,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new TextureSet CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            TextureSet_TranslationMask translationMask = null)
+            TextureSet_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -229,38 +156,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static TextureSet CreateFromXml(
             XElement node,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            TextureSet_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static TextureSet CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new TextureSet() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new TextureSet();
-            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -269,12 +183,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static TextureSet CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            TextureSet_TranslationMask translationMask = null)
+            TextureSet_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -282,12 +194,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static TextureSet CreateFromXml(
             string path,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            TextureSet_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -295,13 +205,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static TextureSet CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TextureSet_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -309,12 +217,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static TextureSet CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            TextureSet_TranslationMask translationMask = null)
+            TextureSet_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -322,12 +228,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static TextureSet CreateFromXml(
             Stream stream,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            TextureSet_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -335,13 +239,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static TextureSet CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TextureSet_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -350,20 +252,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((TextureSet_FieldIndex)index)
-            {
-                case TextureSet_FieldIndex.ObjectBounds:
-                case TextureSet_FieldIndex.Textures:
-                case TextureSet_FieldIndex.Decal:
-                case TextureSet_FieldIndex.Flags:
-                    return _hasBeenSetTracker[index];
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = TextureSet_Registration.TRIGGERING_RECORD_TYPE;
@@ -386,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -409,10 +297,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static TextureSet CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new TextureSet();
-            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -430,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)this).CommonSetterInstance()).Clear(this);
+            ((TextureSetSetterCommon)((ITextureSetGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new TextureSet GetNew()
@@ -447,26 +335,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ITextureSetInternal>
     {
-        new ObjectBounds ObjectBounds { get; set; }
-        new bool ObjectBounds_IsSet { get; set; }
-        void ObjectBounds_Set(ObjectBounds value, bool hasBeenSet = true);
-        void ObjectBounds_Unset();
-
-        new Textures Textures { get; set; }
-        new bool Textures_IsSet { get; set; }
-        void Textures_Set(Textures value, bool hasBeenSet = true);
-        void Textures_Unset();
-
-        new Decal Decal { get; set; }
-        new bool Decal_IsSet { get; set; }
-        void Decal_Set(Decal value, bool hasBeenSet = true);
-        void Decal_Unset();
-
-        new TextureSet.Flag Flags { get; set; }
-        new bool Flags_IsSet { get; set; }
-        void Flags_Set(TextureSet.Flag value, bool hasBeenSet = true);
-        void Flags_Unset();
-
+        new ObjectBounds? ObjectBounds { get; set; }
+        new Textures? Textures { get; set; }
+        new Decal? Decal { get; set; }
+        new TextureSet.Flag? Flags { get; set; }
     }
 
     public partial interface ITextureSetInternal :
@@ -482,26 +354,10 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        #region ObjectBounds
-        IObjectBoundsGetter ObjectBounds { get; }
-        bool ObjectBounds_IsSet { get; }
-
-        #endregion
-        #region Textures
-        ITexturesGetter Textures { get; }
-        bool Textures_IsSet { get; }
-
-        #endregion
-        #region Decal
-        IDecalGetter Decal { get; }
-        bool Decal_IsSet { get; }
-
-        #endregion
-        #region Flags
-        TextureSet.Flag Flags { get; }
-        bool Flags_IsSet { get; }
-
-        #endregion
+        IObjectBoundsGetter? ObjectBounds { get; }
+        ITexturesGetter? Textures { get; }
+        IDecalGetter? Decal { get; }
+        TextureSet.Flag? Flags { get; }
 
     }
 
@@ -512,7 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this ITextureSetInternal item)
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static TextureSet_Mask<bool> GetEqualsMask(
@@ -520,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITextureSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetEqualsMask(
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -528,10 +384,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this ITextureSetGetter item,
-            string name = null,
-            TextureSet_Mask<bool> printMask = null)
+            string? name = null,
+            TextureSet_Mask<bool>? printMask = null)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).ToString(
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -540,10 +396,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this ITextureSetGetter item,
             FileGeneration fg,
-            string name = null,
-            TextureSet_Mask<bool> printMask = null)
+            string? name = null,
+            TextureSet_Mask<bool>? printMask = null)
         {
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).ToString(
+            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -554,15 +410,15 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetGetter item,
             TextureSet_Mask<bool?> checkMask)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).HasBeenSet(
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static TextureSet_Mask<bool> GetHasBeenSetMask(this ITextureSetGetter item)
         {
-            var ret = new TextureSet_Mask<bool>();
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new TextureSet_Mask<bool>(false);
+            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -572,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetGetter item,
             ITextureSetGetter rhs)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).Equals(
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -580,23 +436,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ITextureSetInternal lhs,
             ITextureSetGetter rhs,
-            TextureSet_TranslationMask copyMask)
-        {
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ITextureSetInternal lhs,
-            ITextureSetGetter rhs,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask copyMask = null)
+            TextureSet_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -607,10 +451,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ITextureSetInternal lhs,
             ITextureSetGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -619,9 +463,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static TextureSet DeepCopy(
             this ITextureSetGetter item,
-            TextureSet_TranslationMask copyMask = null)
+            TextureSet_TranslationMask? copyMask = null)
         {
-            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -629,9 +473,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static TextureSet DeepCopy(
             this ITextureSetGetter item,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask copyMask = null)
+            TextureSet_TranslationMask? copyMask = null)
         {
-            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -639,10 +483,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static TextureSet DeepCopy(
             this ITextureSetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -653,12 +497,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            TextureSet_TranslationMask translationMask = null)
+            TextureSet_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -669,29 +511,25 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetInternal item,
             XElement node,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            TextureSet_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -700,13 +538,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            TextureSet_TranslationMask translationMask = null)
+            TextureSet_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -715,13 +551,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetInternal item,
             string path,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            TextureSet_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -730,14 +564,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TextureSet_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -746,13 +578,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            TextureSet_TranslationMask translationMask = null)
+            TextureSet_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -761,13 +591,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetInternal item,
             Stream stream,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            TextureSet_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -776,14 +604,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TextureSet_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -809,9 +635,9 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -870,11 +696,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(ITextureSetGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ITextureSet);
 
-        public static readonly Type InternalSetterType = typeof(ITextureSetInternal);
+        public static readonly Type? InternalSetterType = typeof(ITextureSetInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.TextureSet";
 
@@ -884,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1042,14 +868,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1073,10 +899,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITextureSetInternal item)
         {
             ClearPartial();
-            item.ObjectBounds_Unset();
-            item.Textures_Unset();
-            item.Decal_Unset();
-            item.Flags_Unset();
+            item.ObjectBounds = null;
+            item.Textures = null;
+            item.Decal = null;
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -1095,8 +921,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1114,9 +940,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             ITextureSetInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1164,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1221,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<ITextureSetInternal>(
                 record: item,
@@ -1245,8 +1070,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TextureSet_Mask<bool>();
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new TextureSet_Mask<bool>(false);
+            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1262,34 +1087,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds_IsSet,
-                rhs.ObjectBounds_IsSet,
                 item.ObjectBounds,
                 rhs.ObjectBounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Textures = EqualsMaskHelper.EqualsHelper(
-                item.Textures_IsSet,
-                rhs.Textures_IsSet,
                 item.Textures,
                 rhs.Textures,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Decal = EqualsMaskHelper.EqualsHelper(
-                item.Decal_IsSet,
-                rhs.Decal_IsSet,
                 item.Decal,
                 rhs.Decal,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
             ITextureSetGetter item,
-            string name = null,
-            TextureSet_Mask<bool> printMask = null)
+            string? name = null,
+            TextureSet_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1303,8 +1122,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             ITextureSetGetter item,
             FileGeneration fg,
-            string name = null,
-            TextureSet_Mask<bool> printMask = null)
+            string? name = null,
+            TextureSet_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1328,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             ITextureSetGetter item,
             FileGeneration fg,
-            TextureSet_Mask<bool> printMask = null)
+            TextureSet_Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1356,13 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetGetter item,
             TextureSet_Mask<bool?> checkMask)
         {
-            if (checkMask.ObjectBounds.Overall.HasValue && checkMask.ObjectBounds.Overall.Value != item.ObjectBounds_IsSet) return false;
-            if (checkMask.ObjectBounds.Specific != null && (item.ObjectBounds == null || !item.ObjectBounds.HasBeenSet(checkMask.ObjectBounds.Specific))) return false;
-            if (checkMask.Textures.Overall.HasValue && checkMask.Textures.Overall.Value != item.Textures_IsSet) return false;
-            if (checkMask.Textures.Specific != null && (item.Textures == null || !item.Textures.HasBeenSet(checkMask.Textures.Specific))) return false;
-            if (checkMask.Decal.Overall.HasValue && checkMask.Decal.Overall.Value != item.Decal_IsSet) return false;
-            if (checkMask.Decal.Specific != null && (item.Decal == null || !item.Decal.HasBeenSet(checkMask.Decal.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.ObjectBounds?.Overall.HasValue ?? false && checkMask.ObjectBounds.Overall.Value != (item.ObjectBounds != null)) return false;
+            if (checkMask.ObjectBounds?.Specific != null && (item.ObjectBounds == null || !item.ObjectBounds.HasBeenSet(checkMask.ObjectBounds.Specific))) return false;
+            if (checkMask.Textures?.Overall.HasValue ?? false && checkMask.Textures.Overall.Value != (item.Textures != null)) return false;
+            if (checkMask.Textures?.Specific != null && (item.Textures == null || !item.Textures.HasBeenSet(checkMask.Textures.Specific))) return false;
+            if (checkMask.Decal?.Overall.HasValue ?? false && checkMask.Decal.Overall.Value != (item.Decal != null)) return false;
+            if (checkMask.Decal?.Specific != null && (item.Decal == null || !item.Decal.HasBeenSet(checkMask.Decal.Specific))) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1372,10 +1191,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetGetter item,
             TextureSet_Mask<bool> mask)
         {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds_Mask<bool>>(item.ObjectBounds_IsSet, item.ObjectBounds.GetHasBeenSetMask());
-            mask.Textures = new MaskItem<bool, Textures_Mask<bool>>(item.Textures_IsSet, item.Textures.GetHasBeenSetMask());
-            mask.Decal = new MaskItem<bool, Decal_Mask<bool>>(item.Decal_IsSet, item.Decal.GetHasBeenSetMask());
-            mask.Flags = item.Flags_IsSet;
+            var itemObjectBounds = item.ObjectBounds;
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds_Mask<bool>?>(itemObjectBounds != null, itemObjectBounds?.GetHasBeenSetMask());
+            var itemTextures = item.Textures;
+            mask.Textures = new MaskItem<bool, Textures_Mask<bool>?>(itemTextures != null, itemTextures?.GetHasBeenSetMask());
+            var itemDecal = item.Decal;
+            mask.Decal = new MaskItem<bool, Decal_Mask<bool>?>(itemDecal != null, itemDecal?.GetHasBeenSetMask());
+            mask.Flags = (item.Flags != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1423,71 +1245,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ITextureSetGetter lhs,
-            ITextureSetGetter rhs)
+            ITextureSetGetter? lhs,
+            ITextureSetGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.ObjectBounds_IsSet != rhs.ObjectBounds_IsSet) return false;
-            if (lhs.ObjectBounds_IsSet)
-            {
-                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            }
-            if (lhs.Textures_IsSet != rhs.Textures_IsSet) return false;
-            if (lhs.Textures_IsSet)
-            {
-                if (!object.Equals(lhs.Textures, rhs.Textures)) return false;
-            }
-            if (lhs.Decal_IsSet != rhs.Decal_IsSet) return false;
-            if (lhs.Decal_IsSet)
-            {
-                if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!object.Equals(lhs.Textures, rhs.Textures)) return false;
+            if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
             return true;
         }
         
         public override bool Equals(
-            ISkyrimMajorRecordGetter lhs,
-            ISkyrimMajorRecordGetter rhs)
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ITextureSetGetter)lhs,
+                lhs: (ITextureSetGetter?)lhs,
                 rhs: rhs as ITextureSetGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ITextureSetGetter)lhs,
+                lhs: (ITextureSetGetter?)lhs,
                 rhs: rhs as ITextureSetGetter);
         }
         
         public virtual int GetHashCode(ITextureSetGetter item)
         {
             int ret = 0;
-            if (item.ObjectBounds_IsSet)
+            if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
             {
-                ret = HashHelper.GetHashCode(item.ObjectBounds).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ObjectBoundsitem).CombineHashCode(ret);
             }
-            if (item.Textures_IsSet)
+            if (item.Textures.TryGet(out var Texturesitem))
             {
-                ret = HashHelper.GetHashCode(item.Textures).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Texturesitem).CombineHashCode(ret);
             }
-            if (item.Decal_IsSet)
+            if (item.Decal.TryGet(out var Decalitem))
             {
-                ret = HashHelper.GetHashCode(item.Decal).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Decalitem).CombineHashCode(ret);
             }
-            if (item.Flags_IsSet)
+            if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1521,9 +1327,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(TextureSet obj, TextureSet rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(TextureSet obj, TextureSet rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new TextureSet(getNextFormKey());
             ret.DeepCopyFieldsFrom((TextureSet)item);
@@ -1543,8 +1349,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             ITextureSetInternal item,
             ITextureSetGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1556,8 +1362,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             ITextureSet item,
             ITextureSetGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1569,17 +1375,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds_IsSet)
+                    if(rhs.ObjectBounds.TryGet(out var rhsObjectBounds))
                     {
-                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
                     }
                     else
                     {
-                        item.ObjectBounds_Set(
-                            value: default(ObjectBounds),
-                            hasBeenSet: false);
+                        item.ObjectBounds = default;
                     }
                 }
                 catch (Exception ex)
@@ -1597,17 +1401,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
                 try
                 {
-                    if(rhs.Textures_IsSet)
+                    if(rhs.Textures.TryGet(out var rhsTextures))
                     {
-                        item.Textures = rhs.Textures.DeepCopy(
+                        item.Textures = rhsTextures.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
                     }
                     else
                     {
-                        item.Textures_Set(
-                            value: default(Textures),
-                            hasBeenSet: false);
+                        item.Textures = default;
                     }
                 }
                 catch (Exception ex)
@@ -1625,17 +1427,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                 try
                 {
-                    if(rhs.Decal_IsSet)
+                    if(rhs.Decal.TryGet(out var rhsDecal))
                     {
-                        item.Decal = rhs.Decal.DeepCopy(
+                        item.Decal = rhsDecal.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
                     }
                     else
                     {
-                        item.Decal_Set(
-                            value: default(Decal),
-                            hasBeenSet: false);
+                        item.Decal = default;
                     }
                 }
                 catch (Exception ex)
@@ -1650,35 +1450,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)TextureSet_FieldIndex.Flags);
-                try
-                {
-                    if (rhs.Flags_IsSet)
-                    {
-                        item.Flags = rhs.Flags;
-                    }
-                    else
-                    {
-                        item.Flags_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
             }
         }
         
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ITextureSetInternal)item,
@@ -1690,8 +1470,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ITextureSet)item,
@@ -1703,8 +1483,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ITextureSetInternal)item,
@@ -1716,8 +1496,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (ITextureSet)item,
@@ -1730,9 +1510,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public TextureSet DeepCopy(
             ITextureSetGetter item,
-            TextureSet_TranslationMask copyMask = null)
+            TextureSet_TranslationMask? copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetNew();
+            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1742,9 +1522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TextureSet DeepCopy(
             ITextureSetGetter item,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask copyMask = null)
+            TextureSet_TranslationMask? copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetNew();
+            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1754,10 +1534,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public TextureSet DeepCopy(
             ITextureSetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetNew();
+            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1806,15 +1586,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             ITextureSetGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.ObjectBounds_IsSet
+            if ((item.ObjectBounds != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
             {
                 var loquiItem = item.ObjectBounds;
@@ -1826,7 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
             }
-            if (item.Textures_IsSet
+            if ((item.Textures != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Textures) ?? true))
             {
                 var loquiItem = item.Textures;
@@ -1838,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
             }
-            if (item.Decal_IsSet
+            if ((item.Decal != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
                 var loquiItem = item.Decal;
@@ -1850,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
             }
-            if (item.Flags_IsSet
+            if ((item.Flags != null)
                 && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<TextureSet.Flag>.Instance.Write(
@@ -1865,9 +1645,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             ITextureSetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.TextureSet");
             node.Add(elem);
@@ -1885,9 +1665,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -1900,9 +1680,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -1915,9 +1695,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -1936,8 +1716,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             ITextureSetInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1962,8 +1742,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2065,8 +1845,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetGetter item,
             XElement node,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            string name = null)
+            TextureSet_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((TextureSetXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2082,8 +1862,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetGetter item,
             string path,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            string name = null)
+            TextureSet_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2099,8 +1879,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetGetter item,
             Stream stream,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask translationMask = null,
-            string name = null)
+            TextureSet_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2122,18 +1902,19 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class TextureSet_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<TextureSet_Mask<T>>
+    public class TextureSet_Mask<T> :
+        SkyrimMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<TextureSet_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public TextureSet_Mask()
-        {
-        }
-
         public TextureSet_Mask(T initialValue)
+        : base(initialValue)
         {
-            this.ObjectBounds = new MaskItem<T, ObjectBounds_Mask<T>>(initialValue, new ObjectBounds_Mask<T>(initialValue));
-            this.Textures = new MaskItem<T, Textures_Mask<T>>(initialValue, new Textures_Mask<T>(initialValue));
-            this.Decal = new MaskItem<T, Decal_Mask<T>>(initialValue, new Decal_Mask<T>(initialValue));
+            this.ObjectBounds = new MaskItem<T, ObjectBounds_Mask<T>?>(initialValue, new ObjectBounds_Mask<T>(initialValue));
+            this.Textures = new MaskItem<T, Textures_Mask<T>?>(initialValue, new Textures_Mask<T>(initialValue));
+            this.Decal = new MaskItem<T, Decal_Mask<T>?>(initialValue, new Decal_Mask<T>(initialValue));
             this.Flags = initialValue;
         }
 
@@ -2149,25 +1930,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T Textures,
             T Decal,
             T Flags)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+            FormVersion: FormVersion,
+            Version2: Version2)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
-            this.FormVersion = FormVersion;
-            this.Version2 = Version2;
-            this.ObjectBounds = new MaskItem<T, ObjectBounds_Mask<T>>(ObjectBounds, new ObjectBounds_Mask<T>(ObjectBounds));
-            this.Textures = new MaskItem<T, Textures_Mask<T>>(Textures, new Textures_Mask<T>(Textures));
-            this.Decal = new MaskItem<T, Decal_Mask<T>>(Decal, new Decal_Mask<T>(Decal));
+            this.ObjectBounds = new MaskItem<T, ObjectBounds_Mask<T>?>(ObjectBounds, new ObjectBounds_Mask<T>(ObjectBounds));
+            this.Textures = new MaskItem<T, Textures_Mask<T>?>(Textures, new Textures_Mask<T>(Textures));
+            this.Decal = new MaskItem<T, Decal_Mask<T>?>(Decal, new Decal_Mask<T>(Decal));
             this.Flags = Flags;
         }
+
+        #pragma warning disable CS8618
+        protected TextureSet_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
-        public MaskItem<T, ObjectBounds_Mask<T>> ObjectBounds { get; set; }
-        public MaskItem<T, Textures_Mask<T>> Textures { get; set; }
-        public MaskItem<T, Decal_Mask<T>> Decal { get; set; }
+        public MaskItem<T, ObjectBounds_Mask<T>?>? ObjectBounds { get; set; }
+        public MaskItem<T, Textures_Mask<T>?>? Textures { get; set; }
+        public MaskItem<T, Decal_Mask<T>?>? Decal { get; set; }
         public T Flags;
         #endregion
 
@@ -2236,18 +2025,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void Translate_InternalFill<R>(TextureSet_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            if (this.ObjectBounds != null)
-            {
-                obj.ObjectBounds = new MaskItem<R, ObjectBounds_Mask<R>>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-            }
-            if (this.Textures != null)
-            {
-                obj.Textures = new MaskItem<R, Textures_Mask<R>>(eval(this.Textures.Overall), this.Textures.Specific?.Translate(eval));
-            }
-            if (this.Decal != null)
-            {
-                obj.Decal = new MaskItem<R, Decal_Mask<R>>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
-            }
+            obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds_Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+            obj.Textures = this.Textures == null ? null : new MaskItem<R, Textures_Mask<R>?>(eval(this.Textures.Overall), this.Textures.Specific?.Translate(eval));
+            obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal_Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
             obj.Flags = eval(this.Flags);
         }
         #endregion
@@ -2258,14 +2038,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(TextureSet_Mask<bool> printMask = null)
+        public string ToString(TextureSet_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, TextureSet_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, TextureSet_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(TextureSet_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2297,14 +2077,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class TextureSet_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<TextureSet_ErrorMask>
     {
         #region Members
-        public MaskItem<Exception, ObjectBounds_ErrorMask> ObjectBounds;
-        public MaskItem<Exception, Textures_ErrorMask> Textures;
-        public MaskItem<Exception, Decal_ErrorMask> Decal;
-        public Exception Flags;
+        public MaskItem<Exception?, ObjectBounds_ErrorMask?>? ObjectBounds;
+        public MaskItem<Exception?, Textures_ErrorMask?>? Textures;
+        public MaskItem<Exception?, Decal_ErrorMask?>? Decal;
+        public Exception? Flags;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
             switch (enu)
@@ -2328,13 +2108,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case TextureSet_FieldIndex.ObjectBounds:
-                    this.ObjectBounds = new MaskItem<Exception, ObjectBounds_ErrorMask>(ex, null);
+                    this.ObjectBounds = new MaskItem<Exception?, ObjectBounds_ErrorMask?>(ex, null);
                     break;
                 case TextureSet_FieldIndex.Textures:
-                    this.Textures = new MaskItem<Exception, Textures_ErrorMask>(ex, null);
+                    this.Textures = new MaskItem<Exception?, Textures_ErrorMask?>(ex, null);
                     break;
                 case TextureSet_FieldIndex.Decal:
-                    this.Decal = new MaskItem<Exception, Decal_ErrorMask>(ex, null);
+                    this.Decal = new MaskItem<Exception?, Decal_ErrorMask?>(ex, null);
                     break;
                 case TextureSet_FieldIndex.Flags:
                     this.Flags = ex;
@@ -2351,13 +2131,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case TextureSet_FieldIndex.ObjectBounds:
-                    this.ObjectBounds = (MaskItem<Exception, ObjectBounds_ErrorMask>)obj;
+                    this.ObjectBounds = (MaskItem<Exception?, ObjectBounds_ErrorMask?>?)obj;
                     break;
                 case TextureSet_FieldIndex.Textures:
-                    this.Textures = (MaskItem<Exception, Textures_ErrorMask>)obj;
+                    this.Textures = (MaskItem<Exception?, Textures_ErrorMask?>?)obj;
                     break;
                 case TextureSet_FieldIndex.Decal:
-                    this.Decal = (MaskItem<Exception, Decal_ErrorMask>)obj;
+                    this.Decal = (MaskItem<Exception?, Decal_ErrorMask?>?)obj;
                     break;
                 case TextureSet_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
@@ -2418,16 +2198,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public TextureSet_ErrorMask Combine(TextureSet_ErrorMask rhs)
+        public TextureSet_ErrorMask Combine(TextureSet_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new TextureSet_ErrorMask();
-            ret.ObjectBounds = new MaskItem<Exception, ObjectBounds_ErrorMask>(this.ObjectBounds.Overall.Combine(rhs.ObjectBounds.Overall), ((IErrorMask<ObjectBounds_ErrorMask>)this.ObjectBounds.Specific).Combine(rhs.ObjectBounds.Specific));
-            ret.Textures = new MaskItem<Exception, Textures_ErrorMask>(this.Textures.Overall.Combine(rhs.Textures.Overall), ((IErrorMask<Textures_ErrorMask>)this.Textures.Specific).Combine(rhs.Textures.Specific));
-            ret.Decal = new MaskItem<Exception, Decal_ErrorMask>(this.Decal.Overall.Combine(rhs.Decal.Overall), ((IErrorMask<Decal_ErrorMask>)this.Decal.Specific).Combine(rhs.Decal.Specific));
+            ret.ObjectBounds = new MaskItem<Exception?, ObjectBounds_ErrorMask?>(ExceptionExt.Combine(this.ObjectBounds?.Overall, rhs.ObjectBounds?.Overall), (this.ObjectBounds?.Specific as IErrorMask<ObjectBounds_ErrorMask>)?.Combine(rhs.ObjectBounds?.Specific));
+            ret.Textures = new MaskItem<Exception?, Textures_ErrorMask?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), (this.Textures?.Specific as IErrorMask<Textures_ErrorMask>)?.Combine(rhs.Textures?.Specific));
+            ret.Decal = new MaskItem<Exception?, Decal_ErrorMask?>(ExceptionExt.Combine(this.Decal?.Overall, rhs.Decal?.Overall), (this.Decal?.Specific as IErrorMask<Decal_ErrorMask>)?.Combine(rhs.Decal?.Specific));
             ret.Flags = this.Flags.Combine(rhs.Flags);
             return ret;
         }
-        public static TextureSet_ErrorMask Combine(TextureSet_ErrorMask lhs, TextureSet_ErrorMask rhs)
+        public static TextureSet_ErrorMask? Combine(TextureSet_ErrorMask? lhs, TextureSet_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2437,7 +2218,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new TextureSet_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new TextureSet_ErrorMask();
         }
         #endregion
@@ -2446,30 +2226,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class TextureSet_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Members
-        public MaskItem<bool, ObjectBounds_TranslationMask> ObjectBounds;
-        public MaskItem<bool, Textures_TranslationMask> Textures;
-        public MaskItem<bool, Decal_TranslationMask> Decal;
+        public MaskItem<bool, ObjectBounds_TranslationMask?> ObjectBounds;
+        public MaskItem<bool, Textures_TranslationMask?> Textures;
+        public MaskItem<bool, Decal_TranslationMask?> Decal;
         public bool Flags;
         #endregion
 
         #region Ctors
-        public TextureSet_TranslationMask()
-            : base()
-        {
-        }
-
         public TextureSet_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
-            this.ObjectBounds = new MaskItem<bool, ObjectBounds_TranslationMask>(defaultOn, null);
-            this.Textures = new MaskItem<bool, Textures_TranslationMask>(defaultOn, null);
-            this.Decal = new MaskItem<bool, Decal_TranslationMask>(defaultOn, null);
+            this.ObjectBounds = new MaskItem<bool, ObjectBounds_TranslationMask?>(defaultOn, null);
+            this.Textures = new MaskItem<bool, Textures_TranslationMask?>(defaultOn, null);
+            this.Decal = new MaskItem<bool, Decal_TranslationMask?>(defaultOn, null);
             this.Flags = defaultOn;
         }
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
@@ -2493,7 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_RecordTypes(
             ITextureSetGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -2501,49 +2276,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.ObjectBounds_IsSet)
             {
                 var loquiItem = item.ObjectBounds;
-                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
-            if (item.Textures_IsSet)
             {
                 var loquiItem = item.Textures;
-                ((TexturesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((TexturesBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
-            if (item.Decal_IsSet)
             {
                 var loquiItem = item.Decal;
-                ((DecalBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((DecalBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
-            if (item.Flags_IsSet)
-            {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<TextureSet.Flag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 2,
-                    header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.DNAM_HEADER),
-                    nullable: false);
-            }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<TextureSet.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 2,
+                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.DNAM_HEADER));
         }
 
         public void Write(
             MutagenWriter writer,
             ITextureSetGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2566,7 +2343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2579,7 +2356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2592,7 +2369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2645,9 +2422,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((TextureSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2661,7 +2438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2673,23 +2450,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
         private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        public IObjectBoundsGetter ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
         #endregion
         #region Textures
-        public ITexturesGetter Textures { get; private set; }
+        public ITexturesGetter? Textures { get; private set; }
         public bool Textures_IsSet => Textures != null;
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
         private bool _Decal_IsSet => _DecalLocation.HasValue;
-        public IDecalGetter Decal => _Decal_IsSet ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDecalGetter? Decal => _Decal_IsSet ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public TextureSet.Flag Flags => (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta));
+        private bool Flags_IsSet => _FlagsLocation.HasValue;
+        public TextureSet.Flag? Flags => Flags_IsSet ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(TextureSet.Flag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2708,7 +2485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static TextureSetBinaryOverlay TextureSetFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new TextureSetBinaryOverlay(
@@ -2736,7 +2513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -41,17 +42,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public Condition()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; }
+        public CompareOperator CompareOperator { get; set; } = default;
         #endregion
         #region Flags
-        public Condition.Flag Flags { get; set; }
+        public Condition.Flag Flags { get; set; } = default;
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public virtual void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             ConditionMixIn.ToString(
                 item: this,
@@ -82,15 +82,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IConditionGetter rhs)) return false;
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Condition obj)
         {
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()).Equals(this, obj);
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -101,9 +101,9 @@ namespace Mutagen.Bethesda.Skyrim
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ConditionXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -116,11 +116,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Condition CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Condition_TranslationMask translationMask = null)
+            Condition_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -130,41 +128,28 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromXml(
             XElement node,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Condition_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static Condition CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return null;
-                    break;
-                default:
-                    break;
-            }
             if (!LoquiXmlTranslation.Instance.TryCreate(node, out Condition ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown Condition subclass: {node.Name.LocalName}");
             }
-            ((ConditionSetterCommon)((IConditionGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((ConditionSetterCommon)((IConditionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -173,12 +158,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Condition_TranslationMask translationMask = null)
+            Condition_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -186,12 +169,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromXml(
             string path,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Condition_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -199,13 +180,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Condition_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -213,12 +192,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Condition_TranslationMask translationMask = null)
+            Condition_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -226,12 +203,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromXml(
             Stream stream,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Condition_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -239,13 +214,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Condition_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -254,21 +227,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected virtual bool GetHasBeenSet(int index)
-        {
-            switch ((Condition_FieldIndex)index)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                case Condition_FieldIndex.Flags:
-                case Condition_FieldIndex.Unknown1:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Condition_Registration.TRIGGERING_RECORD_TYPE;
@@ -284,7 +242,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -300,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((ConditionSetterCommon)((IConditionGetter)this).CommonSetterInstance()).Clear(this);
+            ((ConditionSetterCommon)((IConditionGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static Condition GetNew()
@@ -317,11 +275,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ICondition>
     {
         new CompareOperator CompareOperator { get; set; }
-
         new Condition.Flag Flags { get; set; }
-
         new Byte[] Unknown1 { get; set; }
-
     }
 
     public partial interface IConditionGetter :
@@ -334,21 +289,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region CompareOperator
         CompareOperator CompareOperator { get; }
-
-        #endregion
-        #region Flags
         Condition.Flag Flags { get; }
-
-        #endregion
-        #region Unknown1
         ReadOnlySpan<Byte> Unknown1 { get; }
-
-        #endregion
 
     }
 
@@ -359,7 +305,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this ICondition item)
         {
-            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Condition_Mask<bool> GetEqualsMask(
@@ -367,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetEqualsMask(
+            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -375,10 +321,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IConditionGetter item,
-            string name = null,
-            Condition_Mask<bool> printMask = null)
+            string? name = null,
+            Condition_Mask<bool>? printMask = null)
         {
-            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()).ToString(
+            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -387,10 +333,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IConditionGetter item,
             FileGeneration fg,
-            string name = null,
-            Condition_Mask<bool> printMask = null)
+            string? name = null,
+            Condition_Mask<bool>? printMask = null)
         {
-            ((ConditionCommon)((IConditionGetter)item).CommonInstance()).ToString(
+            ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -401,15 +347,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             Condition_Mask<bool?> checkMask)
         {
-            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()).HasBeenSet(
+            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Condition_Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
         {
-            var ret = new Condition_Mask<bool>();
-            ((ConditionCommon)((IConditionGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Condition_Mask<bool>(false);
+            ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -419,16 +365,17 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             IConditionGetter rhs)
         {
-            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()).Equals(
+            return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this ICondition lhs,
-            IConditionGetter rhs)
+            IConditionGetter rhs,
+            Condition_TranslationMask? copyMask = null)
         {
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -438,23 +385,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ICondition lhs,
             IConditionGetter rhs,
-            Condition_TranslationMask copyMask)
-        {
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ICondition lhs,
-            IConditionGetter rhs,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask copyMask = null)
+            Condition_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -465,10 +400,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ICondition lhs,
             IConditionGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -477,9 +412,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            Condition_TranslationMask copyMask = null)
+            Condition_TranslationMask? copyMask = null)
         {
-            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -487,9 +422,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition DeepCopy(
             this IConditionGetter item,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask copyMask = null)
+            Condition_TranslationMask? copyMask = null)
         {
-            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -497,10 +432,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -511,12 +446,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Condition_TranslationMask translationMask = null)
+            Condition_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -527,29 +460,25 @@ namespace Mutagen.Bethesda.Skyrim
             this ICondition item,
             XElement node,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Condition_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ICondition item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -558,13 +487,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Condition_TranslationMask translationMask = null)
+            Condition_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -573,13 +500,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ICondition item,
             string path,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Condition_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -588,14 +513,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Condition_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -604,13 +527,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Condition_TranslationMask translationMask = null)
+            Condition_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -619,13 +540,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ICondition item,
             Stream stream,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Condition_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -634,14 +553,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Condition_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Condition_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -667,9 +584,9 @@ namespace Mutagen.Bethesda.Skyrim
             this ICondition item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -720,11 +637,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IConditionGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ICondition);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Condition";
 
@@ -734,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -869,14 +786,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -900,18 +817,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(ICondition item)
         {
             ClearPartial();
-            item.CompareOperator = default(CompareOperator);
-            item.Flags = default(Condition.Flag);
-            item.Unknown1 = default(Byte[]);
+            item.CompareOperator = default;
+            item.Flags = default;
+            item.Unknown1 = new byte[3];
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             ICondition item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -951,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICondition item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
         }
         
@@ -967,8 +883,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Condition_Mask<bool>();
-            ((ConditionCommon)((IConditionGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Condition_Mask<bool>(false);
+            ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -990,8 +906,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IConditionGetter item,
-            string name = null,
-            Condition_Mask<bool> printMask = null)
+            string? name = null,
+            Condition_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1005,8 +921,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IConditionGetter item,
             FileGeneration fg,
-            string name = null,
-            Condition_Mask<bool> printMask = null)
+            string? name = null,
+            Condition_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1030,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IConditionGetter item,
             FileGeneration fg,
-            Condition_Mask<bool> printMask = null)
+            Condition_Mask<bool>? printMask = null)
         {
             if (printMask?.CompareOperator ?? true)
             {
@@ -1064,8 +980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IConditionGetter lhs,
-            IConditionGetter rhs)
+            IConditionGetter? lhs,
+            IConditionGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1109,8 +1025,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void DeepCopyFieldsFrom(
             ICondition item,
             IConditionGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
             {
@@ -1130,9 +1046,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            Condition_TranslationMask copyMask = null)
+            Condition_TranslationMask? copyMask = null)
         {
-            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetNew();
+            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1142,9 +1058,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Condition DeepCopy(
             IConditionGetter item,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask copyMask = null)
+            Condition_TranslationMask? copyMask = null)
         {
-            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetNew();
+            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1154,10 +1070,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetNew();
+            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1210,8 +1126,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IConditionGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
             {
@@ -1245,9 +1161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             XElement node,
             IConditionGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Condition");
             node.Add(elem);
@@ -1265,9 +1181,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IConditionGetter)item,
@@ -1280,10 +1196,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IConditionGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1315,8 +1231,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             ICondition item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1341,8 +1257,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICondition item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1388,6 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Condition_FieldIndex.Unknown1);
                         item.Unknown1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
+                            fallbackLength: 3,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1417,8 +1334,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             XElement node,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            string name = null)
+            Condition_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1434,8 +1351,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             string path,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            string name = null)
+            Condition_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1450,9 +1367,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1468,8 +1385,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             Stream stream,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask translationMask = null,
-            string name = null)
+            Condition_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1484,9 +1401,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1501,9 +1418,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1516,21 +1433,21 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             XElement node,
-            string name = null,
-            Condition_TranslationMask translationMask = null)
+            string? name = null,
+            Condition_TranslationMask? translationMask = null)
         {
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IConditionGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1545,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1567,13 +1484,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Condition_Mask<T> : IMask<T>, IEquatable<Condition_Mask<T>>
+    public class Condition_Mask<T> :
+        IMask<T>,
+        IEquatable<Condition_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Condition_Mask()
-        {
-        }
-
         public Condition_Mask(T initialValue)
         {
             this.CompareOperator = initialValue;
@@ -1590,6 +1506,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Flags = Flags;
             this.Unknown1 = Unknown1;
         }
+
+        #pragma warning disable CS8618
+        protected Condition_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1656,14 +1579,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Condition_Mask<bool> printMask = null)
+        public string ToString(Condition_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Condition_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Condition_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Condition_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1691,8 +1614,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Condition_ErrorMask : IErrorMask, IErrorMask<Condition_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1704,13 +1627,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return _warnings;
             }
         }
-        public Exception CompareOperator;
-        public Exception Flags;
-        public Exception Unknown1;
+        public Exception? CompareOperator;
+        public Exception? Flags;
+        public Exception? Unknown1;
         #endregion
 
         #region IErrorMask
-        public virtual object GetNthMask(int index)
+        public virtual object? GetNthMask(int index)
         {
             Condition_FieldIndex enu = (Condition_FieldIndex)index;
             switch (enu)
@@ -1811,15 +1734,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Condition_ErrorMask Combine(Condition_ErrorMask rhs)
+        public Condition_ErrorMask Combine(Condition_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Condition_ErrorMask();
             ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
             return ret;
         }
-        public static Condition_ErrorMask Combine(Condition_ErrorMask lhs, Condition_ErrorMask rhs)
+        public static Condition_ErrorMask? Combine(Condition_ErrorMask? lhs, Condition_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1829,7 +1753,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static Condition_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Condition_ErrorMask();
         }
         #endregion
@@ -1838,17 +1761,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Condition_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool CompareOperator;
         public bool Flags;
         public bool Unknown1;
         #endregion
 
         #region Ctors
-        public Condition_TranslationMask()
-        {
-        }
-
         public Condition_TranslationMask(bool defaultOn)
         {
             this.CompareOperator = defaultOn;
@@ -1861,13 +1780,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected virtual void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((CompareOperator, null));
             ret.Add((Flags, null));
@@ -1918,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IConditionGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1936,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IConditionGetter)item,
@@ -2009,7 +1928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         object IConditionGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IConditionGetter.CommonSetterInstance() => null;
+        object? IConditionGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2026,9 +1945,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ConditionXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2044,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

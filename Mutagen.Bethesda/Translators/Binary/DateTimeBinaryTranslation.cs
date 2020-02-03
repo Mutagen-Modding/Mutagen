@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
             return DateTime.Now;
         }
 
-        public override void WriteValue(MutagenWriter writer, DateTime item)
+        public override void Write(MutagenWriter writer, DateTime item)
         {
             writer.Write(new byte[4]);
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,81 +42,80 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public CombatStyleAdvanced()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region DodgeFatigueModMult
-        public Single DodgeFatigueModMult { get; set; }
+        public Single DodgeFatigueModMult { get; set; } = default;
         #endregion
         #region DodgeFatigueModBase
-        public Single DodgeFatigueModBase { get; set; }
+        public Single DodgeFatigueModBase { get; set; } = default;
         #endregion
         #region EncumbSpeedModBase
-        public Single EncumbSpeedModBase { get; set; }
+        public Single EncumbSpeedModBase { get; set; } = default;
         #endregion
         #region EncumbSpeedModMult
-        public Single EncumbSpeedModMult { get; set; }
+        public Single EncumbSpeedModMult { get; set; } = default;
         #endregion
         #region DodgeWhileUnderAttackMult
-        public Single DodgeWhileUnderAttackMult { get; set; }
+        public Single DodgeWhileUnderAttackMult { get; set; } = default;
         #endregion
         #region DodgeNotUnderAttackMult
-        public Single DodgeNotUnderAttackMult { get; set; }
+        public Single DodgeNotUnderAttackMult { get; set; } = default;
         #endregion
         #region DodgeBackWhileUnderAttackMult
-        public Single DodgeBackWhileUnderAttackMult { get; set; }
+        public Single DodgeBackWhileUnderAttackMult { get; set; } = default;
         #endregion
         #region DodgeBackNotUnderAttackMult
-        public Single DodgeBackNotUnderAttackMult { get; set; }
+        public Single DodgeBackNotUnderAttackMult { get; set; } = default;
         #endregion
         #region DodgeForwardWhileUnderAttackMult
-        public Single DodgeForwardWhileUnderAttackMult { get; set; }
+        public Single DodgeForwardWhileUnderAttackMult { get; set; } = default;
         #endregion
         #region DodgeForwardNotUnderAttackMult
-        public Single DodgeForwardNotUnderAttackMult { get; set; }
+        public Single DodgeForwardNotUnderAttackMult { get; set; } = default;
         #endregion
         #region BlockSkillModifierMult
-        public Single BlockSkillModifierMult { get; set; }
+        public Single BlockSkillModifierMult { get; set; } = default;
         #endregion
         #region BlockSkillModifierBase
-        public Single BlockSkillModifierBase { get; set; }
+        public Single BlockSkillModifierBase { get; set; } = default;
         #endregion
         #region BlockWhileUnderAttackMult
-        public Single BlockWhileUnderAttackMult { get; set; }
+        public Single BlockWhileUnderAttackMult { get; set; } = default;
         #endregion
         #region BlockNotUnderAttackMult
-        public Single BlockNotUnderAttackMult { get; set; }
+        public Single BlockNotUnderAttackMult { get; set; } = default;
         #endregion
         #region AttackSkillModifierMult
-        public Single AttackSkillModifierMult { get; set; }
+        public Single AttackSkillModifierMult { get; set; } = default;
         #endregion
         #region AttackSkillModifierBase
-        public Single AttackSkillModifierBase { get; set; }
+        public Single AttackSkillModifierBase { get; set; } = default;
         #endregion
         #region AttackWhileUnderAttackMult
-        public Single AttackWhileUnderAttackMult { get; set; }
+        public Single AttackWhileUnderAttackMult { get; set; } = default;
         #endregion
         #region AttackNotUnderAttackMult
-        public Single AttackNotUnderAttackMult { get; set; }
+        public Single AttackNotUnderAttackMult { get; set; } = default;
         #endregion
         #region AttackDuringBlockMult
-        public Single AttackDuringBlockMult { get; set; }
+        public Single AttackDuringBlockMult { get; set; } = default;
         #endregion
         #region PowerAttackFatigueModBase
-        public Single PowerAttackFatigueModBase { get; set; }
+        public Single PowerAttackFatigueModBase { get; set; } = default;
         #endregion
         #region PowerAttackFatigueModMult
-        public Single PowerAttackFatigueModMult { get; set; }
+        public Single PowerAttackFatigueModMult { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             CombatStyleAdvancedMixIn.ToString(
                 item: this,
@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(CombatStyleAdvanced obj)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()).Equals(this, obj);
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -147,9 +147,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((CombatStyleAdvancedXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -162,11 +162,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CombatStyleAdvanced CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -176,38 +174,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced CreateFromXml(
             XElement node,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static CombatStyleAdvanced CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new CombatStyleAdvanced() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new CombatStyleAdvanced();
-            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -216,12 +201,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -229,12 +212,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced CreateFromXml(
             string path,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -242,13 +223,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -256,12 +235,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -269,12 +246,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced CreateFromXml(
             Stream stream,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -282,13 +257,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -297,39 +270,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((CombatStyleAdvanced_FieldIndex)index)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = CombatStyleAdvanced_Registration.TRIGGERING_RECORD_TYPE;
@@ -343,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((CombatStyleAdvancedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -366,10 +306,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new CombatStyleAdvanced();
-            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -387,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)this).CommonSetterInstance()).Clear(this);
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static CombatStyleAdvanced GetNew()
@@ -404,47 +344,26 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ICombatStyleAdvanced>
     {
         new Single DodgeFatigueModMult { get; set; }
-
         new Single DodgeFatigueModBase { get; set; }
-
         new Single EncumbSpeedModBase { get; set; }
-
         new Single EncumbSpeedModMult { get; set; }
-
         new Single DodgeWhileUnderAttackMult { get; set; }
-
         new Single DodgeNotUnderAttackMult { get; set; }
-
         new Single DodgeBackWhileUnderAttackMult { get; set; }
-
         new Single DodgeBackNotUnderAttackMult { get; set; }
-
         new Single DodgeForwardWhileUnderAttackMult { get; set; }
-
         new Single DodgeForwardNotUnderAttackMult { get; set; }
-
         new Single BlockSkillModifierMult { get; set; }
-
         new Single BlockSkillModifierBase { get; set; }
-
         new Single BlockWhileUnderAttackMult { get; set; }
-
         new Single BlockNotUnderAttackMult { get; set; }
-
         new Single AttackSkillModifierMult { get; set; }
-
         new Single AttackSkillModifierBase { get; set; }
-
         new Single AttackWhileUnderAttackMult { get; set; }
-
         new Single AttackNotUnderAttackMult { get; set; }
-
         new Single AttackDuringBlockMult { get; set; }
-
         new Single PowerAttackFatigueModBase { get; set; }
-
         new Single PowerAttackFatigueModMult { get; set; }
-
     }
 
     public partial interface ICombatStyleAdvancedGetter :
@@ -456,93 +375,30 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region DodgeFatigueModMult
         Single DodgeFatigueModMult { get; }
-
-        #endregion
-        #region DodgeFatigueModBase
         Single DodgeFatigueModBase { get; }
-
-        #endregion
-        #region EncumbSpeedModBase
         Single EncumbSpeedModBase { get; }
-
-        #endregion
-        #region EncumbSpeedModMult
         Single EncumbSpeedModMult { get; }
-
-        #endregion
-        #region DodgeWhileUnderAttackMult
         Single DodgeWhileUnderAttackMult { get; }
-
-        #endregion
-        #region DodgeNotUnderAttackMult
         Single DodgeNotUnderAttackMult { get; }
-
-        #endregion
-        #region DodgeBackWhileUnderAttackMult
         Single DodgeBackWhileUnderAttackMult { get; }
-
-        #endregion
-        #region DodgeBackNotUnderAttackMult
         Single DodgeBackNotUnderAttackMult { get; }
-
-        #endregion
-        #region DodgeForwardWhileUnderAttackMult
         Single DodgeForwardWhileUnderAttackMult { get; }
-
-        #endregion
-        #region DodgeForwardNotUnderAttackMult
         Single DodgeForwardNotUnderAttackMult { get; }
-
-        #endregion
-        #region BlockSkillModifierMult
         Single BlockSkillModifierMult { get; }
-
-        #endregion
-        #region BlockSkillModifierBase
         Single BlockSkillModifierBase { get; }
-
-        #endregion
-        #region BlockWhileUnderAttackMult
         Single BlockWhileUnderAttackMult { get; }
-
-        #endregion
-        #region BlockNotUnderAttackMult
         Single BlockNotUnderAttackMult { get; }
-
-        #endregion
-        #region AttackSkillModifierMult
         Single AttackSkillModifierMult { get; }
-
-        #endregion
-        #region AttackSkillModifierBase
         Single AttackSkillModifierBase { get; }
-
-        #endregion
-        #region AttackWhileUnderAttackMult
         Single AttackWhileUnderAttackMult { get; }
-
-        #endregion
-        #region AttackNotUnderAttackMult
         Single AttackNotUnderAttackMult { get; }
-
-        #endregion
-        #region AttackDuringBlockMult
         Single AttackDuringBlockMult { get; }
-
-        #endregion
-        #region PowerAttackFatigueModBase
         Single PowerAttackFatigueModBase { get; }
-
-        #endregion
-        #region PowerAttackFatigueModMult
         Single PowerAttackFatigueModMult { get; }
-
-        #endregion
 
     }
 
@@ -553,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this ICombatStyleAdvanced item)
         {
-            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static CombatStyleAdvanced_Mask<bool> GetEqualsMask(
@@ -561,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
             ICombatStyleAdvancedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetEqualsMask(
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -569,10 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this ICombatStyleAdvancedGetter item,
-            string name = null,
-            CombatStyleAdvanced_Mask<bool> printMask = null)
+            string? name = null,
+            CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).ToString(
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -581,10 +437,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this ICombatStyleAdvancedGetter item,
             FileGeneration fg,
-            string name = null,
-            CombatStyleAdvanced_Mask<bool> printMask = null)
+            string? name = null,
+            CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
-            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).ToString(
+            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -595,15 +451,15 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             CombatStyleAdvanced_Mask<bool?> checkMask)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).HasBeenSet(
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static CombatStyleAdvanced_Mask<bool> GetHasBeenSetMask(this ICombatStyleAdvancedGetter item)
         {
-            var ret = new CombatStyleAdvanced_Mask<bool>();
-            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new CombatStyleAdvanced_Mask<bool>(false);
+            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -613,16 +469,17 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).Equals(
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this ICombatStyleAdvanced lhs,
-            ICombatStyleAdvancedGetter rhs)
+            ICombatStyleAdvancedGetter rhs,
+            CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -632,23 +489,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
-            CombatStyleAdvanced_TranslationMask copyMask)
-        {
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ICombatStyleAdvanced lhs,
-            ICombatStyleAdvancedGetter rhs,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask copyMask = null)
+            CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -659,10 +504,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -671,9 +516,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced DeepCopy(
             this ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_TranslationMask copyMask = null)
+            CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
-            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -681,9 +526,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced DeepCopy(
             this ICombatStyleAdvancedGetter item,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask copyMask = null)
+            CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
-            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -691,10 +536,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced DeepCopy(
             this ICombatStyleAdvancedGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -705,12 +550,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -721,29 +564,25 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced item,
             XElement node,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -752,13 +591,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -767,13 +604,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced item,
             string path,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -782,14 +617,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             string path,
-            ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -798,13 +631,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -813,13 +644,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced item,
             Stream stream,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -828,14 +657,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -861,9 +688,9 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -932,11 +759,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(ICombatStyleAdvancedGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ICombatStyleAdvanced);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.CombatStyleAdvanced";
 
@@ -946,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1279,14 +1106,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1310,36 +1137,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ICombatStyleAdvanced item)
         {
             ClearPartial();
-            item.DodgeFatigueModMult = default(Single);
-            item.DodgeFatigueModBase = default(Single);
-            item.EncumbSpeedModBase = default(Single);
-            item.EncumbSpeedModMult = default(Single);
-            item.DodgeWhileUnderAttackMult = default(Single);
-            item.DodgeNotUnderAttackMult = default(Single);
-            item.DodgeBackWhileUnderAttackMult = default(Single);
-            item.DodgeBackNotUnderAttackMult = default(Single);
-            item.DodgeForwardWhileUnderAttackMult = default(Single);
-            item.DodgeForwardNotUnderAttackMult = default(Single);
-            item.BlockSkillModifierMult = default(Single);
-            item.BlockSkillModifierBase = default(Single);
-            item.BlockWhileUnderAttackMult = default(Single);
-            item.BlockNotUnderAttackMult = default(Single);
-            item.AttackSkillModifierMult = default(Single);
-            item.AttackSkillModifierBase = default(Single);
-            item.AttackWhileUnderAttackMult = default(Single);
-            item.AttackNotUnderAttackMult = default(Single);
-            item.AttackDuringBlockMult = default(Single);
-            item.PowerAttackFatigueModBase = default(Single);
-            item.PowerAttackFatigueModMult = default(Single);
+            item.DodgeFatigueModMult = default;
+            item.DodgeFatigueModBase = default;
+            item.EncumbSpeedModBase = default;
+            item.EncumbSpeedModMult = default;
+            item.DodgeWhileUnderAttackMult = default;
+            item.DodgeNotUnderAttackMult = default;
+            item.DodgeBackWhileUnderAttackMult = default;
+            item.DodgeBackNotUnderAttackMult = default;
+            item.DodgeForwardWhileUnderAttackMult = default;
+            item.DodgeForwardNotUnderAttackMult = default;
+            item.BlockSkillModifierMult = default;
+            item.BlockSkillModifierBase = default;
+            item.BlockWhileUnderAttackMult = default;
+            item.BlockNotUnderAttackMult = default;
+            item.AttackSkillModifierMult = default;
+            item.AttackSkillModifierBase = default;
+            item.AttackWhileUnderAttackMult = default;
+            item.AttackNotUnderAttackMult = default;
+            item.AttackDuringBlockMult = default;
+            item.PowerAttackFatigueModBase = default;
+            item.PowerAttackFatigueModMult = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             ICombatStyleAdvanced item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1395,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvanced item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1421,8 +1247,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvancedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CombatStyleAdvanced_Mask<bool>();
-            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new CombatStyleAdvanced_Mask<bool>(false);
+            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1462,8 +1288,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             ICombatStyleAdvancedGetter item,
-            string name = null,
-            CombatStyleAdvanced_Mask<bool> printMask = null)
+            string? name = null,
+            CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1477,8 +1303,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             ICombatStyleAdvancedGetter item,
             FileGeneration fg,
-            string name = null,
-            CombatStyleAdvanced_Mask<bool> printMask = null)
+            string? name = null,
+            CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1502,7 +1328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICombatStyleAdvancedGetter item,
             FileGeneration fg,
-            CombatStyleAdvanced_Mask<bool> printMask = null)
+            CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
             if (printMask?.DodgeFatigueModMult ?? true)
             {
@@ -1626,8 +1452,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ICombatStyleAdvancedGetter lhs,
-            ICombatStyleAdvancedGetter rhs)
+            ICombatStyleAdvancedGetter? lhs,
+            ICombatStyleAdvancedGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1707,8 +1533,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ICombatStyleAdvanced item,
             ICombatStyleAdvancedGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult) ?? true))
             {
@@ -1800,9 +1626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyleAdvanced DeepCopy(
             ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_TranslationMask copyMask = null)
+            CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
-            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetNew();
+            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1812,9 +1638,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CombatStyleAdvanced DeepCopy(
             ICombatStyleAdvancedGetter item,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask copyMask = null)
+            CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
-            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetNew();
+            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1824,10 +1650,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyleAdvanced DeepCopy(
             ICombatStyleAdvancedGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetNew();
+            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1880,8 +1706,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             ICombatStyleAdvancedGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult) ?? true))
             {
@@ -2077,9 +1903,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             ICombatStyleAdvancedGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CombatStyleAdvanced");
             node.Add(elem);
@@ -2097,9 +1923,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ICombatStyleAdvancedGetter)item,
@@ -2112,10 +1938,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             ICombatStyleAdvancedGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -2147,8 +1973,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             ICombatStyleAdvanced item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -2173,8 +1999,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvanced item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2573,8 +2399,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             XElement node,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            string name = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((CombatStyleAdvancedXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2590,8 +2416,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             string path,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            string name = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2606,9 +2432,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2624,8 +2450,8 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             Stream stream,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask translationMask = null,
-            string name = null)
+            CombatStyleAdvanced_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2640,9 +2466,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2657,9 +2483,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((CombatStyleAdvancedXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -2672,21 +2498,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             XElement node,
-            string name = null,
-            CombatStyleAdvanced_TranslationMask translationMask = null)
+            string? name = null,
+            CombatStyleAdvanced_TranslationMask? translationMask = null)
         {
             ((CombatStyleAdvancedXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((CombatStyleAdvancedXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2701,7 +2527,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((CombatStyleAdvancedXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2723,13 +2549,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class CombatStyleAdvanced_Mask<T> : IMask<T>, IEquatable<CombatStyleAdvanced_Mask<T>>
+    public class CombatStyleAdvanced_Mask<T> :
+        IMask<T>,
+        IEquatable<CombatStyleAdvanced_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public CombatStyleAdvanced_Mask()
-        {
-        }
-
         public CombatStyleAdvanced_Mask(T initialValue)
         {
             this.DodgeFatigueModMult = initialValue;
@@ -2800,6 +2625,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.PowerAttackFatigueModBase = PowerAttackFatigueModBase;
             this.PowerAttackFatigueModMult = PowerAttackFatigueModMult;
         }
+
+        #pragma warning disable CS8618
+        protected CombatStyleAdvanced_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -2956,14 +2788,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(CombatStyleAdvanced_Mask<bool> printMask = null)
+        public string ToString(CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, CombatStyleAdvanced_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, CombatStyleAdvanced_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(CombatStyleAdvanced_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -3063,8 +2895,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class CombatStyleAdvanced_ErrorMask : IErrorMask, IErrorMask<CombatStyleAdvanced_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -3076,31 +2908,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception DodgeFatigueModMult;
-        public Exception DodgeFatigueModBase;
-        public Exception EncumbSpeedModBase;
-        public Exception EncumbSpeedModMult;
-        public Exception DodgeWhileUnderAttackMult;
-        public Exception DodgeNotUnderAttackMult;
-        public Exception DodgeBackWhileUnderAttackMult;
-        public Exception DodgeBackNotUnderAttackMult;
-        public Exception DodgeForwardWhileUnderAttackMult;
-        public Exception DodgeForwardNotUnderAttackMult;
-        public Exception BlockSkillModifierMult;
-        public Exception BlockSkillModifierBase;
-        public Exception BlockWhileUnderAttackMult;
-        public Exception BlockNotUnderAttackMult;
-        public Exception AttackSkillModifierMult;
-        public Exception AttackSkillModifierBase;
-        public Exception AttackWhileUnderAttackMult;
-        public Exception AttackNotUnderAttackMult;
-        public Exception AttackDuringBlockMult;
-        public Exception PowerAttackFatigueModBase;
-        public Exception PowerAttackFatigueModMult;
+        public Exception? DodgeFatigueModMult;
+        public Exception? DodgeFatigueModBase;
+        public Exception? EncumbSpeedModBase;
+        public Exception? EncumbSpeedModMult;
+        public Exception? DodgeWhileUnderAttackMult;
+        public Exception? DodgeNotUnderAttackMult;
+        public Exception? DodgeBackWhileUnderAttackMult;
+        public Exception? DodgeBackNotUnderAttackMult;
+        public Exception? DodgeForwardWhileUnderAttackMult;
+        public Exception? DodgeForwardNotUnderAttackMult;
+        public Exception? BlockSkillModifierMult;
+        public Exception? BlockSkillModifierBase;
+        public Exception? BlockWhileUnderAttackMult;
+        public Exception? BlockNotUnderAttackMult;
+        public Exception? AttackSkillModifierMult;
+        public Exception? AttackSkillModifierBase;
+        public Exception? AttackWhileUnderAttackMult;
+        public Exception? AttackNotUnderAttackMult;
+        public Exception? AttackDuringBlockMult;
+        public Exception? PowerAttackFatigueModBase;
+        public Exception? PowerAttackFatigueModMult;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
             switch (enu)
@@ -3381,8 +3213,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public CombatStyleAdvanced_ErrorMask Combine(CombatStyleAdvanced_ErrorMask rhs)
+        public CombatStyleAdvanced_ErrorMask Combine(CombatStyleAdvanced_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new CombatStyleAdvanced_ErrorMask();
             ret.DodgeFatigueModMult = this.DodgeFatigueModMult.Combine(rhs.DodgeFatigueModMult);
             ret.DodgeFatigueModBase = this.DodgeFatigueModBase.Combine(rhs.DodgeFatigueModBase);
@@ -3407,7 +3240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PowerAttackFatigueModMult = this.PowerAttackFatigueModMult.Combine(rhs.PowerAttackFatigueModMult);
             return ret;
         }
-        public static CombatStyleAdvanced_ErrorMask Combine(CombatStyleAdvanced_ErrorMask lhs, CombatStyleAdvanced_ErrorMask rhs)
+        public static CombatStyleAdvanced_ErrorMask? Combine(CombatStyleAdvanced_ErrorMask? lhs, CombatStyleAdvanced_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -3417,7 +3250,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static CombatStyleAdvanced_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new CombatStyleAdvanced_ErrorMask();
         }
         #endregion
@@ -3426,7 +3258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class CombatStyleAdvanced_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool DodgeFatigueModMult;
         public bool DodgeFatigueModBase;
         public bool EncumbSpeedModBase;
@@ -3451,10 +3283,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public CombatStyleAdvanced_TranslationMask()
-        {
-        }
-
         public CombatStyleAdvanced_TranslationMask(bool defaultOn)
         {
             this.DodgeFatigueModMult = defaultOn;
@@ -3485,13 +3313,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((DodgeFatigueModMult, null));
             ret.Add((DodgeFatigueModBase, null));
@@ -3600,7 +3428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ICombatStyleAdvancedGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -3618,7 +3446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (ICombatStyleAdvancedGetter)item,
@@ -3675,7 +3503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ICombatStyleAdvancedGetter.CommonSetterInstance() => null;
+        object? ICombatStyleAdvancedGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -3691,9 +3519,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((CombatStyleAdvancedXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -3709,7 +3537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((CombatStyleAdvancedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3756,7 +3584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static CombatStyleAdvancedBinaryOverlay CombatStyleAdvancedFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new CombatStyleAdvancedBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

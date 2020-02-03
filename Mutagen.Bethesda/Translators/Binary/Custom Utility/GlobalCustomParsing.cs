@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
 
         public interface IGlobalCommon
         {
-            float RawFloat { get; set; }
+            float? RawFloat { get; set; }
         }
 
         public static char GetGlobalChar(MajorRecordFrame frame)

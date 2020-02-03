@@ -16,7 +16,9 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return EnumerableExt<string>.Empty;
             return new string[]
             {
-                "System.Collections.Concurrent"
+                "System.Collections.Concurrent",
+                "System.Threading.Tasks",
+                "System.IO",
             };
         }
 
@@ -35,7 +37,7 @@ namespace Mutagen.Bethesda.Generation
                 "public void AddRecords"))
             {
                 args.Add($"{obj.Name} rhsMod");
-                args.Add($"GroupMask mask = null");
+                args.Add($"GroupMask? mask = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -67,7 +69,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public Dictionary<FormKey, {nameof(IMajorRecordCommon)}> CopyInDuplicate"))
             {
                 args.Add($"{obj.Name} rhs");
-                args.Add($"GroupMask mask = null");
+                args.Add($"GroupMask? mask = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -471,7 +473,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default);");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);");
                     }
                     fg.AppendLine($"subStreams[0] = groupByteStream;");
                     fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");
@@ -567,7 +569,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default);");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default!);");
                     }
                     fg.AppendLine($"streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));");
                     fg.AppendLine($"foreach (var cutItems in group.Records.Cut(CutCount))");

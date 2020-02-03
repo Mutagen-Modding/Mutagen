@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public override void WriteValue(MutagenWriter writer, float item)
+        public override void Write(MutagenWriter writer, float item)
         {
             if (item == float.Epsilon)
             {

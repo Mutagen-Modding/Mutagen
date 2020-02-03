@@ -17,10 +17,10 @@ namespace Mutagen.Bethesda.Binary
                 FloatBinaryTranslation.Instance.ParseValue(reader));
         }
 
-        public override void WriteValue(MutagenWriter writer, P2Float item)
+        public override void Write(MutagenWriter writer, P2Float item)
         {
-            FloatBinaryTranslation.Instance.WriteValue(writer, item.X);
-            FloatBinaryTranslation.Instance.WriteValue(writer, item.Y);
+            FloatBinaryTranslation.Instance.Write(writer, item.X);
+            FloatBinaryTranslation.Instance.Write(writer, item.Y);
         }
 
         public static P2Float Read(ReadOnlySpan<byte> span)

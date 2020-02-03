@@ -29,9 +29,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item, MasterReferences masterReferences)
             {
+                if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, GameSettingBool_Registration.DATA_HEADER))
                 {
-                    writer.Write(item.Data ? 1 : 0);
+                    writer.Write(data ? 1 : 0);
                 }
             }
         }

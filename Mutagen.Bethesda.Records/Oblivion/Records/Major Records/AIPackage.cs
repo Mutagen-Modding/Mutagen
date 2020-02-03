@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool GetFlagsIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.Flag GetFlagsCustom()
             {
-                var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation.Value - _package.Meta.SubConstants.HeaderLength));
+                var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
                 if (subFrame.ContentSpan.Length > 4)
                 {
                     return EnumExt<AIPackage.Flag>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan));
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool GetGeneralTypeIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.GeneralTypeEnum GetGeneralTypeCustom()
             {
-                var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation.Value - _package.Meta.SubConstants.HeaderLength));
+                var subFrame = _package.Meta.SubRecordFrame(_data.Slice(_PKDTLocation!.Value - _package.Meta.SubConstants.HeaderLength));
                 if (subFrame.ContentSpan.Length > 4)
                 {
                     return EnumExt<AIPackage.GeneralTypeEnum>.Convert(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.ContentSpan.Slice(4)));

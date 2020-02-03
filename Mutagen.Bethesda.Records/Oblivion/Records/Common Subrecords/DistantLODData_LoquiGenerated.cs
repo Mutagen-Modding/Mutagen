@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,27 +42,26 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public DistantLODData()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Unknown0
-        public Single Unknown0 { get; set; }
+        public Single Unknown0 { get; set; } = default;
         #endregion
         #region Unknown1
-        public Single Unknown1 { get; set; }
+        public Single Unknown1 { get; set; } = default;
         #endregion
         #region Unknown2
-        public Single Unknown2 { get; set; }
+        public Single Unknown2 { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             DistantLODDataMixIn.ToString(
                 item: this,
@@ -74,15 +74,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDistantLODDataGetter rhs)) return false;
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(DistantLODData obj)
         {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()).Equals(this, obj);
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((DistantLODDataCommon)((IDistantLODDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((DistantLODDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -108,11 +108,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static DistantLODData CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            DistantLODData_TranslationMask translationMask = null)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -122,38 +120,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData CreateFromXml(
             XElement node,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static DistantLODData CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new DistantLODData() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new DistantLODData();
-            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -162,12 +147,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            DistantLODData_TranslationMask translationMask = null)
+            DistantLODData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -175,12 +158,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData CreateFromXml(
             string path,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DistantLODData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -188,13 +169,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DistantLODData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -202,12 +181,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            DistantLODData_TranslationMask translationMask = null)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -215,12 +192,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData CreateFromXml(
             Stream stream,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -228,13 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DistantLODData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -243,21 +216,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((DistantLODData_FieldIndex)index)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                case DistantLODData_FieldIndex.Unknown1:
-                case DistantLODData_FieldIndex.Unknown2:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DistantLODData_Registration.TRIGGERING_RECORD_TYPE;
@@ -271,7 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -294,10 +252,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new DistantLODData();
-            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -315,7 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)this).CommonSetterInstance()).Clear(this);
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static DistantLODData GetNew()
@@ -332,11 +290,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IDistantLODData>
     {
         new Single Unknown0 { get; set; }
-
         new Single Unknown1 { get; set; }
-
         new Single Unknown2 { get; set; }
-
     }
 
     public partial interface IDistantLODDataGetter :
@@ -348,21 +303,12 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Unknown0
         Single Unknown0 { get; }
-
-        #endregion
-        #region Unknown1
         Single Unknown1 { get; }
-
-        #endregion
-        #region Unknown2
         Single Unknown2 { get; }
-
-        #endregion
 
     }
 
@@ -373,7 +319,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDistantLODData item)
         {
-            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static DistantLODData_Mask<bool> GetEqualsMask(
@@ -381,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDistantLODDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetEqualsMask(
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -389,10 +335,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IDistantLODDataGetter item,
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
+            string? name = null,
+            DistantLODData_Mask<bool>? printMask = null)
         {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).ToString(
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -401,10 +347,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IDistantLODDataGetter item,
             FileGeneration fg,
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
+            string? name = null,
+            DistantLODData_Mask<bool>? printMask = null)
         {
-            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).ToString(
+            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -415,15 +361,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             DistantLODData_Mask<bool?> checkMask)
         {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).HasBeenSet(
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static DistantLODData_Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
         {
-            var ret = new DistantLODData_Mask<bool>();
-            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new DistantLODData_Mask<bool>(false);
+            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -433,16 +379,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             IDistantLODDataGetter rhs)
         {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).Equals(
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IDistantLODData lhs,
-            IDistantLODDataGetter rhs)
+            IDistantLODDataGetter rhs,
+            DistantLODData_TranslationMask? copyMask = null)
         {
-            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -452,23 +399,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDistantLODData lhs,
             IDistantLODDataGetter rhs,
-            DistantLODData_TranslationMask copyMask)
-        {
-            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IDistantLODData lhs,
-            IDistantLODDataGetter rhs,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask copyMask = null)
+            DistantLODData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -479,10 +414,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDistantLODData lhs,
             IDistantLODDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -491,9 +426,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData DeepCopy(
             this IDistantLODDataGetter item,
-            DistantLODData_TranslationMask copyMask = null)
+            DistantLODData_TranslationMask? copyMask = null)
         {
-            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -501,9 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData DeepCopy(
             this IDistantLODDataGetter item,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask copyMask = null)
+            DistantLODData_TranslationMask? copyMask = null)
         {
-            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -511,10 +446,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData DeepCopy(
             this IDistantLODDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -525,12 +460,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            DistantLODData_TranslationMask translationMask = null)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -541,29 +474,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData item,
             XElement node,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IDistantLODData item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -572,13 +501,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            DistantLODData_TranslationMask translationMask = null)
+            DistantLODData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -587,13 +514,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData item,
             string path,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DistantLODData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -602,14 +527,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             string path,
-            ErrorMaskBuilder errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DistantLODData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -618,13 +541,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            DistantLODData_TranslationMask translationMask = null)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -633,13 +554,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData item,
             Stream stream,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DistantLODData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -648,14 +567,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DistantLODData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -681,9 +598,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -734,11 +651,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IDistantLODDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IDistantLODData);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.DistantLODData";
 
@@ -748,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -883,14 +800,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -914,18 +831,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IDistantLODData item)
         {
             ClearPartial();
-            item.Unknown0 = default(Single);
-            item.Unknown1 = default(Single);
-            item.Unknown2 = default(Single);
+            item.Unknown0 = default;
+            item.Unknown1 = default;
+            item.Unknown2 = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IDistantLODData item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -963,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -989,8 +905,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DistantLODData_Mask<bool>();
-            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new DistantLODData_Mask<bool>(false);
+            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1012,8 +928,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IDistantLODDataGetter item,
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
+            string? name = null,
+            DistantLODData_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1027,8 +943,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IDistantLODDataGetter item,
             FileGeneration fg,
-            string name = null,
-            DistantLODData_Mask<bool> printMask = null)
+            string? name = null,
+            DistantLODData_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1052,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IDistantLODDataGetter item,
             FileGeneration fg,
-            DistantLODData_Mask<bool> printMask = null)
+            DistantLODData_Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown0 ?? true)
             {
@@ -1086,8 +1002,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDistantLODDataGetter lhs,
-            IDistantLODDataGetter rhs)
+            IDistantLODDataGetter? lhs,
+            IDistantLODDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1131,8 +1047,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IDistantLODData item,
             IDistantLODDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown0) ?? true))
             {
@@ -1152,9 +1068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DistantLODData DeepCopy(
             IDistantLODDataGetter item,
-            DistantLODData_TranslationMask copyMask = null)
+            DistantLODData_TranslationMask? copyMask = null)
         {
-            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1164,9 +1080,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DistantLODData DeepCopy(
             IDistantLODDataGetter item,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask copyMask = null)
+            DistantLODData_TranslationMask? copyMask = null)
         {
-            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1176,10 +1092,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DistantLODData DeepCopy(
             IDistantLODDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1232,8 +1148,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IDistantLODDataGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown0) ?? true))
             {
@@ -1267,9 +1183,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IDistantLODDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DistantLODData");
             node.Add(elem);
@@ -1287,9 +1203,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IDistantLODDataGetter)item,
@@ -1302,10 +1218,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IDistantLODDataGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1337,8 +1253,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IDistantLODData item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1363,8 +1279,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODData item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1439,8 +1355,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             XElement node,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            string name = null)
+            DistantLODData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DistantLODDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1456,8 +1372,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             string path,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            string name = null)
+            DistantLODData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1472,9 +1388,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1490,8 +1406,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             Stream stream,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask translationMask = null,
-            string name = null)
+            DistantLODData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1506,9 +1422,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1523,9 +1439,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((DistantLODDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1538,21 +1454,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             XElement node,
-            string name = null,
-            DistantLODData_TranslationMask translationMask = null)
+            string? name = null,
+            DistantLODData_TranslationMask? translationMask = null)
         {
             ((DistantLODDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((DistantLODDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1567,7 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((DistantLODDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1589,13 +1505,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class DistantLODData_Mask<T> : IMask<T>, IEquatable<DistantLODData_Mask<T>>
+    public class DistantLODData_Mask<T> :
+        IMask<T>,
+        IEquatable<DistantLODData_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public DistantLODData_Mask()
-        {
-        }
-
         public DistantLODData_Mask(T initialValue)
         {
             this.Unknown0 = initialValue;
@@ -1612,6 +1527,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Unknown1 = Unknown1;
             this.Unknown2 = Unknown2;
         }
+
+        #pragma warning disable CS8618
+        protected DistantLODData_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1678,14 +1600,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(DistantLODData_Mask<bool> printMask = null)
+        public string ToString(DistantLODData_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, DistantLODData_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, DistantLODData_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(DistantLODData_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1713,8 +1635,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class DistantLODData_ErrorMask : IErrorMask, IErrorMask<DistantLODData_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1726,13 +1648,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Unknown0;
-        public Exception Unknown1;
-        public Exception Unknown2;
+        public Exception? Unknown0;
+        public Exception? Unknown1;
+        public Exception? Unknown2;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
             switch (enu)
@@ -1833,15 +1755,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public DistantLODData_ErrorMask Combine(DistantLODData_ErrorMask rhs)
+        public DistantLODData_ErrorMask Combine(DistantLODData_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new DistantLODData_ErrorMask();
             ret.Unknown0 = this.Unknown0.Combine(rhs.Unknown0);
             ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
             ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
             return ret;
         }
-        public static DistantLODData_ErrorMask Combine(DistantLODData_ErrorMask lhs, DistantLODData_ErrorMask rhs)
+        public static DistantLODData_ErrorMask? Combine(DistantLODData_ErrorMask? lhs, DistantLODData_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1851,7 +1774,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static DistantLODData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new DistantLODData_ErrorMask();
         }
         #endregion
@@ -1860,17 +1782,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class DistantLODData_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Unknown0;
         public bool Unknown1;
         public bool Unknown2;
         #endregion
 
         #region Ctors
-        public DistantLODData_TranslationMask()
-        {
-        }
-
         public DistantLODData_TranslationMask(bool defaultOn)
         {
             this.Unknown0 = defaultOn;
@@ -1883,13 +1801,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Unknown0, null));
             ret.Add((Unknown1, null));
@@ -1926,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IDistantLODDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1944,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IDistantLODDataGetter)item,
@@ -2001,7 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IDistantLODDataGetter.CommonSetterInstance() => null;
+        object? IDistantLODDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2017,9 +1935,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((DistantLODDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2035,7 +1953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2064,7 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static DistantLODDataBinaryOverlay DistantLODDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new DistantLODDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

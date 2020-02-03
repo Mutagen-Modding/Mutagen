@@ -25,35 +25,21 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<ScriptVariableReference> VariableReferences => this.References.WhereCastable<ScriptReference, ScriptVariableReference>();
 
         #region CompiledScript
+        protected Byte[]? _CompiledScript;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public bool CompiledScript_IsSet
-        {
-            get => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript];
-            set => _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript] = value;
-        }
-        bool IScriptFieldsGetter.CompiledScript_IsSet => CompiledScript_IsSet;
-        protected Byte[] _CompiledScript;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Byte[] CompiledScript
+        public Byte[]? CompiledScript
         {
             get => this._CompiledScript;
-            set => CompiledScript_Set(value);
+            set
+            {
+                this._CompiledScript = value;
+                this.MetadataSummary.CompiledSizeInternal = value?.Length ?? 0;
+            }
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<byte> IScriptFieldsGetter.CompiledScript => this.CompiledScript;
-        public void CompiledScript_Set(
-            Byte[] value,
-            bool markSet = true)
-        {
-            this.MetadataSummary.CompiledSizeInternal = value?.Length ?? 0;
-            _CompiledScript = value;
-            _hasBeenSetTracker[(int)ScriptFields_FieldIndex.CompiledScript] = markSet;
-        }
-        public void CompiledScript_Unset()
-        {
-            this.MetadataSummary.CompiledSizeInternal = 0;
-            this.CompiledScript_Set(default(Byte[]), false);
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IScriptFieldsGetter.CompiledScript_IsSet => _CompiledScript != null;
         #endregion
     }
 

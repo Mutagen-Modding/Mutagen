@@ -17,23 +17,23 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly CellBlock_TranslationMask XmlFolderTranslationMask = new CellBlock_TranslationMask(true)
         {
-            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
+            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask?>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
         public static CellBlock_TranslationMask duplicateMask = new CellBlock_TranslationMask(true)
         {
-            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
+            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask?>(false, default)
         };
 
         public async Task WriteToXmlFolder(
-            DirectoryPath? dir,
+            DirectoryPath dir,
             string name,
             XElement node,
             int counter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
         {
-            var subDir = Path.Combine(dir.Value.Path, $"{this.BlockNumber}");
+            var subDir = Path.Combine(dir.Path, $"{this.BlockNumber}");
             Directory.CreateDirectory(subDir);
             this.WriteToXml(
                 Path.Combine(subDir, "Group.xml"),
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
+        public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null)
         {
             var ret = new CellBlock();
             ret.DeepCopyFieldsFrom(this, duplicateMask);

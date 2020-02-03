@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Unknown_Unset();
+                            item.Unknown = default;
                         }
                         break;
                     case 0x52524750: // "PGRR":
@@ -163,8 +163,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointGetter>.Instance;
 
         private int? _UnknownLocation;
-        public bool Unknown_IsSet => this._UnknownLocation.HasValue;
-        public ReadOnlySpan<byte> Unknown => HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta);
+        public bool Unknown_IsSet => _UnknownLocation.HasValue;
+        public ReadOnlySpan<byte> Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta) : ArrayExt<byte>.Empty.AsSpan();
 
         partial void PointToPointConnectionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 for (int i = 0; i < bytePointsNum; i++)
                                 {
                                     var pt = PathGridPointBinaryOverlay.Factory(s, p);
-                                    pt.Connections = connectionInts.Slice(0, pt.NumConnections).ToArray().ToList();
+                                    pt.Connections.AddRange(connectionInts.Slice(0, pt.NumConnections).ToArray());
                                     pathGridPoints[i] = pt;
                                     s = s.Slice(16);
                                     connectionInts = connectionInts.Slice(pt.NumConnections);

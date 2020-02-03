@@ -25,10 +25,10 @@ namespace Mutagen.Bethesda.Generation
             if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
             //ToDo
             // Modify to getter interface after copy is refactored
-            fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.ObjectName} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords);");
+            fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.ObjectName} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>? duplicatedRecords);");
             fg.AppendLine();
 
-            fg.AppendLine($"public{obj.FunctionOverride()}{nameof(IMajorRecordCommon)} Duplicate({nameof(IMajorRecordCommonGetter)} item, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords)");
+            fg.AppendLine($"public{obj.FunctionOverride()}{nameof(IMajorRecordCommon)} Duplicate({nameof(IMajorRecordCommonGetter)} item, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>? duplicatedRecords)");
             using (new BraceWrapper(fg))
             {
                 if (obj.Abstract)
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Generation
                 // Modify to getter interface after copy is refactored
                 args.Add($"this {obj.ObjectName} item");
                 args.Add("Func<FormKey> getNextFormKey");
-                args.Add($"IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)> duplicatedRecords = null");
+                args.Add($"IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>? duplicatedRecords = null");
             }
             using (new BraceWrapper(fg))
             {

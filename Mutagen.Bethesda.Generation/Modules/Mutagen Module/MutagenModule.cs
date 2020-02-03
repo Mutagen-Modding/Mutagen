@@ -38,11 +38,6 @@ namespace Mutagen.Bethesda.Generation
         public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
             var data = field.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
-            data.Optional = node.GetAttribute<bool>(Constants.Optional, false);
-            if (data.Optional && !data.RecordType.HasValue)
-            {
-                throw new ArgumentException($"{obj.Name} {field.Name} cannot have an optional field if it is not a record typed field.");
-            }
             data.Binary = node.GetAttribute<BinaryGenerationType>(Constants.Binary, BinaryGenerationType.Normal);
             data.BinaryOverlay = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryOverlay, default);
             ModifyGRUPAttributes(field);
@@ -67,7 +62,6 @@ namespace Mutagen.Bethesda.Generation
             loqui.SingletonType = SingletonLevel.Singleton;
             loqui.HasBeenSetProperty.OnNext(false);
             loqui.NotifyingProperty.OnNext(NotifyingType.None);
-            loqui.ObjectCentralizedProperty.OnNext(false);
         }
     }
 }

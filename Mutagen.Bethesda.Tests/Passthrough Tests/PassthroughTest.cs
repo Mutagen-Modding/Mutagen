@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Tests
 
         protected abstract Task<IMod> ImportBinary(FilePath path);
         protected abstract Task<IModGetter> ImportBinaryOverlay(FilePath path);
-        protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
-        protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
+        //protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
+        //protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
         protected abstract Task<IMod> ImportCopyIn(FilePath file);
 
         public async Task BinaryPassthroughTest()
@@ -224,21 +224,21 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                if (Settings.TestFolder)
-                {
-                    var ret = await XmlFolderPassthroughTest();
-                    if (ret.Exception != null)
-                    {
-                        if (ret.HadMore)
-                        {
-                            delayedExceptions.Add(ret.Exception);
-                        }
-                        else
-                        {
-                            throw ret.Exception;
-                        }
-                    }
-                }
+                //if (Settings.TestFolder)
+                //{
+                //    var ret = await XmlFolderPassthroughTest();
+                //    if (ret.Exception != null)
+                //    {
+                //        if (ret.HadMore)
+                //        {
+                //            delayedExceptions.Add(ret.Exception);
+                //        }
+                //        else
+                //        {
+                //            throw ret.Exception;
+                //        }
+                //    }
+                //}
 
                 if (Settings.TestCopyIn)
                 {
@@ -274,39 +274,39 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public async Task<(Exception Exception, IEnumerable<RangeInt64> Sections, bool HadMore)> XmlFolderPassthroughTest()
-        {
-            async Task CreateXmlFolder(string sourcePath, DirectoryPath dir)
-            {
-                var mod = await ImportBinary(sourcePath);
-                await WriteXmlFolder(mod, dir);
-            }
+        //public async Task<(Exception Exception, IEnumerable<RangeInt64> Sections, bool HadMore)> XmlFolderPassthroughTest()
+        //{
+        //    async Task CreateXmlFolder(string sourcePath, DirectoryPath dir)
+        //    {
+        //        var mod = await ImportBinary(sourcePath);
+        //        await WriteXmlFolder(mod, dir);
+        //    }
 
-            using (var processedTmp = await this.SetupProcessedFiles())
-            {
-                using (var tmp = new TempFolder($"Mutagen_{this.Nickname}_XmlFolder", deleteAfter: false))
-                {
-                    ModKey modKey = ModKey.Factory(this.FilePath.Name);
-                    var sourcePath = this.ProcessedPath(processedTmp);
-                    await CreateXmlFolder(sourcePath, tmp.Dir);
-                    GC.Collect();
-                    var reimport = await ImportXmlFolder(
-                        dir: tmp.Dir);
-                    GC.Collect();
-                    var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
-                    reimport.WriteToBinary(
-                        reexportPath,
-                        modKeyOverride: this.ModKey);
-                    using (var stream = new BinaryReadStream(sourcePath))
-                    {
-                        return PassthroughTest.AssertFilesEqual(
-                            stream,
-                            reexportPath,
-                            amountToReport: 15);
-                    }
-                }
-            }
-        }
+        //    using (var processedTmp = await this.SetupProcessedFiles())
+        //    {
+        //        using (var tmp = new TempFolder($"Mutagen_{this.Nickname}_XmlFolder", deleteAfter: false))
+        //        {
+        //            ModKey modKey = ModKey.Factory(this.FilePath.Name);
+        //            var sourcePath = this.ProcessedPath(processedTmp);
+        //            await CreateXmlFolder(sourcePath, tmp.Dir);
+        //            GC.Collect();
+        //            var reimport = await ImportXmlFolder(
+        //                dir: tmp.Dir);
+        //            GC.Collect();
+        //            var reexportPath = Path.Combine(tmp.Dir.Path, "Reexport");
+        //            reimport.WriteToBinary(
+        //                reexportPath,
+        //                modKeyOverride: this.ModKey);
+        //            using (var stream = new BinaryReadStream(sourcePath))
+        //            {
+        //                return PassthroughTest.AssertFilesEqual(
+        //                    stream,
+        //                    reexportPath,
+        //                    amountToReport: 15);
+        //            }
+        //        }
+        //    }
+        //}
 
         public async Task TestImport()
         {

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -24,15 +25,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -52,120 +53,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        public bool Texture_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Water_FieldIndex.Texture];
-            set => _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IWaterGetter.Texture_IsSet => Texture_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Texture;
-        public String Texture
+        private String? _Texture;
+        public String? Texture
         {
             get => this._Texture;
-            set => Texture_Set(value);
+            set => this._Texture = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IWaterGetter.Texture => this.Texture;
-        public void Texture_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Texture = value;
-            _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = markSet;
-        }
-        public void Texture_Unset()
-        {
-            this.Texture_Set(default(String), false);
-        }
+        String? IWaterGetter.Texture => this.Texture;
         #endregion
         #region Opacity
-        public bool Opacity_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity];
-            set => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IWaterGetter.Opacity_IsSet => Opacity_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Opacity;
-        public Byte Opacity
+        private Byte? _Opacity;
+        public Byte? Opacity
         {
             get => this._Opacity;
-            set => Opacity_Set(value);
+            set => this._Opacity = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte IWaterGetter.Opacity => this.Opacity;
-        public void Opacity_Set(
-            Byte value,
-            bool markSet = true)
-        {
-            _Opacity = value;
-            _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = markSet;
-        }
-        public void Opacity_Unset()
-        {
-            this.Opacity_Set(default(Byte), false);
-        }
+        Byte? IWaterGetter.Opacity => this.Opacity;
         #endregion
         #region Flags
-        public bool Flags_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Water_FieldIndex.Flags];
-            set => _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IWaterGetter.Flags_IsSet => Flags_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Water.Flag _Flags;
-        public Water.Flag Flags
+        private Water.Flag? _Flags;
+        public Water.Flag? Flags
         {
             get => this._Flags;
-            set => Flags_Set(value);
+            set => this._Flags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Water.Flag IWaterGetter.Flags => this.Flags;
-        public void Flags_Set(
-            Water.Flag value,
-            bool markSet = true)
-        {
-            _Flags = value;
-            _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = markSet;
-        }
-        public void Flags_Unset()
-        {
-            this.Flags_Set(default(Water.Flag), false);
-        }
+        Water.Flag? IWaterGetter.Flags => this.Flags;
         #endregion
         #region MaterialID
-        public bool MaterialID_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID];
-            set => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IWaterGetter.MaterialID_IsSet => MaterialID_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _MaterialID;
-        public String MaterialID
+        private String? _MaterialID;
+        public String? MaterialID
         {
             get => this._MaterialID;
-            set => MaterialID_Set(value);
+            set => this._MaterialID = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IWaterGetter.MaterialID => this.MaterialID;
-        public void MaterialID_Set(
-            String value,
-            bool markSet = true)
-        {
-            _MaterialID = value;
-            _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = markSet;
-        }
-        public void MaterialID_Unset()
-        {
-            this.MaterialID_Set(default(String), false);
-        }
+        String? IWaterGetter.MaterialID => this.MaterialID;
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -571,43 +500,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RelatedWaters
-        public bool RelatedWaters_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters];
-            set => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IWaterGetter.RelatedWaters_IsSet => RelatedWaters_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RelatedWaters _RelatedWaters;
-        public RelatedWaters RelatedWaters
+        private RelatedWaters? _RelatedWaters;
+        public RelatedWaters? RelatedWaters
         {
             get => _RelatedWaters;
-            set => RelatedWaters_Set(value);
-        }
-        public void RelatedWaters_Set(
-            RelatedWaters value,
-            bool hasBeenSet = true)
-        {
-            _RelatedWaters = value;
-            _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = hasBeenSet;
-        }
-        public void RelatedWaters_Unset()
-        {
-            this.RelatedWaters_Set(default(RelatedWaters), false);
+            set => _RelatedWaters = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRelatedWatersGetter IWaterGetter.RelatedWaters => this.RelatedWaters;
+        IRelatedWatersGetter? IWaterGetter.RelatedWaters => this.RelatedWaters;
         #endregion
         #region DATADataTypeState
-        public Water.DATADataType DATADataTypeState { get; set; }
+        public Water.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             WaterMixIn.ToString(
                 item: this,
@@ -620,15 +531,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IWaterGetter rhs)) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Water obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()).Equals(this, obj);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -637,9 +548,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((WaterXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -652,11 +563,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Water CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Water_TranslationMask translationMask = null)
+            Water_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -666,38 +575,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water CreateFromXml(
             XElement node,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Water_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Water CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Water() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Water();
-            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -706,12 +602,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Water_TranslationMask translationMask = null)
+            Water_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -719,12 +613,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water CreateFromXml(
             string path,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Water_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -732,13 +624,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Water_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -746,12 +636,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Water_TranslationMask translationMask = null)
+            Water_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -759,12 +647,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water CreateFromXml(
             Stream stream,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Water_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -772,13 +658,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Water_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -787,50 +671,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Water_FieldIndex)index)
-            {
-                case Water_FieldIndex.Texture:
-                case Water_FieldIndex.Opacity:
-                case Water_FieldIndex.Flags:
-                case Water_FieldIndex.MaterialID:
-                case Water_FieldIndex.Sound:
-                case Water_FieldIndex.RelatedWaters:
-                    return _hasBeenSetTracker[index];
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
-                case Water_FieldIndex.DATADataTypeState:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Water_Registration.TRIGGERING_RECORD_TYPE;
@@ -864,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -887,10 +727,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Water CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Water();
-            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -908,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((WaterSetterCommon)((IWaterGetter)this).CommonSetterInstance()).Clear(this);
+            ((WaterSetterCommon)((IWaterGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Water GetNew()
@@ -925,86 +765,39 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IWaterInternal>
     {
-        new String Texture { get; set; }
-        new bool Texture_IsSet { get; set; }
-        void Texture_Set(String value, bool hasBeenSet = true);
-        void Texture_Unset();
-
-        new Byte Opacity { get; set; }
-        new bool Opacity_IsSet { get; set; }
-        void Opacity_Set(Byte value, bool hasBeenSet = true);
-        void Opacity_Unset();
-
-        new Water.Flag Flags { get; set; }
-        new bool Flags_IsSet { get; set; }
-        void Flags_Set(Water.Flag value, bool hasBeenSet = true);
-        void Flags_Unset();
-
-        new String MaterialID { get; set; }
-        new bool MaterialID_IsSet { get; set; }
-        void MaterialID_Set(String value, bool hasBeenSet = true);
-        void MaterialID_Unset();
-
+        new String? Texture { get; set; }
+        new Byte? Opacity { get; set; }
+        new Water.Flag? Flags { get; set; }
+        new String? MaterialID { get; set; }
         new IFormIDSetLink<Sound> Sound { get; }
         new Single WindVelocity { get; set; }
-
         new Single WindDirection { get; set; }
-
         new Single WaveAmplitude { get; set; }
-
         new Single WaveFrequency { get; set; }
-
         new Single SunPower { get; set; }
-
         new Single ReflectivityAmount { get; set; }
-
         new Single FresnelAmount { get; set; }
-
         new Single ScrollXSpeed { get; set; }
-
         new Single ScrollYSpeed { get; set; }
-
         new Single FogDistanceNearPlane { get; set; }
-
         new Single FogDistanceFarPlane { get; set; }
-
         new Color ShallowColor { get; set; }
-
         new Color DeepColor { get; set; }
-
         new Color ReflectionColor { get; set; }
-
         new Byte TextureBlend { get; set; }
-
         new Single RainSimulatorForce { get; set; }
-
         new Single RainSimulatorVelocity { get; set; }
-
         new Single RainSimulatorFalloff { get; set; }
-
         new Single RainSimulatorDampner { get; set; }
-
         new Single RainSimulatorStartingSize { get; set; }
-
         new Single DisplacementSimulatorForce { get; set; }
-
         new Single DisplacementSimulatorVelocity { get; set; }
-
         new Single DisplacementSimulatorFalloff { get; set; }
-
         new Single DisplacementSimulatorDampner { get; set; }
-
         new Single DisplacementSimulatorStartingSize { get; set; }
-
         new UInt16 Damage { get; set; }
-
-        new RelatedWaters RelatedWaters { get; set; }
-        new bool RelatedWaters_IsSet { get; set; }
-        void RelatedWaters_Set(RelatedWaters value, bool hasBeenSet = true);
-        void RelatedWaters_Unset();
-
+        new RelatedWaters? RelatedWaters { get; set; }
         new Water.DATADataType DATADataTypeState { get; set; }
-
     }
 
     public partial interface IWaterInternal :
@@ -1021,142 +814,39 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        #region Texture
-        String Texture { get; }
-        bool Texture_IsSet { get; }
-
-        #endregion
-        #region Opacity
-        Byte Opacity { get; }
-        bool Opacity_IsSet { get; }
-
-        #endregion
-        #region Flags
-        Water.Flag Flags { get; }
-        bool Flags_IsSet { get; }
-
-        #endregion
-        #region MaterialID
-        String MaterialID { get; }
-        bool MaterialID_IsSet { get; }
-
-        #endregion
-        #region Sound
+        String? Texture { get; }
+        Byte? Opacity { get; }
+        Water.Flag? Flags { get; }
+        String? MaterialID { get; }
         IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
-        #endregion
-        #region WindVelocity
         Single WindVelocity { get; }
-
-        #endregion
-        #region WindDirection
         Single WindDirection { get; }
-
-        #endregion
-        #region WaveAmplitude
         Single WaveAmplitude { get; }
-
-        #endregion
-        #region WaveFrequency
         Single WaveFrequency { get; }
-
-        #endregion
-        #region SunPower
         Single SunPower { get; }
-
-        #endregion
-        #region ReflectivityAmount
         Single ReflectivityAmount { get; }
-
-        #endregion
-        #region FresnelAmount
         Single FresnelAmount { get; }
-
-        #endregion
-        #region ScrollXSpeed
         Single ScrollXSpeed { get; }
-
-        #endregion
-        #region ScrollYSpeed
         Single ScrollYSpeed { get; }
-
-        #endregion
-        #region FogDistanceNearPlane
         Single FogDistanceNearPlane { get; }
-
-        #endregion
-        #region FogDistanceFarPlane
         Single FogDistanceFarPlane { get; }
-
-        #endregion
-        #region ShallowColor
         Color ShallowColor { get; }
-
-        #endregion
-        #region DeepColor
         Color DeepColor { get; }
-
-        #endregion
-        #region ReflectionColor
         Color ReflectionColor { get; }
-
-        #endregion
-        #region TextureBlend
         Byte TextureBlend { get; }
-
-        #endregion
-        #region RainSimulatorForce
         Single RainSimulatorForce { get; }
-
-        #endregion
-        #region RainSimulatorVelocity
         Single RainSimulatorVelocity { get; }
-
-        #endregion
-        #region RainSimulatorFalloff
         Single RainSimulatorFalloff { get; }
-
-        #endregion
-        #region RainSimulatorDampner
         Single RainSimulatorDampner { get; }
-
-        #endregion
-        #region RainSimulatorStartingSize
         Single RainSimulatorStartingSize { get; }
-
-        #endregion
-        #region DisplacementSimulatorForce
         Single DisplacementSimulatorForce { get; }
-
-        #endregion
-        #region DisplacementSimulatorVelocity
         Single DisplacementSimulatorVelocity { get; }
-
-        #endregion
-        #region DisplacementSimulatorFalloff
         Single DisplacementSimulatorFalloff { get; }
-
-        #endregion
-        #region DisplacementSimulatorDampner
         Single DisplacementSimulatorDampner { get; }
-
-        #endregion
-        #region DisplacementSimulatorStartingSize
         Single DisplacementSimulatorStartingSize { get; }
-
-        #endregion
-        #region Damage
         UInt16 Damage { get; }
-
-        #endregion
-        #region RelatedWaters
-        IRelatedWatersGetter RelatedWaters { get; }
-        bool RelatedWaters_IsSet { get; }
-
-        #endregion
-        #region DATADataTypeState
+        IRelatedWatersGetter? RelatedWaters { get; }
         Water.DATADataType DATADataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -1167,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IWaterInternal item)
         {
-            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Water_Mask<bool> GetEqualsMask(
@@ -1175,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
             IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()).GetEqualsMask(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1183,10 +873,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IWaterGetter item,
-            string name = null,
-            Water_Mask<bool> printMask = null)
+            string? name = null,
+            Water_Mask<bool>? printMask = null)
         {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()).ToString(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1195,10 +885,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IWaterGetter item,
             FileGeneration fg,
-            string name = null,
-            Water_Mask<bool> printMask = null)
+            string? name = null,
+            Water_Mask<bool>? printMask = null)
         {
-            ((WaterCommon)((IWaterGetter)item).CommonInstance()).ToString(
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1209,15 +899,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             Water_Mask<bool?> checkMask)
         {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()).HasBeenSet(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Water_Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
         {
-            var ret = new Water_Mask<bool>();
-            ((WaterCommon)((IWaterGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Water_Mask<bool>(false);
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1227,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             IWaterGetter rhs)
         {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()).Equals(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1235,23 +925,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IWaterInternal lhs,
             IWaterGetter rhs,
-            Water_TranslationMask copyMask)
-        {
-            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IWaterInternal lhs,
-            IWaterGetter rhs,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask copyMask = null)
+            Water_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -1262,10 +940,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IWaterInternal lhs,
             IWaterGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1274,9 +952,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water DeepCopy(
             this IWaterGetter item,
-            Water_TranslationMask copyMask = null)
+            Water_TranslationMask? copyMask = null)
         {
-            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -1284,9 +962,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water DeepCopy(
             this IWaterGetter item,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask copyMask = null)
+            Water_TranslationMask? copyMask = null)
         {
-            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -1294,10 +972,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water DeepCopy(
             this IWaterGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1308,12 +986,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Water_TranslationMask translationMask = null)
+            Water_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -1324,29 +1000,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             XElement node,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Water_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IWaterInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1355,13 +1027,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Water_TranslationMask translationMask = null)
+            Water_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1370,13 +1040,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             string path,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Water_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1385,14 +1053,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Water_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1401,13 +1067,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Water_TranslationMask translationMask = null)
+            Water_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1416,13 +1080,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             Stream stream,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Water_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1431,14 +1093,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Water_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Water_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1464,9 +1124,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -1552,11 +1212,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IWaterGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IWater);
 
-        public static readonly Type InternalSetterType = typeof(IWaterInternal);
+        public static readonly Type? InternalSetterType = typeof(IWaterInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Water";
 
@@ -1566,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -2039,14 +1699,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -2070,39 +1730,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWaterInternal item)
         {
             ClearPartial();
-            item.Texture_Unset();
-            item.Opacity_Unset();
-            item.Flags_Unset();
-            item.MaterialID_Unset();
+            item.Texture = default;
+            item.Opacity = default;
+            item.Flags = default;
+            item.MaterialID = default;
             item.Sound.Unset();
-            item.WindVelocity = default(Single);
-            item.WindDirection = default(Single);
-            item.WaveAmplitude = default(Single);
-            item.WaveFrequency = default(Single);
-            item.SunPower = default(Single);
-            item.ReflectivityAmount = default(Single);
-            item.FresnelAmount = default(Single);
-            item.ScrollXSpeed = default(Single);
-            item.ScrollYSpeed = default(Single);
-            item.FogDistanceNearPlane = default(Single);
-            item.FogDistanceFarPlane = default(Single);
-            item.ShallowColor = default(Color);
-            item.DeepColor = default(Color);
-            item.ReflectionColor = default(Color);
-            item.TextureBlend = default(Byte);
-            item.RainSimulatorForce = default(Single);
-            item.RainSimulatorVelocity = default(Single);
-            item.RainSimulatorFalloff = default(Single);
-            item.RainSimulatorDampner = default(Single);
-            item.RainSimulatorStartingSize = default(Single);
-            item.DisplacementSimulatorForce = default(Single);
-            item.DisplacementSimulatorVelocity = default(Single);
-            item.DisplacementSimulatorFalloff = default(Single);
-            item.DisplacementSimulatorDampner = default(Single);
-            item.DisplacementSimulatorStartingSize = default(Single);
-            item.Damage = default(UInt16);
-            item.RelatedWaters_Unset();
-            item.DATADataTypeState = default(Water.DATADataType);
+            item.WindVelocity = default;
+            item.WindDirection = default;
+            item.WaveAmplitude = default;
+            item.WaveFrequency = default;
+            item.SunPower = default;
+            item.ReflectivityAmount = default;
+            item.FresnelAmount = default;
+            item.ScrollXSpeed = default;
+            item.ScrollYSpeed = default;
+            item.FogDistanceNearPlane = default;
+            item.FogDistanceFarPlane = default;
+            item.ShallowColor = default;
+            item.DeepColor = default;
+            item.ReflectionColor = default;
+            item.TextureBlend = default;
+            item.RainSimulatorForce = default;
+            item.RainSimulatorVelocity = default;
+            item.RainSimulatorFalloff = default;
+            item.RainSimulatorDampner = default;
+            item.RainSimulatorStartingSize = default;
+            item.DisplacementSimulatorForce = default;
+            item.DisplacementSimulatorVelocity = default;
+            item.DisplacementSimulatorFalloff = default;
+            item.DisplacementSimulatorDampner = default;
+            item.DisplacementSimulatorStartingSize = default;
+            item.Damage = default;
+            item.RelatedWaters = null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2121,8 +1781,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2143,9 +1803,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IWaterInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -2197,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2341,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IWaterInternal>(
                 record: item,
@@ -2365,8 +2024,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Water_Mask<bool>();
-            ((WaterCommon)((IWaterGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Water_Mask<bool>(false);
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2381,10 +2040,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Texture = item.Texture_IsSet == rhs.Texture_IsSet && string.Equals(item.Texture, rhs.Texture);
-            ret.Opacity = item.Opacity_IsSet == rhs.Opacity_IsSet && item.Opacity == rhs.Opacity;
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
-            ret.MaterialID = item.MaterialID_IsSet == rhs.MaterialID_IsSet && string.Equals(item.MaterialID, rhs.MaterialID);
+            ret.Texture = string.Equals(item.Texture, rhs.Texture);
+            ret.Opacity = item.Opacity == rhs.Opacity;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.MaterialID = string.Equals(item.MaterialID, rhs.MaterialID);
             ret.Sound = object.Equals(item.Sound, rhs.Sound);
             ret.WindVelocity = item.WindVelocity.EqualsWithin(rhs.WindVelocity);
             ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
@@ -2413,8 +2072,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize);
             ret.Damage = item.Damage == rhs.Damage;
             ret.RelatedWaters = EqualsMaskHelper.EqualsHelper(
-                item.RelatedWaters_IsSet,
-                rhs.RelatedWaters_IsSet,
                 item.RelatedWaters,
                 rhs.RelatedWaters,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
@@ -2425,8 +2082,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IWaterGetter item,
-            string name = null,
-            Water_Mask<bool> printMask = null)
+            string? name = null,
+            Water_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2440,8 +2097,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IWaterGetter item,
             FileGeneration fg,
-            string name = null,
-            Water_Mask<bool> printMask = null)
+            string? name = null,
+            Water_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2465,7 +2122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWaterGetter item,
             FileGeneration fg,
-            Water_Mask<bool> printMask = null)
+            Water_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -2609,13 +2266,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter item,
             Water_Mask<bool?> checkMask)
         {
-            if (checkMask.Texture.HasValue && checkMask.Texture.Value != item.Texture_IsSet) return false;
-            if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != item.Opacity_IsSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
-            if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != item.MaterialID_IsSet) return false;
+            if (checkMask.Texture.HasValue && checkMask.Texture.Value != (item.Texture != null)) return false;
+            if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != (item.Opacity != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != (item.MaterialID != null)) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound.HasBeenSet) return false;
-            if (checkMask.RelatedWaters.Overall.HasValue && checkMask.RelatedWaters.Overall.Value != item.RelatedWaters_IsSet) return false;
-            if (checkMask.RelatedWaters.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
+            if (checkMask.RelatedWaters?.Overall.HasValue ?? false && checkMask.RelatedWaters.Overall.Value != (item.RelatedWaters != null)) return false;
+            if (checkMask.RelatedWaters?.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2625,10 +2282,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter item,
             Water_Mask<bool> mask)
         {
-            mask.Texture = item.Texture_IsSet;
-            mask.Opacity = item.Opacity_IsSet;
-            mask.Flags = item.Flags_IsSet;
-            mask.MaterialID = item.MaterialID_IsSet;
+            mask.Texture = (item.Texture != null);
+            mask.Opacity = (item.Opacity != null);
+            mask.Flags = (item.Flags != null);
+            mask.MaterialID = (item.MaterialID != null);
             mask.Sound = item.Sound.HasBeenSet;
             mask.WindVelocity = true;
             mask.WindDirection = true;
@@ -2656,7 +2313,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.DisplacementSimulatorDampner = true;
             mask.DisplacementSimulatorStartingSize = true;
             mask.Damage = true;
-            mask.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>>(item.RelatedWaters_IsSet, item.RelatedWaters.GetHasBeenSetMask());
+            var itemRelatedWaters = item.RelatedWaters;
+            mask.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>?>(itemRelatedWaters != null, itemRelatedWaters?.GetHasBeenSetMask());
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2701,37 +2359,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IWaterGetter lhs,
-            IWaterGetter rhs)
+            IWaterGetter? lhs,
+            IWaterGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Texture_IsSet != rhs.Texture_IsSet) return false;
-            if (lhs.Texture_IsSet)
-            {
-                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
-            }
-            if (lhs.Opacity_IsSet != rhs.Opacity_IsSet) return false;
-            if (lhs.Opacity_IsSet)
-            {
-                if (lhs.Opacity != rhs.Opacity) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if (lhs.MaterialID_IsSet != rhs.MaterialID_IsSet) return false;
-            if (lhs.MaterialID_IsSet)
-            {
-                if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
-            }
-            if (lhs.Sound.HasBeenSet != rhs.Sound.HasBeenSet) return false;
-            if (lhs.Sound.HasBeenSet)
-            {
-                if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            }
+            if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+            if (lhs.Opacity != rhs.Opacity) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
+            if (!lhs.Sound.Equals(rhs.Sound)) return false;
             if (!lhs.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
             if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
             if (!lhs.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
@@ -2758,55 +2396,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
             if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
             if (lhs.Damage != rhs.Damage) return false;
-            if (lhs.RelatedWaters_IsSet != rhs.RelatedWaters_IsSet) return false;
-            if (lhs.RelatedWaters_IsSet)
-            {
-                if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
-            }
+            if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IWaterGetter)lhs,
+                lhs: (IWaterGetter?)lhs,
                 rhs: rhs as IWaterGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IWaterGetter)lhs,
+                lhs: (IWaterGetter?)lhs,
                 rhs: rhs as IWaterGetter);
         }
         
         public virtual int GetHashCode(IWaterGetter item)
         {
             int ret = 0;
-            if (item.Texture_IsSet)
+            if (item.Texture.TryGet(out var Textureitem))
             {
-                ret = HashHelper.GetHashCode(item.Texture).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Textureitem).CombineHashCode(ret);
             }
-            if (item.Opacity_IsSet)
+            if (item.Opacity.TryGet(out var Opacityitem))
             {
-                ret = HashHelper.GetHashCode(item.Opacity).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Opacityitem).CombineHashCode(ret);
             }
-            if (item.Flags_IsSet)
+            if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
             }
-            if (item.MaterialID_IsSet)
+            if (item.MaterialID.TryGet(out var MaterialIDitem))
             {
-                ret = HashHelper.GetHashCode(item.MaterialID).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(MaterialIDitem).CombineHashCode(ret);
             }
-            if (item.Sound.HasBeenSet)
+            if (item.Sound.TryGet(out var Sounditem))
             {
-                ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Sounditem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.WindVelocity).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.WindDirection).CombineHashCode(ret);
@@ -2834,9 +2468,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = HashHelper.GetHashCode(item.DisplacementSimulatorDampner).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.DisplacementSimulatorStartingSize).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Damage).CombineHashCode(ret);
-            if (item.RelatedWaters_IsSet)
+            if (item.RelatedWaters.TryGet(out var RelatedWatersitem))
             {
-                ret = HashHelper.GetHashCode(item.RelatedWaters).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(RelatedWatersitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
@@ -2879,9 +2513,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Water(getNextFormKey());
             ret.DeepCopyFieldsFrom((Water)item);
@@ -2901,8 +2535,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IWaterInternal item,
             IWaterGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -2914,8 +2548,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IWater item,
             IWaterGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -2924,116 +2558,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.Texture);
-                try
-                {
-                    if (rhs.Texture_IsSet)
-                    {
-                        item.Texture = rhs.Texture;
-                    }
-                    else
-                    {
-                        item.Texture_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Texture = rhs.Texture;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
-                try
-                {
-                    if (rhs.Opacity_IsSet)
-                    {
-                        item.Opacity = rhs.Opacity;
-                    }
-                    else
-                    {
-                        item.Opacity_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Opacity = rhs.Opacity;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.Flags);
-                try
-                {
-                    if (rhs.Flags_IsSet)
-                    {
-                        item.Flags = rhs.Flags;
-                    }
-                    else
-                    {
-                        item.Flags_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
-                try
-                {
-                    if (rhs.MaterialID_IsSet)
-                    {
-                        item.MaterialID = rhs.MaterialID;
-                    }
-                    else
-                    {
-                        item.MaterialID_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaterialID = rhs.MaterialID;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.Sound);
-                try
-                {
-                    item.Sound.SetToFormKey(rhs: rhs.Sound);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Sound.SetToFormKey(rhs: rhs.Sound);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
             {
@@ -3144,17 +2685,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
                 {
-                    if(rhs.RelatedWaters_IsSet)
+                    if(rhs.RelatedWaters.TryGet(out var rhsRelatedWaters))
                     {
-                        item.RelatedWaters = rhs.RelatedWaters.DeepCopy(
+                        item.RelatedWaters = rhsRelatedWaters.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
                     }
                     else
                     {
-                        item.RelatedWaters_Set(
-                            value: default(RelatedWaters),
-                            hasBeenSet: false);
+                        item.RelatedWaters = default;
                     }
                 }
                 catch (Exception ex)
@@ -3176,8 +2715,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IWaterInternal)item,
@@ -3189,8 +2728,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IWater)item,
@@ -3202,8 +2741,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IWaterInternal)item,
@@ -3215,8 +2754,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IWater)item,
@@ -3229,9 +2768,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Water DeepCopy(
             IWaterGetter item,
-            Water_TranslationMask copyMask = null)
+            Water_TranslationMask? copyMask = null)
         {
-            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()).GetNew();
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -3241,9 +2780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Water DeepCopy(
             IWaterGetter item,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask copyMask = null)
+            Water_TranslationMask? copyMask = null)
         {
-            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()).GetNew();
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -3253,10 +2792,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Water DeepCopy(
             IWaterGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()).GetNew();
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -3305,15 +2844,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IWaterGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Texture_IsSet
+            if ((item.Texture != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -3323,17 +2862,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.Texture,
                     errorMask: errorMask);
             }
-            if (item.Opacity_IsSet
+            if ((item.Opacity != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Opacity),
-                    item: item.Opacity,
+                    item: item.Opacity.Value,
                     fieldIndex: (int)Water_FieldIndex.Opacity,
                     errorMask: errorMask);
             }
-            if (item.Flags_IsSet
+            if ((item.Flags != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Water.Flag>.Instance.Write(
@@ -3343,7 +2882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if (item.MaterialID_IsSet
+            if ((item.MaterialID != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -3616,7 +3155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     node.Add(new XElement("HasDATADataType"));
                 }
             }
-            if (item.RelatedWaters_IsSet
+            if ((item.RelatedWaters != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
                 var loquiItem = item.RelatedWaters;
@@ -3642,9 +3181,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IWaterGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Water");
             node.Add(elem);
@@ -3662,9 +3201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -3677,9 +3216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -3692,9 +3231,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -3713,8 +3252,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IWaterInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -3739,8 +3278,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -4367,8 +3906,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             XElement node,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            string name = null)
+            Water_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((WaterXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -4384,8 +3923,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             string path,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            string name = null)
+            Water_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -4401,8 +3940,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             Stream stream,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask translationMask = null,
-            string name = null)
+            Water_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -4424,14 +3963,15 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Water_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Water_Mask<T>>
+    public class Water_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Water_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Water_Mask()
-        {
-        }
-
         public Water_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Texture = initialValue;
             this.Opacity = initialValue;
@@ -4464,7 +4004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DisplacementSimulatorDampner = initialValue;
             this.DisplacementSimulatorStartingSize = initialValue;
             this.Damage = initialValue;
-            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>>(initialValue, new RelatedWaters_Mask<T>(initialValue));
+            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>?>(initialValue, new RelatedWaters_Mask<T>(initialValue));
             this.DATADataTypeState = initialValue;
         }
 
@@ -4507,12 +4047,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T Damage,
             T RelatedWaters,
             T DATADataTypeState)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
             this.Texture = Texture;
             this.Opacity = Opacity;
             this.Flags = Flags;
@@ -4544,9 +4085,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
             this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
             this.Damage = Damage;
-            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>>(RelatedWaters, new RelatedWaters_Mask<T>(RelatedWaters));
+            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>?>(RelatedWaters, new RelatedWaters_Mask<T>(RelatedWaters));
             this.DATADataTypeState = DATADataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected Water_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -4581,7 +4129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T DisplacementSimulatorDampner;
         public T DisplacementSimulatorStartingSize;
         public T Damage;
-        public MaskItem<T, RelatedWaters_Mask<T>> RelatedWaters { get; set; }
+        public MaskItem<T, RelatedWaters_Mask<T>?>? RelatedWaters { get; set; }
         public T DATADataTypeState;
         #endregion
 
@@ -4760,10 +4308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.DisplacementSimulatorDampner = eval(this.DisplacementSimulatorDampner);
             obj.DisplacementSimulatorStartingSize = eval(this.DisplacementSimulatorStartingSize);
             obj.Damage = eval(this.Damage);
-            if (this.RelatedWaters != null)
-            {
-                obj.RelatedWaters = new MaskItem<R, RelatedWaters_Mask<R>>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
-            }
+            obj.RelatedWaters = this.RelatedWaters == null ? null : new MaskItem<R, RelatedWaters_Mask<R>?>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
             obj.DATADataTypeState = eval(this.DATADataTypeState);
         }
         #endregion
@@ -4774,14 +4319,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Water_Mask<bool> printMask = null)
+        public string ToString(Water_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Water_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Water_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Water_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -4929,43 +4474,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Water_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Water_ErrorMask>
     {
         #region Members
-        public Exception Texture;
-        public Exception Opacity;
-        public Exception Flags;
-        public Exception MaterialID;
-        public Exception Sound;
-        public Exception WindVelocity;
-        public Exception WindDirection;
-        public Exception WaveAmplitude;
-        public Exception WaveFrequency;
-        public Exception SunPower;
-        public Exception ReflectivityAmount;
-        public Exception FresnelAmount;
-        public Exception ScrollXSpeed;
-        public Exception ScrollYSpeed;
-        public Exception FogDistanceNearPlane;
-        public Exception FogDistanceFarPlane;
-        public Exception ShallowColor;
-        public Exception DeepColor;
-        public Exception ReflectionColor;
-        public Exception TextureBlend;
-        public Exception RainSimulatorForce;
-        public Exception RainSimulatorVelocity;
-        public Exception RainSimulatorFalloff;
-        public Exception RainSimulatorDampner;
-        public Exception RainSimulatorStartingSize;
-        public Exception DisplacementSimulatorForce;
-        public Exception DisplacementSimulatorVelocity;
-        public Exception DisplacementSimulatorFalloff;
-        public Exception DisplacementSimulatorDampner;
-        public Exception DisplacementSimulatorStartingSize;
-        public Exception Damage;
-        public MaskItem<Exception, RelatedWaters_ErrorMask> RelatedWaters;
-        public Exception DATADataTypeState;
+        public Exception? Texture;
+        public Exception? Opacity;
+        public Exception? Flags;
+        public Exception? MaterialID;
+        public Exception? Sound;
+        public Exception? WindVelocity;
+        public Exception? WindDirection;
+        public Exception? WaveAmplitude;
+        public Exception? WaveFrequency;
+        public Exception? SunPower;
+        public Exception? ReflectivityAmount;
+        public Exception? FresnelAmount;
+        public Exception? ScrollXSpeed;
+        public Exception? ScrollYSpeed;
+        public Exception? FogDistanceNearPlane;
+        public Exception? FogDistanceFarPlane;
+        public Exception? ShallowColor;
+        public Exception? DeepColor;
+        public Exception? ReflectionColor;
+        public Exception? TextureBlend;
+        public Exception? RainSimulatorForce;
+        public Exception? RainSimulatorVelocity;
+        public Exception? RainSimulatorFalloff;
+        public Exception? RainSimulatorDampner;
+        public Exception? RainSimulatorStartingSize;
+        public Exception? DisplacementSimulatorForce;
+        public Exception? DisplacementSimulatorVelocity;
+        public Exception? DisplacementSimulatorFalloff;
+        public Exception? DisplacementSimulatorDampner;
+        public Exception? DisplacementSimulatorStartingSize;
+        public Exception? Damage;
+        public MaskItem<Exception?, RelatedWaters_ErrorMask?>? RelatedWaters;
+        public Exception? DATADataTypeState;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
@@ -5140,7 +4685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Damage = ex;
                     break;
                 case Water_FieldIndex.RelatedWaters:
-                    this.RelatedWaters = new MaskItem<Exception, RelatedWaters_ErrorMask>(ex, null);
+                    this.RelatedWaters = new MaskItem<Exception?, RelatedWaters_ErrorMask?>(ex, null);
                     break;
                 case Water_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = ex;
@@ -5250,7 +4795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Damage = (Exception)obj;
                     break;
                 case Water_FieldIndex.RelatedWaters:
-                    this.RelatedWaters = (MaskItem<Exception, RelatedWaters_ErrorMask>)obj;
+                    this.RelatedWaters = (MaskItem<Exception?, RelatedWaters_ErrorMask?>?)obj;
                     break;
                 case Water_FieldIndex.DATADataTypeState:
                     this.DATADataTypeState = (Exception)obj;
@@ -5369,8 +4914,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Water_ErrorMask Combine(Water_ErrorMask rhs)
+        public Water_ErrorMask Combine(Water_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Water_ErrorMask();
             ret.Texture = this.Texture.Combine(rhs.Texture);
             ret.Opacity = this.Opacity.Combine(rhs.Opacity);
@@ -5403,11 +4949,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
             ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
             ret.Damage = this.Damage.Combine(rhs.Damage);
-            ret.RelatedWaters = new MaskItem<Exception, RelatedWaters_ErrorMask>(this.RelatedWaters.Overall.Combine(rhs.RelatedWaters.Overall), ((IErrorMask<RelatedWaters_ErrorMask>)this.RelatedWaters.Specific).Combine(rhs.RelatedWaters.Specific));
+            ret.RelatedWaters = new MaskItem<Exception?, RelatedWaters_ErrorMask?>(ExceptionExt.Combine(this.RelatedWaters?.Overall, rhs.RelatedWaters?.Overall), (this.RelatedWaters?.Specific as IErrorMask<RelatedWaters_ErrorMask>)?.Combine(rhs.RelatedWaters?.Specific));
             ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
-        public static Water_ErrorMask Combine(Water_ErrorMask lhs, Water_ErrorMask rhs)
+        public static Water_ErrorMask? Combine(Water_ErrorMask? lhs, Water_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -5417,7 +4963,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new Water_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Water_ErrorMask();
         }
         #endregion
@@ -5457,16 +5002,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool DisplacementSimulatorDampner;
         public bool DisplacementSimulatorStartingSize;
         public bool Damage;
-        public MaskItem<bool, RelatedWaters_TranslationMask> RelatedWaters;
+        public MaskItem<bool, RelatedWaters_TranslationMask?> RelatedWaters;
         public bool DATADataTypeState;
         #endregion
 
         #region Ctors
-        public Water_TranslationMask()
-            : base()
-        {
-        }
-
         public Water_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -5501,13 +5041,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.DisplacementSimulatorDampner = defaultOn;
             this.DisplacementSimulatorStartingSize = defaultOn;
             this.Damage = defaultOn;
-            this.RelatedWaters = new MaskItem<bool, RelatedWaters_TranslationMask>(defaultOn, null);
+            this.RelatedWaters = new MaskItem<bool, RelatedWaters_TranslationMask?>(defaultOn, null);
             this.DATADataTypeState = defaultOn;
         }
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Texture, null));
@@ -5635,7 +5175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IWaterGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -5643,50 +5183,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Texture_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Texture,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Opacity_IsSet)
-            {
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Opacity,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER),
-                    nullable: false);
-            }
-            if (item.Flags_IsSet)
-            {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER),
-                    nullable: false);
-            }
-            if (item.MaterialID_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaterialID,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Sound.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Sound,
-                    header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Texture,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Opacity,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.ANAM_HEADER));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Water.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.FNAM_HEADER));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaterialID,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Sound,
+                header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER),
+                masterReferences: masterReferences);
             if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
@@ -5799,14 +5319,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-            if (item.RelatedWaters_IsSet)
             {
                 var loquiItem = item.RelatedWaters;
-                ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
         }
 
@@ -5814,7 +5336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IWaterGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -5837,7 +5359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5850,7 +5372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5863,7 +5385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5981,9 +5503,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((WaterXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -5997,7 +5519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -6008,28 +5530,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Texture
         private int? _TextureLocation;
-        public bool Texture_IsSet => _TextureLocation.HasValue;
-        public String Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureLocation.Value, _package.Meta)) : default;
+        public String? Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Opacity
         private int? _OpacityLocation;
-        public bool Opacity_IsSet => _OpacityLocation.HasValue;
-        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _OpacityLocation.Value, _package.Meta)[0] : default;
+        public Byte? Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _OpacityLocation.Value, _package.Meta)[0] : default(Byte?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Water.Flag Flags => (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
+        private bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Water.Flag? Flags => Flags_IsSet ? (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Water.Flag?);
         #endregion
         #region MaterialID
         private int? _MaterialIDLocation;
-        public bool MaterialID_IsSet => _MaterialIDLocation.HasValue;
-        public String MaterialID => _MaterialIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialIDLocation.Value, _package.Meta)) : default;
+        public String? MaterialID => _MaterialIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialIDLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
+        public IFormIDSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
         #endregion
         private int? _DATALocation;
         public Water.DATADataType DATADataTypeState { get; private set; }
@@ -6042,52 +5561,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         #region WindVelocity
-        private int _WindVelocityLocation => _DATALocation.Value + 0x0;
+        private int _WindVelocityLocation => _DATALocation!.Value + 0x0;
         private bool _WindVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single WindVelocity => _WindVelocity_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WindVelocityLocation, 4)) : default;
         #endregion
         #region WindDirection
-        private int _WindDirectionLocation => _DATALocation.Value + 0x4;
+        private int _WindDirectionLocation => _DATALocation!.Value + 0x4;
         private bool _WindDirection_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single WindDirection => _WindDirection_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WindDirectionLocation, 4)) : default;
         #endregion
         #region WaveAmplitude
-        private int _WaveAmplitudeLocation => _DATALocation.Value + 0x8;
+        private int _WaveAmplitudeLocation => _DATALocation!.Value + 0x8;
         private bool _WaveAmplitude_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single WaveAmplitude => _WaveAmplitude_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WaveAmplitudeLocation, 4)) : default;
         #endregion
         #region WaveFrequency
-        private int _WaveFrequencyLocation => _DATALocation.Value + 0xC;
+        private int _WaveFrequencyLocation => _DATALocation!.Value + 0xC;
         private bool _WaveFrequency_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single WaveFrequency => _WaveFrequency_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WaveFrequencyLocation, 4)) : default;
         #endregion
         #region SunPower
-        private int _SunPowerLocation => _DATALocation.Value + 0x10;
+        private int _SunPowerLocation => _DATALocation!.Value + 0x10;
         private bool _SunPower_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single SunPower => _SunPower_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_SunPowerLocation, 4)) : default;
         #endregion
         #region ReflectivityAmount
-        private int _ReflectivityAmountLocation => _DATALocation.Value + 0x14;
+        private int _ReflectivityAmountLocation => _DATALocation!.Value + 0x14;
         private bool _ReflectivityAmount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single ReflectivityAmount => _ReflectivityAmount_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ReflectivityAmountLocation, 4)) : default;
         #endregion
         #region FresnelAmount
-        private int _FresnelAmountLocation => _DATALocation.Value + 0x18;
+        private int _FresnelAmountLocation => _DATALocation!.Value + 0x18;
         private bool _FresnelAmount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single FresnelAmount => _FresnelAmount_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FresnelAmountLocation, 4)) : default;
         #endregion
         #region ScrollXSpeed
-        private int _ScrollXSpeedLocation => _DATALocation.Value + 0x1C;
+        private int _ScrollXSpeedLocation => _DATALocation!.Value + 0x1C;
         private bool _ScrollXSpeed_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single ScrollXSpeed => _ScrollXSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ScrollXSpeedLocation, 4)) : default;
         #endregion
         #region ScrollYSpeed
-        private int _ScrollYSpeedLocation => _DATALocation.Value + 0x20;
+        private int _ScrollYSpeedLocation => _DATALocation!.Value + 0x20;
         private bool _ScrollYSpeed_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single ScrollYSpeed => _ScrollYSpeed_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ScrollYSpeedLocation, 4)) : default;
         #endregion
         #region FogDistanceNearPlane
-        private int _FogDistanceNearPlaneLocation => _DATALocation.Value + 0x24;
+        private int _FogDistanceNearPlaneLocation => _DATALocation!.Value + 0x24;
         private bool _FogDistanceNearPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
         public Single FogDistanceNearPlane => _FogDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDistanceNearPlaneLocation, 4)) : default;
         #endregion
@@ -6097,27 +5616,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         #region FogDistanceFarPlane
-        private int _FogDistanceFarPlaneLocation => _DATALocation.Value + 0x28;
+        private int _FogDistanceFarPlaneLocation => _DATALocation!.Value + 0x28;
         private bool _FogDistanceFarPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
         public Single FogDistanceFarPlane => _FogDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_FogDistanceFarPlaneLocation, 4)) : default;
         #endregion
         #region ShallowColor
-        private int _ShallowColorLocation => _DATALocation.Value + 0x2C;
+        private int _ShallowColorLocation => _DATALocation!.Value + 0x2C;
         private bool _ShallowColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
         public Color ShallowColor => _ShallowColor_IsSet ? _data.Span.Slice(_ShallowColorLocation, 4).ReadColor() : default;
         #endregion
         #region DeepColor
-        private int _DeepColorLocation => _DATALocation.Value + 0x30;
+        private int _DeepColorLocation => _DATALocation!.Value + 0x30;
         private bool _DeepColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
         public Color DeepColor => _DeepColor_IsSet ? _data.Span.Slice(_DeepColorLocation, 4).ReadColor() : default;
         #endregion
         #region ReflectionColor
-        private int _ReflectionColorLocation => _DATALocation.Value + 0x34;
+        private int _ReflectionColorLocation => _DATALocation!.Value + 0x34;
         private bool _ReflectionColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
         public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Span.Slice(_ReflectionColorLocation, 4).ReadColor() : default;
         #endregion
         #region TextureBlend
-        private int _TextureBlendLocation => _DATALocation.Value + 0x38;
+        private int _TextureBlendLocation => _DATALocation!.Value + 0x38;
         private bool _TextureBlend_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
         public Byte TextureBlend => _TextureBlend_IsSet ? _data.Span[_TextureBlendLocation] : default;
         #endregion
@@ -6127,32 +5646,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         #region RainSimulatorForce
-        private int _RainSimulatorForceLocation => _DATALocation.Value + 0x3C;
+        private int _RainSimulatorForceLocation => _DATALocation!.Value + 0x3C;
         private bool _RainSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single RainSimulatorForce => _RainSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorForceLocation, 4)) : default;
         #endregion
         #region RainSimulatorVelocity
-        private int _RainSimulatorVelocityLocation => _DATALocation.Value + 0x40;
+        private int _RainSimulatorVelocityLocation => _DATALocation!.Value + 0x40;
         private bool _RainSimulatorVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single RainSimulatorVelocity => _RainSimulatorVelocity_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorVelocityLocation, 4)) : default;
         #endregion
         #region RainSimulatorFalloff
-        private int _RainSimulatorFalloffLocation => _DATALocation.Value + 0x44;
+        private int _RainSimulatorFalloffLocation => _DATALocation!.Value + 0x44;
         private bool _RainSimulatorFalloff_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single RainSimulatorFalloff => _RainSimulatorFalloff_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorFalloffLocation, 4)) : default;
         #endregion
         #region RainSimulatorDampner
-        private int _RainSimulatorDampnerLocation => _DATALocation.Value + 0x48;
+        private int _RainSimulatorDampnerLocation => _DATALocation!.Value + 0x48;
         private bool _RainSimulatorDampner_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single RainSimulatorDampner => _RainSimulatorDampner_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorDampnerLocation, 4)) : default;
         #endregion
         #region RainSimulatorStartingSize
-        private int _RainSimulatorStartingSizeLocation => _DATALocation.Value + 0x4C;
+        private int _RainSimulatorStartingSizeLocation => _DATALocation!.Value + 0x4C;
         private bool _RainSimulatorStartingSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single RainSimulatorStartingSize => _RainSimulatorStartingSize_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_RainSimulatorStartingSizeLocation, 4)) : default;
         #endregion
         #region DisplacementSimulatorForce
-        private int _DisplacementSimulatorForceLocation => _DATALocation.Value + 0x50;
+        private int _DisplacementSimulatorForceLocation => _DATALocation!.Value + 0x50;
         private bool _DisplacementSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
         public Single DisplacementSimulatorForce => _DisplacementSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorForceLocation, 4)) : default;
         #endregion
@@ -6162,34 +5681,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         #region DisplacementSimulatorVelocity
-        private int _DisplacementSimulatorVelocityLocation => _DATALocation.Value + 0x54;
+        private int _DisplacementSimulatorVelocityLocation => _DATALocation!.Value + 0x54;
         private bool _DisplacementSimulatorVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
         public Single DisplacementSimulatorVelocity => _DisplacementSimulatorVelocity_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorVelocityLocation, 4)) : default;
         #endregion
         #region DisplacementSimulatorFalloff
-        private int _DisplacementSimulatorFalloffLocation => _DATALocation.Value + 0x58;
+        private int _DisplacementSimulatorFalloffLocation => _DATALocation!.Value + 0x58;
         private bool _DisplacementSimulatorFalloff_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
         public Single DisplacementSimulatorFalloff => _DisplacementSimulatorFalloff_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorFalloffLocation, 4)) : default;
         #endregion
         #region DisplacementSimulatorDampner
-        private int _DisplacementSimulatorDampnerLocation => _DATALocation.Value + 0x5C;
+        private int _DisplacementSimulatorDampnerLocation => _DATALocation!.Value + 0x5C;
         private bool _DisplacementSimulatorDampner_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
         public Single DisplacementSimulatorDampner => _DisplacementSimulatorDampner_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorDampnerLocation, 4)) : default;
         #endregion
         #region DisplacementSimulatorStartingSize
-        private int _DisplacementSimulatorStartingSizeLocation => _DATALocation.Value + 0x60;
+        private int _DisplacementSimulatorStartingSizeLocation => _DATALocation!.Value + 0x60;
         private bool _DisplacementSimulatorStartingSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
         public Single DisplacementSimulatorStartingSize => _DisplacementSimulatorStartingSize_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_DisplacementSimulatorStartingSizeLocation, 4)) : default;
         #endregion
         #region Damage
-        private int _DamageLocation => _DATALocation.Value + 0x64;
+        private int _DamageLocation => _DATALocation!.Value + 0x64;
         private bool _Damage_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
         public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DamageLocation, 2)) : default;
         #endregion
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
         private bool _RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
-        public IRelatedWatersGetter RelatedWaters => _RelatedWaters_IsSet ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRelatedWatersGetter? RelatedWaters => _RelatedWaters_IsSet ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomCtor(
@@ -6209,7 +5728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static WaterBinaryOverlay WaterFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new WaterBinaryOverlay(
@@ -6237,7 +5756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

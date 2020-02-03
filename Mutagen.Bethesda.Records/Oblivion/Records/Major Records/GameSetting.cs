@@ -14,9 +14,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public abstract GameSettingType SettingType { get; }
 
-        public override void EditorID_Set(string value, bool markSet = true)
-        {
-            base.EditorID_Set(GameSettingUtility.CorrectEDID(value, this.SettingType), markSet);
+        public override string? EditorID
+        { 
+            get => base.EditorID; 
+            set => base.EditorID = value == null ? null : GameSettingUtility.CorrectEDID(value, this.SettingType);
         }
 
         public static GameSetting CreateFromBinary(

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             PlaceMixIn.ToString(
                 item: this,
@@ -67,15 +68,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IPlaceGetter rhs)) return false;
-            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Place obj)
         {
-            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()).Equals(this, obj);
+            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PlaceCommon)((IPlaceGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -84,9 +85,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => PlaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((PlaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -99,11 +100,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Place CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Place_TranslationMask translationMask = null)
+            Place_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -113,41 +112,28 @@ namespace Mutagen.Bethesda.Oblivion
         public static Place CreateFromXml(
             XElement node,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Place_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Place CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return null;
-                    break;
-                default:
-                    break;
-            }
             if (!LoquiXmlTranslation.Instance.TryCreate(node, out Place ret, errorMask, translationMask))
             {
                 throw new ArgumentException($"Unknown Place subclass: {node.Name.LocalName}");
             }
-            ((PlaceSetterCommon)((IPlaceGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((PlaceSetterCommon)((IPlaceGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -156,12 +142,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Place CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Place_TranslationMask translationMask = null)
+            Place_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -169,12 +153,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Place CreateFromXml(
             string path,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Place_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -182,13 +164,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Place CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Place_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -196,12 +176,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Place CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Place_TranslationMask translationMask = null)
+            Place_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -209,12 +187,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Place CreateFromXml(
             Stream stream,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Place_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -222,13 +198,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Place CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Place_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -268,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((PlaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -284,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((PlaceSetterCommon)((IPlaceGetter)this).CommonSetterInstance()).Clear(this);
+            ((PlaceSetterCommon)((IPlaceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Place GetNew()
@@ -329,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IPlaceInternal item)
         {
-            ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Place_Mask<bool> GetEqualsMask(
@@ -337,7 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
             IPlaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).GetEqualsMask(
+            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -345,10 +319,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IPlaceGetter item,
-            string name = null,
-            Place_Mask<bool> printMask = null)
+            string? name = null,
+            Place_Mask<bool>? printMask = null)
         {
-            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).ToString(
+            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -357,10 +331,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IPlaceGetter item,
             FileGeneration fg,
-            string name = null,
-            Place_Mask<bool> printMask = null)
+            string? name = null,
+            Place_Mask<bool>? printMask = null)
         {
-            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).ToString(
+            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -371,15 +345,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceGetter item,
             Place_Mask<bool?> checkMask)
         {
-            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).HasBeenSet(
+            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Place_Mask<bool> GetHasBeenSetMask(this IPlaceGetter item)
         {
-            var ret = new Place_Mask<bool>();
-            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Place_Mask<bool>(false);
+            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -389,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceGetter item,
             IPlaceGetter rhs)
         {
-            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).Equals(
+            return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -397,23 +371,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
-            Place_TranslationMask copyMask)
-        {
-            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IPlaceInternal lhs,
-            IPlaceGetter rhs,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask copyMask = null)
+            Place_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -424,10 +386,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -436,9 +398,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Place DeepCopy(
             this IPlaceGetter item,
-            Place_TranslationMask copyMask = null)
+            Place_TranslationMask? copyMask = null)
         {
-            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -446,9 +408,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Place DeepCopy(
             this IPlaceGetter item,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask copyMask = null)
+            Place_TranslationMask? copyMask = null)
         {
-            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -456,10 +418,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Place DeepCopy(
             this IPlaceGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -470,12 +432,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlaceInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Place_TranslationMask translationMask = null)
+            Place_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -486,29 +446,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal item,
             XElement node,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Place_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IPlaceInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -517,13 +473,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlaceInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Place_TranslationMask translationMask = null)
+            Place_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -532,13 +486,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal item,
             string path,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Place_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -547,14 +499,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlaceInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Place_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -563,13 +513,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlaceInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Place_TranslationMask translationMask = null)
+            Place_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -578,13 +526,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal item,
             Stream stream,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Place_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -593,14 +539,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlaceInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Place_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Place_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -612,27 +556,27 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IPlaceGetter obj)
         {
-            return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
+            return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IPlaceGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((PlaceCommon)((IPlaceGetter)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IPlaceInternal obj)
         {
-            return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+            return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IPlaceInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
-            return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -655,9 +599,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -710,11 +654,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IPlaceGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IPlace);
 
-        public static readonly Type InternalSetterType = typeof(IPlaceInternal);
+        public static readonly Type? InternalSetterType = typeof(IPlaceInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Place";
 
@@ -724,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -833,14 +777,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -882,8 +826,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlaceInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -901,9 +845,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IPlaceInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -937,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             foreach (var item in PlaceCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return item as IMajorRecordCommon;
+                yield return (item as IMajorRecordCommon)!;
             }
         }
         
@@ -946,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             foreach (var item in PlaceCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
             {
-                yield return item as TMajor;
+                yield return (item as TMajor)!;
             }
         }
         
@@ -958,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
         }
         
@@ -974,8 +917,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Place_Mask<bool>();
-            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Place_Mask<bool>(false);
+            ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -995,8 +938,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IPlaceGetter item,
-            string name = null,
-            Place_Mask<bool> printMask = null)
+            string? name = null,
+            Place_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1010,8 +953,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IPlaceGetter item,
             FileGeneration fg,
-            string name = null,
-            Place_Mask<bool> printMask = null)
+            string? name = null,
+            Place_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1035,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IPlaceGetter item,
             FileGeneration fg,
-            Place_Mask<bool> printMask = null)
+            Place_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1099,8 +1042,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPlaceGetter lhs,
-            IPlaceGetter rhs)
+            IPlaceGetter? lhs,
+            IPlaceGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1109,20 +1052,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IPlaceGetter)lhs,
+                lhs: (IPlaceGetter?)lhs,
                 rhs: rhs as IPlaceGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IPlaceGetter)lhs,
+                lhs: (IPlaceGetter?)lhs,
                 rhs: rhs as IPlaceGetter);
         }
         
@@ -1161,9 +1104,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Place obj, Place rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Place obj, Place rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             throw new NotImplementedException();
         }
@@ -1186,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return item as TMajor;
+                        yield return (item as TMajor)!;
                     }
                     yield break;
                 default:
@@ -1205,8 +1148,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void DeepCopyFieldsFrom(
             IPlaceInternal item,
             IPlaceGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1218,8 +1161,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void DeepCopyFieldsFrom(
             IPlace item,
             IPlaceGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1231,8 +1174,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IPlaceInternal)item,
@@ -1244,8 +1187,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IPlace)item,
@@ -1257,8 +1200,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IPlaceInternal)item,
@@ -1270,8 +1213,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IPlace)item,
@@ -1284,9 +1227,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Place DeepCopy(
             IPlaceGetter item,
-            Place_TranslationMask copyMask = null)
+            Place_TranslationMask? copyMask = null)
         {
-            Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()).GetNew();
+            Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1296,9 +1239,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Place DeepCopy(
             IPlaceGetter item,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask copyMask = null)
+            Place_TranslationMask? copyMask = null)
         {
-            Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()).GetNew();
+            Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1308,10 +1251,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Place DeepCopy(
             IPlaceGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()).GetNew();
+            Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1360,8 +1303,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IPlaceGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
@@ -1373,9 +1316,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void Write(
             XElement node,
             IPlaceGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Place");
             node.Add(elem);
@@ -1393,9 +1336,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1408,9 +1351,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1423,9 +1366,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1444,8 +1387,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IPlaceInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1470,8 +1413,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlaceInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1498,8 +1441,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceGetter item,
             XElement node,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            string name = null)
+            Place_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((PlaceXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1515,8 +1458,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceGetter item,
             string path,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            string name = null)
+            Place_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1532,8 +1475,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceGetter item,
             Stream stream,
             out Place_ErrorMask errorMask,
-            Place_TranslationMask translationMask = null,
-            string name = null)
+            Place_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1555,14 +1498,15 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Place_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Place_Mask<T>>
+    public class Place_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Place_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Place_Mask()
-        {
-        }
-
         public Place_Mask(T initialValue)
+        : base(initialValue)
         {
         }
 
@@ -1572,13 +1516,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T Version,
             T EditorID,
             T OblivionMajorRecordFlags)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
         }
+
+        #pragma warning disable CS8618
+        protected Place_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Equals
@@ -1631,14 +1583,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Place_Mask<bool> printMask = null)
+        public string ToString(Place_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Place_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Place_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Place_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1654,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Place_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Place_ErrorMask>
     {
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Place_FieldIndex enu = (Place_FieldIndex)index;
             switch (enu)
@@ -1728,12 +1680,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Place_ErrorMask Combine(Place_ErrorMask rhs)
+        public Place_ErrorMask Combine(Place_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Place_ErrorMask();
             return ret;
         }
-        public static Place_ErrorMask Combine(Place_ErrorMask lhs, Place_ErrorMask rhs)
+        public static Place_ErrorMask? Combine(Place_ErrorMask? lhs, Place_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1743,7 +1696,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new Place_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Place_ErrorMask();
         }
         #endregion
@@ -1752,11 +1704,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Place_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Ctors
-        public Place_TranslationMask()
-            : base()
-        {
-        }
-
         public Place_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -1781,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IPlaceGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
@@ -1798,7 +1745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1811,7 +1758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1824,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IPlaceGetter)item,
@@ -1882,9 +1829,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => PlaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((PlaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -1898,7 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((PlaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,

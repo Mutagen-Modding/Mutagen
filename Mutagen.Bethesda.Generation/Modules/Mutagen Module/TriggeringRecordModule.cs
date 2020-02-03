@@ -97,11 +97,6 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
-            if (obj.Name == "Script")
-            {
-                int wer = 23;
-                wer++;
-            }
             HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             if (obj.TryGetRecordType(out var recType))
@@ -426,11 +421,6 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
-            if (obj.Name == "ScriptFields")
-            {
-                int wer = 23;
-                wer++;
-            }
             var data = obj.GetObjectData();
             await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
 

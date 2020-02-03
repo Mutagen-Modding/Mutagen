@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -21,9 +22,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -31,6 +31,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -43,51 +44,50 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public Decal()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region MinWidth
-        public Single MinWidth { get; set; }
+        public Single MinWidth { get; set; } = default;
         #endregion
         #region MaxWidth
-        public Single MaxWidth { get; set; }
+        public Single MaxWidth { get; set; } = default;
         #endregion
         #region MinHeight
-        public Single MinHeight { get; set; }
+        public Single MinHeight { get; set; } = default;
         #endregion
         #region MaxHeight
-        public Single MaxHeight { get; set; }
+        public Single MaxHeight { get; set; } = default;
         #endregion
         #region Depth
-        public Single Depth { get; set; }
+        public Single Depth { get; set; } = default;
         #endregion
         #region Shininess
-        public Single Shininess { get; set; }
+        public Single Shininess { get; set; } = default;
         #endregion
         #region ParallaxScale
-        public Single ParallaxScale { get; set; }
+        public Single ParallaxScale { get; set; } = default;
         #endregion
         #region ParallaxPasses
-        public Byte ParallaxPasses { get; set; }
+        public Byte ParallaxPasses { get; set; } = default;
         #endregion
         #region Flags
-        public Decal.Flag Flags { get; set; }
+        public Decal.Flag Flags { get; set; } = default;
         #endregion
         #region Unknown
-        public UInt16 Unknown { get; set; }
+        public UInt16 Unknown { get; set; } = default;
         #endregion
         #region Color
-        public Color Color { get; set; }
+        public Color Color { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             DecalMixIn.ToString(
                 item: this,
@@ -100,15 +100,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IDecalGetter rhs)) return false;
-            return ((DecalCommon)((IDecalGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Decal obj)
         {
-            return ((DecalCommon)((IDecalGetter)this).CommonInstance()).Equals(this, obj);
+            return ((DecalCommon)((IDecalGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DecalCommon)((IDecalGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((DecalCommon)((IDecalGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -119,9 +119,9 @@ namespace Mutagen.Bethesda.Skyrim
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((DecalXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -134,11 +134,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Decal CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Decal_TranslationMask translationMask = null)
+            Decal_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -148,38 +146,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromXml(
             XElement node,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Decal_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static Decal CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Decal() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Decal();
-            ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -188,12 +173,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Decal_TranslationMask translationMask = null)
+            Decal_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -201,12 +184,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromXml(
             string path,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Decal_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -214,13 +195,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Decal_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -228,12 +207,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Decal_TranslationMask translationMask = null)
+            Decal_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -241,12 +218,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromXml(
             Stream stream,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Decal_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -254,13 +229,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Decal_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -269,29 +242,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((Decal_FieldIndex)index)
-            {
-                case Decal_FieldIndex.MinWidth:
-                case Decal_FieldIndex.MaxWidth:
-                case Decal_FieldIndex.MinHeight:
-                case Decal_FieldIndex.MaxHeight:
-                case Decal_FieldIndex.Depth:
-                case Decal_FieldIndex.Shininess:
-                case Decal_FieldIndex.ParallaxScale:
-                case Decal_FieldIndex.ParallaxPasses:
-                case Decal_FieldIndex.Flags:
-                case Decal_FieldIndex.Unknown:
-                case Decal_FieldIndex.Color:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Decal_Registration.TRIGGERING_RECORD_TYPE;
@@ -305,7 +255,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -328,10 +278,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Decal();
-            ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -349,7 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((DecalSetterCommon)((IDecalGetter)this).CommonSetterInstance()).Clear(this);
+            ((DecalSetterCommon)((IDecalGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static Decal GetNew()
@@ -366,27 +316,16 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDecal>
     {
         new Single MinWidth { get; set; }
-
         new Single MaxWidth { get; set; }
-
         new Single MinHeight { get; set; }
-
         new Single MaxHeight { get; set; }
-
         new Single Depth { get; set; }
-
         new Single Shininess { get; set; }
-
         new Single ParallaxScale { get; set; }
-
         new Byte ParallaxPasses { get; set; }
-
         new Decal.Flag Flags { get; set; }
-
         new UInt16 Unknown { get; set; }
-
         new Color Color { get; set; }
-
     }
 
     public partial interface IDecalGetter :
@@ -398,53 +337,20 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region MinWidth
         Single MinWidth { get; }
-
-        #endregion
-        #region MaxWidth
         Single MaxWidth { get; }
-
-        #endregion
-        #region MinHeight
         Single MinHeight { get; }
-
-        #endregion
-        #region MaxHeight
         Single MaxHeight { get; }
-
-        #endregion
-        #region Depth
         Single Depth { get; }
-
-        #endregion
-        #region Shininess
         Single Shininess { get; }
-
-        #endregion
-        #region ParallaxScale
         Single ParallaxScale { get; }
-
-        #endregion
-        #region ParallaxPasses
         Byte ParallaxPasses { get; }
-
-        #endregion
-        #region Flags
         Decal.Flag Flags { get; }
-
-        #endregion
-        #region Unknown
         UInt16 Unknown { get; }
-
-        #endregion
-        #region Color
         Color Color { get; }
-
-        #endregion
 
     }
 
@@ -455,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IDecal item)
         {
-            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Decal_Mask<bool> GetEqualsMask(
@@ -463,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
             IDecalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DecalCommon)((IDecalGetter)item).CommonInstance()).GetEqualsMask(
+            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -471,10 +377,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IDecalGetter item,
-            string name = null,
-            Decal_Mask<bool> printMask = null)
+            string? name = null,
+            Decal_Mask<bool>? printMask = null)
         {
-            return ((DecalCommon)((IDecalGetter)item).CommonInstance()).ToString(
+            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -483,10 +389,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IDecalGetter item,
             FileGeneration fg,
-            string name = null,
-            Decal_Mask<bool> printMask = null)
+            string? name = null,
+            Decal_Mask<bool>? printMask = null)
         {
-            ((DecalCommon)((IDecalGetter)item).CommonInstance()).ToString(
+            ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -497,15 +403,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             Decal_Mask<bool?> checkMask)
         {
-            return ((DecalCommon)((IDecalGetter)item).CommonInstance()).HasBeenSet(
+            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Decal_Mask<bool> GetHasBeenSetMask(this IDecalGetter item)
         {
-            var ret = new Decal_Mask<bool>();
-            ((DecalCommon)((IDecalGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Decal_Mask<bool>(false);
+            ((DecalCommon)((IDecalGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -515,16 +421,17 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             IDecalGetter rhs)
         {
-            return ((DecalCommon)((IDecalGetter)item).CommonInstance()).Equals(
+            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IDecal lhs,
-            IDecalGetter rhs)
+            IDecalGetter rhs,
+            Decal_TranslationMask? copyMask = null)
         {
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -534,23 +441,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IDecal lhs,
             IDecalGetter rhs,
-            Decal_TranslationMask copyMask)
-        {
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IDecal lhs,
-            IDecalGetter rhs,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask copyMask = null)
+            Decal_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -561,10 +456,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IDecal lhs,
             IDecalGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -573,9 +468,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal DeepCopy(
             this IDecalGetter item,
-            Decal_TranslationMask copyMask = null)
+            Decal_TranslationMask? copyMask = null)
         {
-            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -583,9 +478,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal DeepCopy(
             this IDecalGetter item,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask copyMask = null)
+            Decal_TranslationMask? copyMask = null)
         {
-            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -593,10 +488,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal DeepCopy(
             this IDecalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -607,12 +502,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Decal_TranslationMask translationMask = null)
+            Decal_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -623,29 +516,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             XElement node,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Decal_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IDecal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -654,13 +543,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Decal_TranslationMask translationMask = null)
+            Decal_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -669,13 +556,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             string path,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Decal_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -684,14 +569,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Decal_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -700,13 +583,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Decal_TranslationMask translationMask = null)
+            Decal_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -715,13 +596,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             Stream stream,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Decal_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -730,14 +609,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Decal_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Decal_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -763,9 +640,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -824,11 +701,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IDecalGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IDecal);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Decal";
 
@@ -838,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1061,14 +938,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1092,26 +969,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDecal item)
         {
             ClearPartial();
-            item.MinWidth = default(Single);
-            item.MaxWidth = default(Single);
-            item.MinHeight = default(Single);
-            item.MaxHeight = default(Single);
-            item.Depth = default(Single);
-            item.Shininess = default(Single);
-            item.ParallaxScale = default(Single);
-            item.ParallaxPasses = default(Byte);
-            item.Flags = default(Decal.Flag);
-            item.Unknown = default(UInt16);
-            item.Color = default(Color);
+            item.MinWidth = default;
+            item.MaxWidth = default;
+            item.MinHeight = default;
+            item.MaxHeight = default;
+            item.Depth = default;
+            item.Shininess = default;
+            item.ParallaxScale = default;
+            item.ParallaxPasses = default;
+            item.Flags = default;
+            item.Unknown = default;
+            item.Color = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IDecal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1159,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1185,8 +1061,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Decal_Mask<bool>();
-            ((DecalCommon)((IDecalGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Decal_Mask<bool>(false);
+            ((DecalCommon)((IDecalGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1216,8 +1092,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IDecalGetter item,
-            string name = null,
-            Decal_Mask<bool> printMask = null)
+            string? name = null,
+            Decal_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1231,8 +1107,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IDecalGetter item,
             FileGeneration fg,
-            string name = null,
-            Decal_Mask<bool> printMask = null)
+            string? name = null,
+            Decal_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1256,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IDecalGetter item,
             FileGeneration fg,
-            Decal_Mask<bool> printMask = null)
+            Decal_Mask<bool>? printMask = null)
         {
             if (printMask?.MinWidth ?? true)
             {
@@ -1330,8 +1206,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDecalGetter lhs,
-            IDecalGetter rhs)
+            IDecalGetter? lhs,
+            IDecalGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1391,8 +1267,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IDecal item,
             IDecalGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)Decal_FieldIndex.MinWidth) ?? true))
             {
@@ -1444,9 +1320,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Decal DeepCopy(
             IDecalGetter item,
-            Decal_TranslationMask copyMask = null)
+            Decal_TranslationMask? copyMask = null)
         {
-            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()).GetNew();
+            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1456,9 +1332,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Decal DeepCopy(
             IDecalGetter item,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask copyMask = null)
+            Decal_TranslationMask? copyMask = null)
         {
-            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()).GetNew();
+            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1468,10 +1344,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Decal DeepCopy(
             IDecalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()).GetNew();
+            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1524,8 +1400,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IDecalGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)Decal_FieldIndex.MinWidth) ?? true))
             {
@@ -1631,9 +1507,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IDecalGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Decal");
             node.Add(elem);
@@ -1651,9 +1527,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IDecalGetter)item,
@@ -1666,10 +1542,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IDecalGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1701,8 +1577,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IDecal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1727,8 +1603,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1947,8 +1823,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             XElement node,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            string name = null)
+            Decal_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1964,8 +1840,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             string path,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            string name = null)
+            Decal_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1980,9 +1856,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1998,8 +1874,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             Stream stream,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask translationMask = null,
-            string name = null)
+            Decal_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2014,9 +1890,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2031,9 +1907,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -2046,21 +1922,21 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             XElement node,
-            string name = null,
-            Decal_TranslationMask translationMask = null)
+            string? name = null,
+            Decal_TranslationMask? translationMask = null)
         {
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IDecalGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2075,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2097,13 +1973,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Decal_Mask<T> : IMask<T>, IEquatable<Decal_Mask<T>>
+    public class Decal_Mask<T> :
+        IMask<T>,
+        IEquatable<Decal_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Decal_Mask()
-        {
-        }
-
         public Decal_Mask(T initialValue)
         {
             this.MinWidth = initialValue;
@@ -2144,6 +2019,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Unknown = Unknown;
             this.Color = Color;
         }
+
+        #pragma warning disable CS8618
+        protected Decal_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -2250,14 +2132,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Decal_Mask<bool> printMask = null)
+        public string ToString(Decal_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Decal_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Decal_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Decal_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2317,8 +2199,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Decal_ErrorMask : IErrorMask, IErrorMask<Decal_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -2330,21 +2212,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return _warnings;
             }
         }
-        public Exception MinWidth;
-        public Exception MaxWidth;
-        public Exception MinHeight;
-        public Exception MaxHeight;
-        public Exception Depth;
-        public Exception Shininess;
-        public Exception ParallaxScale;
-        public Exception ParallaxPasses;
-        public Exception Flags;
-        public Exception Unknown;
-        public Exception Color;
+        public Exception? MinWidth;
+        public Exception? MaxWidth;
+        public Exception? MinHeight;
+        public Exception? MaxHeight;
+        public Exception? Depth;
+        public Exception? Shininess;
+        public Exception? ParallaxScale;
+        public Exception? ParallaxPasses;
+        public Exception? Flags;
+        public Exception? Unknown;
+        public Exception? Color;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             Decal_FieldIndex enu = (Decal_FieldIndex)index;
             switch (enu)
@@ -2525,8 +2407,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Decal_ErrorMask Combine(Decal_ErrorMask rhs)
+        public Decal_ErrorMask Combine(Decal_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Decal_ErrorMask();
             ret.MinWidth = this.MinWidth.Combine(rhs.MinWidth);
             ret.MaxWidth = this.MaxWidth.Combine(rhs.MaxWidth);
@@ -2541,7 +2424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Color = this.Color.Combine(rhs.Color);
             return ret;
         }
-        public static Decal_ErrorMask Combine(Decal_ErrorMask lhs, Decal_ErrorMask rhs)
+        public static Decal_ErrorMask? Combine(Decal_ErrorMask? lhs, Decal_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2551,7 +2434,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static Decal_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Decal_ErrorMask();
         }
         #endregion
@@ -2560,7 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Decal_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool MinWidth;
         public bool MaxWidth;
         public bool MinHeight;
@@ -2575,10 +2457,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Ctors
-        public Decal_TranslationMask()
-        {
-        }
-
         public Decal_TranslationMask(bool defaultOn)
         {
             this.MinWidth = defaultOn;
@@ -2599,13 +2477,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((MinWidth, null));
             ret.Add((MaxWidth, null));
@@ -2672,7 +2550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IDecalGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2690,7 +2568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IDecalGetter)item,
@@ -2747,7 +2625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         object IDecalGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IDecalGetter.CommonSetterInstance() => null;
+        object? IDecalGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IDecalGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2763,9 +2641,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((DecalXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2781,7 +2659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2818,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static DecalBinaryOverlay DecalFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new DecalBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

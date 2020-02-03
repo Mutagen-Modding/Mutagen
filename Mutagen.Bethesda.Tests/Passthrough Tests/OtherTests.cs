@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Tests
         
         public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
         {
-            if (!settings.ExpectedBaseGroupCount_IsSet) return;
+            if (!settings.ExpectedBaseGroupCount.TryGet(out var expected)) return;
             var loc = settings.GetFilePath(locs);
             using (var stream = new MutagenBinaryReadStream(loc.Path, settings.GameMode))
             {
                 var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
-                Assert.Equal(settings.ExpectedBaseGroupCount, grups.Length);
+                Assert.Equal(expected, grups.Length);
             }
         }
 

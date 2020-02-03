@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Tests.Internals;
 using System.Xml;
@@ -17,11 +18,11 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
@@ -34,36 +35,35 @@ namespace Mutagen.Bethesda.Tests
         #region Ctor
         public PassthroughSettings()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region ReuseCaches
-        public Boolean ReuseCaches { get; set; }
+        public Boolean ReuseCaches { get; set; } = default;
         #endregion
         #region ReorderRecords
-        public Boolean ReorderRecords { get; set; }
+        public Boolean ReorderRecords { get; set; } = default;
         #endregion
         #region DeleteCachesAfter
         public readonly static Boolean _DeleteCachesAfter_Default = true;
-        public Boolean DeleteCachesAfter { get; set; }
+        public Boolean DeleteCachesAfter { get; set; } = default;
         #endregion
         #region TestNormal
-        public Boolean TestNormal { get; set; }
+        public Boolean TestNormal { get; set; } = default;
         #endregion
         #region TestBinaryOverlay
-        public Boolean TestBinaryOverlay { get; set; }
+        public Boolean TestBinaryOverlay { get; set; } = default;
         #endregion
         #region TestImport
-        public Boolean TestImport { get; set; }
+        public Boolean TestImport { get; set; } = default;
         #endregion
         #region TestFolder
-        public Boolean TestFolder { get; set; }
+        public Boolean TestFolder { get; set; } = default;
         #endregion
         #region TestCopyIn
-        public Boolean TestCopyIn { get; set; }
+        public Boolean TestCopyIn { get; set; } = default;
         #endregion
 
         #region To String
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             PassthroughSettingsMixIn.ToString(
                 item: this,
@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is IPassthroughSettingsGetter rhs)) return false;
-            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(PassthroughSettings obj)
         {
-            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()).Equals(this, obj);
+            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -107,9 +107,9 @@ namespace Mutagen.Bethesda.Tests
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((PassthroughSettingsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -122,11 +122,9 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static PassthroughSettings CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            PassthroughSettings_TranslationMask translationMask = null)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -136,38 +134,25 @@ namespace Mutagen.Bethesda.Tests
         public static PassthroughSettings CreateFromXml(
             XElement node,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static PassthroughSettings CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new PassthroughSettings() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new PassthroughSettings();
-            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -176,12 +161,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughSettings CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            PassthroughSettings_TranslationMask translationMask = null)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -189,12 +172,10 @@ namespace Mutagen.Bethesda.Tests
         public static PassthroughSettings CreateFromXml(
             string path,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -202,13 +183,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughSettings CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -216,12 +195,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughSettings CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            PassthroughSettings_TranslationMask translationMask = null)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -229,12 +206,10 @@ namespace Mutagen.Bethesda.Tests
         public static PassthroughSettings CreateFromXml(
             Stream stream,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -242,13 +217,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughSettings CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -257,26 +230,6 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((PassthroughSettings_FieldIndex)index)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
-                case PassthroughSettings_FieldIndex.TestImport:
-                case PassthroughSettings_FieldIndex.TestFolder:
-                case PassthroughSettings_FieldIndex.TestCopyIn:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
@@ -284,7 +237,7 @@ namespace Mutagen.Bethesda.Tests
 
         void IClearable.Clear()
         {
-            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)this).CommonSetterInstance()).Clear(this);
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static PassthroughSettings GetNew()
@@ -301,21 +254,13 @@ namespace Mutagen.Bethesda.Tests
         ILoquiObjectSetter<IPassthroughSettings>
     {
         new Boolean ReuseCaches { get; set; }
-
         new Boolean ReorderRecords { get; set; }
-
         new Boolean DeleteCachesAfter { get; set; }
-
         new Boolean TestNormal { get; set; }
-
         new Boolean TestBinaryOverlay { get; set; }
-
         new Boolean TestImport { get; set; }
-
         new Boolean TestFolder { get; set; }
-
         new Boolean TestCopyIn { get; set; }
-
     }
 
     public partial interface IPassthroughSettingsGetter :
@@ -326,41 +271,17 @@ namespace Mutagen.Bethesda.Tests
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region ReuseCaches
         Boolean ReuseCaches { get; }
-
-        #endregion
-        #region ReorderRecords
         Boolean ReorderRecords { get; }
-
-        #endregion
-        #region DeleteCachesAfter
         Boolean DeleteCachesAfter { get; }
-
-        #endregion
-        #region TestNormal
         Boolean TestNormal { get; }
-
-        #endregion
-        #region TestBinaryOverlay
         Boolean TestBinaryOverlay { get; }
-
-        #endregion
-        #region TestImport
         Boolean TestImport { get; }
-
-        #endregion
-        #region TestFolder
         Boolean TestFolder { get; }
-
-        #endregion
-        #region TestCopyIn
         Boolean TestCopyIn { get; }
-
-        #endregion
 
     }
 
@@ -371,7 +292,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this IPassthroughSettings item)
         {
-            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static PassthroughSettings_Mask<bool> GetEqualsMask(
@@ -379,7 +300,7 @@ namespace Mutagen.Bethesda.Tests
             IPassthroughSettingsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetEqualsMask(
+            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -387,10 +308,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static string ToString(
             this IPassthroughSettingsGetter item,
-            string name = null,
-            PassthroughSettings_Mask<bool> printMask = null)
+            string? name = null,
+            PassthroughSettings_Mask<bool>? printMask = null)
         {
-            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).ToString(
+            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -399,10 +320,10 @@ namespace Mutagen.Bethesda.Tests
         public static void ToString(
             this IPassthroughSettingsGetter item,
             FileGeneration fg,
-            string name = null,
-            PassthroughSettings_Mask<bool> printMask = null)
+            string? name = null,
+            PassthroughSettings_Mask<bool>? printMask = null)
         {
-            ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).ToString(
+            ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -413,15 +334,15 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             PassthroughSettings_Mask<bool?> checkMask)
         {
-            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).HasBeenSet(
+            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static PassthroughSettings_Mask<bool> GetHasBeenSetMask(this IPassthroughSettingsGetter item)
         {
-            var ret = new PassthroughSettings_Mask<bool>();
-            ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new PassthroughSettings_Mask<bool>(false);
+            ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -431,16 +352,17 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             IPassthroughSettingsGetter rhs)
         {
-            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).Equals(
+            return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IPassthroughSettings lhs,
-            IPassthroughSettingsGetter rhs)
+            IPassthroughSettingsGetter rhs,
+            PassthroughSettings_TranslationMask? copyMask = null)
         {
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -450,23 +372,11 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyFieldsFrom(
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
-            PassthroughSettings_TranslationMask copyMask)
-        {
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IPassthroughSettings lhs,
-            IPassthroughSettingsGetter rhs,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask copyMask = null)
+            PassthroughSettings_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -477,10 +387,10 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyFieldsFrom(
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -489,9 +399,9 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughSettings DeepCopy(
             this IPassthroughSettingsGetter item,
-            PassthroughSettings_TranslationMask copyMask = null)
+            PassthroughSettings_TranslationMask? copyMask = null)
         {
-            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -499,9 +409,9 @@ namespace Mutagen.Bethesda.Tests
         public static PassthroughSettings DeepCopy(
             this IPassthroughSettingsGetter item,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask copyMask = null)
+            PassthroughSettings_TranslationMask? copyMask = null)
         {
-            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -509,10 +419,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughSettings DeepCopy(
             this IPassthroughSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -523,12 +433,10 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            PassthroughSettings_TranslationMask translationMask = null)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -539,29 +447,25 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettings item,
             XElement node,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -570,13 +474,11 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            PassthroughSettings_TranslationMask translationMask = null)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -585,13 +487,11 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettings item,
             string path,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -600,14 +500,12 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             string path,
-            ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -616,13 +514,11 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            PassthroughSettings_TranslationMask translationMask = null)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -631,13 +527,11 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettings item,
             Stream stream,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -646,14 +540,12 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -708,11 +600,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static readonly Type GetterType = typeof(IPassthroughSettingsGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IPassthroughSettings);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Tests.PassthroughSettings";
 
@@ -722,7 +614,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -907,14 +799,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -938,23 +830,22 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Clear(IPassthroughSettings item)
         {
             ClearPartial();
-            item.ReuseCaches = default(Boolean);
-            item.ReorderRecords = default(Boolean);
+            item.ReuseCaches = default;
+            item.ReorderRecords = default;
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
-            item.TestNormal = default(Boolean);
-            item.TestBinaryOverlay = default(Boolean);
-            item.TestImport = default(Boolean);
-            item.TestFolder = default(Boolean);
-            item.TestCopyIn = default(Boolean);
+            item.TestNormal = default;
+            item.TestBinaryOverlay = default;
+            item.TestImport = default;
+            item.TestFolder = default;
+            item.TestCopyIn = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IPassthroughSettings item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -987,8 +878,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettingsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PassthroughSettings_Mask<bool>();
-            ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new PassthroughSettings_Mask<bool>(false);
+            ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1015,8 +906,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public string ToString(
             IPassthroughSettingsGetter item,
-            string name = null,
-            PassthroughSettings_Mask<bool> printMask = null)
+            string? name = null,
+            PassthroughSettings_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1030,8 +921,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void ToString(
             IPassthroughSettingsGetter item,
             FileGeneration fg,
-            string name = null,
-            PassthroughSettings_Mask<bool> printMask = null)
+            string? name = null,
+            PassthroughSettings_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1055,7 +946,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected static void ToStringFields(
             IPassthroughSettingsGetter item,
             FileGeneration fg,
-            PassthroughSettings_Mask<bool> printMask = null)
+            PassthroughSettings_Mask<bool>? printMask = null)
         {
             if (printMask?.ReuseCaches ?? true)
             {
@@ -1114,8 +1005,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPassthroughSettingsGetter lhs,
-            IPassthroughSettingsGetter rhs)
+            IPassthroughSettingsGetter? lhs,
+            IPassthroughSettingsGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1161,8 +1052,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void DeepCopyFieldsFrom(
             IPassthroughSettings item,
             IPassthroughSettingsGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
             {
@@ -1202,9 +1093,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public PassthroughSettings DeepCopy(
             IPassthroughSettingsGetter item,
-            PassthroughSettings_TranslationMask copyMask = null)
+            PassthroughSettings_TranslationMask? copyMask = null)
         {
-            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1214,9 +1105,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         public PassthroughSettings DeepCopy(
             IPassthroughSettingsGetter item,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask copyMask = null)
+            PassthroughSettings_TranslationMask? copyMask = null)
         {
-            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1226,10 +1117,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public PassthroughSettings DeepCopy(
             IPassthroughSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1272,6 +1163,456 @@ namespace Mutagen.Bethesda.Tests
 }
 
 #region Modules
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
+    public class PassthroughSettings_Mask<T> :
+        IMask<T>,
+        IEquatable<PassthroughSettings_Mask<T>>
+        where T : notnull
+    {
+        #region Ctors
+        public PassthroughSettings_Mask(T initialValue)
+        {
+            this.ReuseCaches = initialValue;
+            this.ReorderRecords = initialValue;
+            this.DeleteCachesAfter = initialValue;
+            this.TestNormal = initialValue;
+            this.TestBinaryOverlay = initialValue;
+            this.TestImport = initialValue;
+            this.TestFolder = initialValue;
+            this.TestCopyIn = initialValue;
+        }
+
+        public PassthroughSettings_Mask(
+            T ReuseCaches,
+            T ReorderRecords,
+            T DeleteCachesAfter,
+            T TestNormal,
+            T TestBinaryOverlay,
+            T TestImport,
+            T TestFolder,
+            T TestCopyIn)
+        {
+            this.ReuseCaches = ReuseCaches;
+            this.ReorderRecords = ReorderRecords;
+            this.DeleteCachesAfter = DeleteCachesAfter;
+            this.TestNormal = TestNormal;
+            this.TestBinaryOverlay = TestBinaryOverlay;
+            this.TestImport = TestImport;
+            this.TestFolder = TestFolder;
+            this.TestCopyIn = TestCopyIn;
+        }
+
+        #pragma warning disable CS8618
+        protected PassthroughSettings_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
+        #endregion
+
+        #region Members
+        public T ReuseCaches;
+        public T ReorderRecords;
+        public T DeleteCachesAfter;
+        public T TestNormal;
+        public T TestBinaryOverlay;
+        public T TestImport;
+        public T TestFolder;
+        public T TestCopyIn;
+        #endregion
+
+        #region Equals
+        public override bool Equals(object obj)
+        {
+            if (!(obj is PassthroughSettings_Mask<T> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public bool Equals(PassthroughSettings_Mask<T> rhs)
+        {
+            if (rhs == null) return false;
+            if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;
+            if (!object.Equals(this.ReorderRecords, rhs.ReorderRecords)) return false;
+            if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
+            if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
+            if (!object.Equals(this.TestBinaryOverlay, rhs.TestBinaryOverlay)) return false;
+            if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
+            if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
+            if (!object.Equals(this.TestCopyIn, rhs.TestCopyIn)) return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.ReuseCaches?.GetHashCode());
+            ret = ret.CombineHashCode(this.ReorderRecords?.GetHashCode());
+            ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestBinaryOverlay?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestCopyIn?.GetHashCode());
+            return ret;
+        }
+
+        #endregion
+
+        #region All Equal
+        public bool AllEqual(Func<T, bool> eval)
+        {
+            if (!eval(this.ReuseCaches)) return false;
+            if (!eval(this.ReorderRecords)) return false;
+            if (!eval(this.DeleteCachesAfter)) return false;
+            if (!eval(this.TestNormal)) return false;
+            if (!eval(this.TestBinaryOverlay)) return false;
+            if (!eval(this.TestImport)) return false;
+            if (!eval(this.TestFolder)) return false;
+            if (!eval(this.TestCopyIn)) return false;
+            return true;
+        }
+        #endregion
+
+        #region Translate
+        public PassthroughSettings_Mask<R> Translate<R>(Func<T, R> eval)
+        {
+            var ret = new PassthroughSettings_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(PassthroughSettings_Mask<R> obj, Func<T, R> eval)
+        {
+            obj.ReuseCaches = eval(this.ReuseCaches);
+            obj.ReorderRecords = eval(this.ReorderRecords);
+            obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
+            obj.TestNormal = eval(this.TestNormal);
+            obj.TestBinaryOverlay = eval(this.TestBinaryOverlay);
+            obj.TestImport = eval(this.TestImport);
+            obj.TestFolder = eval(this.TestFolder);
+            obj.TestCopyIn = eval(this.TestCopyIn);
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return ToString(printMask: null);
+        }
+
+        public string ToString(PassthroughSettings_Mask<bool>? printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(fg, printMask);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg, PassthroughSettings_Mask<bool>? printMask = null)
+        {
+            fg.AppendLine($"{nameof(PassthroughSettings_Mask<T>)} =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (printMask?.ReuseCaches ?? true)
+                {
+                    fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+                }
+                if (printMask?.ReorderRecords ?? true)
+                {
+                    fg.AppendLine($"ReorderRecords => {ReorderRecords}");
+                }
+                if (printMask?.DeleteCachesAfter ?? true)
+                {
+                    fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
+                }
+                if (printMask?.TestNormal ?? true)
+                {
+                    fg.AppendLine($"TestNormal => {TestNormal}");
+                }
+                if (printMask?.TestBinaryOverlay ?? true)
+                {
+                    fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
+                }
+                if (printMask?.TestImport ?? true)
+                {
+                    fg.AppendLine($"TestImport => {TestImport}");
+                }
+                if (printMask?.TestFolder ?? true)
+                {
+                    fg.AppendLine($"TestFolder => {TestFolder}");
+                }
+                if (printMask?.TestCopyIn ?? true)
+                {
+                    fg.AppendLine($"TestCopyIn => {TestCopyIn}");
+                }
+            }
+            fg.AppendLine("]");
+        }
+        #endregion
+
+    }
+
+    public class PassthroughSettings_ErrorMask : IErrorMask, IErrorMask<PassthroughSettings_ErrorMask>
+    {
+        #region Members
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
+        public List<string> Warnings
+        {
+            get
+            {
+                if (_warnings == null)
+                {
+                    _warnings = new List<string>();
+                }
+                return _warnings;
+            }
+        }
+        public Exception? ReuseCaches;
+        public Exception? ReorderRecords;
+        public Exception? DeleteCachesAfter;
+        public Exception? TestNormal;
+        public Exception? TestBinaryOverlay;
+        public Exception? TestImport;
+        public Exception? TestFolder;
+        public Exception? TestCopyIn;
+        #endregion
+
+        #region IErrorMask
+        public object? GetNthMask(int index)
+        {
+            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
+            switch (enu)
+            {
+                case PassthroughSettings_FieldIndex.ReuseCaches:
+                    return ReuseCaches;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    return ReorderRecords;
+                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
+                    return DeleteCachesAfter;
+                case PassthroughSettings_FieldIndex.TestNormal:
+                    return TestNormal;
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    return TestBinaryOverlay;
+                case PassthroughSettings_FieldIndex.TestImport:
+                    return TestImport;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    return TestFolder;
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    return TestCopyIn;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
+        public void SetNthException(int index, Exception ex)
+        {
+            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
+            switch (enu)
+            {
+                case PassthroughSettings_FieldIndex.ReuseCaches:
+                    this.ReuseCaches = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    this.ReorderRecords = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
+                    this.DeleteCachesAfter = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestNormal:
+                    this.TestNormal = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    this.TestBinaryOverlay = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestImport:
+                    this.TestImport = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    this.TestFolder = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    this.TestCopyIn = ex;
+                    break;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
+        public void SetNthMask(int index, object obj)
+        {
+            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
+            switch (enu)
+            {
+                case PassthroughSettings_FieldIndex.ReuseCaches:
+                    this.ReuseCaches = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.ReorderRecords:
+                    this.ReorderRecords = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
+                    this.DeleteCachesAfter = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.TestNormal:
+                    this.TestNormal = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    this.TestBinaryOverlay = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.TestImport:
+                    this.TestImport = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.TestFolder:
+                    this.TestFolder = (Exception)obj;
+                    break;
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    this.TestCopyIn = (Exception)obj;
+                    break;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (ReuseCaches != null) return true;
+            if (ReorderRecords != null) return true;
+            if (DeleteCachesAfter != null) return true;
+            if (TestNormal != null) return true;
+            if (TestBinaryOverlay != null) return true;
+            if (TestImport != null) return true;
+            if (TestFolder != null) return true;
+            if (TestCopyIn != null) return true;
+            return false;
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            var fg = new FileGeneration();
+            ToString(fg);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg)
+        {
+            fg.AppendLine("PassthroughSettings_ErrorMask =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (this.Overall != null)
+                {
+                    fg.AppendLine("Overall =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"{this.Overall}");
+                    }
+                    fg.AppendLine("]");
+                }
+                ToString_FillInternal(fg);
+            }
+            fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            fg.AppendLine($"ReuseCaches => {ReuseCaches}");
+            fg.AppendLine($"ReorderRecords => {ReorderRecords}");
+            fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
+            fg.AppendLine($"TestNormal => {TestNormal}");
+            fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
+            fg.AppendLine($"TestImport => {TestImport}");
+            fg.AppendLine($"TestFolder => {TestFolder}");
+            fg.AppendLine($"TestCopyIn => {TestCopyIn}");
+        }
+        #endregion
+
+        #region Combine
+        public PassthroughSettings_ErrorMask Combine(PassthroughSettings_ErrorMask? rhs)
+        {
+            if (rhs == null) return this;
+            var ret = new PassthroughSettings_ErrorMask();
+            ret.ReuseCaches = this.ReuseCaches.Combine(rhs.ReuseCaches);
+            ret.ReorderRecords = this.ReorderRecords.Combine(rhs.ReorderRecords);
+            ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
+            ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
+            ret.TestBinaryOverlay = this.TestBinaryOverlay.Combine(rhs.TestBinaryOverlay);
+            ret.TestImport = this.TestImport.Combine(rhs.TestImport);
+            ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
+            ret.TestCopyIn = this.TestCopyIn.Combine(rhs.TestCopyIn);
+            return ret;
+        }
+        public static PassthroughSettings_ErrorMask? Combine(PassthroughSettings_ErrorMask? lhs, PassthroughSettings_ErrorMask? rhs)
+        {
+            if (lhs != null && rhs != null) return lhs.Combine(rhs);
+            return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static PassthroughSettings_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            return new PassthroughSettings_ErrorMask();
+        }
+        #endregion
+
+    }
+    public class PassthroughSettings_TranslationMask : ITranslationMask
+    {
+        #region Members
+        private TranslationCrystal? _crystal;
+        public bool ReuseCaches;
+        public bool ReorderRecords;
+        public bool DeleteCachesAfter;
+        public bool TestNormal;
+        public bool TestBinaryOverlay;
+        public bool TestImport;
+        public bool TestFolder;
+        public bool TestCopyIn;
+        #endregion
+
+        #region Ctors
+        public PassthroughSettings_TranslationMask(bool defaultOn)
+        {
+            this.ReuseCaches = defaultOn;
+            this.ReorderRecords = defaultOn;
+            this.DeleteCachesAfter = defaultOn;
+            this.TestNormal = defaultOn;
+            this.TestBinaryOverlay = defaultOn;
+            this.TestImport = defaultOn;
+            this.TestFolder = defaultOn;
+            this.TestCopyIn = defaultOn;
+        }
+
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal(ret.ToArray());
+            return _crystal;
+        }
+
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+        {
+            ret.Add((ReuseCaches, null));
+            ret.Add((ReorderRecords, null));
+            ret.Add((DeleteCachesAfter, null));
+            ret.Add((TestNormal, null));
+            ret.Add((TestBinaryOverlay, null));
+            ret.Add((TestImport, null));
+            ret.Add((TestFolder, null));
+            ret.Add((TestCopyIn, null));
+        }
+    }
+}
+#endregion
+
 #region Xml Translation
 namespace Mutagen.Bethesda.Tests.Internals
 {
@@ -1282,8 +1623,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void WriteToNodeXml(
             IPassthroughSettingsGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
             {
@@ -1362,9 +1703,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Write(
             XElement node,
             IPassthroughSettingsGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.PassthroughSettings");
             node.Add(elem);
@@ -1382,9 +1723,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IPassthroughSettingsGetter)item,
@@ -1397,10 +1738,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Write(
             XElement node,
             IPassthroughSettingsGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1432,8 +1773,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void FillPublicXml(
             IPassthroughSettings item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1458,8 +1799,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettings item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1648,8 +1989,8 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             XElement node,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            string name = null)
+            PassthroughSettings_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1665,8 +2006,8 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             string path,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            string name = null)
+            PassthroughSettings_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1681,9 +2022,9 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IPassthroughSettingsGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1699,8 +2040,8 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettingsGetter item,
             Stream stream,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_TranslationMask translationMask = null,
-            string name = null)
+            PassthroughSettings_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1715,9 +2056,9 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IPassthroughSettingsGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1732,9 +2073,9 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IPassthroughSettingsGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1747,21 +2088,21 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IPassthroughSettingsGetter item,
             XElement node,
-            string name = null,
-            PassthroughSettings_TranslationMask translationMask = null)
+            string? name = null,
+            PassthroughSettings_TranslationMask? translationMask = null)
         {
             ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IPassthroughSettingsGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1776,7 +2117,7 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IPassthroughSettingsGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((PassthroughSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1792,454 +2133,6 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Tests.Internals
-{
-    public class PassthroughSettings_Mask<T> : IMask<T>, IEquatable<PassthroughSettings_Mask<T>>
-    {
-        #region Ctors
-        public PassthroughSettings_Mask()
-        {
-        }
-
-        public PassthroughSettings_Mask(T initialValue)
-        {
-            this.ReuseCaches = initialValue;
-            this.ReorderRecords = initialValue;
-            this.DeleteCachesAfter = initialValue;
-            this.TestNormal = initialValue;
-            this.TestBinaryOverlay = initialValue;
-            this.TestImport = initialValue;
-            this.TestFolder = initialValue;
-            this.TestCopyIn = initialValue;
-        }
-
-        public PassthroughSettings_Mask(
-            T ReuseCaches,
-            T ReorderRecords,
-            T DeleteCachesAfter,
-            T TestNormal,
-            T TestBinaryOverlay,
-            T TestImport,
-            T TestFolder,
-            T TestCopyIn)
-        {
-            this.ReuseCaches = ReuseCaches;
-            this.ReorderRecords = ReorderRecords;
-            this.DeleteCachesAfter = DeleteCachesAfter;
-            this.TestNormal = TestNormal;
-            this.TestBinaryOverlay = TestBinaryOverlay;
-            this.TestImport = TestImport;
-            this.TestFolder = TestFolder;
-            this.TestCopyIn = TestCopyIn;
-        }
-        #endregion
-
-        #region Members
-        public T ReuseCaches;
-        public T ReorderRecords;
-        public T DeleteCachesAfter;
-        public T TestNormal;
-        public T TestBinaryOverlay;
-        public T TestImport;
-        public T TestFolder;
-        public T TestCopyIn;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PassthroughSettings_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(PassthroughSettings_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;
-            if (!object.Equals(this.ReorderRecords, rhs.ReorderRecords)) return false;
-            if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
-            if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
-            if (!object.Equals(this.TestBinaryOverlay, rhs.TestBinaryOverlay)) return false;
-            if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
-            if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
-            if (!object.Equals(this.TestCopyIn, rhs.TestCopyIn)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ReuseCaches?.GetHashCode());
-            ret = ret.CombineHashCode(this.ReorderRecords?.GetHashCode());
-            ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
-            ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
-            ret = ret.CombineHashCode(this.TestBinaryOverlay?.GetHashCode());
-            ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
-            ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
-            ret = ret.CombineHashCode(this.TestCopyIn?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.ReuseCaches)) return false;
-            if (!eval(this.ReorderRecords)) return false;
-            if (!eval(this.DeleteCachesAfter)) return false;
-            if (!eval(this.TestNormal)) return false;
-            if (!eval(this.TestBinaryOverlay)) return false;
-            if (!eval(this.TestImport)) return false;
-            if (!eval(this.TestFolder)) return false;
-            if (!eval(this.TestCopyIn)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public PassthroughSettings_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new PassthroughSettings_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(PassthroughSettings_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.ReuseCaches = eval(this.ReuseCaches);
-            obj.ReorderRecords = eval(this.ReorderRecords);
-            obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
-            obj.TestNormal = eval(this.TestNormal);
-            obj.TestBinaryOverlay = eval(this.TestBinaryOverlay);
-            obj.TestImport = eval(this.TestImport);
-            obj.TestFolder = eval(this.TestFolder);
-            obj.TestCopyIn = eval(this.TestCopyIn);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(PassthroughSettings_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, PassthroughSettings_Mask<bool> printMask = null)
-        {
-            fg.AppendLine($"{nameof(PassthroughSettings_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ReuseCaches ?? true)
-                {
-                    fg.AppendLine($"ReuseCaches => {ReuseCaches}");
-                }
-                if (printMask?.ReorderRecords ?? true)
-                {
-                    fg.AppendLine($"ReorderRecords => {ReorderRecords}");
-                }
-                if (printMask?.DeleteCachesAfter ?? true)
-                {
-                    fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
-                }
-                if (printMask?.TestNormal ?? true)
-                {
-                    fg.AppendLine($"TestNormal => {TestNormal}");
-                }
-                if (printMask?.TestBinaryOverlay ?? true)
-                {
-                    fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
-                }
-                if (printMask?.TestImport ?? true)
-                {
-                    fg.AppendLine($"TestImport => {TestImport}");
-                }
-                if (printMask?.TestFolder ?? true)
-                {
-                    fg.AppendLine($"TestFolder => {TestFolder}");
-                }
-                if (printMask?.TestCopyIn ?? true)
-                {
-                    fg.AppendLine($"TestCopyIn => {TestCopyIn}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class PassthroughSettings_ErrorMask : IErrorMask, IErrorMask<PassthroughSettings_ErrorMask>
-    {
-        #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception ReuseCaches;
-        public Exception ReorderRecords;
-        public Exception DeleteCachesAfter;
-        public Exception TestNormal;
-        public Exception TestBinaryOverlay;
-        public Exception TestImport;
-        public Exception TestFolder;
-        public Exception TestCopyIn;
-        #endregion
-
-        #region IErrorMask
-        public object GetNthMask(int index)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    return ReuseCaches;
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                    return ReorderRecords;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    return DeleteCachesAfter;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    return TestNormal;
-                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
-                    return TestBinaryOverlay;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    return TestImport;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    return TestFolder;
-                case PassthroughSettings_FieldIndex.TestCopyIn:
-                    return TestCopyIn;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    this.ReuseCaches = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                    this.ReorderRecords = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    this.DeleteCachesAfter = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    this.TestNormal = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
-                    this.TestBinaryOverlay = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    this.TestImport = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    this.TestFolder = ex;
-                    break;
-                case PassthroughSettings_FieldIndex.TestCopyIn:
-                    this.TestCopyIn = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
-            switch (enu)
-            {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    this.ReuseCaches = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.ReorderRecords:
-                    this.ReorderRecords = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.DeleteCachesAfter:
-                    this.DeleteCachesAfter = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestNormal:
-                    this.TestNormal = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
-                    this.TestBinaryOverlay = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestImport:
-                    this.TestImport = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestFolder:
-                    this.TestFolder = (Exception)obj;
-                    break;
-                case PassthroughSettings_FieldIndex.TestCopyIn:
-                    this.TestCopyIn = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ReuseCaches != null) return true;
-            if (ReorderRecords != null) return true;
-            if (DeleteCachesAfter != null) return true;
-            if (TestNormal != null) return true;
-            if (TestBinaryOverlay != null) return true;
-            if (TestImport != null) return true;
-            if (TestFolder != null) return true;
-            if (TestCopyIn != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("PassthroughSettings_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"ReuseCaches => {ReuseCaches}");
-            fg.AppendLine($"ReorderRecords => {ReorderRecords}");
-            fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
-            fg.AppendLine($"TestNormal => {TestNormal}");
-            fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
-            fg.AppendLine($"TestImport => {TestImport}");
-            fg.AppendLine($"TestFolder => {TestFolder}");
-            fg.AppendLine($"TestCopyIn => {TestCopyIn}");
-        }
-        #endregion
-
-        #region Combine
-        public PassthroughSettings_ErrorMask Combine(PassthroughSettings_ErrorMask rhs)
-        {
-            var ret = new PassthroughSettings_ErrorMask();
-            ret.ReuseCaches = this.ReuseCaches.Combine(rhs.ReuseCaches);
-            ret.ReorderRecords = this.ReorderRecords.Combine(rhs.ReorderRecords);
-            ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
-            ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
-            ret.TestBinaryOverlay = this.TestBinaryOverlay.Combine(rhs.TestBinaryOverlay);
-            ret.TestImport = this.TestImport.Combine(rhs.TestImport);
-            ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
-            ret.TestCopyIn = this.TestCopyIn.Combine(rhs.TestCopyIn);
-            return ret;
-        }
-        public static PassthroughSettings_ErrorMask Combine(PassthroughSettings_ErrorMask lhs, PassthroughSettings_ErrorMask rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static PassthroughSettings_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            if (errorMask?.Empty ?? true) return null;
-            return new PassthroughSettings_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class PassthroughSettings_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal _crystal;
-        public bool ReuseCaches;
-        public bool ReorderRecords;
-        public bool DeleteCachesAfter;
-        public bool TestNormal;
-        public bool TestBinaryOverlay;
-        public bool TestImport;
-        public bool TestFolder;
-        public bool TestCopyIn;
-        #endregion
-
-        #region Ctors
-        public PassthroughSettings_TranslationMask()
-        {
-        }
-
-        public PassthroughSettings_TranslationMask(bool defaultOn)
-        {
-            this.ReuseCaches = defaultOn;
-            this.ReorderRecords = defaultOn;
-            this.DeleteCachesAfter = defaultOn;
-            this.TestNormal = defaultOn;
-            this.TestBinaryOverlay = defaultOn;
-            this.TestImport = defaultOn;
-            this.TestFolder = defaultOn;
-            this.TestCopyIn = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
-        {
-            ret.Add((ReuseCaches, null));
-            ret.Add((ReorderRecords, null));
-            ret.Add((DeleteCachesAfter, null));
-            ret.Add((TestNormal, null));
-            ret.Add((TestBinaryOverlay, null));
-            ret.Add((TestImport, null));
-            ret.Add((TestFolder, null));
-            ret.Add((TestCopyIn, null));
-        }
-    }
 }
 #endregion
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,13 +32,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<CombatStyle> CreateFromXmlFolder(
             XElement node,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             var ret = CreateFromXml(
                 node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if (ret == null) throw new NullReferenceException();
             var customEndingNode = node.Element("CustomEndingFlags");
             if (customEndingNode == null
                 || !customEndingNode.TryGetAttribute<bool>("value", out var val)
@@ -50,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override async Task WriteToXmlFolder(
-            DirectoryPath? dir,
+            DirectoryPath dir,
             string name,
             XElement node,
             int counter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.CombatStyle");
             node.Add(elem);
@@ -80,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 int flags = frame.ReadInt32();
                 var otherFlag = (CombatStyle.Flag)(flags << 8);
-                item.Flags = item.Flags | otherFlag;
+                item.Flags |= otherFlag;
             }
         }
 
@@ -89,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void WriteBinarySecondaryFlagsCustom(MutagenWriter writer, ICombatStyleGetter item, MasterReferences masterReferences)
             {
                 int flags = (int)item.Flags;
-                flags = flags >> 8;
+                flags >>= 8;
                 writer.Write(flags);
             }
         }
@@ -103,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = (CombatStyle.Flag)_data.Span.Slice(_FlagsLocation, 1)[0];
                 if (!this.CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break4))
                 {
-                    int flags = BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CSTDLocation.Value + 0x78));
+                    int flags = BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CSTDLocation!.Value + 0x78));
                     var otherFlag = (CombatStyle.Flag)(flags << 8);
                     ret |= otherFlag;
                 }

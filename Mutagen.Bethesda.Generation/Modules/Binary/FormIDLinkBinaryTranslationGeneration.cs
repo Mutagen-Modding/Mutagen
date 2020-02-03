@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
             this.PreferDirectTranslation = false;
         }
 
-        protected override string ItemWriteAccess(Accessor itemAccessor)
+        protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
             return itemAccessor.PropertyOrDirectAccess;
         }
@@ -159,10 +159,10 @@ namespace Mutagen.Bethesda.Generation
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
                     using (var args = new ArgsWrapper(fg,
-                        $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write"))
+                        $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
                     {
                         args.Add($"writer: {writerAccessor}");
-                        args.Add($"item: {ItemWriteAccess(itemAccessor)}");
+                        args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
                         if (this.DoErrorMasks)
                         {
                             if (typeGen.HasIndex)
@@ -173,8 +173,6 @@ namespace Mutagen.Bethesda.Generation
                         }
                         if (data.RecordType.HasValue)
                         {
-                            args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
-                            args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                         }
                     }
                     break;
@@ -193,7 +191,7 @@ namespace Mutagen.Bethesda.Generation
             switch (linkType.FormIDType)
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
-                    return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
+                    return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     return $"new EDIDLink<{linkType.LoquiType.TypeName(getter: true, internalInterface: true)}>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})))";
                 default:

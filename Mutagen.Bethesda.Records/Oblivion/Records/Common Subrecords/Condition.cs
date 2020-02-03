@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
         static Condition CustomRecordTypeTrigger(
             MutagenFrame frame,
             RecordType recordType, 
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             var pos = frame.PositionWithOffset;
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
                 BinaryMemoryReadStream stream,
                 RecordType recordType,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter)
+                RecordTypeConverter? recordTypeConverter)
             {
                 var rawBytes = stream.ReadSpan(0x1A);
                 byte[] newBytes = new byte[rawBytes.Length + 4];

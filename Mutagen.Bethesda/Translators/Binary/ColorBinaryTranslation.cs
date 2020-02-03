@@ -44,27 +44,25 @@ namespace Mutagen.Bethesda.Binary
             return reader.ReadColor();
         }
 
-        public override void WriteValue(MutagenWriter writer, Color item)
+        public override void Write(MutagenWriter writer, Color item)
         {
             writer.Write(item, false);
         }
 
-        protected Action<MutagenWriter, Color?> GetWriter(bool extraByte)
+        protected Action<MutagenWriter, Color> GetWriter(bool extraByte)
         {
             if (extraByte)
             {
                 return (w, c) =>
                 {
-                    if (!c.HasValue) return;
-                    w.Write(c.Value, true);
+                    w.Write(c, true);
                 };
             }
             else
             {
                 return (w, c) =>
                 {
-                    if (!c.HasValue) return;
-                    w.Write(c.Value, false);
+                    w.Write(c, false);
                 };
             }
         }
@@ -73,14 +71,12 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             Color item,
             RecordType header,
-            bool nullable,
             bool extraByte)
         {
             this.Write(
                 writer,
                 item,
                 header,
-                nullable,
                 write: GetWriter(extraByte));
         }
 
@@ -90,6 +86,30 @@ namespace Mutagen.Bethesda.Binary
             bool extraByte)
         {
             this.Write(
+                writer,
+                item,
+                write: GetWriter(extraByte));
+        }
+
+        public void WriteNullable(
+            MutagenWriter writer,
+            Color? item,
+            RecordType header,
+            bool extraByte)
+        {
+            this.WriteNullable(
+                writer,
+                item,
+                header,
+                write: GetWriter(extraByte));
+        }
+
+        public void WriteNullable(
+            MutagenWriter writer,
+            Color? item,
+            bool extraByte)
+        {
+            this.WriteNullable(
                 writer,
                 item,
                 write: GetWriter(extraByte));

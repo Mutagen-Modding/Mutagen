@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     else
                     {
-                        item.Icon_Unset();
+                        item.Icon = null;
                     }
                     break;
                 default:
@@ -116,26 +116,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item, MasterReferences masterReferences)
         {
-            if (item.Objects_IsSet)
-            {
-                item.Objects.WriteToBinary(writer, masterReferences);
-            }
-            if (item.Weather_IsSet)
-            {
-                item.Weather.WriteToBinary(writer, masterReferences);
-            }
-            if (item.MapName_IsSet)
-            {
-                item.MapName.WriteToBinary(writer, masterReferences);
-            }
-            if (item.Grasses_IsSet)
-            {
-                item.Grasses.WriteToBinary(writer, masterReferences);
-            }
-            if (item.Sounds_IsSet)
-            {
-                item.Sounds.WriteToBinary(writer, masterReferences);
-            }
+            item.Objects?.WriteToBinary(writer, masterReferences);
+            item.Weather?.WriteToBinary(writer, masterReferences);
+            item.MapName?.WriteToBinary(writer, masterReferences);
+            item.Grasses?.WriteToBinary(writer, masterReferences);
+            item.Sounds?.WriteToBinary(writer, masterReferences);
         }
     }
 
@@ -144,8 +129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Icon
         private int? _IconLocation;
         private int? _SecondaryIconLocation;
-        bool GetIconIsSetCustom() => _IconLocation.HasValue || _SecondaryIconLocation.HasValue;
-        string GetIconCustom()
+        string? GetIconCustom()
         {
             if (_IconLocation.HasValue)
             {
@@ -160,24 +144,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
-        public bool Objects_IsSet => _ObjectsSpan.HasValue;
-        public IRegionDataObjectsGetter Objects => RegionDataObjectsBinaryOverlay.RegionDataObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package);
+        public IRegionDataObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionDataObjectsBinaryOverlay.RegionDataObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package) : default;
 
         private ReadOnlyMemorySlice<byte>? _WeatherSpan;
-        public bool Weather_IsSet => _WeatherSpan.HasValue;
-        public IRegionDataWeatherGetter Weather => RegionDataWeatherBinaryOverlay.RegionDataWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package);
+        public IRegionDataWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionDataWeatherBinaryOverlay.RegionDataWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package) : default;
         
         private ReadOnlyMemorySlice<byte>? _MapNameSpan;
-        public bool MapName_IsSet => _MapNameSpan.HasValue;
-        public IRegionDataMapNameGetter MapName => RegionDataMapNameBinaryOverlay.RegionDataMapNameFactory(new BinaryMemoryReadStream(_MapNameSpan.Value), _package);
+        public IRegionDataMapNameGetter? MapName => _MapNameSpan.HasValue ? RegionDataMapNameBinaryOverlay.RegionDataMapNameFactory(new BinaryMemoryReadStream(_MapNameSpan.Value), _package) : default;
         
         private ReadOnlyMemorySlice<byte>? _GrassesSpan;
-        public bool Grasses_IsSet => _GrassesSpan.HasValue;
-        public IRegionDataGrassesGetter Grasses => RegionDataGrassesBinaryOverlay.RegionDataGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package);
+        public IRegionDataGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionDataGrassesBinaryOverlay.RegionDataGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package) : default;
 
         private ReadOnlyMemorySlice<byte>? _SoundsSpan;
-        public bool Sounds_IsSet => _SoundsSpan.HasValue;
-        public IRegionDataSoundsGetter Sounds => RegionDataSoundsBinaryOverlay.RegionDataSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package);
+        public IRegionDataSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionDataSoundsBinaryOverlay.RegionDataSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package) : default;
 
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,

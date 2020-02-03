@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType FNAM = new RecordType("FNAM");
         public static readonly RecordType FLTV = new RecordType("FLTV");
 
-        public abstract float RawFloat { get; set; }
+        public abstract float? RawFloat { get; set; }
         public abstract char TypeChar { get; }
 
         public static Global CreateFromBinary(
@@ -64,14 +64,13 @@ namespace Mutagen.Bethesda.Oblivion
                 Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                     writer,
                     item.TypeChar,
-                    header: Global_Registration.FNAM_HEADER,
-                    nullable: false);
+                    header: Global_Registration.FNAM_HEADER);
             }
         }
 
         public abstract partial class GlobalBinaryOverlay
         {
-            public abstract float RawFloat { get; }
+            public abstract float? RawFloat { get; }
             public abstract char TypeChar { get; }
 
             public static GlobalBinaryOverlay GlobalFactory(

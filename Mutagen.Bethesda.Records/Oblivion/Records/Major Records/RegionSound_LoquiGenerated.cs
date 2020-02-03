@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RegionSound()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
         #region Flags
-        public RegionSound.Flag Flags { get; set; }
+        public RegionSound.Flag Flags { get; set; } = default;
         #endregion
         #region Chance
-        public Single Chance { get; set; }
+        public Single Chance { get; set; } = default;
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             RegionSoundMixIn.ToString(
                 item: this,
@@ -79,15 +79,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRegionSoundGetter rhs)) return false;
-            return ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(RegionSound obj)
         {
-            return ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()).Equals(this, obj);
+            return ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((RegionSoundCommon)((IRegionSoundGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -98,9 +98,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RegionSoundXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -113,11 +113,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionSound CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            RegionSound_TranslationMask translationMask = null)
+            RegionSound_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -127,38 +125,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound CreateFromXml(
             XElement node,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RegionSound_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static RegionSound CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new RegionSound() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new RegionSound();
-            ((RegionSoundSetterCommon)((IRegionSoundGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((RegionSoundSetterCommon)((IRegionSoundGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -167,12 +152,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            RegionSound_TranslationMask translationMask = null)
+            RegionSound_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -180,12 +163,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound CreateFromXml(
             string path,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RegionSound_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -193,13 +174,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RegionSound_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -207,12 +186,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            RegionSound_TranslationMask translationMask = null)
+            RegionSound_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -220,12 +197,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound CreateFromXml(
             Stream stream,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RegionSound_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -233,13 +208,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RegionSound_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -248,21 +221,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((RegionSound_FieldIndex)index)
-            {
-                case RegionSound_FieldIndex.Sound:
-                case RegionSound_FieldIndex.Flags:
-                case RegionSound_FieldIndex.Chance:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -277,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RegionSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -300,10 +258,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new RegionSound();
-            ((RegionSoundSetterCommon)((IRegionSoundGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((RegionSoundSetterCommon)((IRegionSoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -321,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((RegionSoundSetterCommon)((IRegionSoundGetter)this).CommonSetterInstance()).Clear(this);
+            ((RegionSoundSetterCommon)((IRegionSoundGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static RegionSound GetNew()
@@ -339,9 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new IFormIDLink<Sound> Sound { get; }
         new RegionSound.Flag Flags { get; set; }
-
         new Single Chance { get; set; }
-
     }
 
     public partial interface IRegionSoundGetter :
@@ -354,20 +310,12 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Sound
         IFormIDLinkGetter<ISoundGetter> Sound { get; }
-        #endregion
-        #region Flags
         RegionSound.Flag Flags { get; }
-
-        #endregion
-        #region Chance
         Single Chance { get; }
-
-        #endregion
 
     }
 
@@ -378,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRegionSound item)
         {
-            ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static RegionSound_Mask<bool> GetEqualsMask(
@@ -386,7 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).GetEqualsMask(
+            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -394,10 +342,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IRegionSoundGetter item,
-            string name = null,
-            RegionSound_Mask<bool> printMask = null)
+            string? name = null,
+            RegionSound_Mask<bool>? printMask = null)
         {
-            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).ToString(
+            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -406,10 +354,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IRegionSoundGetter item,
             FileGeneration fg,
-            string name = null,
-            RegionSound_Mask<bool> printMask = null)
+            string? name = null,
+            RegionSound_Mask<bool>? printMask = null)
         {
-            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).ToString(
+            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -420,15 +368,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             RegionSound_Mask<bool?> checkMask)
         {
-            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).HasBeenSet(
+            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static RegionSound_Mask<bool> GetHasBeenSetMask(this IRegionSoundGetter item)
         {
-            var ret = new RegionSound_Mask<bool>();
-            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new RegionSound_Mask<bool>(false);
+            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -438,16 +386,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             IRegionSoundGetter rhs)
         {
-            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).Equals(
+            return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IRegionSound lhs,
-            IRegionSoundGetter rhs)
+            IRegionSoundGetter rhs,
+            RegionSound_TranslationMask? copyMask = null)
         {
-            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -457,23 +406,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRegionSound lhs,
             IRegionSoundGetter rhs,
-            RegionSound_TranslationMask copyMask)
-        {
-            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IRegionSound lhs,
-            IRegionSoundGetter rhs,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask copyMask = null)
+            RegionSound_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -484,10 +421,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRegionSound lhs,
             IRegionSoundGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -496,9 +433,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound DeepCopy(
             this IRegionSoundGetter item,
-            RegionSound_TranslationMask copyMask = null)
+            RegionSound_TranslationMask? copyMask = null)
         {
-            return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -506,9 +443,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound DeepCopy(
             this IRegionSoundGetter item,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask copyMask = null)
+            RegionSound_TranslationMask? copyMask = null)
         {
-            return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -516,10 +453,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound DeepCopy(
             this IRegionSoundGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -530,12 +467,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            RegionSound_TranslationMask translationMask = null)
+            RegionSound_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -546,29 +481,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound item,
             XElement node,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RegionSound_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IRegionSound item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -577,13 +508,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            RegionSound_TranslationMask translationMask = null)
+            RegionSound_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -592,13 +521,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound item,
             string path,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RegionSound_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -607,14 +534,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             string path,
-            ErrorMaskBuilder errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RegionSound_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -623,13 +548,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            RegionSound_TranslationMask translationMask = null)
+            RegionSound_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -638,13 +561,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound item,
             Stream stream,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RegionSound_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -653,14 +574,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RegionSound_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -686,9 +605,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -739,11 +658,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRegionSoundGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IRegionSound);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionSound";
 
@@ -753,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -886,14 +805,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -918,17 +837,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Sound.Unset();
-            item.Flags = default(RegionSound.Flag);
-            item.Chance = default(Single);
+            item.Flags = default;
+            item.Chance = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IRegionSound item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -969,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -992,8 +910,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionSound_Mask<bool>();
-            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new RegionSound_Mask<bool>(false);
+            ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1015,8 +933,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IRegionSoundGetter item,
-            string name = null,
-            RegionSound_Mask<bool> printMask = null)
+            string? name = null,
+            RegionSound_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1030,8 +948,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IRegionSoundGetter item,
             FileGeneration fg,
-            string name = null,
-            RegionSound_Mask<bool> printMask = null)
+            string? name = null,
+            RegionSound_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1055,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionSoundGetter item,
             FileGeneration fg,
-            RegionSound_Mask<bool> printMask = null)
+            RegionSound_Mask<bool>? printMask = null)
         {
             if (printMask?.Sound ?? true)
             {
@@ -1089,8 +1007,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRegionSoundGetter lhs,
-            IRegionSoundGetter rhs)
+            IRegionSoundGetter? lhs,
+            IRegionSoundGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1135,8 +1053,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRegionSound item,
             IRegionSoundGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
@@ -1156,9 +1074,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionSound DeepCopy(
             IRegionSoundGetter item,
-            RegionSound_TranslationMask copyMask = null)
+            RegionSound_TranslationMask? copyMask = null)
         {
-            RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).GetNew();
+            RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1168,9 +1086,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionSound DeepCopy(
             IRegionSoundGetter item,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask copyMask = null)
+            RegionSound_TranslationMask? copyMask = null)
         {
-            RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).GetNew();
+            RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1180,10 +1098,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionSound DeepCopy(
             IRegionSoundGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()).GetNew();
+            RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1236,8 +1154,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IRegionSoundGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
@@ -1271,9 +1189,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IRegionSoundGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionSound");
             node.Add(elem);
@@ -1291,9 +1209,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IRegionSoundGetter)item,
@@ -1306,10 +1224,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IRegionSoundGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1341,8 +1259,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IRegionSound item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1367,8 +1285,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1444,8 +1362,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             XElement node,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            string name = null)
+            RegionSound_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1461,8 +1379,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             string path,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            string name = null)
+            RegionSound_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1477,9 +1395,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1495,8 +1413,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             Stream stream,
             out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask translationMask = null,
-            string name = null)
+            RegionSound_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1511,9 +1429,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1528,9 +1446,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((RegionSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1543,21 +1461,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             XElement node,
-            string name = null,
-            RegionSound_TranslationMask translationMask = null)
+            string? name = null,
+            RegionSound_TranslationMask? translationMask = null)
         {
             ((RegionSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IRegionSoundGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RegionSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1572,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RegionSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1594,13 +1512,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class RegionSound_Mask<T> : IMask<T>, IEquatable<RegionSound_Mask<T>>
+    public class RegionSound_Mask<T> :
+        IMask<T>,
+        IEquatable<RegionSound_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public RegionSound_Mask()
-        {
-        }
-
         public RegionSound_Mask(T initialValue)
         {
             this.Sound = initialValue;
@@ -1617,6 +1534,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = Flags;
             this.Chance = Chance;
         }
+
+        #pragma warning disable CS8618
+        protected RegionSound_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1683,14 +1607,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(RegionSound_Mask<bool> printMask = null)
+        public string ToString(RegionSound_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, RegionSound_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, RegionSound_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(RegionSound_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1718,8 +1642,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class RegionSound_ErrorMask : IErrorMask, IErrorMask<RegionSound_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1731,13 +1655,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Sound;
-        public Exception Flags;
-        public Exception Chance;
+        public Exception? Sound;
+        public Exception? Flags;
+        public Exception? Chance;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
             switch (enu)
@@ -1838,15 +1762,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public RegionSound_ErrorMask Combine(RegionSound_ErrorMask rhs)
+        public RegionSound_ErrorMask Combine(RegionSound_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new RegionSound_ErrorMask();
             ret.Sound = this.Sound.Combine(rhs.Sound);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Chance = this.Chance.Combine(rhs.Chance);
             return ret;
         }
-        public static RegionSound_ErrorMask Combine(RegionSound_ErrorMask lhs, RegionSound_ErrorMask rhs)
+        public static RegionSound_ErrorMask? Combine(RegionSound_ErrorMask? lhs, RegionSound_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1856,7 +1781,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static RegionSound_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new RegionSound_ErrorMask();
         }
         #endregion
@@ -1865,17 +1789,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class RegionSound_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Sound;
         public bool Flags;
         public bool Chance;
         #endregion
 
         #region Ctors
-        public RegionSound_TranslationMask()
-        {
-        }
-
         public RegionSound_TranslationMask(bool defaultOn)
         {
             this.Sound = defaultOn;
@@ -1888,13 +1808,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Sound, null));
             ret.Add((Flags, null));
@@ -1933,7 +1853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRegionSoundGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -1945,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IRegionSoundGetter)item,
@@ -2002,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IRegionSoundGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IRegionSoundGetter.CommonSetterInstance() => null;
+        object? IRegionSoundGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IRegionSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2019,9 +1939,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RegionSoundXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2037,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RegionSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2046,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<ISoundGetter> Sound => new FormIDLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<ISoundGetter> Sound => new FormIDLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public Single Chance => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(
@@ -2066,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RegionSoundBinaryOverlay RegionSoundFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RegionSoundBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 12),

@@ -15,22 +15,6 @@ namespace Mutagen.Bethesda.Binary
 
         protected abstract T ParseValue(MutagenFrame reader);
 
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<T> item)
-        {
-            if (Parse(
-                frame,
-                out T subItem))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
-        }
-
         public bool Parse(MutagenFrame frame, out T item)
         {
             item = ParseValue(frame);
@@ -56,38 +40,6 @@ namespace Mutagen.Bethesda.Binary
                 item.Item,
                 header,
                 nullable);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<T> item,
-            RecordType header,
-            bool nullable)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                nullable);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<T> item)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<T> item)
-        {
-            this.Write(
-                writer,
-                item.Item);
         }
 
         public void Write(

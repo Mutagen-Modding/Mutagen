@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var subRecMeta = frame.MetaData.GetSubRecord(frame);
             if (subRecMeta.RecordType != Condition_Registration.CTDA_HEADER)
@@ -156,18 +156,18 @@ namespace Mutagen.Bethesda.Skyrim
             public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj, MasterReferences masterReferences)
             {
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
-                if (funcData.ParameterOneString_IsSet)
+                if (funcData.ParameterOneString.TryGet(out var param1))
                 {
                     using (HeaderExport.ExportSubRecordHeader(writer, Condition_Registration.CIS1_HEADER))
                     {
-                        StringBinaryTranslation.WriteString(writer, funcData.ParameterOneString, StringBinaryType.NullTerminate);
+                        StringBinaryTranslation.WriteString(writer, param1, StringBinaryType.NullTerminate);
                     }
                 }
-                if (funcData.ParameterTwoString_IsSet)
+                if (funcData.ParameterTwoString.TryGet(out var param2))
                 {
                     using (HeaderExport.ExportSubRecordHeader(writer, Condition_Registration.CIS2_HEADER))
                     {
-                        StringBinaryTranslation.WriteString(writer, funcData.ParameterTwoString, StringBinaryType.NullTerminate);
+                        StringBinaryTranslation.WriteString(writer, param2, StringBinaryType.NullTerminate);
                     }
                 }
             }

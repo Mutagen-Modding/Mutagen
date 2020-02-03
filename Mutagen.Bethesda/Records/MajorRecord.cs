@@ -34,33 +34,9 @@ namespace Mutagen.Bethesda
         }
 
         #region EditorID
-        public bool EditorID_IsSet
-        {
-            get => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
-            set => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = value;
-        }
+        public virtual String? EditorID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _EditorID;
-        public String EditorID
-        {
-            get => this._EditorID;
-            set => EditorID_Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IMajorRecordGetter.EditorID => this.EditorID;
-        public virtual void EditorID_Set(
-            String value,
-            bool markSet = true)
-        {
-            _EditorID = value;
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = markSet;
-        }
-        public void EditorID_Unset()
-        {
-            this.EditorID_Set(default(String), false);
-        }
+        String? IMajorRecordGetter.EditorID => this.EditorID;
         #endregion
 
         [Flags]
@@ -100,7 +76,7 @@ namespace Mutagen.Bethesda.Internals
     {
         public bool IsCompressed => ((MajorRecord.MajorRecordFlag)this.MajorRecordFlagsRaw).HasFlag(MajorRecord.MajorRecordFlag.Compressed);
 
-        public Task WriteToXmlFolder(DirectoryPath? dir, string name, XElement node, int counter, ErrorMaskBuilder errorMask)
+        public Task WriteToXmlFolder(DirectoryPath dir, string name, XElement node, int counter, ErrorMaskBuilder? errorMask)
         {
             throw new NotImplementedException();
         }

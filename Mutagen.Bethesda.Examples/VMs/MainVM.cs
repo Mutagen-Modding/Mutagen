@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Examples
         public ObservableCollectionExtended<ViewModel> Examples { get; } = new ObservableCollectionExtended<ViewModel>();
 
         [Reactive]
-        public ViewModel SelectedExample { get; set; }
+        public ViewModel? SelectedExample { get; set; }
 
         [JsonProperty]
         public PathPickerVM ModFilePath { get; } = new PathPickerVM();

@@ -47,15 +47,15 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
-        {
-            return await OblivionMod.CreateFromXmlFolder(dir, this.ModKey);
-        }
+        //protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
+        //{
+        //    return await OblivionMod.CreateFromXmlFolder(dir, this.ModKey);
+        //}
 
-        protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
-        {
-            return ((OblivionMod)mod).WriteToXmlFolder(dir);
-        }
+        //protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
+        //{
+        //    return ((OblivionMod)mod).WriteToXmlFolder(dir);
+        //}
 
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()
         {

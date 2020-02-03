@@ -9,22 +9,6 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
 
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<E> item)
-        {
-            if (Parse(
-                frame,
-                out E subItem))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
-        }
-
         public bool Parse(
             MutagenFrame frame,
             out E item)
@@ -36,22 +20,6 @@ namespace Mutagen.Bethesda.Binary
         public E Parse(MutagenFrame frame)
         {
             return ParseValue(frame);
-        }
-
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<E?> item)
-        {
-            if (Parse(
-                frame,
-                out E? subItem))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
         }
 
         public bool Parse(
@@ -81,131 +49,27 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IHasBeenSetItemGetter<E?> item,
+            E item,
+            RecordType header,
             long length)
         {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                length);
+            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            {
+                WriteValue(writer, item, length);
+            }
         }
 
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<E> item,
-            long length)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                length);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<E?> item,
-            long length)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                length);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<E> item,
-            long length)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                length);
-        }
-
-        public void Write(
+        public void WriteNullable(
             MutagenWriter writer,
             E? item,
             RecordType header,
-            long length,
-            bool nullable)
+            long length)
         {
-            if (item == null)
-            {
-                if (nullable)
-                {
-                    return;
-                }
-                throw new ArgumentException("Non optional string was null.");
-            }
+            if (!item.HasValue) return;
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
                 WriteValue(writer, item.Value, length);
             }
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<E?> item,
-            RecordType header,
-            long length,
-            bool nullable)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                length,
-                nullable);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<E> item,
-            RecordType header,
-            long length,
-            bool nullable)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                length,
-                nullable);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<E?> item,
-            RecordType header,
-            long length,
-            bool nullable)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                length,
-                nullable);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<E> item,
-            RecordType header,
-            long length,
-            bool nullable)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                length,
-                nullable);
         }
 
         public E ParseValue(MutagenFrame reader, ErrorMaskBuilder? errorMask)

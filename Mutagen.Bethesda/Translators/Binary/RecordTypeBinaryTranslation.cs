@@ -12,32 +12,6 @@ namespace Mutagen.Bethesda.Binary
         public readonly static RecordTypeBinaryTranslation Instance = new RecordTypeBinaryTranslation();
         public override int ExpectedLength => 4;
 
-        public void ParseInto<T>(MutagenFrame frame, IEDIDSetLink<T> item)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (Parse(frame, ExpectedLength, out RecordType val))
-            {
-                item.EDID = val;
-            }
-            else
-            {
-                item.EDID = EDIDLink<T>.UNLINKED;
-            }
-        }
-
-        public void ParseInto<T>(MutagenFrame frame, IEDIDLink<T> item)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (Parse(frame, ExpectedLength, out RecordType val))
-            {
-                item.EDID = val;
-            }
-            else
-            {
-                item.EDID = EDIDLink<T>.UNLINKED;
-            }
-        }
-
         public override RecordType ParseValue(MutagenFrame reader)
         {
             return HeaderTranslation.ReadNextRecordType(reader.Reader);
@@ -73,7 +47,7 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
-        public override void WriteValue(MutagenWriter writer, RecordType item)
+        public override void Write(MutagenWriter writer, RecordType item)
         {
             writer.Write(item.TypeInt);
         }
@@ -81,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write<T>(MutagenWriter writer, IEDIDLinkGetter<T> item)
             where T : class, IMajorRecordCommonGetter
         {
-            this.WriteValue(
+            this.Write(
                 writer,
                 item.EDID);
         }
@@ -100,30 +74,26 @@ namespace Mutagen.Bethesda.Binary
         public void Write<M, T>(
             MutagenWriter writer,
             IEDIDLinkGetter<T> item,
-            RecordType header,
-            bool nullable = false)
+            RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
             this.Write(
                 writer,
                 item.EDID,
-                header,
-                nullable: nullable);
+                header);
         }
 
         public void Write<T>(
             MutagenWriter writer,
             IEDIDSetLinkGetter<T> item,
-            RecordType header,
-            bool nullable = false)
+            RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.EDID,
-                header,
-                nullable: nullable);
+                header);
         }
 
         public void Write<T>(
@@ -136,8 +106,7 @@ namespace Mutagen.Bethesda.Binary
             this.Write(
                 writer,
                 item.EDID,
-                header,
-                nullable);
+                header);
         }
 
         public void Write<T>(

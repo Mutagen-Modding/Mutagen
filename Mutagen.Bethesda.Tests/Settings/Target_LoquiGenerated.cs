@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Tests.Internals;
 using Mutagen.Bethesda.Tests;
@@ -18,11 +19,11 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Tests
 {
     #region Class
@@ -35,55 +36,36 @@ namespace Mutagen.Bethesda.Tests
         #region Ctor
         public Target()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Do
-        public Boolean Do { get; set; }
+        public Boolean Do { get; set; } = default;
         #endregion
         #region Path
-        public String Path { get; set; }
+        public String Path { get; set; } = string.Empty;
         #endregion
         #region NumMasters
-        public Byte NumMasters { get; set; }
+        public Byte NumMasters { get; set; } = default;
         #endregion
         #region GameMode
-        public Mutagen.Bethesda.GameMode GameMode { get; set; }
+        public Mutagen.Bethesda.GameMode GameMode { get; set; } = default;
         #endregion
         #region ExpectedBaseGroupCount
-        public bool ExpectedBaseGroupCount_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount];
-            set => _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool ITargetGetter.ExpectedBaseGroupCount_IsSet => ExpectedBaseGroupCount_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _ExpectedBaseGroupCount;
-        public Byte ExpectedBaseGroupCount
+        private Byte? _ExpectedBaseGroupCount;
+        public Byte? ExpectedBaseGroupCount
         {
             get => this._ExpectedBaseGroupCount;
-            set => ExpectedBaseGroupCount_Set(value);
+            set => this._ExpectedBaseGroupCount = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte ITargetGetter.ExpectedBaseGroupCount => this.ExpectedBaseGroupCount;
-        public void ExpectedBaseGroupCount_Set(
-            Byte value,
-            bool markSet = true)
-        {
-            _ExpectedBaseGroupCount = value;
-            _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount] = markSet;
-        }
-        public void ExpectedBaseGroupCount_Unset()
-        {
-            this.ExpectedBaseGroupCount_Set(default(Byte), false);
-        }
+        Byte? ITargetGetter.ExpectedBaseGroupCount => this.ExpectedBaseGroupCount;
         #endregion
         #region Interest
-        public RecordInterest Interest { get; set; }
+        public RecordInterest Interest { get; set; } = new RecordInterest();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IRecordInterestGetter ITargetGetter.Interest => Interest;
         #endregion
@@ -97,7 +79,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             TargetMixIn.ToString(
                 item: this,
@@ -110,15 +92,15 @@ namespace Mutagen.Bethesda.Tests
         public override bool Equals(object obj)
         {
             if (!(obj is ITargetGetter rhs)) return false;
-            return ((TargetCommon)((ITargetGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((TargetCommon)((ITargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Target obj)
         {
-            return ((TargetCommon)((ITargetGetter)this).CommonInstance()).Equals(this, obj);
+            return ((TargetCommon)((ITargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TargetCommon)((ITargetGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((TargetCommon)((ITargetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -129,9 +111,9 @@ namespace Mutagen.Bethesda.Tests
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((TargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -144,11 +126,9 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static Target CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Target_TranslationMask translationMask = null)
+            Target_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -158,38 +138,25 @@ namespace Mutagen.Bethesda.Tests
         public static Target CreateFromXml(
             XElement node,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Target_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static Target CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Target() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Target();
-            ((TargetSetterCommon)((ITargetGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((TargetSetterCommon)((ITargetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -198,12 +165,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static Target CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Target_TranslationMask translationMask = null)
+            Target_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -211,12 +176,10 @@ namespace Mutagen.Bethesda.Tests
         public static Target CreateFromXml(
             string path,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Target_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -224,13 +187,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static Target CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Target_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -238,12 +199,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static Target CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Target_TranslationMask translationMask = null)
+            Target_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -251,12 +210,10 @@ namespace Mutagen.Bethesda.Tests
         public static Target CreateFromXml(
             Stream stream,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Target_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -264,13 +221,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static Target CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Target_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -279,25 +234,6 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((Target_FieldIndex)index)
-            {
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    return _hasBeenSetTracker[index];
-                case Target_FieldIndex.Do:
-                case Target_FieldIndex.Path:
-                case Target_FieldIndex.NumMasters:
-                case Target_FieldIndex.GameMode:
-                case Target_FieldIndex.Interest:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
@@ -305,7 +241,7 @@ namespace Mutagen.Bethesda.Tests
 
         void IClearable.Clear()
         {
-            ((TargetSetterCommon)((ITargetGetter)this).CommonSetterInstance()).Clear(this);
+            ((TargetSetterCommon)((ITargetGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static Target GetNew()
@@ -322,20 +258,11 @@ namespace Mutagen.Bethesda.Tests
         ILoquiObjectSetter<ITarget>
     {
         new Boolean Do { get; set; }
-
         new String Path { get; set; }
-
         new Byte NumMasters { get; set; }
-
         new Mutagen.Bethesda.GameMode GameMode { get; set; }
-
-        new Byte ExpectedBaseGroupCount { get; set; }
-        new bool ExpectedBaseGroupCount_IsSet { get; set; }
-        void ExpectedBaseGroupCount_Set(Byte value, bool hasBeenSet = true);
-        void ExpectedBaseGroupCount_Unset();
-
+        new Byte? ExpectedBaseGroupCount { get; set; }
         new RecordInterest Interest { get; set; }
-
     }
 
     public partial interface ITargetGetter :
@@ -346,33 +273,15 @@ namespace Mutagen.Bethesda.Tests
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Do
         Boolean Do { get; }
-
-        #endregion
-        #region Path
         String Path { get; }
-
-        #endregion
-        #region NumMasters
         Byte NumMasters { get; }
-
-        #endregion
-        #region GameMode
         Mutagen.Bethesda.GameMode GameMode { get; }
-
-        #endregion
-        #region ExpectedBaseGroupCount
-        Byte ExpectedBaseGroupCount { get; }
-        bool ExpectedBaseGroupCount_IsSet { get; }
-
-        #endregion
-        #region Interest
+        Byte? ExpectedBaseGroupCount { get; }
         IRecordInterestGetter Interest { get; }
-        #endregion
 
     }
 
@@ -383,7 +292,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static void Clear(this ITarget item)
         {
-            ((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Target_Mask<bool> GetEqualsMask(
@@ -391,7 +300,7 @@ namespace Mutagen.Bethesda.Tests
             ITargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TargetCommon)((ITargetGetter)item).CommonInstance()).GetEqualsMask(
+            return ((TargetCommon)((ITargetGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -399,10 +308,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static string ToString(
             this ITargetGetter item,
-            string name = null,
-            Target_Mask<bool> printMask = null)
+            string? name = null,
+            Target_Mask<bool>? printMask = null)
         {
-            return ((TargetCommon)((ITargetGetter)item).CommonInstance()).ToString(
+            return ((TargetCommon)((ITargetGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -411,10 +320,10 @@ namespace Mutagen.Bethesda.Tests
         public static void ToString(
             this ITargetGetter item,
             FileGeneration fg,
-            string name = null,
-            Target_Mask<bool> printMask = null)
+            string? name = null,
+            Target_Mask<bool>? printMask = null)
         {
-            ((TargetCommon)((ITargetGetter)item).CommonInstance()).ToString(
+            ((TargetCommon)((ITargetGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -425,15 +334,15 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             Target_Mask<bool?> checkMask)
         {
-            return ((TargetCommon)((ITargetGetter)item).CommonInstance()).HasBeenSet(
+            return ((TargetCommon)((ITargetGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Target_Mask<bool> GetHasBeenSetMask(this ITargetGetter item)
         {
-            var ret = new Target_Mask<bool>();
-            ((TargetCommon)((ITargetGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Target_Mask<bool>(false);
+            ((TargetCommon)((ITargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -443,16 +352,17 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             ITargetGetter rhs)
         {
-            return ((TargetCommon)((ITargetGetter)item).CommonInstance()).Equals(
+            return ((TargetCommon)((ITargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this ITarget lhs,
-            ITargetGetter rhs)
+            ITargetGetter rhs,
+            Target_TranslationMask? copyMask = null)
         {
-            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -462,23 +372,11 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyFieldsFrom(
             this ITarget lhs,
             ITargetGetter rhs,
-            Target_TranslationMask copyMask)
-        {
-            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this ITarget lhs,
-            ITargetGetter rhs,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask copyMask = null)
+            Target_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -489,10 +387,10 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyFieldsFrom(
             this ITarget lhs,
             ITargetGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -501,9 +399,9 @@ namespace Mutagen.Bethesda.Tests
 
         public static Target DeepCopy(
             this ITargetGetter item,
-            Target_TranslationMask copyMask = null)
+            Target_TranslationMask? copyMask = null)
         {
-            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -511,9 +409,9 @@ namespace Mutagen.Bethesda.Tests
         public static Target DeepCopy(
             this ITargetGetter item,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask copyMask = null)
+            Target_TranslationMask? copyMask = null)
         {
-            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -521,10 +419,10 @@ namespace Mutagen.Bethesda.Tests
 
         public static Target DeepCopy(
             this ITargetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -535,12 +433,10 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this ITarget item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Target_TranslationMask translationMask = null)
+            Target_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -551,29 +447,25 @@ namespace Mutagen.Bethesda.Tests
             this ITarget item,
             XElement node,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Target_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this ITarget item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -582,13 +474,11 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this ITarget item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Target_TranslationMask translationMask = null)
+            Target_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -597,13 +487,11 @@ namespace Mutagen.Bethesda.Tests
             this ITarget item,
             string path,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Target_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -612,14 +500,12 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this ITarget item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Target_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -628,13 +514,11 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this ITarget item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Target_TranslationMask translationMask = null)
+            Target_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -643,13 +527,11 @@ namespace Mutagen.Bethesda.Tests
             this ITarget item,
             Stream stream,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Target_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -658,14 +540,12 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this ITarget item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Target_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Target_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -718,11 +598,11 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static readonly Type GetterType = typeof(ITargetGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ITarget);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Tests.Target";
 
@@ -732,7 +612,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -896,14 +776,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -927,21 +807,20 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Clear(ITarget item)
         {
             ClearPartial();
-            item.Do = default(Boolean);
-            item.Path = default(String);
-            item.NumMasters = default(Byte);
-            item.GameMode = default(Mutagen.Bethesda.GameMode);
-            item.ExpectedBaseGroupCount_Unset();
-            item.Interest = default(RecordInterest);
+            item.Do = default;
+            item.Path = string.Empty;
+            item.NumMasters = default;
+            item.GameMode = default;
+            item.ExpectedBaseGroupCount = default;
+            item.Interest.Clear();
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             ITarget item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -974,8 +853,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Target_Mask<bool>();
-            ((TargetCommon)((ITargetGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Target_Mask<bool>(false);
+            ((TargetCommon)((ITargetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -994,14 +873,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Path = string.Equals(item.Path, rhs.Path);
             ret.NumMasters = item.NumMasters == rhs.NumMasters;
             ret.GameMode = item.GameMode == rhs.GameMode;
-            ret.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount_IsSet == rhs.ExpectedBaseGroupCount_IsSet && item.ExpectedBaseGroupCount == rhs.ExpectedBaseGroupCount;
+            ret.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount == rhs.ExpectedBaseGroupCount;
             ret.Interest = MaskItemExt.Factory(item.Interest.GetEqualsMask(rhs.Interest, include), include);
         }
         
         public string ToString(
             ITargetGetter item,
-            string name = null,
-            Target_Mask<bool> printMask = null)
+            string? name = null,
+            Target_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1015,8 +894,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void ToString(
             ITargetGetter item,
             FileGeneration fg,
-            string name = null,
-            Target_Mask<bool> printMask = null)
+            string? name = null,
+            Target_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1040,7 +919,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected static void ToStringFields(
             ITargetGetter item,
             FileGeneration fg,
-            Target_Mask<bool> printMask = null)
+            Target_Mask<bool>? printMask = null)
         {
             if (printMask?.Do ?? true)
             {
@@ -1072,7 +951,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITargetGetter item,
             Target_Mask<bool?> checkMask)
         {
-            if (checkMask.ExpectedBaseGroupCount.HasValue && checkMask.ExpectedBaseGroupCount.Value != item.ExpectedBaseGroupCount_IsSet) return false;
+            if (checkMask.ExpectedBaseGroupCount.HasValue && checkMask.ExpectedBaseGroupCount.Value != (item.ExpectedBaseGroupCount != null)) return false;
             return true;
         }
         
@@ -1084,14 +963,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.Path = true;
             mask.NumMasters = true;
             mask.GameMode = true;
-            mask.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount_IsSet;
-            mask.Interest = new MaskItem<bool, RecordInterest_Mask<bool>>(true, item.Interest.GetHasBeenSetMask());
+            mask.ExpectedBaseGroupCount = (item.ExpectedBaseGroupCount != null);
+            mask.Interest = new MaskItem<bool, RecordInterest_Mask<bool>?>(true, item.Interest?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ITargetGetter lhs,
-            ITargetGetter rhs)
+            ITargetGetter? lhs,
+            ITargetGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1099,11 +978,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!string.Equals(lhs.Path, rhs.Path)) return false;
             if (lhs.NumMasters != rhs.NumMasters) return false;
             if (lhs.GameMode != rhs.GameMode) return false;
-            if (lhs.ExpectedBaseGroupCount_IsSet != rhs.ExpectedBaseGroupCount_IsSet) return false;
-            if (lhs.ExpectedBaseGroupCount_IsSet)
-            {
-                if (lhs.ExpectedBaseGroupCount != rhs.ExpectedBaseGroupCount) return false;
-            }
+            if (lhs.ExpectedBaseGroupCount != rhs.ExpectedBaseGroupCount) return false;
             if (!object.Equals(lhs.Interest, rhs.Interest)) return false;
             return true;
         }
@@ -1115,9 +990,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = HashHelper.GetHashCode(item.Path).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.NumMasters).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.GameMode).CombineHashCode(ret);
-            if (item.ExpectedBaseGroupCount_IsSet)
+            if (item.ExpectedBaseGroupCount.TryGet(out var ExpectedBaseGroupCountitem))
             {
-                ret = HashHelper.GetHashCode(item.ExpectedBaseGroupCount).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ExpectedBaseGroupCountitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.Interest).CombineHashCode(ret);
             return ret;
@@ -1140,8 +1015,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void DeepCopyFieldsFrom(
             ITarget item,
             ITargetGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Do) ?? true))
             {
@@ -1161,27 +1036,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
             {
-                errorMask?.PushIndex((int)Target_FieldIndex.ExpectedBaseGroupCount);
-                try
-                {
-                    if (rhs.ExpectedBaseGroupCount_IsSet)
-                    {
-                        item.ExpectedBaseGroupCount = rhs.ExpectedBaseGroupCount;
-                    }
-                    else
-                    {
-                        item.ExpectedBaseGroupCount_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ExpectedBaseGroupCount = rhs.ExpectedBaseGroupCount;
             }
             if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
             {
@@ -1190,16 +1045,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
                     {
-                        if (rhs.Interest == null)
-                        {
-                            item.Interest = null;
-                        }
-                        else
-                        {
-                            item.Interest = rhs.Interest.DeepCopy(
-                                copyMask: copyMask?.GetSubCrystal((int)Target_FieldIndex.Interest),
-                                errorMask: errorMask);
-                        }
+                        item.Interest = rhs.Interest.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Target_FieldIndex.Interest),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1218,9 +1066,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public Target DeepCopy(
             ITargetGetter item,
-            Target_TranslationMask copyMask = null)
+            Target_TranslationMask? copyMask = null)
         {
-            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()).GetNew();
+            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1230,9 +1078,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Target DeepCopy(
             ITargetGetter item,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask copyMask = null)
+            Target_TranslationMask? copyMask = null)
         {
-            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()).GetNew();
+            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1242,10 +1090,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public Target DeepCopy(
             ITargetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()).GetNew();
+            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1288,6 +1136,406 @@ namespace Mutagen.Bethesda.Tests
 }
 
 #region Modules
+#region Mask
+namespace Mutagen.Bethesda.Tests.Internals
+{
+    public class Target_Mask<T> :
+        IMask<T>,
+        IEquatable<Target_Mask<T>>
+        where T : notnull
+    {
+        #region Ctors
+        public Target_Mask(T initialValue)
+        {
+            this.Do = initialValue;
+            this.Path = initialValue;
+            this.NumMasters = initialValue;
+            this.GameMode = initialValue;
+            this.ExpectedBaseGroupCount = initialValue;
+            this.Interest = new MaskItem<T, RecordInterest_Mask<T>?>(initialValue, new RecordInterest_Mask<T>(initialValue));
+        }
+
+        public Target_Mask(
+            T Do,
+            T Path,
+            T NumMasters,
+            T GameMode,
+            T ExpectedBaseGroupCount,
+            T Interest)
+        {
+            this.Do = Do;
+            this.Path = Path;
+            this.NumMasters = NumMasters;
+            this.GameMode = GameMode;
+            this.ExpectedBaseGroupCount = ExpectedBaseGroupCount;
+            this.Interest = new MaskItem<T, RecordInterest_Mask<T>?>(Interest, new RecordInterest_Mask<T>(Interest));
+        }
+
+        #pragma warning disable CS8618
+        protected Target_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
+        #endregion
+
+        #region Members
+        public T Do;
+        public T Path;
+        public T NumMasters;
+        public T GameMode;
+        public T ExpectedBaseGroupCount;
+        public MaskItem<T, RecordInterest_Mask<T>?>? Interest { get; set; }
+        #endregion
+
+        #region Equals
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Target_Mask<T> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public bool Equals(Target_Mask<T> rhs)
+        {
+            if (rhs == null) return false;
+            if (!object.Equals(this.Do, rhs.Do)) return false;
+            if (!object.Equals(this.Path, rhs.Path)) return false;
+            if (!object.Equals(this.NumMasters, rhs.NumMasters)) return false;
+            if (!object.Equals(this.GameMode, rhs.GameMode)) return false;
+            if (!object.Equals(this.ExpectedBaseGroupCount, rhs.ExpectedBaseGroupCount)) return false;
+            if (!object.Equals(this.Interest, rhs.Interest)) return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Do?.GetHashCode());
+            ret = ret.CombineHashCode(this.Path?.GetHashCode());
+            ret = ret.CombineHashCode(this.NumMasters?.GetHashCode());
+            ret = ret.CombineHashCode(this.GameMode?.GetHashCode());
+            ret = ret.CombineHashCode(this.ExpectedBaseGroupCount?.GetHashCode());
+            ret = ret.CombineHashCode(this.Interest?.GetHashCode());
+            return ret;
+        }
+
+        #endregion
+
+        #region All Equal
+        public bool AllEqual(Func<T, bool> eval)
+        {
+            if (!eval(this.Do)) return false;
+            if (!eval(this.Path)) return false;
+            if (!eval(this.NumMasters)) return false;
+            if (!eval(this.GameMode)) return false;
+            if (!eval(this.ExpectedBaseGroupCount)) return false;
+            if (Interest != null)
+            {
+                if (!eval(this.Interest.Overall)) return false;
+                if (this.Interest.Specific != null && !this.Interest.Specific.AllEqual(eval)) return false;
+            }
+            return true;
+        }
+        #endregion
+
+        #region Translate
+        public Target_Mask<R> Translate<R>(Func<T, R> eval)
+        {
+            var ret = new Target_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(Target_Mask<R> obj, Func<T, R> eval)
+        {
+            obj.Do = eval(this.Do);
+            obj.Path = eval(this.Path);
+            obj.NumMasters = eval(this.NumMasters);
+            obj.GameMode = eval(this.GameMode);
+            obj.ExpectedBaseGroupCount = eval(this.ExpectedBaseGroupCount);
+            obj.Interest = this.Interest == null ? null : new MaskItem<R, RecordInterest_Mask<R>?>(eval(this.Interest.Overall), this.Interest.Specific?.Translate(eval));
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return ToString(printMask: null);
+        }
+
+        public string ToString(Target_Mask<bool>? printMask = null)
+        {
+            var fg = new FileGeneration();
+            ToString(fg, printMask);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg, Target_Mask<bool>? printMask = null)
+        {
+            fg.AppendLine($"{nameof(Target_Mask<T>)} =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (printMask?.Do ?? true)
+                {
+                    fg.AppendLine($"Do => {Do}");
+                }
+                if (printMask?.Path ?? true)
+                {
+                    fg.AppendLine($"Path => {Path}");
+                }
+                if (printMask?.NumMasters ?? true)
+                {
+                    fg.AppendLine($"NumMasters => {NumMasters}");
+                }
+                if (printMask?.GameMode ?? true)
+                {
+                    fg.AppendLine($"GameMode => {GameMode}");
+                }
+                if (printMask?.ExpectedBaseGroupCount ?? true)
+                {
+                    fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
+                }
+                if (printMask?.Interest?.Overall ?? true)
+                {
+                    Interest?.ToString(fg);
+                }
+            }
+            fg.AppendLine("]");
+        }
+        #endregion
+
+    }
+
+    public class Target_ErrorMask : IErrorMask, IErrorMask<Target_ErrorMask>
+    {
+        #region Members
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
+        public List<string> Warnings
+        {
+            get
+            {
+                if (_warnings == null)
+                {
+                    _warnings = new List<string>();
+                }
+                return _warnings;
+            }
+        }
+        public Exception? Do;
+        public Exception? Path;
+        public Exception? NumMasters;
+        public Exception? GameMode;
+        public Exception? ExpectedBaseGroupCount;
+        public MaskItem<Exception?, RecordInterest_ErrorMask?>? Interest;
+        #endregion
+
+        #region IErrorMask
+        public object? GetNthMask(int index)
+        {
+            Target_FieldIndex enu = (Target_FieldIndex)index;
+            switch (enu)
+            {
+                case Target_FieldIndex.Do:
+                    return Do;
+                case Target_FieldIndex.Path:
+                    return Path;
+                case Target_FieldIndex.NumMasters:
+                    return NumMasters;
+                case Target_FieldIndex.GameMode:
+                    return GameMode;
+                case Target_FieldIndex.ExpectedBaseGroupCount:
+                    return ExpectedBaseGroupCount;
+                case Target_FieldIndex.Interest:
+                    return Interest;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
+        public void SetNthException(int index, Exception ex)
+        {
+            Target_FieldIndex enu = (Target_FieldIndex)index;
+            switch (enu)
+            {
+                case Target_FieldIndex.Do:
+                    this.Do = ex;
+                    break;
+                case Target_FieldIndex.Path:
+                    this.Path = ex;
+                    break;
+                case Target_FieldIndex.NumMasters:
+                    this.NumMasters = ex;
+                    break;
+                case Target_FieldIndex.GameMode:
+                    this.GameMode = ex;
+                    break;
+                case Target_FieldIndex.ExpectedBaseGroupCount:
+                    this.ExpectedBaseGroupCount = ex;
+                    break;
+                case Target_FieldIndex.Interest:
+                    this.Interest = new MaskItem<Exception?, RecordInterest_ErrorMask?>(ex, null);
+                    break;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
+        public void SetNthMask(int index, object obj)
+        {
+            Target_FieldIndex enu = (Target_FieldIndex)index;
+            switch (enu)
+            {
+                case Target_FieldIndex.Do:
+                    this.Do = (Exception)obj;
+                    break;
+                case Target_FieldIndex.Path:
+                    this.Path = (Exception)obj;
+                    break;
+                case Target_FieldIndex.NumMasters:
+                    this.NumMasters = (Exception)obj;
+                    break;
+                case Target_FieldIndex.GameMode:
+                    this.GameMode = (Exception)obj;
+                    break;
+                case Target_FieldIndex.ExpectedBaseGroupCount:
+                    this.ExpectedBaseGroupCount = (Exception)obj;
+                    break;
+                case Target_FieldIndex.Interest:
+                    this.Interest = (MaskItem<Exception?, RecordInterest_ErrorMask?>?)obj;
+                    break;
+                default:
+                    throw new ArgumentException($"Index is out of range: {index}");
+            }
+        }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Do != null) return true;
+            if (Path != null) return true;
+            if (NumMasters != null) return true;
+            if (GameMode != null) return true;
+            if (ExpectedBaseGroupCount != null) return true;
+            if (Interest != null) return true;
+            return false;
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            var fg = new FileGeneration();
+            ToString(fg);
+            return fg.ToString();
+        }
+
+        public void ToString(FileGeneration fg)
+        {
+            fg.AppendLine("Target_ErrorMask =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (this.Overall != null)
+                {
+                    fg.AppendLine("Overall =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"{this.Overall}");
+                    }
+                    fg.AppendLine("]");
+                }
+                ToString_FillInternal(fg);
+            }
+            fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            fg.AppendLine($"Do => {Do}");
+            fg.AppendLine($"Path => {Path}");
+            fg.AppendLine($"NumMasters => {NumMasters}");
+            fg.AppendLine($"GameMode => {GameMode}");
+            fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
+            Interest?.ToString(fg);
+        }
+        #endregion
+
+        #region Combine
+        public Target_ErrorMask Combine(Target_ErrorMask? rhs)
+        {
+            if (rhs == null) return this;
+            var ret = new Target_ErrorMask();
+            ret.Do = this.Do.Combine(rhs.Do);
+            ret.Path = this.Path.Combine(rhs.Path);
+            ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
+            ret.GameMode = this.GameMode.Combine(rhs.GameMode);
+            ret.ExpectedBaseGroupCount = this.ExpectedBaseGroupCount.Combine(rhs.ExpectedBaseGroupCount);
+            ret.Interest = new MaskItem<Exception?, RecordInterest_ErrorMask?>(ExceptionExt.Combine(this.Interest?.Overall, rhs.Interest?.Overall), (this.Interest?.Specific as IErrorMask<RecordInterest_ErrorMask>)?.Combine(rhs.Interest?.Specific));
+            return ret;
+        }
+        public static Target_ErrorMask? Combine(Target_ErrorMask? lhs, Target_ErrorMask? rhs)
+        {
+            if (lhs != null && rhs != null) return lhs.Combine(rhs);
+            return lhs ?? rhs;
+        }
+        #endregion
+
+        #region Factory
+        public static Target_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        {
+            return new Target_ErrorMask();
+        }
+        #endregion
+
+    }
+    public class Target_TranslationMask : ITranslationMask
+    {
+        #region Members
+        private TranslationCrystal? _crystal;
+        public bool Do;
+        public bool Path;
+        public bool NumMasters;
+        public bool GameMode;
+        public bool ExpectedBaseGroupCount;
+        public MaskItem<bool, RecordInterest_TranslationMask?> Interest;
+        #endregion
+
+        #region Ctors
+        public Target_TranslationMask(bool defaultOn)
+        {
+            this.Do = defaultOn;
+            this.Path = defaultOn;
+            this.NumMasters = defaultOn;
+            this.GameMode = defaultOn;
+            this.ExpectedBaseGroupCount = defaultOn;
+            this.Interest = new MaskItem<bool, RecordInterest_TranslationMask?>(defaultOn, null);
+        }
+
+        #endregion
+
+        public TranslationCrystal GetCrystal()
+        {
+            if (_crystal != null) return _crystal;
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+            GetCrystal(ret);
+            _crystal = new TranslationCrystal(ret.ToArray());
+            return _crystal;
+        }
+
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+        {
+            ret.Add((Do, null));
+            ret.Add((Path, null));
+            ret.Add((NumMasters, null));
+            ret.Add((GameMode, null));
+            ret.Add((ExpectedBaseGroupCount, null));
+            ret.Add((Interest?.Overall ?? true, Interest?.Specific?.GetCrystal()));
+        }
+    }
+}
+#endregion
+
 #region Xml Translation
 namespace Mutagen.Bethesda.Tests.Internals
 {
@@ -1298,8 +1546,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void WriteToNodeXml(
             ITargetGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Do) ?? true))
             {
@@ -1337,13 +1585,13 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)Target_FieldIndex.GameMode,
                     errorMask: errorMask);
             }
-            if (item.ExpectedBaseGroupCount_IsSet
+            if ((item.ExpectedBaseGroupCount != null)
                 && (translationMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ExpectedBaseGroupCount),
-                    item: item.ExpectedBaseGroupCount,
+                    item: item.ExpectedBaseGroupCount.Value,
                     fieldIndex: (int)Target_FieldIndex.ExpectedBaseGroupCount,
                     errorMask: errorMask);
             }
@@ -1363,9 +1611,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Write(
             XElement node,
             ITargetGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Tests.Target");
             node.Add(elem);
@@ -1383,9 +1631,9 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (ITargetGetter)item,
@@ -1398,10 +1646,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Write(
             XElement node,
             ITargetGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1433,8 +1681,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void FillPublicXml(
             ITarget item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1459,8 +1707,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITarget item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1608,8 +1856,8 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             XElement node,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            string name = null)
+            Target_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1625,8 +1873,8 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             string path,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            string name = null)
+            Target_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1641,9 +1889,9 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this ITargetGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1659,8 +1907,8 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGetter item,
             Stream stream,
             out Target_ErrorMask errorMask,
-            Target_TranslationMask translationMask = null,
-            string name = null)
+            Target_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1675,9 +1923,9 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this ITargetGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1692,9 +1940,9 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this ITargetGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1707,21 +1955,21 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this ITargetGetter item,
             XElement node,
-            string name = null,
-            Target_TranslationMask translationMask = null)
+            string? name = null,
+            Target_TranslationMask? translationMask = null)
         {
             ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this ITargetGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1736,7 +1984,7 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this ITargetGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((TargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1752,407 +2000,6 @@ namespace Mutagen.Bethesda.Tests
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Tests.Internals
-{
-    public class Target_Mask<T> : IMask<T>, IEquatable<Target_Mask<T>>
-    {
-        #region Ctors
-        public Target_Mask()
-        {
-        }
-
-        public Target_Mask(T initialValue)
-        {
-            this.Do = initialValue;
-            this.Path = initialValue;
-            this.NumMasters = initialValue;
-            this.GameMode = initialValue;
-            this.ExpectedBaseGroupCount = initialValue;
-            this.Interest = new MaskItem<T, RecordInterest_Mask<T>>(initialValue, new RecordInterest_Mask<T>(initialValue));
-        }
-
-        public Target_Mask(
-            T Do,
-            T Path,
-            T NumMasters,
-            T GameMode,
-            T ExpectedBaseGroupCount,
-            T Interest)
-        {
-            this.Do = Do;
-            this.Path = Path;
-            this.NumMasters = NumMasters;
-            this.GameMode = GameMode;
-            this.ExpectedBaseGroupCount = ExpectedBaseGroupCount;
-            this.Interest = new MaskItem<T, RecordInterest_Mask<T>>(Interest, new RecordInterest_Mask<T>(Interest));
-        }
-        #endregion
-
-        #region Members
-        public T Do;
-        public T Path;
-        public T NumMasters;
-        public T GameMode;
-        public T ExpectedBaseGroupCount;
-        public MaskItem<T, RecordInterest_Mask<T>> Interest { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Target_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Target_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Do, rhs.Do)) return false;
-            if (!object.Equals(this.Path, rhs.Path)) return false;
-            if (!object.Equals(this.NumMasters, rhs.NumMasters)) return false;
-            if (!object.Equals(this.GameMode, rhs.GameMode)) return false;
-            if (!object.Equals(this.ExpectedBaseGroupCount, rhs.ExpectedBaseGroupCount)) return false;
-            if (!object.Equals(this.Interest, rhs.Interest)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Do?.GetHashCode());
-            ret = ret.CombineHashCode(this.Path?.GetHashCode());
-            ret = ret.CombineHashCode(this.NumMasters?.GetHashCode());
-            ret = ret.CombineHashCode(this.GameMode?.GetHashCode());
-            ret = ret.CombineHashCode(this.ExpectedBaseGroupCount?.GetHashCode());
-            ret = ret.CombineHashCode(this.Interest?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Do)) return false;
-            if (!eval(this.Path)) return false;
-            if (!eval(this.NumMasters)) return false;
-            if (!eval(this.GameMode)) return false;
-            if (!eval(this.ExpectedBaseGroupCount)) return false;
-            if (Interest != null)
-            {
-                if (!eval(this.Interest.Overall)) return false;
-                if (this.Interest.Specific != null && !this.Interest.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Target_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Target_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Target_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Do = eval(this.Do);
-            obj.Path = eval(this.Path);
-            obj.NumMasters = eval(this.NumMasters);
-            obj.GameMode = eval(this.GameMode);
-            obj.ExpectedBaseGroupCount = eval(this.ExpectedBaseGroupCount);
-            if (this.Interest != null)
-            {
-                obj.Interest = new MaskItem<R, RecordInterest_Mask<R>>(eval(this.Interest.Overall), this.Interest.Specific?.Translate(eval));
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Target_Mask<bool> printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Target_Mask<bool> printMask = null)
-        {
-            fg.AppendLine($"{nameof(Target_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Do ?? true)
-                {
-                    fg.AppendLine($"Do => {Do}");
-                }
-                if (printMask?.Path ?? true)
-                {
-                    fg.AppendLine($"Path => {Path}");
-                }
-                if (printMask?.NumMasters ?? true)
-                {
-                    fg.AppendLine($"NumMasters => {NumMasters}");
-                }
-                if (printMask?.GameMode ?? true)
-                {
-                    fg.AppendLine($"GameMode => {GameMode}");
-                }
-                if (printMask?.ExpectedBaseGroupCount ?? true)
-                {
-                    fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
-                }
-                if (printMask?.Interest?.Overall ?? true)
-                {
-                    Interest?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Target_ErrorMask : IErrorMask, IErrorMask<Target_ErrorMask>
-    {
-        #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception Do;
-        public Exception Path;
-        public Exception NumMasters;
-        public Exception GameMode;
-        public Exception ExpectedBaseGroupCount;
-        public MaskItem<Exception, RecordInterest_ErrorMask> Interest;
-        #endregion
-
-        #region IErrorMask
-        public object GetNthMask(int index)
-        {
-            Target_FieldIndex enu = (Target_FieldIndex)index;
-            switch (enu)
-            {
-                case Target_FieldIndex.Do:
-                    return Do;
-                case Target_FieldIndex.Path:
-                    return Path;
-                case Target_FieldIndex.NumMasters:
-                    return NumMasters;
-                case Target_FieldIndex.GameMode:
-                    return GameMode;
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    return ExpectedBaseGroupCount;
-                case Target_FieldIndex.Interest:
-                    return Interest;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Target_FieldIndex enu = (Target_FieldIndex)index;
-            switch (enu)
-            {
-                case Target_FieldIndex.Do:
-                    this.Do = ex;
-                    break;
-                case Target_FieldIndex.Path:
-                    this.Path = ex;
-                    break;
-                case Target_FieldIndex.NumMasters:
-                    this.NumMasters = ex;
-                    break;
-                case Target_FieldIndex.GameMode:
-                    this.GameMode = ex;
-                    break;
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    this.ExpectedBaseGroupCount = ex;
-                    break;
-                case Target_FieldIndex.Interest:
-                    this.Interest = new MaskItem<Exception, RecordInterest_ErrorMask>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Target_FieldIndex enu = (Target_FieldIndex)index;
-            switch (enu)
-            {
-                case Target_FieldIndex.Do:
-                    this.Do = (Exception)obj;
-                    break;
-                case Target_FieldIndex.Path:
-                    this.Path = (Exception)obj;
-                    break;
-                case Target_FieldIndex.NumMasters:
-                    this.NumMasters = (Exception)obj;
-                    break;
-                case Target_FieldIndex.GameMode:
-                    this.GameMode = (Exception)obj;
-                    break;
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    this.ExpectedBaseGroupCount = (Exception)obj;
-                    break;
-                case Target_FieldIndex.Interest:
-                    this.Interest = (MaskItem<Exception, RecordInterest_ErrorMask>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Do != null) return true;
-            if (Path != null) return true;
-            if (NumMasters != null) return true;
-            if (GameMode != null) return true;
-            if (ExpectedBaseGroupCount != null) return true;
-            if (Interest != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Target_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Do => {Do}");
-            fg.AppendLine($"Path => {Path}");
-            fg.AppendLine($"NumMasters => {NumMasters}");
-            fg.AppendLine($"GameMode => {GameMode}");
-            fg.AppendLine($"ExpectedBaseGroupCount => {ExpectedBaseGroupCount}");
-            Interest?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public Target_ErrorMask Combine(Target_ErrorMask rhs)
-        {
-            var ret = new Target_ErrorMask();
-            ret.Do = this.Do.Combine(rhs.Do);
-            ret.Path = this.Path.Combine(rhs.Path);
-            ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
-            ret.GameMode = this.GameMode.Combine(rhs.GameMode);
-            ret.ExpectedBaseGroupCount = this.ExpectedBaseGroupCount.Combine(rhs.ExpectedBaseGroupCount);
-            ret.Interest = new MaskItem<Exception, RecordInterest_ErrorMask>(this.Interest.Overall.Combine(rhs.Interest.Overall), ((IErrorMask<RecordInterest_ErrorMask>)this.Interest.Specific).Combine(rhs.Interest.Specific));
-            return ret;
-        }
-        public static Target_ErrorMask Combine(Target_ErrorMask lhs, Target_ErrorMask rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Target_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            if (errorMask?.Empty ?? true) return null;
-            return new Target_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Target_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal _crystal;
-        public bool Do;
-        public bool Path;
-        public bool NumMasters;
-        public bool GameMode;
-        public bool ExpectedBaseGroupCount;
-        public MaskItem<bool, RecordInterest_TranslationMask> Interest;
-        #endregion
-
-        #region Ctors
-        public Target_TranslationMask()
-        {
-        }
-
-        public Target_TranslationMask(bool defaultOn)
-        {
-            this.Do = defaultOn;
-            this.Path = defaultOn;
-            this.NumMasters = defaultOn;
-            this.GameMode = defaultOn;
-            this.ExpectedBaseGroupCount = defaultOn;
-            this.Interest = new MaskItem<bool, RecordInterest_TranslationMask>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
-        {
-            ret.Add((Do, null));
-            ret.Add((Path, null));
-            ret.Add((NumMasters, null));
-            ret.Add((GameMode, null));
-            ret.Add((ExpectedBaseGroupCount, null));
-            ret.Add((Interest?.Overall ?? true, Interest?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

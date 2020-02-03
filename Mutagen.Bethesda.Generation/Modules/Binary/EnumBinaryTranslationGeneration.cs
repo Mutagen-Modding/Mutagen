@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write"))
+                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
             {
                 args.Add(writerAccessor.DirectAccess);
                 args.Add($"{itemAccessor.DirectAccess}");
@@ -54,7 +54,6 @@ namespace Mutagen.Bethesda.Generation
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
-                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
             }
         }
@@ -148,16 +147,16 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
             }
 
-            if (data.HasTrigger)
+            if (typeGen.HasBeenSet)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                fg.AppendLine($"{(typeGen.CanBeNullable(getter: true) ? "private" : "public")} bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
             var posStr = dataType == null ? $"{currentPosition}" : $"_{typeGen.Name}Location";
             string slice;
             if (data.RecordType.HasValue)
             {
-                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
+                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location!.Value, _package.Meta)";
             }
             else
             {
@@ -165,9 +164,17 @@ namespace Mutagen.Bethesda.Generation
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
-            if (data.RecordType.HasValue)
+            if (typeGen.HasBeenSet)
             {
-                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                if (typeGen.CanBeNullable(getter: true))
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name} => {typeGen.Name}_IsSet ? {getType} : default({eType.TypeName(getter: true)}?);");
+                }
+                else
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                    fg.AppendLine($"public bool {eType.Name}_IsSet => _{typeGen.Name}_IsSet;");
+                }
             }
             else
             {

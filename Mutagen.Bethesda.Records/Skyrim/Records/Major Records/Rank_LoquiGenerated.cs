@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -41,105 +42,50 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public Rank()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region RankID
-        public bool RankID_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Rank_FieldIndex.RankID];
-            set => _hasBeenSetTracker[(int)Rank_FieldIndex.RankID] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IRankGetter.RankID_IsSet => RankID_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _RankID;
-        public UInt32 RankID
+        private UInt32? _RankID;
+        public UInt32? RankID
         {
             get => this._RankID;
-            set => RankID_Set(value);
+            set => this._RankID = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32 IRankGetter.RankID => this.RankID;
-        public void RankID_Set(
-            UInt32 value,
-            bool markSet = true)
-        {
-            _RankID = value;
-            _hasBeenSetTracker[(int)Rank_FieldIndex.RankID] = markSet;
-        }
-        public void RankID_Unset()
-        {
-            this.RankID_Set(default(UInt32), false);
-        }
+        UInt32? IRankGetter.RankID => this.RankID;
         #endregion
         #region MaleRankTitle
-        public bool MaleRankTitle_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleRankTitle];
-            set => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleRankTitle] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IRankGetter.MaleRankTitle_IsSet => MaleRankTitle_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _MaleRankTitle;
-        public String MaleRankTitle
+        private String? _MaleRankTitle;
+        public String? MaleRankTitle
         {
             get => this._MaleRankTitle;
-            set => MaleRankTitle_Set(value);
+            set => this._MaleRankTitle = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IRankGetter.MaleRankTitle => this.MaleRankTitle;
-        public void MaleRankTitle_Set(
-            String value,
-            bool markSet = true)
-        {
-            _MaleRankTitle = value;
-            _hasBeenSetTracker[(int)Rank_FieldIndex.MaleRankTitle] = markSet;
-        }
-        public void MaleRankTitle_Unset()
-        {
-            this.MaleRankTitle_Set(default(String), false);
-        }
+        String? IRankGetter.MaleRankTitle => this.MaleRankTitle;
         #endregion
         #region FemaleRankTitle
-        public bool FemaleRankTitle_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleRankTitle];
-            set => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleRankTitle] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IRankGetter.FemaleRankTitle_IsSet => FemaleRankTitle_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _FemaleRankTitle;
-        public String FemaleRankTitle
+        private String? _FemaleRankTitle;
+        public String? FemaleRankTitle
         {
             get => this._FemaleRankTitle;
-            set => FemaleRankTitle_Set(value);
+            set => this._FemaleRankTitle = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IRankGetter.FemaleRankTitle => this.FemaleRankTitle;
-        public void FemaleRankTitle_Set(
-            String value,
-            bool markSet = true)
-        {
-            _FemaleRankTitle = value;
-            _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleRankTitle] = markSet;
-        }
-        public void FemaleRankTitle_Unset()
-        {
-            this.FemaleRankTitle_Set(default(String), false);
-        }
+        String? IRankGetter.FemaleRankTitle => this.FemaleRankTitle;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             RankMixIn.ToString(
                 item: this,
@@ -152,15 +98,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IRankGetter rhs)) return false;
-            return ((RankCommon)((IRankGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Rank obj)
         {
-            return ((RankCommon)((IRankGetter)this).CommonInstance()).Equals(this, obj);
+            return ((RankCommon)((IRankGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RankCommon)((IRankGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((RankCommon)((IRankGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -171,9 +117,9 @@ namespace Mutagen.Bethesda.Skyrim
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RankXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -186,11 +132,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Rank CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Rank_TranslationMask translationMask = null)
+            Rank_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -200,38 +144,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static Rank CreateFromXml(
             XElement node,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Rank_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static Rank CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Rank() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Rank();
-            ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -240,12 +171,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Rank CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Rank_TranslationMask translationMask = null)
+            Rank_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -253,12 +182,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Rank CreateFromXml(
             string path,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Rank_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -266,13 +193,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Rank CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Rank_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -280,12 +205,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Rank CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Rank_TranslationMask translationMask = null)
+            Rank_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -293,12 +216,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Rank CreateFromXml(
             Stream stream,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Rank_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -306,13 +227,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Rank CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Rank_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -321,21 +240,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((Rank_FieldIndex)index)
-            {
-                case Rank_FieldIndex.RankID:
-                case Rank_FieldIndex.MaleRankTitle:
-                case Rank_FieldIndex.FemaleRankTitle:
-                    return _hasBeenSetTracker[index];
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -345,7 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -368,10 +272,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Rank CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Rank();
-            ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -389,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((RankSetterCommon)((IRankGetter)this).CommonSetterInstance()).Clear(this);
+            ((RankSetterCommon)((IRankGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static Rank GetNew()
@@ -405,21 +309,9 @@ namespace Mutagen.Bethesda.Skyrim
         IRankGetter,
         ILoquiObjectSetter<IRank>
     {
-        new UInt32 RankID { get; set; }
-        new bool RankID_IsSet { get; set; }
-        void RankID_Set(UInt32 value, bool hasBeenSet = true);
-        void RankID_Unset();
-
-        new String MaleRankTitle { get; set; }
-        new bool MaleRankTitle_IsSet { get; set; }
-        void MaleRankTitle_Set(String value, bool hasBeenSet = true);
-        void MaleRankTitle_Unset();
-
-        new String FemaleRankTitle { get; set; }
-        new bool FemaleRankTitle_IsSet { get; set; }
-        void FemaleRankTitle_Set(String value, bool hasBeenSet = true);
-        void FemaleRankTitle_Unset();
-
+        new UInt32? RankID { get; set; }
+        new String? MaleRankTitle { get; set; }
+        new String? FemaleRankTitle { get; set; }
     }
 
     public partial interface IRankGetter :
@@ -431,24 +323,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region RankID
-        UInt32 RankID { get; }
-        bool RankID_IsSet { get; }
-
-        #endregion
-        #region MaleRankTitle
-        String MaleRankTitle { get; }
-        bool MaleRankTitle_IsSet { get; }
-
-        #endregion
-        #region FemaleRankTitle
-        String FemaleRankTitle { get; }
-        bool FemaleRankTitle_IsSet { get; }
-
-        #endregion
+        UInt32? RankID { get; }
+        String? MaleRankTitle { get; }
+        String? FemaleRankTitle { get; }
 
     }
 
@@ -459,7 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IRank item)
         {
-            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Rank_Mask<bool> GetEqualsMask(
@@ -467,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
             IRankGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RankCommon)((IRankGetter)item).CommonInstance()).GetEqualsMask(
+            return ((RankCommon)((IRankGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -475,10 +355,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IRankGetter item,
-            string name = null,
-            Rank_Mask<bool> printMask = null)
+            string? name = null,
+            Rank_Mask<bool>? printMask = null)
         {
-            return ((RankCommon)((IRankGetter)item).CommonInstance()).ToString(
+            return ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -487,10 +367,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IRankGetter item,
             FileGeneration fg,
-            string name = null,
-            Rank_Mask<bool> printMask = null)
+            string? name = null,
+            Rank_Mask<bool>? printMask = null)
         {
-            ((RankCommon)((IRankGetter)item).CommonInstance()).ToString(
+            ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -501,15 +381,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IRankGetter item,
             Rank_Mask<bool?> checkMask)
         {
-            return ((RankCommon)((IRankGetter)item).CommonInstance()).HasBeenSet(
+            return ((RankCommon)((IRankGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Rank_Mask<bool> GetHasBeenSetMask(this IRankGetter item)
         {
-            var ret = new Rank_Mask<bool>();
-            ((RankCommon)((IRankGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Rank_Mask<bool>(false);
+            ((RankCommon)((IRankGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -519,16 +399,17 @@ namespace Mutagen.Bethesda.Skyrim
             this IRankGetter item,
             IRankGetter rhs)
         {
-            return ((RankCommon)((IRankGetter)item).CommonInstance()).Equals(
+            return ((RankCommon)((IRankGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IRank lhs,
-            IRankGetter rhs)
+            IRankGetter rhs,
+            Rank_TranslationMask? copyMask = null)
         {
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -538,23 +419,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IRank lhs,
             IRankGetter rhs,
-            Rank_TranslationMask copyMask)
-        {
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IRank lhs,
-            IRankGetter rhs,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask copyMask = null)
+            Rank_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -565,10 +434,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IRank lhs,
             IRankGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -577,9 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Rank DeepCopy(
             this IRankGetter item,
-            Rank_TranslationMask copyMask = null)
+            Rank_TranslationMask? copyMask = null)
         {
-            return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -587,9 +456,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static Rank DeepCopy(
             this IRankGetter item,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask copyMask = null)
+            Rank_TranslationMask? copyMask = null)
         {
-            return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -597,10 +466,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Rank DeepCopy(
             this IRankGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -611,12 +480,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IRank item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Rank_TranslationMask translationMask = null)
+            Rank_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -627,29 +494,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IRank item,
             XElement node,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Rank_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IRank item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -658,13 +521,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IRank item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Rank_TranslationMask translationMask = null)
+            Rank_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -673,13 +534,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IRank item,
             string path,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Rank_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -688,14 +547,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IRank item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Rank_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -704,13 +561,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IRank item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Rank_TranslationMask translationMask = null)
+            Rank_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -719,13 +574,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IRank item,
             Stream stream,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Rank_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -734,14 +587,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IRank item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Rank_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Rank_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -767,9 +618,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IRank item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -820,11 +671,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IRankGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IRank);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Rank";
 
@@ -834,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -983,14 +834,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1014,18 +865,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRank item)
         {
             ClearPartial();
-            item.RankID_Unset();
-            item.MaleRankTitle_Unset();
-            item.FemaleRankTitle_Unset();
+            item.RankID = default;
+            item.MaleRankTitle = default;
+            item.FemaleRankTitle = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IRank item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1063,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1102,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRank item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1126,8 +976,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Rank_Mask<bool>();
-            ((RankCommon)((IRankGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Rank_Mask<bool>(false);
+            ((RankCommon)((IRankGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1142,15 +992,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.RankID = item.RankID_IsSet == rhs.RankID_IsSet && item.RankID == rhs.RankID;
-            ret.MaleRankTitle = item.MaleRankTitle_IsSet == rhs.MaleRankTitle_IsSet && string.Equals(item.MaleRankTitle, rhs.MaleRankTitle);
-            ret.FemaleRankTitle = item.FemaleRankTitle_IsSet == rhs.FemaleRankTitle_IsSet && string.Equals(item.FemaleRankTitle, rhs.FemaleRankTitle);
+            ret.RankID = item.RankID == rhs.RankID;
+            ret.MaleRankTitle = string.Equals(item.MaleRankTitle, rhs.MaleRankTitle);
+            ret.FemaleRankTitle = string.Equals(item.FemaleRankTitle, rhs.FemaleRankTitle);
         }
         
         public string ToString(
             IRankGetter item,
-            string name = null,
-            Rank_Mask<bool> printMask = null)
+            string? name = null,
+            Rank_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1164,8 +1014,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IRankGetter item,
             FileGeneration fg,
-            string name = null,
-            Rank_Mask<bool> printMask = null)
+            string? name = null,
+            Rank_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1189,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IRankGetter item,
             FileGeneration fg,
-            Rank_Mask<bool> printMask = null)
+            Rank_Mask<bool>? printMask = null)
         {
             if (printMask?.RankID ?? true)
             {
@@ -1209,9 +1059,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankGetter item,
             Rank_Mask<bool?> checkMask)
         {
-            if (checkMask.RankID.HasValue && checkMask.RankID.Value != item.RankID_IsSet) return false;
-            if (checkMask.MaleRankTitle.HasValue && checkMask.MaleRankTitle.Value != item.MaleRankTitle_IsSet) return false;
-            if (checkMask.FemaleRankTitle.HasValue && checkMask.FemaleRankTitle.Value != item.FemaleRankTitle_IsSet) return false;
+            if (checkMask.RankID.HasValue && checkMask.RankID.Value != (item.RankID != null)) return false;
+            if (checkMask.MaleRankTitle.HasValue && checkMask.MaleRankTitle.Value != (item.MaleRankTitle != null)) return false;
+            if (checkMask.FemaleRankTitle.HasValue && checkMask.FemaleRankTitle.Value != (item.FemaleRankTitle != null)) return false;
             return true;
         }
         
@@ -1219,50 +1069,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankGetter item,
             Rank_Mask<bool> mask)
         {
-            mask.RankID = item.RankID_IsSet;
-            mask.MaleRankTitle = item.MaleRankTitle_IsSet;
-            mask.FemaleRankTitle = item.FemaleRankTitle_IsSet;
+            mask.RankID = (item.RankID != null);
+            mask.MaleRankTitle = (item.MaleRankTitle != null);
+            mask.FemaleRankTitle = (item.FemaleRankTitle != null);
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRankGetter lhs,
-            IRankGetter rhs)
+            IRankGetter? lhs,
+            IRankGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.RankID_IsSet != rhs.RankID_IsSet) return false;
-            if (lhs.RankID_IsSet)
-            {
-                if (lhs.RankID != rhs.RankID) return false;
-            }
-            if (lhs.MaleRankTitle_IsSet != rhs.MaleRankTitle_IsSet) return false;
-            if (lhs.MaleRankTitle_IsSet)
-            {
-                if (!string.Equals(lhs.MaleRankTitle, rhs.MaleRankTitle)) return false;
-            }
-            if (lhs.FemaleRankTitle_IsSet != rhs.FemaleRankTitle_IsSet) return false;
-            if (lhs.FemaleRankTitle_IsSet)
-            {
-                if (!string.Equals(lhs.FemaleRankTitle, rhs.FemaleRankTitle)) return false;
-            }
+            if (lhs.RankID != rhs.RankID) return false;
+            if (!string.Equals(lhs.MaleRankTitle, rhs.MaleRankTitle)) return false;
+            if (!string.Equals(lhs.FemaleRankTitle, rhs.FemaleRankTitle)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IRankGetter item)
         {
             int ret = 0;
-            if (item.RankID_IsSet)
+            if (item.RankID.TryGet(out var RankIDitem))
             {
-                ret = HashHelper.GetHashCode(item.RankID).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(RankIDitem).CombineHashCode(ret);
             }
-            if (item.MaleRankTitle_IsSet)
+            if (item.MaleRankTitle.TryGet(out var MaleRankTitleitem))
             {
-                ret = HashHelper.GetHashCode(item.MaleRankTitle).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(MaleRankTitleitem).CombineHashCode(ret);
             }
-            if (item.FemaleRankTitle_IsSet)
+            if (item.FemaleRankTitle.TryGet(out var FemaleRankTitleitem))
             {
-                ret = HashHelper.GetHashCode(item.FemaleRankTitle).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(FemaleRankTitleitem).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1292,80 +1130,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IRank item,
             IRankGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.RankID) ?? true))
             {
-                errorMask?.PushIndex((int)Rank_FieldIndex.RankID);
-                try
-                {
-                    if (rhs.RankID_IsSet)
-                    {
-                        item.RankID = rhs.RankID;
-                    }
-                    else
-                    {
-                        item.RankID_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RankID = rhs.RankID;
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleRankTitle) ?? true))
             {
-                errorMask?.PushIndex((int)Rank_FieldIndex.MaleRankTitle);
-                try
-                {
-                    if (rhs.MaleRankTitle_IsSet)
-                    {
-                        item.MaleRankTitle = rhs.MaleRankTitle;
-                    }
-                    else
-                    {
-                        item.MaleRankTitle_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaleRankTitle = rhs.MaleRankTitle;
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleRankTitle) ?? true))
             {
-                errorMask?.PushIndex((int)Rank_FieldIndex.FemaleRankTitle);
-                try
-                {
-                    if (rhs.FemaleRankTitle_IsSet)
-                    {
-                        item.FemaleRankTitle = rhs.FemaleRankTitle;
-                    }
-                    else
-                    {
-                        item.FemaleRankTitle_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FemaleRankTitle = rhs.FemaleRankTitle;
             }
         }
         
@@ -1373,9 +1151,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Rank DeepCopy(
             IRankGetter item,
-            Rank_TranslationMask copyMask = null)
+            Rank_TranslationMask? copyMask = null)
         {
-            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()).GetNew();
+            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1385,9 +1163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Rank DeepCopy(
             IRankGetter item,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask copyMask = null)
+            Rank_TranslationMask? copyMask = null)
         {
-            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()).GetNew();
+            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1397,10 +1175,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Rank DeepCopy(
             IRankGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()).GetNew();
+            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1453,20 +1231,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IRankGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            if (item.RankID_IsSet
+            if ((item.RankID != null)
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankID) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RankID),
-                    item: item.RankID,
+                    item: item.RankID.Value,
                     fieldIndex: (int)Rank_FieldIndex.RankID,
                     errorMask: errorMask);
             }
-            if (item.MaleRankTitle_IsSet
+            if ((item.MaleRankTitle != null)
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleRankTitle) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1476,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Rank_FieldIndex.MaleRankTitle,
                     errorMask: errorMask);
             }
-            if (item.FemaleRankTitle_IsSet
+            if ((item.FemaleRankTitle != null)
                 && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleRankTitle) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1491,9 +1269,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IRankGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Rank");
             node.Add(elem);
@@ -1511,9 +1289,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IRankGetter)item,
@@ -1526,10 +1304,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IRankGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1561,8 +1339,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IRank item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1587,8 +1365,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRank item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1663,8 +1441,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IRankGetter item,
             XElement node,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            string name = null)
+            Rank_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1680,8 +1458,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IRankGetter item,
             string path,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            string name = null)
+            Rank_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1696,9 +1474,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IRankGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1714,8 +1492,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IRankGetter item,
             Stream stream,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask translationMask = null,
-            string name = null)
+            Rank_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1730,9 +1508,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IRankGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1747,9 +1525,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IRankGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1762,21 +1540,21 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IRankGetter item,
             XElement node,
-            string name = null,
-            Rank_TranslationMask translationMask = null)
+            string? name = null,
+            Rank_TranslationMask? translationMask = null)
         {
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IRankGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1791,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IRankGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1813,13 +1591,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Rank_Mask<T> : IMask<T>, IEquatable<Rank_Mask<T>>
+    public class Rank_Mask<T> :
+        IMask<T>,
+        IEquatable<Rank_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Rank_Mask()
-        {
-        }
-
         public Rank_Mask(T initialValue)
         {
             this.RankID = initialValue;
@@ -1836,6 +1613,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.MaleRankTitle = MaleRankTitle;
             this.FemaleRankTitle = FemaleRankTitle;
         }
+
+        #pragma warning disable CS8618
+        protected Rank_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1902,14 +1686,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Rank_Mask<bool> printMask = null)
+        public string ToString(Rank_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Rank_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Rank_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Rank_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1937,8 +1721,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Rank_ErrorMask : IErrorMask, IErrorMask<Rank_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1950,13 +1734,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return _warnings;
             }
         }
-        public Exception RankID;
-        public Exception MaleRankTitle;
-        public Exception FemaleRankTitle;
+        public Exception? RankID;
+        public Exception? MaleRankTitle;
+        public Exception? FemaleRankTitle;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
@@ -2057,15 +1841,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Rank_ErrorMask Combine(Rank_ErrorMask rhs)
+        public Rank_ErrorMask Combine(Rank_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Rank_ErrorMask();
             ret.RankID = this.RankID.Combine(rhs.RankID);
             ret.MaleRankTitle = this.MaleRankTitle.Combine(rhs.MaleRankTitle);
             ret.FemaleRankTitle = this.FemaleRankTitle.Combine(rhs.FemaleRankTitle);
             return ret;
         }
-        public static Rank_ErrorMask Combine(Rank_ErrorMask lhs, Rank_ErrorMask rhs)
+        public static Rank_ErrorMask? Combine(Rank_ErrorMask? lhs, Rank_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2075,7 +1860,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static Rank_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Rank_ErrorMask();
         }
         #endregion
@@ -2084,17 +1868,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Rank_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool RankID;
         public bool MaleRankTitle;
         public bool FemaleRankTitle;
         #endregion
 
         #region Ctors
-        public Rank_TranslationMask()
-        {
-        }
-
         public Rank_TranslationMask(bool defaultOn)
         {
             this.RankID = defaultOn;
@@ -2107,13 +1887,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((RankID, null));
             ret.Add((MaleRankTitle, null));
@@ -2133,42 +1913,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_RecordTypes(
             IRankGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
-            if (item.RankID_IsSet)
-            {
-                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RankID,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER),
-                    nullable: false);
-            }
-            if (item.MaleRankTitle_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaleRankTitle,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.FemaleRankTitle_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FemaleRankTitle,
-                    header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.RankID,
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaleRankTitle,
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FemaleRankTitle,
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IRankGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_RecordTypes(
                 item: item,
@@ -2181,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IRankGetter)item,
@@ -2238,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         object IRankGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IRankGetter.CommonSetterInstance() => null;
+        object? IRankGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IRankGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2254,9 +2022,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RankXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2272,7 +2040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2283,18 +2051,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region RankID
         private int? _RankIDLocation;
-        public bool RankID_IsSet => _RankIDLocation.HasValue;
-        public UInt32 RankID => _RankIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RankIDLocation.Value, _package.Meta)) : default;
+        public UInt32? RankID => _RankIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RankIDLocation.Value, _package.Meta)) : default(UInt32?);
         #endregion
         #region MaleRankTitle
         private int? _MaleRankTitleLocation;
-        public bool MaleRankTitle_IsSet => _MaleRankTitleLocation.HasValue;
-        public String MaleRankTitle => _MaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleRankTitleLocation.Value, _package.Meta)) : default;
+        public String? MaleRankTitle => _MaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _MaleRankTitleLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region FemaleRankTitle
         private int? _FemaleRankTitleLocation;
-        public bool FemaleRankTitle_IsSet => _FemaleRankTitleLocation.HasValue;
-        public String FemaleRankTitle => _FemaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleRankTitleLocation.Value, _package.Meta)) : default;
+        public String? FemaleRankTitle => _FemaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FemaleRankTitleLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2313,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static RankBinaryOverlay RankFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RankBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2338,7 +2103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

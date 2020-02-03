@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
     {
         public readonly static RecordTypeXmlTranslation Instance = new RecordTypeXmlTranslation();
          
-        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDLink<T> item, ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             using (errorMask.PushIndex(fieldIndex))
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDSetLink<T> item, ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             using (errorMask.PushIndex(fieldIndex))
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node, 
             out IEDIDLink<T> item,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             if (Parse(node, out RecordType id, errorMask))
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node, 
             out IEDIDLink<T> item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter
         {
             return this.Parse(
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node,
             out IEDIDSetLink<T> item,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             if (Parse(node, out RecordType id, errorMask))
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node, 
             out IEDIDSetLink<T> item, 
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter
         {
             return this.Parse(

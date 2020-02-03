@@ -26,7 +26,6 @@ namespace Mutagen.Bethesda.Binary
             return bytes;
         }
 
-        // Spans
         public void Write(MutagenWriter writer, ReadOnlySpan<byte> item)
         {
             writer.Write(item);
@@ -35,14 +34,8 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             ReadOnlySpan<byte> item,
-            RecordType header,
-            bool nullable)
+            RecordType header)
         {
-            if (item == null)
-            {
-                if (nullable) return;
-                throw new ArgumentException("Non optional string was null.");
-            }
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
                 Write(writer, item);

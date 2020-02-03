@@ -17,19 +17,18 @@ namespace Mutagen.Bethesda.Oblivion
         public const char TRIGGER_CHAR = 'l';
         public override char TypeChar => TRIGGER_CHAR;
 
-        public override float RawFloat
+        public override float? RawFloat
         {
-            get => (float)this.Data;
+            get => this.Data.TryGet(out var data) ? (float)data : default;
             set
             {
-                var val = (int)value;
-                if (this.Data != val)
+                if (value.HasValue)
                 {
-                    this.Data = val;
+                    this.Data = (int)value.Value;
                 }
                 else
                 {
-                    this.Data_IsSet = true;
+                    this.Data = default;
                 }
             }
         }
@@ -53,9 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item, MasterReferences masterReferences)
             {
+                if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.ExportSubRecordHeader(writer, GlobalInt_Registration.FLTV_HEADER))
                 {
-                    writer.Write((float)item.Data);
+                    writer.Write((float)data);
                 }
             }
         }
@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Oblivion
         public partial class GlobalIntBinaryOverlay
         {
             public override char TypeChar => GlobalInt.TRIGGER_CHAR;
-            public override float RawFloat => (float)this.Data;
+            public override float? RawFloat => this.Data.TryGet(out var data) ? (float)data : default;
 
             private int? _DataLocation;
             public bool GetDataIsSetCustom() => _DataLocation.HasValue;
             public int GetDataCustom()
             {
-                return (int)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _DataLocation.Value, _package.Meta).GetFloat();
+                return (int)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _DataLocation!.Value, _package.Meta).GetFloat();
             }
             partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
             {

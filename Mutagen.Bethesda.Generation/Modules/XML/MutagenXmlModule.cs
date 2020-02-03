@@ -24,8 +24,8 @@ namespace Mutagen.Bethesda.Generation
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
-                args.Add($"ErrorMaskBuilder errorMask");
-                args.Add($"{nameof(TranslationCrystal)} translationMask");
+                args.Add($"ErrorMaskBuilder? errorMask");
+                args.Add($"{nameof(TranslationCrystal)}? translationMask");
             }
             using (new BraceWrapper(fg))
             {
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Generation
                     List<string> conditions = new List<string>();
                     if (field.HasBeenSet)
                     {
-                        conditions.Add($"{field.HasBeenSetAccessor(new Accessor(field, "item."))}");
+                        conditions.Add($"{field.HasBeenSetAccessor(getter: true, accessor: new Accessor(field, "item."))}");
                     }
                     if (this.TranslationMaskParameter)
                     {
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                     args.Add("string name");
-                    args.Add($"ErrorMaskBuilder errorMask");
-                    args.Add($"{nameof(TranslationCrystal)} translationMask");
+                    args.Add($"ErrorMaskBuilder? errorMask");
+                    args.Add($"{nameof(TranslationCrystal)}? translationMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -300,8 +300,8 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                 args.Add($"XElement {XmlTranslationModule.XElementLine.GetParameterName(obj)}");
                 args.Add("string name");
-                args.Add($"ErrorMaskBuilder errorMask");
-                args.Add($"{nameof(TranslationCrystal)} translationMask");
+                args.Add($"ErrorMaskBuilder? errorMask");
+                args.Add($"{nameof(TranslationCrystal)}? translationMask");
             }
             using (new BraceWrapper(fg))
             {

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Mod = await OblivionMod.CreateFromBinary(
                 DataPath,
                 ModKey);
-            await Mod.WriteToXmlFolder(XmlFolder, doMasks: false);
+            //await Mod.WriteToXmlFolder(XmlFolder, doMasks: false);
         }
 
         [GlobalCleanup]
@@ -52,20 +52,20 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             TempFolder.Dispose();
         }
 
-        [Benchmark]
-        public Task CreateFromXmlFolder()
-        {
-            return OblivionMod.CreateFromXmlFolder(
-                XmlFolder,
-                ModKey);
-        }
+        //[Benchmark]
+        //public Task CreateFromXmlFolder()
+        //{
+        //    return OblivionMod.CreateFromXmlFolder(
+        //        XmlFolder,
+        //        ModKey);
+        //}
 
-        [Benchmark]
-        public async Task WriteXmlFolderExisting()
-        {
-            await Mod.WriteToXmlFolder(
-                XmlFolder);
-        }
+        //[Benchmark]
+        //public async Task WriteXmlFolderExisting()
+        //{
+        //    await Mod.WriteToXmlFolder(
+        //        XmlFolder);
+        //}
     }
 
     [MemoryDiagnoser]
@@ -116,11 +116,11 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             OneTimeXmlFolder.DeleteContainedFiles(true);
         }
 
-        [Benchmark]
-        public async Task WriteXmlFolder()
-        {
-            await Mod.WriteToXmlFolder(
-                OneTimeXmlFolder);
-        }
+        //[Benchmark]
+        //public async Task WriteXmlFolder()
+        //{
+        //    await Mod.WriteToXmlFolder(
+        //        OneTimeXmlFolder);
+        //}
     }
 }

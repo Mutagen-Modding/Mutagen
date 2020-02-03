@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Folder
         where T : ILoquiObjectGetter
     {
         public delegate Task<T> CREATE_FUNC(
-            XElement node,
+            XElement? node,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask);
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Folder
                 return async (node, path, errorMask, translMask) =>
                 {
                     if (LoquiXmlTranslation<T>.Instance.Parse(
-                        node,
+                        node!,
                         out var item,
                         errorMask: errorMask,
                         translationMask: translMask))

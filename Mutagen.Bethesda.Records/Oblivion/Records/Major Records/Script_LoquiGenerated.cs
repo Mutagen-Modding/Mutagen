@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -61,7 +62,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             ScriptMixIn.ToString(
                 item: this,
@@ -74,15 +75,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IScriptGetter rhs)) return false;
-            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Script obj)
         {
-            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()).Equals(this, obj);
+            return ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptCommon)((IScriptGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptCommon)((IScriptGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -91,9 +92,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => ScriptXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ScriptXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -106,11 +107,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Script CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Script_TranslationMask translationMask = null)
+            Script_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -120,38 +119,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script CreateFromXml(
             XElement node,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Script_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Script CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Script() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Script();
-            ((ScriptSetterCommon)((IScriptGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((ScriptSetterCommon)((IScriptGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -160,12 +146,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Script_TranslationMask translationMask = null)
+            Script_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -173,12 +157,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script CreateFromXml(
             string path,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Script_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -186,13 +168,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Script_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -200,12 +180,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Script_TranslationMask translationMask = null)
+            Script_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -213,12 +191,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script CreateFromXml(
             Stream stream,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Script_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -226,13 +202,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Script_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -241,17 +215,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Script_FieldIndex)index)
-            {
-                case Script_FieldIndex.Fields:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Script_Registration.TRIGGERING_RECORD_TYPE;
@@ -276,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ScriptBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -299,10 +262,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Script CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Script();
-            ((ScriptSetterCommon)((IScriptGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((ScriptSetterCommon)((IScriptGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -320,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((ScriptSetterCommon)((IScriptGetter)this).CommonSetterInstance()).Clear(this);
+            ((ScriptSetterCommon)((IScriptGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Script GetNew()
@@ -355,9 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        #region Fields
         IScriptFieldsGetter Fields { get; }
-        #endregion
 
     }
 
@@ -368,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IScriptInternal item)
         {
-            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Script_Mask<bool> GetEqualsMask(
@@ -376,7 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetEqualsMask(
+            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -384,10 +345,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IScriptGetter item,
-            string name = null,
-            Script_Mask<bool> printMask = null)
+            string? name = null,
+            Script_Mask<bool>? printMask = null)
         {
-            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()).ToString(
+            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -396,10 +357,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IScriptGetter item,
             FileGeneration fg,
-            string name = null,
-            Script_Mask<bool> printMask = null)
+            string? name = null,
+            Script_Mask<bool>? printMask = null)
         {
-            ((ScriptCommon)((IScriptGetter)item).CommonInstance()).ToString(
+            ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -410,15 +371,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptGetter item,
             Script_Mask<bool?> checkMask)
         {
-            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()).HasBeenSet(
+            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Script_Mask<bool> GetHasBeenSetMask(this IScriptGetter item)
         {
-            var ret = new Script_Mask<bool>();
-            ((ScriptCommon)((IScriptGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Script_Mask<bool>(false);
+            ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -428,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptGetter item,
             IScriptGetter rhs)
         {
-            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()).Equals(
+            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -436,23 +397,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IScriptInternal lhs,
             IScriptGetter rhs,
-            Script_TranslationMask copyMask)
-        {
-            ((ScriptSetterTranslationCommon)((IScriptGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IScriptInternal lhs,
-            IScriptGetter rhs,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask copyMask = null)
+            Script_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptSetterTranslationCommon)((IScriptGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ScriptSetterTranslationCommon)((IScriptGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -463,10 +412,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IScriptInternal lhs,
             IScriptGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((ScriptSetterTranslationCommon)((IScriptGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ScriptSetterTranslationCommon)((IScriptGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -475,9 +424,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script DeepCopy(
             this IScriptGetter item,
-            Script_TranslationMask copyMask = null)
+            Script_TranslationMask? copyMask = null)
         {
-            return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -485,9 +434,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script DeepCopy(
             this IScriptGetter item,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask copyMask = null)
+            Script_TranslationMask? copyMask = null)
         {
-            return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -495,10 +444,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script DeepCopy(
             this IScriptGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -509,12 +458,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Script_TranslationMask translationMask = null)
+            Script_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -525,29 +472,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternal item,
             XElement node,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Script_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IScriptInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -556,13 +499,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Script_TranslationMask translationMask = null)
+            Script_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -571,13 +512,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternal item,
             string path,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Script_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -586,14 +525,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Script_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -602,13 +539,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Script_TranslationMask translationMask = null)
+            Script_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -617,13 +552,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternal item,
             Stream stream,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Script_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -632,14 +565,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Script_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Script_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -665,9 +596,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -721,11 +652,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IScriptGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IScript);
 
-        public static readonly Type InternalSetterType = typeof(IScriptInternal);
+        public static readonly Type? InternalSetterType = typeof(IScriptInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Script";
 
@@ -735,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -850,14 +781,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -899,8 +830,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -937,9 +868,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IScriptInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -987,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1016,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IScriptInternal>(
                 record: item,
@@ -1040,8 +970,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Script_Mask<bool>();
-            ((ScriptCommon)((IScriptGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Script_Mask<bool>(false);
+            ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1062,8 +992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IScriptGetter item,
-            string name = null,
-            Script_Mask<bool> printMask = null)
+            string? name = null,
+            Script_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1077,8 +1007,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IScriptGetter item,
             FileGeneration fg,
-            string name = null,
-            Script_Mask<bool> printMask = null)
+            string? name = null,
+            Script_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1102,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IScriptGetter item,
             FileGeneration fg,
-            Script_Mask<bool> printMask = null)
+            Script_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1127,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter item,
             Script_Mask<bool> mask)
         {
-            mask.Fields = new MaskItem<bool, ScriptFields_Mask<bool>>(true, item.Fields.GetHasBeenSetMask());
+            mask.Fields = new MaskItem<bool, ScriptFields_Mask<bool>?>(true, item.Fields?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1171,8 +1101,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IScriptGetter lhs,
-            IScriptGetter rhs)
+            IScriptGetter? lhs,
+            IScriptGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1182,20 +1112,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IScriptGetter)lhs,
+                lhs: (IScriptGetter?)lhs,
                 rhs: rhs as IScriptGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IScriptGetter)lhs,
+                lhs: (IScriptGetter?)lhs,
                 rhs: rhs as IScriptGetter);
         }
         
@@ -1242,9 +1172,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Script(getNextFormKey());
             ret.DeepCopyFieldsFrom((Script)item);
@@ -1264,8 +1194,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IScriptInternal item,
             IScriptGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1277,8 +1207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IScript item,
             IScriptGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1310,8 +1240,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IScriptInternal)item,
@@ -1323,8 +1253,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IScript)item,
@@ -1336,8 +1266,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IScriptInternal)item,
@@ -1349,8 +1279,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IScript)item,
@@ -1363,9 +1293,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Script DeepCopy(
             IScriptGetter item,
-            Script_TranslationMask copyMask = null)
+            Script_TranslationMask? copyMask = null)
         {
-            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetNew();
+            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1375,9 +1305,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Script DeepCopy(
             IScriptGetter item,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask copyMask = null)
+            Script_TranslationMask? copyMask = null)
         {
-            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetNew();
+            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1387,10 +1317,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Script DeepCopy(
             IScriptGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetNew();
+            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1439,8 +1369,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IScriptGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
@@ -1463,9 +1393,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IScriptGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Script");
             node.Add(elem);
@@ -1483,9 +1413,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IScriptGetter)item,
@@ -1498,9 +1428,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IScriptGetter)item,
@@ -1513,9 +1443,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IScriptGetter)item,
@@ -1534,8 +1464,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IScriptInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1560,8 +1490,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1588,8 +1518,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptGetter item,
             XElement node,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            string name = null)
+            Script_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1605,8 +1535,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptGetter item,
             string path,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            string name = null)
+            Script_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1622,8 +1552,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptGetter item,
             Stream stream,
             out Script_ErrorMask errorMask,
-            Script_TranslationMask translationMask = null,
-            string name = null)
+            Script_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1645,16 +1575,17 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Script_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Script_Mask<T>>
+    public class Script_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Script_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Script_Mask()
-        {
-        }
-
         public Script_Mask(T initialValue)
+        : base(initialValue)
         {
-            this.Fields = new MaskItem<T, ScriptFields_Mask<T>>(initialValue, new ScriptFields_Mask<T>(initialValue));
+            this.Fields = new MaskItem<T, ScriptFields_Mask<T>?>(initialValue, new ScriptFields_Mask<T>(initialValue));
         }
 
         public Script_Mask(
@@ -1664,18 +1595,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T EditorID,
             T OblivionMajorRecordFlags,
             T Fields)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
-            this.Fields = new MaskItem<T, ScriptFields_Mask<T>>(Fields, new ScriptFields_Mask<T>(Fields));
+            this.Fields = new MaskItem<T, ScriptFields_Mask<T>?>(Fields, new ScriptFields_Mask<T>(Fields));
         }
+
+        #pragma warning disable CS8618
+        protected Script_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
-        public MaskItem<T, ScriptFields_Mask<T>> Fields { get; set; }
+        public MaskItem<T, ScriptFields_Mask<T>?>? Fields { get; set; }
         #endregion
 
         #region Equals
@@ -1726,10 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Script_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            if (this.Fields != null)
-            {
-                obj.Fields = new MaskItem<R, ScriptFields_Mask<R>>(eval(this.Fields.Overall), this.Fields.Specific?.Translate(eval));
-            }
+            obj.Fields = this.Fields == null ? null : new MaskItem<R, ScriptFields_Mask<R>?>(eval(this.Fields.Overall), this.Fields.Specific?.Translate(eval));
         }
         #endregion
 
@@ -1739,14 +1675,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Script_Mask<bool> printMask = null)
+        public string ToString(Script_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Script_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Script_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Script_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1766,11 +1702,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Script_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Script_ErrorMask>
     {
         #region Members
-        public MaskItem<Exception, ScriptFields_ErrorMask> Fields;
+        public MaskItem<Exception?, ScriptFields_ErrorMask?>? Fields;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Script_FieldIndex enu = (Script_FieldIndex)index;
             switch (enu)
@@ -1788,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Script_FieldIndex.Fields:
-                    this.Fields = new MaskItem<Exception, ScriptFields_ErrorMask>(ex, null);
+                    this.Fields = new MaskItem<Exception?, ScriptFields_ErrorMask?>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1802,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Script_FieldIndex.Fields:
-                    this.Fields = (MaskItem<Exception, ScriptFields_ErrorMask>)obj;
+                    this.Fields = (MaskItem<Exception?, ScriptFields_ErrorMask?>?)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -1854,13 +1790,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Script_ErrorMask Combine(Script_ErrorMask rhs)
+        public Script_ErrorMask Combine(Script_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Script_ErrorMask();
-            ret.Fields = new MaskItem<Exception, ScriptFields_ErrorMask>(this.Fields.Overall.Combine(rhs.Fields.Overall), ((IErrorMask<ScriptFields_ErrorMask>)this.Fields.Specific).Combine(rhs.Fields.Specific));
+            ret.Fields = new MaskItem<Exception?, ScriptFields_ErrorMask?>(ExceptionExt.Combine(this.Fields?.Overall, rhs.Fields?.Overall), (this.Fields?.Specific as IErrorMask<ScriptFields_ErrorMask>)?.Combine(rhs.Fields?.Specific));
             return ret;
         }
-        public static Script_ErrorMask Combine(Script_ErrorMask lhs, Script_ErrorMask rhs)
+        public static Script_ErrorMask? Combine(Script_ErrorMask? lhs, Script_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1870,7 +1807,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new Script_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Script_ErrorMask();
         }
         #endregion
@@ -1879,24 +1815,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Script_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
-        public MaskItem<bool, ScriptFields_TranslationMask> Fields;
+        public MaskItem<bool, ScriptFields_TranslationMask?> Fields;
         #endregion
 
         #region Ctors
-        public Script_TranslationMask()
-            : base()
-        {
-        }
-
         public Script_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
-            this.Fields = new MaskItem<bool, ScriptFields_TranslationMask>(defaultOn, null);
+            this.Fields = new MaskItem<bool, ScriptFields_TranslationMask?>(defaultOn, null);
         }
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Fields?.Overall ?? true, Fields?.Specific?.GetCrystal()));
@@ -1917,7 +1848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IScriptGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -1939,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IScriptGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1962,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IScriptGetter)item,
@@ -1975,7 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IScriptGetter)item,
@@ -1988,7 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IScriptGetter)item,
@@ -2042,9 +1973,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => ScriptXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ScriptXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2058,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ScriptBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2068,8 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Fields
-        private IScriptFieldsGetter _Fields;
-        public bool Fields_IsSet => true;
+        private IScriptFieldsGetter? _Fields;
         public IScriptFieldsGetter Fields => _Fields ?? new ScriptFields();
         #endregion
         partial void CustomCtor(
@@ -2089,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static ScriptBinaryOverlay ScriptFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new ScriptBinaryOverlay(
@@ -2117,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

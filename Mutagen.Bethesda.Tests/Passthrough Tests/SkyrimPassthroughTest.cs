@@ -45,14 +45,14 @@ namespace Mutagen.Bethesda.Tests
 
         protected override Processor ProcessorFactory() => new SkyrimProcessor();
 
-        protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
-        {
-            return await SkyrimMod.CreateFromXmlFolder(dir, this.ModKey);
-        }
+        //protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
+        //{
+        //    return await SkyrimMod.CreateFromXmlFolder(dir, this.ModKey);
+        //}
 
-        protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
-        {
-            return ((SkyrimMod)mod).WriteToXmlFolder(dir);
-        }
+        //protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
+        //{
+        //    return ((SkyrimMod)mod).WriteToXmlFolder(dir);
+        //}
     }
 }

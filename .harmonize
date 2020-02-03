@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>b51abbd790dc336f57636e0cec3c36ae8eb96016</Sha>
+         <Sha>3e4d7f6d7affbd660e20293e67d6a75ee656c84d</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-29-2020 21:12:25</CommitDate>
-         <Description>Removed DynamicData as a dependency</Description>
+         <CommitDate>02-02-2020 20:59:52</CommitDate>
+         <Description>Added nullable error</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3535dda44e7ecf475b872611c7f39eb1f087d6e2</Sha>
+         <Sha>665a862194de43c335507761a3523efd591ecbc0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-29-2020 22:03:15</CommitDate>
-         <Description>Library Updates</Description>
+         <CommitDate>02-02-2020 21:00:27</CommitDate>
+         <Description>Some work on nullable for generation content</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

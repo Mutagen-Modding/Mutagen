@@ -47,30 +47,12 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             ModKey item,
             RecordType header,
-            bool nullable,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             StringBinaryTranslation.Instance.Write(
                 writer,
                 item.ToString(),
                 header,
-                nullable,
-                binaryType);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItem<ModKey> item,
-            RecordType header,
-            bool nullable,
-            StringBinaryType binaryType = StringBinaryType.NullTerminate)
-        {
-            if (!item.HasBeenSet) return;
-            StringBinaryTranslation.Instance.Write(
-                writer,
-                item.Item.ToString(),
-                header,
-                nullable,
                 binaryType);
         }
     }

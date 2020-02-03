@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -51,91 +52,37 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        public bool Name_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Class_FieldIndex.Name];
-            set => _hasBeenSetTracker[(int)Class_FieldIndex.Name] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IClassGetter.Name_IsSet => Name_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Name;
-        public String Name
+        private String? _Name;
+        public String? Name
         {
             get => this._Name;
-            set => Name_Set(value);
+            set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IClassGetter.Name => this.Name;
-        public void Name_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Name = value;
-            _hasBeenSetTracker[(int)Class_FieldIndex.Name] = markSet;
-        }
-        public void Name_Unset()
-        {
-            this.Name_Set(default(String), false);
-        }
+        String? IClassGetter.Name => this.Name;
         #endregion
         #region Description
-        public bool Description_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Class_FieldIndex.Description];
-            set => _hasBeenSetTracker[(int)Class_FieldIndex.Description] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IClassGetter.Description_IsSet => Description_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Description;
-        public String Description
+        private String? _Description;
+        public String? Description
         {
             get => this._Description;
-            set => Description_Set(value);
+            set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IClassGetter.Description => this.Description;
-        public void Description_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Description = value;
-            _hasBeenSetTracker[(int)Class_FieldIndex.Description] = markSet;
-        }
-        public void Description_Unset()
-        {
-            this.Description_Set(default(String), false);
-        }
+        String? IClassGetter.Description => this.Description;
         #endregion
         #region Icon
-        public bool Icon_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Class_FieldIndex.Icon];
-            set => _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IClassGetter.Icon_IsSet => Icon_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Icon;
-        public String Icon
+        private String? _Icon;
+        public String? Icon
         {
             get => this._Icon;
-            set => Icon_Set(value);
+            set => this._Icon = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IClassGetter.Icon => this.Icon;
-        public void Icon_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Icon = value;
-            _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = markSet;
-        }
-        public void Icon_Unset()
-        {
-            this.Icon_Set(default(String), false);
-        }
+        String? IClassGetter.Icon => this.Icon;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -489,14 +436,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region DATADataTypeState
-        public Class.DATADataType DATADataTypeState { get; set; }
+        public Class.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             ClassMixIn.ToString(
                 item: this,
@@ -509,15 +456,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IClassGetter rhs)) return false;
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Class obj)
         {
-            return ((ClassCommon)((IClassGetter)this).CommonInstance()).Equals(this, obj);
+            return ((ClassCommon)((IClassGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((ClassCommon)((IClassGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -526,9 +473,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ClassXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -541,11 +488,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new Class CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Class_TranslationMask translationMask = null)
+            Class_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -555,38 +500,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static Class CreateFromXml(
             XElement node,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Class_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Class CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Class() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Class();
-            ((ClassSetterCommon)((IClassGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((ClassSetterCommon)((IClassGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -595,12 +527,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Class CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Class_TranslationMask translationMask = null)
+            Class_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -608,12 +538,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Class CreateFromXml(
             string path,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Class_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -621,13 +549,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Class CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Class_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -635,12 +561,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Class CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Class_TranslationMask translationMask = null)
+            Class_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -648,12 +572,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Class CreateFromXml(
             Stream stream,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Class_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -661,13 +583,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Class CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Class_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -676,48 +596,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Class_FieldIndex)index)
-            {
-                case Class_FieldIndex.Name:
-                case Class_FieldIndex.Description:
-                case Class_FieldIndex.Icon:
-                    return _hasBeenSetTracker[index];
-                case Class_FieldIndex.Unknown:
-                case Class_FieldIndex.Teaches:
-                case Class_FieldIndex.MaxTrainingLevel:
-                case Class_FieldIndex.OneHandedWeight:
-                case Class_FieldIndex.TwoHandedWeight:
-                case Class_FieldIndex.MarksmanWeight:
-                case Class_FieldIndex.BlockWeight:
-                case Class_FieldIndex.SmithingWeight:
-                case Class_FieldIndex.HeavyArmorWeight:
-                case Class_FieldIndex.LightArmorWeight:
-                case Class_FieldIndex.PickpocketWeight:
-                case Class_FieldIndex.LockpickingWeight:
-                case Class_FieldIndex.SneakWeight:
-                case Class_FieldIndex.AlchemyWeight:
-                case Class_FieldIndex.SpeechcraftWeight:
-                case Class_FieldIndex.AlterationWeight:
-                case Class_FieldIndex.ConjurationWeight:
-                case Class_FieldIndex.DestructionWeight:
-                case Class_FieldIndex.IllusionWeight:
-                case Class_FieldIndex.RestorationWeight:
-                case Class_FieldIndex.EnchantingWeight:
-                case Class_FieldIndex.BleedoutDefault:
-                case Class_FieldIndex.VoicePoints:
-                case Class_FieldIndex.HealthWeight:
-                case Class_FieldIndex.MagickaWeight:
-                case Class_FieldIndex.StaminaWeight:
-                case Class_FieldIndex.Unknown2:
-                case Class_FieldIndex.DATADataTypeState:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Class_Registration.TRIGGERING_RECORD_TYPE;
@@ -745,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ClassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -768,10 +646,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static Class CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Class();
-            ((ClassSetterCommon)((IClassGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((ClassSetterCommon)((IClassGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -789,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((ClassSetterCommon)((IClassGetter)this).CommonSetterInstance()).Clear(this);
+            ((ClassSetterCommon)((IClassGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Class GetNew()
@@ -806,77 +684,37 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IClassInternal>
     {
-        new String Name { get; set; }
-        new bool Name_IsSet { get; set; }
-        void Name_Set(String value, bool hasBeenSet = true);
-        void Name_Unset();
-
-        new String Description { get; set; }
-        new bool Description_IsSet { get; set; }
-        void Description_Set(String value, bool hasBeenSet = true);
-        void Description_Unset();
-
-        new String Icon { get; set; }
-        new bool Icon_IsSet { get; set; }
-        void Icon_Set(String value, bool hasBeenSet = true);
-        void Icon_Unset();
-
+        new String? Name { get; set; }
+        new String? Description { get; set; }
+        new String? Icon { get; set; }
         new Int32 Unknown { get; set; }
-
         new Skill Teaches { get; set; }
-
         new Byte MaxTrainingLevel { get; set; }
-
         new Byte OneHandedWeight { get; set; }
-
         new Byte TwoHandedWeight { get; set; }
-
         new Byte MarksmanWeight { get; set; }
-
         new Byte BlockWeight { get; set; }
-
         new Byte SmithingWeight { get; set; }
-
         new Byte HeavyArmorWeight { get; set; }
-
         new Byte LightArmorWeight { get; set; }
-
         new Byte PickpocketWeight { get; set; }
-
         new Byte LockpickingWeight { get; set; }
-
         new Byte SneakWeight { get; set; }
-
         new Byte AlchemyWeight { get; set; }
-
         new Byte SpeechcraftWeight { get; set; }
-
         new Byte AlterationWeight { get; set; }
-
         new Byte ConjurationWeight { get; set; }
-
         new Byte DestructionWeight { get; set; }
-
         new Byte IllusionWeight { get; set; }
-
         new Byte RestorationWeight { get; set; }
-
         new Byte EnchantingWeight { get; set; }
-
         new Single BleedoutDefault { get; set; }
-
         new UInt32 VoicePoints { get; set; }
-
         new Byte HealthWeight { get; set; }
-
         new Byte MagickaWeight { get; set; }
-
         new Byte StaminaWeight { get; set; }
-
         new Byte Unknown2 { get; set; }
-
         new Class.DATADataType DATADataTypeState { get; set; }
-
     }
 
     public partial interface IClassInternal :
@@ -892,133 +730,37 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        #region Name
-        String Name { get; }
-        bool Name_IsSet { get; }
-
-        #endregion
-        #region Description
-        String Description { get; }
-        bool Description_IsSet { get; }
-
-        #endregion
-        #region Icon
-        String Icon { get; }
-        bool Icon_IsSet { get; }
-
-        #endregion
-        #region Unknown
+        String? Name { get; }
+        String? Description { get; }
+        String? Icon { get; }
         Int32 Unknown { get; }
-
-        #endregion
-        #region Teaches
         Skill Teaches { get; }
-
-        #endregion
-        #region MaxTrainingLevel
         Byte MaxTrainingLevel { get; }
-
-        #endregion
-        #region OneHandedWeight
         Byte OneHandedWeight { get; }
-
-        #endregion
-        #region TwoHandedWeight
         Byte TwoHandedWeight { get; }
-
-        #endregion
-        #region MarksmanWeight
         Byte MarksmanWeight { get; }
-
-        #endregion
-        #region BlockWeight
         Byte BlockWeight { get; }
-
-        #endregion
-        #region SmithingWeight
         Byte SmithingWeight { get; }
-
-        #endregion
-        #region HeavyArmorWeight
         Byte HeavyArmorWeight { get; }
-
-        #endregion
-        #region LightArmorWeight
         Byte LightArmorWeight { get; }
-
-        #endregion
-        #region PickpocketWeight
         Byte PickpocketWeight { get; }
-
-        #endregion
-        #region LockpickingWeight
         Byte LockpickingWeight { get; }
-
-        #endregion
-        #region SneakWeight
         Byte SneakWeight { get; }
-
-        #endregion
-        #region AlchemyWeight
         Byte AlchemyWeight { get; }
-
-        #endregion
-        #region SpeechcraftWeight
         Byte SpeechcraftWeight { get; }
-
-        #endregion
-        #region AlterationWeight
         Byte AlterationWeight { get; }
-
-        #endregion
-        #region ConjurationWeight
         Byte ConjurationWeight { get; }
-
-        #endregion
-        #region DestructionWeight
         Byte DestructionWeight { get; }
-
-        #endregion
-        #region IllusionWeight
         Byte IllusionWeight { get; }
-
-        #endregion
-        #region RestorationWeight
         Byte RestorationWeight { get; }
-
-        #endregion
-        #region EnchantingWeight
         Byte EnchantingWeight { get; }
-
-        #endregion
-        #region BleedoutDefault
         Single BleedoutDefault { get; }
-
-        #endregion
-        #region VoicePoints
         UInt32 VoicePoints { get; }
-
-        #endregion
-        #region HealthWeight
         Byte HealthWeight { get; }
-
-        #endregion
-        #region MagickaWeight
         Byte MagickaWeight { get; }
-
-        #endregion
-        #region StaminaWeight
         Byte StaminaWeight { get; }
-
-        #endregion
-        #region Unknown2
         Byte Unknown2 { get; }
-
-        #endregion
-        #region DATADataTypeState
         Class.DATADataType DATADataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -1029,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IClassInternal item)
         {
-            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Class_Mask<bool> GetEqualsMask(
@@ -1037,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
             IClassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ClassCommon)((IClassGetter)item).CommonInstance()).GetEqualsMask(
+            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -1045,10 +787,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IClassGetter item,
-            string name = null,
-            Class_Mask<bool> printMask = null)
+            string? name = null,
+            Class_Mask<bool>? printMask = null)
         {
-            return ((ClassCommon)((IClassGetter)item).CommonInstance()).ToString(
+            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -1057,10 +799,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IClassGetter item,
             FileGeneration fg,
-            string name = null,
-            Class_Mask<bool> printMask = null)
+            string? name = null,
+            Class_Mask<bool>? printMask = null)
         {
-            ((ClassCommon)((IClassGetter)item).CommonInstance()).ToString(
+            ((ClassCommon)((IClassGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1071,15 +813,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassGetter item,
             Class_Mask<bool?> checkMask)
         {
-            return ((ClassCommon)((IClassGetter)item).CommonInstance()).HasBeenSet(
+            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Class_Mask<bool> GetHasBeenSetMask(this IClassGetter item)
         {
-            var ret = new Class_Mask<bool>();
-            ((ClassCommon)((IClassGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Class_Mask<bool>(false);
+            ((ClassCommon)((IClassGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -1089,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassGetter item,
             IClassGetter rhs)
         {
-            return ((ClassCommon)((IClassGetter)item).CommonInstance()).Equals(
+            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -1097,23 +839,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IClassInternal lhs,
             IClassGetter rhs,
-            Class_TranslationMask copyMask)
-        {
-            ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IClassInternal lhs,
-            IClassGetter rhs,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask copyMask = null)
+            Class_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -1124,10 +854,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IClassInternal lhs,
             IClassGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1136,9 +866,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Class DeepCopy(
             this IClassGetter item,
-            Class_TranslationMask copyMask = null)
+            Class_TranslationMask? copyMask = null)
         {
-            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -1146,9 +876,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static Class DeepCopy(
             this IClassGetter item,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask copyMask = null)
+            Class_TranslationMask? copyMask = null)
         {
-            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -1156,10 +886,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Class DeepCopy(
             this IClassGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1170,12 +900,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IClassInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Class_TranslationMask translationMask = null)
+            Class_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -1186,29 +914,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassInternal item,
             XElement node,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Class_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IClassInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1217,13 +941,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IClassInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Class_TranslationMask translationMask = null)
+            Class_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1232,13 +954,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassInternal item,
             string path,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Class_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1247,14 +967,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IClassInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Class_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1263,13 +981,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IClassInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Class_TranslationMask translationMask = null)
+            Class_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -1278,13 +994,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassInternal item,
             Stream stream,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Class_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -1293,14 +1007,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IClassInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Class_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Class_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -1326,9 +1038,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -1414,11 +1126,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IClassGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IClass);
 
-        public static readonly Type InternalSetterType = typeof(IClassInternal);
+        public static readonly Type? InternalSetterType = typeof(IClassInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.Class";
 
@@ -1428,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1875,14 +1587,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1906,37 +1618,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IClassInternal item)
         {
             ClearPartial();
-            item.Name_Unset();
-            item.Description_Unset();
-            item.Icon_Unset();
-            item.Unknown = default(Int32);
-            item.Teaches = default(Skill);
-            item.MaxTrainingLevel = default(Byte);
-            item.OneHandedWeight = default(Byte);
-            item.TwoHandedWeight = default(Byte);
-            item.MarksmanWeight = default(Byte);
-            item.BlockWeight = default(Byte);
-            item.SmithingWeight = default(Byte);
-            item.HeavyArmorWeight = default(Byte);
-            item.LightArmorWeight = default(Byte);
-            item.PickpocketWeight = default(Byte);
-            item.LockpickingWeight = default(Byte);
-            item.SneakWeight = default(Byte);
-            item.AlchemyWeight = default(Byte);
-            item.SpeechcraftWeight = default(Byte);
-            item.AlterationWeight = default(Byte);
-            item.ConjurationWeight = default(Byte);
-            item.DestructionWeight = default(Byte);
-            item.IllusionWeight = default(Byte);
-            item.RestorationWeight = default(Byte);
-            item.EnchantingWeight = default(Byte);
-            item.BleedoutDefault = default(Single);
-            item.VoicePoints = default(UInt32);
-            item.HealthWeight = default(Byte);
-            item.MagickaWeight = default(Byte);
-            item.StaminaWeight = default(Byte);
-            item.Unknown2 = default(Byte);
-            item.DATADataTypeState = default(Class.DATADataType);
+            item.Name = default;
+            item.Description = default;
+            item.Icon = default;
+            item.Unknown = default;
+            item.Teaches = default;
+            item.MaxTrainingLevel = default;
+            item.OneHandedWeight = default;
+            item.TwoHandedWeight = default;
+            item.MarksmanWeight = default;
+            item.BlockWeight = default;
+            item.SmithingWeight = default;
+            item.HeavyArmorWeight = default;
+            item.LightArmorWeight = default;
+            item.PickpocketWeight = default;
+            item.LockpickingWeight = default;
+            item.SneakWeight = default;
+            item.AlchemyWeight = default;
+            item.SpeechcraftWeight = default;
+            item.AlterationWeight = default;
+            item.ConjurationWeight = default;
+            item.DestructionWeight = default;
+            item.IllusionWeight = default;
+            item.RestorationWeight = default;
+            item.EnchantingWeight = default;
+            item.BleedoutDefault = default;
+            item.VoicePoints = default;
+            item.HealthWeight = default;
+            item.MagickaWeight = default;
+            item.StaminaWeight = default;
+            item.Unknown2 = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1955,8 +1667,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1977,9 +1689,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             IClassInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -2027,7 +1738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2108,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IClassInternal>(
                 record: item,
@@ -2132,8 +1843,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Class_Mask<bool>();
-            ((ClassCommon)((IClassGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Class_Mask<bool>(false);
+            ((ClassCommon)((IClassGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -2148,9 +1859,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Description = item.Description_IsSet == rhs.Description_IsSet && string.Equals(item.Description, rhs.Description);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.MaxTrainingLevel = item.MaxTrainingLevel == rhs.MaxTrainingLevel;
@@ -2184,8 +1895,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IClassGetter item,
-            string name = null,
-            Class_Mask<bool> printMask = null)
+            string? name = null,
+            Class_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2199,8 +1910,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IClassGetter item,
             FileGeneration fg,
-            string name = null,
-            Class_Mask<bool> printMask = null)
+            string? name = null,
+            Class_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2224,7 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IClassGetter item,
             FileGeneration fg,
-            Class_Mask<bool> printMask = null)
+            Class_Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -2360,9 +2071,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter item,
             Class_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_IsSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2372,9 +2083,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter item,
             Class_Mask<bool> mask)
         {
-            mask.Name = item.Name_IsSet;
-            mask.Description = item.Description_IsSet;
-            mask.Icon = item.Icon_IsSet;
+            mask.Name = (item.Name != null);
+            mask.Description = (item.Description != null);
+            mask.Icon = (item.Icon != null);
             mask.Unknown = true;
             mask.Teaches = true;
             mask.MaxTrainingLevel = true;
@@ -2450,27 +2161,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IClassGetter lhs,
-            IClassGetter rhs)
+            IClassGetter? lhs,
+            IClassGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Description_IsSet != rhs.Description_IsSet) return false;
-            if (lhs.Description_IsSet)
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.Teaches != rhs.Teaches) return false;
             if (lhs.MaxTrainingLevel != rhs.MaxTrainingLevel) return false;
@@ -2503,37 +2202,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            ISkyrimMajorRecordGetter lhs,
-            ISkyrimMajorRecordGetter rhs)
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IClassGetter)lhs,
+                lhs: (IClassGetter?)lhs,
                 rhs: rhs as IClassGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IClassGetter)lhs,
+                lhs: (IClassGetter?)lhs,
                 rhs: rhs as IClassGetter);
         }
         
         public virtual int GetHashCode(IClassGetter item)
         {
             int ret = 0;
-            if (item.Name_IsSet)
+            if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
             }
-            if (item.Description_IsSet)
+            if (item.Description.TryGet(out var Descriptionitem))
             {
-                ret = HashHelper.GetHashCode(item.Description).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Descriptionitem).CombineHashCode(ret);
             }
-            if (item.Icon_IsSet)
+            if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Teaches).CombineHashCode(ret);
@@ -2595,9 +2294,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Class obj, Class rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Class(getNextFormKey());
             ret.DeepCopyFieldsFrom((Class)item);
@@ -2617,8 +2316,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IClassInternal item,
             IClassGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -2630,8 +2329,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IClass item,
             IClassGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -2640,75 +2339,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
-                errorMask?.PushIndex((int)Class_FieldIndex.Name);
-                try
-                {
-                    if (rhs.Name_IsSet)
-                    {
-                        item.Name = rhs.Name;
-                    }
-                    else
-                    {
-                        item.Name_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Name = rhs.Name;
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
-                errorMask?.PushIndex((int)Class_FieldIndex.Description);
-                try
-                {
-                    if (rhs.Description_IsSet)
-                    {
-                        item.Description = rhs.Description;
-                    }
-                    else
-                    {
-                        item.Description_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Description = rhs.Description;
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
-                errorMask?.PushIndex((int)Class_FieldIndex.Icon);
-                try
-                {
-                    if (rhs.Icon_IsSet)
-                    {
-                        item.Icon = rhs.Icon;
-                    }
-                    else
-                    {
-                        item.Icon_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Icon = rhs.Icon;
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
@@ -2827,8 +2466,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IClassInternal)item,
@@ -2840,8 +2479,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IClass)item,
@@ -2853,8 +2492,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IClassInternal)item,
@@ -2866,8 +2505,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IClass)item,
@@ -2880,9 +2519,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Class DeepCopy(
             IClassGetter item,
-            Class_TranslationMask copyMask = null)
+            Class_TranslationMask? copyMask = null)
         {
-            Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()).GetNew();
+            Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2892,9 +2531,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Class DeepCopy(
             IClassGetter item,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask copyMask = null)
+            Class_TranslationMask? copyMask = null)
         {
-            Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()).GetNew();
+            Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2904,10 +2543,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Class DeepCopy(
             IClassGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()).GetNew();
+            Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -2956,15 +2595,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IClassGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Name_IsSet
+            if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -2974,7 +2613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Class_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Description_IsSet
+            if ((item.Description != null)
                 && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -2984,7 +2623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Class_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if (item.Icon_IsSet
+            if ((item.Icon != null)
                 && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -3254,9 +2893,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IClassGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Class");
             node.Add(elem);
@@ -3274,9 +2913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IClassGetter)item,
@@ -3289,9 +2928,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IClassGetter)item,
@@ -3304,9 +2943,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IClassGetter)item,
@@ -3325,8 +2964,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IClassInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -3351,8 +2990,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -3938,8 +3577,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassGetter item,
             XElement node,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            string name = null)
+            Class_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ClassXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -3955,8 +3594,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassGetter item,
             string path,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            string name = null)
+            Class_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -3972,8 +3611,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassGetter item,
             Stream stream,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask translationMask = null,
-            string name = null)
+            Class_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -3995,14 +3634,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class Class_Mask<T> : SkyrimMajorRecord_Mask<T>, IMask<T>, IEquatable<Class_Mask<T>>
+    public class Class_Mask<T> :
+        SkyrimMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Class_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Class_Mask()
-        {
-        }
-
         public Class_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Name = initialValue;
             this.Description = initialValue;
@@ -4076,14 +3716,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T StaminaWeight,
             T Unknown2,
             T DATADataTypeState)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+            FormVersion: FormVersion,
+            Version2: Version2)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
-            this.FormVersion = FormVersion;
-            this.Version2 = Version2;
             this.Name = Name;
             this.Description = Description;
             this.Icon = Icon;
@@ -4116,6 +3757,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Unknown2 = Unknown2;
             this.DATADataTypeState = DATADataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected Class_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -4326,14 +3974,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Class_Mask<bool> printMask = null)
+        public string ToString(Class_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Class_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Class_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Class_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -4473,41 +4121,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class Class_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<Class_ErrorMask>
     {
         #region Members
-        public Exception Name;
-        public Exception Description;
-        public Exception Icon;
-        public Exception Unknown;
-        public Exception Teaches;
-        public Exception MaxTrainingLevel;
-        public Exception OneHandedWeight;
-        public Exception TwoHandedWeight;
-        public Exception MarksmanWeight;
-        public Exception BlockWeight;
-        public Exception SmithingWeight;
-        public Exception HeavyArmorWeight;
-        public Exception LightArmorWeight;
-        public Exception PickpocketWeight;
-        public Exception LockpickingWeight;
-        public Exception SneakWeight;
-        public Exception AlchemyWeight;
-        public Exception SpeechcraftWeight;
-        public Exception AlterationWeight;
-        public Exception ConjurationWeight;
-        public Exception DestructionWeight;
-        public Exception IllusionWeight;
-        public Exception RestorationWeight;
-        public Exception EnchantingWeight;
-        public Exception BleedoutDefault;
-        public Exception VoicePoints;
-        public Exception HealthWeight;
-        public Exception MagickaWeight;
-        public Exception StaminaWeight;
-        public Exception Unknown2;
-        public Exception DATADataTypeState;
+        public Exception? Name;
+        public Exception? Description;
+        public Exception? Icon;
+        public Exception? Unknown;
+        public Exception? Teaches;
+        public Exception? MaxTrainingLevel;
+        public Exception? OneHandedWeight;
+        public Exception? TwoHandedWeight;
+        public Exception? MarksmanWeight;
+        public Exception? BlockWeight;
+        public Exception? SmithingWeight;
+        public Exception? HeavyArmorWeight;
+        public Exception? LightArmorWeight;
+        public Exception? PickpocketWeight;
+        public Exception? LockpickingWeight;
+        public Exception? SneakWeight;
+        public Exception? AlchemyWeight;
+        public Exception? SpeechcraftWeight;
+        public Exception? AlterationWeight;
+        public Exception? ConjurationWeight;
+        public Exception? DestructionWeight;
+        public Exception? IllusionWeight;
+        public Exception? RestorationWeight;
+        public Exception? EnchantingWeight;
+        public Exception? BleedoutDefault;
+        public Exception? VoicePoints;
+        public Exception? HealthWeight;
+        public Exception? MagickaWeight;
+        public Exception? StaminaWeight;
+        public Exception? Unknown2;
+        public Exception? DATADataTypeState;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
@@ -4891,8 +4539,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public Class_ErrorMask Combine(Class_ErrorMask rhs)
+        public Class_ErrorMask Combine(Class_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Class_ErrorMask();
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Description = this.Description.Combine(rhs.Description);
@@ -4927,7 +4576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
-        public static Class_ErrorMask Combine(Class_ErrorMask lhs, Class_ErrorMask rhs)
+        public static Class_ErrorMask? Combine(Class_ErrorMask? lhs, Class_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -4937,7 +4586,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new Class_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Class_ErrorMask();
         }
         #endregion
@@ -4980,11 +4628,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Ctors
-        public Class_TranslationMask()
-            : base()
-        {
-        }
-
         public Class_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -5023,7 +4666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Name, null));
@@ -5085,7 +4728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_RecordTypes(
             IClassGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -5093,33 +4736,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Description_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Description,
-                    header: recordTypeConverter.ConvertToCustom(Class_Registration.DESC_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Icon_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Icon,
-                    header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(Class_Registration.DESC_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Icon,
+                header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
             if (item.DATADataTypeState.HasFlag(Class.DATADataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
@@ -5164,7 +4795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IClassGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -5187,7 +4818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IClassGetter)item,
@@ -5200,7 +4831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IClassGetter)item,
@@ -5213,7 +4844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IClassGetter)item,
@@ -5266,9 +4897,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((ClassXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -5282,7 +4913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((ClassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -5293,153 +4924,150 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public bool Name_IsSet => _NameLocation.HasValue;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public bool Description_IsSet => _DescriptionLocation.HasValue;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Icon
         private int? _IconLocation;
-        public bool Icon_IsSet => _IconLocation.HasValue;
-        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         private int? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DATALocation.Value + 0x0;
+        private int _UnknownLocation => _DATALocation!.Value + 0x0;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region Teaches
-        private int _TeachesLocation => _DATALocation.Value + 0x4;
+        private int _TeachesLocation => _DATALocation!.Value + 0x4;
         private bool _Teaches_IsSet => _DATALocation.HasValue;
         public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
         #endregion
         #region MaxTrainingLevel
-        private int _MaxTrainingLevelLocation => _DATALocation.Value + 0x5;
+        private int _MaxTrainingLevelLocation => _DATALocation!.Value + 0x5;
         private bool _MaxTrainingLevel_IsSet => _DATALocation.HasValue;
         public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _data.Span[_MaxTrainingLevelLocation] : default;
         #endregion
         #region OneHandedWeight
-        private int _OneHandedWeightLocation => _DATALocation.Value + 0x6;
+        private int _OneHandedWeightLocation => _DATALocation!.Value + 0x6;
         private bool _OneHandedWeight_IsSet => _DATALocation.HasValue;
         public Byte OneHandedWeight => _OneHandedWeight_IsSet ? _data.Span[_OneHandedWeightLocation] : default;
         #endregion
         #region TwoHandedWeight
-        private int _TwoHandedWeightLocation => _DATALocation.Value + 0x7;
+        private int _TwoHandedWeightLocation => _DATALocation!.Value + 0x7;
         private bool _TwoHandedWeight_IsSet => _DATALocation.HasValue;
         public Byte TwoHandedWeight => _TwoHandedWeight_IsSet ? _data.Span[_TwoHandedWeightLocation] : default;
         #endregion
         #region MarksmanWeight
-        private int _MarksmanWeightLocation => _DATALocation.Value + 0x8;
+        private int _MarksmanWeightLocation => _DATALocation!.Value + 0x8;
         private bool _MarksmanWeight_IsSet => _DATALocation.HasValue;
         public Byte MarksmanWeight => _MarksmanWeight_IsSet ? _data.Span[_MarksmanWeightLocation] : default;
         #endregion
         #region BlockWeight
-        private int _BlockWeightLocation => _DATALocation.Value + 0x9;
+        private int _BlockWeightLocation => _DATALocation!.Value + 0x9;
         private bool _BlockWeight_IsSet => _DATALocation.HasValue;
         public Byte BlockWeight => _BlockWeight_IsSet ? _data.Span[_BlockWeightLocation] : default;
         #endregion
         #region SmithingWeight
-        private int _SmithingWeightLocation => _DATALocation.Value + 0xA;
+        private int _SmithingWeightLocation => _DATALocation!.Value + 0xA;
         private bool _SmithingWeight_IsSet => _DATALocation.HasValue;
         public Byte SmithingWeight => _SmithingWeight_IsSet ? _data.Span[_SmithingWeightLocation] : default;
         #endregion
         #region HeavyArmorWeight
-        private int _HeavyArmorWeightLocation => _DATALocation.Value + 0xB;
+        private int _HeavyArmorWeightLocation => _DATALocation!.Value + 0xB;
         private bool _HeavyArmorWeight_IsSet => _DATALocation.HasValue;
         public Byte HeavyArmorWeight => _HeavyArmorWeight_IsSet ? _data.Span[_HeavyArmorWeightLocation] : default;
         #endregion
         #region LightArmorWeight
-        private int _LightArmorWeightLocation => _DATALocation.Value + 0xC;
+        private int _LightArmorWeightLocation => _DATALocation!.Value + 0xC;
         private bool _LightArmorWeight_IsSet => _DATALocation.HasValue;
         public Byte LightArmorWeight => _LightArmorWeight_IsSet ? _data.Span[_LightArmorWeightLocation] : default;
         #endregion
         #region PickpocketWeight
-        private int _PickpocketWeightLocation => _DATALocation.Value + 0xD;
+        private int _PickpocketWeightLocation => _DATALocation!.Value + 0xD;
         private bool _PickpocketWeight_IsSet => _DATALocation.HasValue;
         public Byte PickpocketWeight => _PickpocketWeight_IsSet ? _data.Span[_PickpocketWeightLocation] : default;
         #endregion
         #region LockpickingWeight
-        private int _LockpickingWeightLocation => _DATALocation.Value + 0xE;
+        private int _LockpickingWeightLocation => _DATALocation!.Value + 0xE;
         private bool _LockpickingWeight_IsSet => _DATALocation.HasValue;
         public Byte LockpickingWeight => _LockpickingWeight_IsSet ? _data.Span[_LockpickingWeightLocation] : default;
         #endregion
         #region SneakWeight
-        private int _SneakWeightLocation => _DATALocation.Value + 0xF;
+        private int _SneakWeightLocation => _DATALocation!.Value + 0xF;
         private bool _SneakWeight_IsSet => _DATALocation.HasValue;
         public Byte SneakWeight => _SneakWeight_IsSet ? _data.Span[_SneakWeightLocation] : default;
         #endregion
         #region AlchemyWeight
-        private int _AlchemyWeightLocation => _DATALocation.Value + 0x10;
+        private int _AlchemyWeightLocation => _DATALocation!.Value + 0x10;
         private bool _AlchemyWeight_IsSet => _DATALocation.HasValue;
         public Byte AlchemyWeight => _AlchemyWeight_IsSet ? _data.Span[_AlchemyWeightLocation] : default;
         #endregion
         #region SpeechcraftWeight
-        private int _SpeechcraftWeightLocation => _DATALocation.Value + 0x11;
+        private int _SpeechcraftWeightLocation => _DATALocation!.Value + 0x11;
         private bool _SpeechcraftWeight_IsSet => _DATALocation.HasValue;
         public Byte SpeechcraftWeight => _SpeechcraftWeight_IsSet ? _data.Span[_SpeechcraftWeightLocation] : default;
         #endregion
         #region AlterationWeight
-        private int _AlterationWeightLocation => _DATALocation.Value + 0x12;
+        private int _AlterationWeightLocation => _DATALocation!.Value + 0x12;
         private bool _AlterationWeight_IsSet => _DATALocation.HasValue;
         public Byte AlterationWeight => _AlterationWeight_IsSet ? _data.Span[_AlterationWeightLocation] : default;
         #endregion
         #region ConjurationWeight
-        private int _ConjurationWeightLocation => _DATALocation.Value + 0x13;
+        private int _ConjurationWeightLocation => _DATALocation!.Value + 0x13;
         private bool _ConjurationWeight_IsSet => _DATALocation.HasValue;
         public Byte ConjurationWeight => _ConjurationWeight_IsSet ? _data.Span[_ConjurationWeightLocation] : default;
         #endregion
         #region DestructionWeight
-        private int _DestructionWeightLocation => _DATALocation.Value + 0x14;
+        private int _DestructionWeightLocation => _DATALocation!.Value + 0x14;
         private bool _DestructionWeight_IsSet => _DATALocation.HasValue;
         public Byte DestructionWeight => _DestructionWeight_IsSet ? _data.Span[_DestructionWeightLocation] : default;
         #endregion
         #region IllusionWeight
-        private int _IllusionWeightLocation => _DATALocation.Value + 0x15;
+        private int _IllusionWeightLocation => _DATALocation!.Value + 0x15;
         private bool _IllusionWeight_IsSet => _DATALocation.HasValue;
         public Byte IllusionWeight => _IllusionWeight_IsSet ? _data.Span[_IllusionWeightLocation] : default;
         #endregion
         #region RestorationWeight
-        private int _RestorationWeightLocation => _DATALocation.Value + 0x16;
+        private int _RestorationWeightLocation => _DATALocation!.Value + 0x16;
         private bool _RestorationWeight_IsSet => _DATALocation.HasValue;
         public Byte RestorationWeight => _RestorationWeight_IsSet ? _data.Span[_RestorationWeightLocation] : default;
         #endregion
         #region EnchantingWeight
-        private int _EnchantingWeightLocation => _DATALocation.Value + 0x17;
+        private int _EnchantingWeightLocation => _DATALocation!.Value + 0x17;
         private bool _EnchantingWeight_IsSet => _DATALocation.HasValue;
         public Byte EnchantingWeight => _EnchantingWeight_IsSet ? _data.Span[_EnchantingWeightLocation] : default;
         #endregion
         #region BleedoutDefault
-        private int _BleedoutDefaultLocation => _DATALocation.Value + 0x18;
+        private int _BleedoutDefaultLocation => _DATALocation!.Value + 0x18;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
         public Single BleedoutDefault => _BleedoutDefault_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BleedoutDefaultLocation, 4)) : default;
         #endregion
         #region VoicePoints
-        private int _VoicePointsLocation => _DATALocation.Value + 0x1C;
+        private int _VoicePointsLocation => _DATALocation!.Value + 0x1C;
         private bool _VoicePoints_IsSet => _DATALocation.HasValue;
         public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_VoicePointsLocation, 4)) : default;
         #endregion
         #region HealthWeight
-        private int _HealthWeightLocation => _DATALocation.Value + 0x20;
+        private int _HealthWeightLocation => _DATALocation!.Value + 0x20;
         private bool _HealthWeight_IsSet => _DATALocation.HasValue;
         public Byte HealthWeight => _HealthWeight_IsSet ? _data.Span[_HealthWeightLocation] : default;
         #endregion
         #region MagickaWeight
-        private int _MagickaWeightLocation => _DATALocation.Value + 0x21;
+        private int _MagickaWeightLocation => _DATALocation!.Value + 0x21;
         private bool _MagickaWeight_IsSet => _DATALocation.HasValue;
         public Byte MagickaWeight => _MagickaWeight_IsSet ? _data.Span[_MagickaWeightLocation] : default;
         #endregion
         #region StaminaWeight
-        private int _StaminaWeightLocation => _DATALocation.Value + 0x22;
+        private int _StaminaWeightLocation => _DATALocation!.Value + 0x22;
         private bool _StaminaWeight_IsSet => _DATALocation.HasValue;
         public Byte StaminaWeight => _StaminaWeight_IsSet ? _data.Span[_StaminaWeightLocation] : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DATALocation.Value + 0x23;
+        private int _Unknown2Location => _DATALocation!.Value + 0x23;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
         public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
         #endregion
@@ -5460,7 +5088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static ClassBinaryOverlay ClassFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new ClassBinaryOverlay(
@@ -5488,7 +5116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

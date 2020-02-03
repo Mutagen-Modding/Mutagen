@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();");
+                fg.AppendLine("ErrorMaskBuilder? errorMaskBuilder = new ErrorMaskBuilder();");
                 using (var args = new ArgsWrapper(fg,
                     "var ret = await CreateFromXmlFolder"))
                 {
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add("DirectoryPath dir");
                 args.Add("ModKey modKey");
-                args.Add("ErrorMaskBuilder errorMask");
+                args.Add("ErrorMaskBuilder? errorMask");
             }
             using (new BraceWrapper(fg))
             {
@@ -150,14 +150,14 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public async Task<{obj.Mask(MaskType.Error)}> WriteToXmlFolder"))
+                $"public async Task<{obj.Mask(MaskType.Error)}?> WriteToXmlFolder"))
             {
                 args.Add("DirectoryPath dir");
                 args.Add("bool doMasks = true");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"ErrorMaskBuilder errorMaskBuilder = null;");
+                fg.AppendLine($"ErrorMaskBuilder? errorMaskBuilder = null;");
                 fg.AppendLine("dir.Create();");
                 fg.AppendLine("using (new FolderCleaner(dir, FolderCleaner.CleanType.AccessTime))");
                 using (new BraceWrapper(fg))
@@ -239,11 +239,11 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.FunctionOverride()}async Task WriteToXmlFolder"))
             {
-                args.Add("DirectoryPath? dir");
+                args.Add("DirectoryPath dir");
                 args.Add("string name");
                 args.Add("XElement node");
                 args.Add("int counter");
-                args.Add($"ErrorMaskBuilder errorMask");
+                args.Add($"ErrorMaskBuilder? errorMask");
             }
             using (new BraceWrapper(fg))
             {

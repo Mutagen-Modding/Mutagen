@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly Group_TranslationMask<OblivionMajorRecord_TranslationMask> XmlFolderTranslationMask = new Group_TranslationMask<OblivionMajorRecord_TranslationMask>(true)
         {
-            RecordCache = new MaskItem<bool, OblivionMajorRecord_TranslationMask>(false, default)
+            RecordCache = new MaskItem<bool, OblivionMajorRecord_TranslationMask?>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
             this Group<T> group,
             DirectoryPath dir,
             string name,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int index)
             where T : OblivionMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
         {
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
             this Group<T> group,
             DirectoryPath dir,
             string name,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int index)
             where T : OblivionMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -177,8 +177,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class GroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T> _RecordCache;
-            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache;
+            private GroupMajorRecordCacheWrapper<T>? _RecordCache;
+            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache!;
             public IMod SourceMod => throw new NotImplementedException();
             public IEnumerable<T> Records => RecordCache.Items;
             public int Count => this.RecordCache.Count;

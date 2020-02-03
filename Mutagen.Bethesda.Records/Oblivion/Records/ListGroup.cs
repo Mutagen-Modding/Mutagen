@@ -20,14 +20,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly ListGroup_TranslationMask<CellBlock_TranslationMask> XmlFolderTranslationMask = new ListGroup_TranslationMask<CellBlock_TranslationMask>(true)
         {
-            Records = new MaskItem<bool, CellBlock_TranslationMask>(false, default)
+            Records = new MaskItem<bool, CellBlock_TranslationMask?>(false, default)
         };
 
         public static async Task CreateFromXmlFolder<T>(
             this ListGroup<T> group,
             DirectoryPath dir,
             string name,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int index)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
         {
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
             <T> list,
             DirectoryPath dir,
             string name,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int index)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem, IXmlFolderItem
         {
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
                             tasks.Add(Task.Run(() =>
                             {
                                 item.WriteToXmlFolder(
-                                    node: null,
+                                    node: null!,
                                     name: name,
                                     counter: stampedCounter,
                                     dir: dir,
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ListGroupBinaryOverlay<T>
         {
-            private ListGroupAbstract.GroupListOverlay<T> _Records;
-            public IReadOnlyList<T> Records => _Records;
+            private ListGroupAbstract.GroupListOverlay<T>? _Records;
+            public IReadOnlyList<T> Records => _Records!;
 
             partial void CustomCtor(
                 IBinaryReadStream stream,

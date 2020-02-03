@@ -38,26 +38,23 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
                 NotifyingDefault = NotifyingType.None,
-                ObjectCentralizedDefault = true,
                 HasBeenSetDefault = true,
                 ToStringDefault = false,
             };
             gen.AddTypicalTypeAssociations();
-            gen.XmlTranslation = new MutagenXmlModule(gen);
-            gen.Add(gen.XmlTranslation);
+            var xmlGen = new MutagenXmlModule(gen);
+            gen.Add(xmlGen);
             gen.Add(gen.MaskModule);
-            gen.Add(gen.ObjectCentralizationModule);
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
-            gen.XmlTranslation.ShouldGenerateXSD = false;
-            gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
-            gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
-            gen.XmlTranslation.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
-            gen.XmlTranslation.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
-            gen.XmlTranslation.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
+            xmlGen.ShouldGenerateXSD = false;
+            xmlGen.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
+            xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
+            xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
+            xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
+            xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
-            //gen.Add(new ObservableModModule());
             gen.AddTypeAssociation<FormIDLinkType>("FormIDLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<FormKeyType>("FormKey");
@@ -72,7 +69,7 @@ namespace Mutagen.Bethesda.Generation
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
-            Loqui.Generation.Presentation.Utility.AddToLoquiGenerator(gen);
+            Loqui.Generation.Presentation.Utility.AddToLoquiGenerator(gen, xmlGen);
 
             var bethesdaProto = gen.AddProtocol(
                 new ProtocolGeneration(
@@ -115,10 +112,13 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator()
             {
                 NotifyingDefault = NotifyingType.None,
-                ObjectCentralizedDefault = true,
                 HasBeenSetDefault = false
             };
-            gen.XmlTranslation.ShouldGenerateXSD = true;
+            var xmlModule = new XmlTranslationModule(gen)
+            {
+                ShouldGenerateXSD = true
+            };
+            gen.Add(xmlModule);
             var testerProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,

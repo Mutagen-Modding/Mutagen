@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
 
     public interface IGameSettingNumeric : IGameSettingCommon
     {
-        float RawData { get; set; }
+        float? RawData { get; set; }
     }
 
     public static class GameSettingUtility

@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Skyrim
             this Group<T> group,
             DirectoryPath dir,
             string name,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int index)
-            where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
+            where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IBinaryItem
         {
             throw new NotImplementedException();
         }
@@ -46,9 +46,9 @@ namespace Mutagen.Bethesda.Skyrim
             this Group<T> group,
             DirectoryPath dir,
             string name,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int index)
-            where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
+            where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IBinaryItem
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             throw new NotImplementedException();
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T> _Cache;
-            public IReadOnlyCache<T, FormKey> RecordCache => _Cache;
+            private GroupMajorRecordCacheWrapper<T>? _Cache;
+            public IReadOnlyCache<T, FormKey> RecordCache => _Cache!;
             public IMod SourceMod => throw new NotImplementedException();
             public IEnumerable<T> Records => RecordCache.Items;
             public int Count => this.RecordCache.Count;

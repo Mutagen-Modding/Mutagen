@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
@@ -20,9 +21,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -30,6 +30,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
@@ -43,17 +44,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public FunctionConditionData()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Function
-        public UInt16 Function { get; set; }
+        public UInt16 Function { get; set; } = default;
         #endregion
         #region Unknown2
-        public UInt16 Unknown2 { get; set; }
+        public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
-        public Int32 ParameterOneNumber { get; set; }
+        public Int32 ParameterOneNumber { get; set; } = default;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IFunctionConditionDataInternal.ParameterOneNumber
         {
@@ -72,35 +72,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ParameterOneString
-        public bool ParameterOneString_IsSet
-        {
-            get => _hasBeenSetTracker[(int)FunctionConditionData_FieldIndex.ParameterOneString];
-            set => _hasBeenSetTracker[(int)FunctionConditionData_FieldIndex.ParameterOneString] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFunctionConditionDataGetter.ParameterOneString_IsSet => ParameterOneString_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _ParameterOneString;
-        public String ParameterOneString
+        private String? _ParameterOneString;
+        public String? ParameterOneString
         {
             get => this._ParameterOneString;
-            set => ParameterOneString_Set(value);
+            set => this._ParameterOneString = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
-        public void ParameterOneString_Set(
-            String value,
-            bool markSet = true)
-        {
-            _ParameterOneString = value;
-            _hasBeenSetTracker[(int)FunctionConditionData_FieldIndex.ParameterOneString] = markSet;
-        }
-        public void ParameterOneString_Unset()
-        {
-            this.ParameterOneString_Set(default(String), false);
-        }
+        String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IFunctionConditionDataInternal.ParameterOneString
+        String? IFunctionConditionDataInternal.ParameterOneString
         {
             get => this.ParameterOneString;
             set => this.ParameterOneString = value;
@@ -114,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
-        public Int32 ParameterTwoNumber { get; set; }
+        public Int32 ParameterTwoNumber { get; set; } = default;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IFunctionConditionDataInternal.ParameterTwoNumber
         {
@@ -123,56 +105,38 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ParameterTwoString
-        public bool ParameterTwoString_IsSet
-        {
-            get => _hasBeenSetTracker[(int)FunctionConditionData_FieldIndex.ParameterTwoString];
-            set => _hasBeenSetTracker[(int)FunctionConditionData_FieldIndex.ParameterTwoString] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFunctionConditionDataGetter.ParameterTwoString_IsSet => ParameterTwoString_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _ParameterTwoString;
-        public String ParameterTwoString
+        private String? _ParameterTwoString;
+        public String? ParameterTwoString
         {
             get => this._ParameterTwoString;
-            set => ParameterTwoString_Set(value);
+            set => this._ParameterTwoString = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
-        public void ParameterTwoString_Set(
-            String value,
-            bool markSet = true)
-        {
-            _ParameterTwoString = value;
-            _hasBeenSetTracker[(int)FunctionConditionData_FieldIndex.ParameterTwoString] = markSet;
-        }
-        public void ParameterTwoString_Unset()
-        {
-            this.ParameterTwoString_Set(default(String), false);
-        }
+        String? IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IFunctionConditionDataInternal.ParameterTwoString
+        String? IFunctionConditionDataInternal.ParameterTwoString
         {
             get => this.ParameterTwoString;
             set => this.ParameterTwoString = value;
         }
         #endregion
         #region Unknown3
-        public Int32 Unknown3 { get; set; }
+        public Int32 Unknown3 { get; set; } = default;
         #endregion
         #region Unknown4
-        public Int32 Unknown4 { get; set; }
+        public Int32 Unknown4 { get; set; } = default;
         #endregion
         #region Unknown5
         public readonly static Int32 _Unknown5_Default = -1;
-        public Int32 Unknown5 { get; set; }
+        public Int32 Unknown5 { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             FunctionConditionDataMixIn.ToString(
                 item: this,
@@ -185,15 +149,15 @@ namespace Mutagen.Bethesda.Skyrim
         public override bool Equals(object obj)
         {
             if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(FunctionConditionData obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -202,9 +166,9 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object XmlWriteTranslator => FunctionConditionDataXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((FunctionConditionDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -217,11 +181,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new FunctionConditionData CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            FunctionConditionData_TranslationMask translationMask = null)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -231,38 +193,25 @@ namespace Mutagen.Bethesda.Skyrim
         public static FunctionConditionData CreateFromXml(
             XElement node,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static FunctionConditionData CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new FunctionConditionData() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new FunctionConditionData();
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -271,12 +220,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            FunctionConditionData_TranslationMask translationMask = null)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -284,12 +231,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static FunctionConditionData CreateFromXml(
             string path,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -297,13 +242,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -311,12 +254,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            FunctionConditionData_TranslationMask translationMask = null)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -324,12 +265,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static FunctionConditionData CreateFromXml(
             Stream stream,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -337,13 +276,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -352,30 +289,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((FunctionConditionData_FieldIndex)index)
-            {
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                    return _hasBeenSetTracker[index];
-                case FunctionConditionData_FieldIndex.Function:
-                case FunctionConditionData_FieldIndex.Unknown2:
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                case FunctionConditionData_FieldIndex.Unknown3:
-                case FunctionConditionData_FieldIndex.Unknown4:
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -388,7 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((FunctionConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -411,10 +324,10 @@ namespace Mutagen.Bethesda.Skyrim
         public new static FunctionConditionData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new FunctionConditionData();
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -432,7 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)this).CommonSetterInstance()).Clear(this);
+            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new FunctionConditionData GetNew()
@@ -450,15 +363,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFunctionConditionDataInternal>
     {
         new UInt16 Function { get; set; }
-
         new UInt16 Unknown2 { get; set; }
-
         new Int32 Unknown3 { get; set; }
-
         new Int32 Unknown4 { get; set; }
-
         new Int32 Unknown5 { get; set; }
-
     }
 
     public partial interface IFunctionConditionDataInternal :
@@ -467,20 +375,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IFormIDLink<SkyrimMajorRecord> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
-
-        new String ParameterOneString { get; set; }
-        new bool ParameterOneString_IsSet { get; set; }
-        void ParameterOneString_Set(String value, bool hasBeenSet = true);
-        void ParameterOneString_Unset();
-
+        new String? ParameterOneString { get; set; }
         new IFormIDLink<SkyrimMajorRecord> ParameterTwoRecord { get; }
         new Int32 ParameterTwoNumber { get; set; }
-
-        new String ParameterTwoString { get; set; }
-        new bool ParameterTwoString_IsSet { get; set; }
-        void ParameterTwoString_Set(String value, bool hasBeenSet = true);
-        void ParameterTwoString_Unset();
-
+        new String? ParameterTwoString { get; set; }
     }
 
     public partial interface IFunctionConditionDataGetter :
@@ -490,50 +388,17 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        #region Function
         UInt16 Function { get; }
-
-        #endregion
-        #region Unknown2
         UInt16 Unknown2 { get; }
-
-        #endregion
-        #region ParameterOneRecord
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
-        #endregion
-        #region ParameterOneNumber
         Int32 ParameterOneNumber { get; }
-
-        #endregion
-        #region ParameterOneString
-        String ParameterOneString { get; }
-        bool ParameterOneString_IsSet { get; }
-
-        #endregion
-        #region ParameterTwoRecord
+        String? ParameterOneString { get; }
         IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
-        #endregion
-        #region ParameterTwoNumber
         Int32 ParameterTwoNumber { get; }
-
-        #endregion
-        #region ParameterTwoString
-        String ParameterTwoString { get; }
-        bool ParameterTwoString_IsSet { get; }
-
-        #endregion
-        #region Unknown3
+        String? ParameterTwoString { get; }
         Int32 Unknown3 { get; }
-
-        #endregion
-        #region Unknown4
         Int32 Unknown4 { get; }
-
-        #endregion
-        #region Unknown5
         Int32 Unknown5 { get; }
-
-        #endregion
 
     }
 
@@ -544,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void Clear(this IFunctionConditionDataInternal item)
         {
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static FunctionConditionData_Mask<bool> GetEqualsMask(
@@ -552,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
             IFunctionConditionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).GetEqualsMask(
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -560,10 +425,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static string ToString(
             this IFunctionConditionDataGetter item,
-            string name = null,
-            FunctionConditionData_Mask<bool> printMask = null)
+            string? name = null,
+            FunctionConditionData_Mask<bool>? printMask = null)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).ToString(
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -572,10 +437,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void ToString(
             this IFunctionConditionDataGetter item,
             FileGeneration fg,
-            string name = null,
-            FunctionConditionData_Mask<bool> printMask = null)
+            string? name = null,
+            FunctionConditionData_Mask<bool>? printMask = null)
         {
-            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).ToString(
+            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -586,15 +451,15 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataGetter item,
             FunctionConditionData_Mask<bool?> checkMask)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).HasBeenSet(
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static FunctionConditionData_Mask<bool> GetHasBeenSetMask(this IFunctionConditionDataGetter item)
         {
-            var ret = new FunctionConditionData_Mask<bool>();
-            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new FunctionConditionData_Mask<bool>(false);
+            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -604,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataGetter item,
             IFunctionConditionDataGetter rhs)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).Equals(
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -612,23 +477,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IFunctionConditionDataInternal lhs,
             IFunctionConditionDataGetter rhs,
-            FunctionConditionData_TranslationMask copyMask)
-        {
-            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IFunctionConditionDataInternal lhs,
-            IFunctionConditionDataGetter rhs,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask copyMask = null)
+            FunctionConditionData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -639,10 +492,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IFunctionConditionDataInternal lhs,
             IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -651,9 +504,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData DeepCopy(
             this IFunctionConditionDataGetter item,
-            FunctionConditionData_TranslationMask copyMask = null)
+            FunctionConditionData_TranslationMask? copyMask = null)
         {
-            return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -661,9 +514,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static FunctionConditionData DeepCopy(
             this IFunctionConditionDataGetter item,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask copyMask = null)
+            FunctionConditionData_TranslationMask? copyMask = null)
         {
-            return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -671,10 +524,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData DeepCopy(
             this IFunctionConditionDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -685,12 +538,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            FunctionConditionData_TranslationMask translationMask = null)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -701,29 +552,25 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataInternal item,
             XElement node,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -732,13 +579,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            FunctionConditionData_TranslationMask translationMask = null)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -747,13 +592,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataInternal item,
             string path,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -762,14 +605,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -778,13 +619,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            FunctionConditionData_TranslationMask translationMask = null)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -793,13 +632,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataInternal item,
             Stream stream,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -808,14 +645,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            FunctionConditionData_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -841,9 +676,9 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -902,11 +737,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type GetterType = typeof(IFunctionConditionDataGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IFunctionConditionData);
 
-        public static readonly Type InternalSetterType = typeof(IFunctionConditionDataInternal);
+        public static readonly Type? InternalSetterType = typeof(IFunctionConditionDataInternal);
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.FunctionConditionData";
 
@@ -916,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1137,14 +972,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1168,12 +1003,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFunctionConditionDataInternal item)
         {
             ClearPartial();
-            item.Function = default(UInt16);
-            item.Unknown2 = default(UInt16);
+            item.Function = default;
+            item.Unknown2 = default;
             item.ParameterOneRecord.Unset();
             item.ParameterTwoRecord.Unset();
-            item.Unknown3 = default(Int32);
-            item.Unknown4 = default(Int32);
+            item.Unknown3 = default;
+            item.Unknown4 = default;
             item.Unknown5 = FunctionConditionData._Unknown5_Default;
             base.Clear(item);
         }
@@ -1187,9 +1022,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void CopyInFromXml(
             IFunctionConditionDataInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1230,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionDataInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1253,8 +1087,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FunctionConditionData_Mask<bool>();
-            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new FunctionConditionData_Mask<bool>(false);
+            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1273,10 +1107,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.ParameterOneRecord = object.Equals(item.ParameterOneRecord, rhs.ParameterOneRecord);
             ret.ParameterOneNumber = item.ParameterOneNumber == rhs.ParameterOneNumber;
-            ret.ParameterOneString = item.ParameterOneString_IsSet == rhs.ParameterOneString_IsSet && string.Equals(item.ParameterOneString, rhs.ParameterOneString);
+            ret.ParameterOneString = string.Equals(item.ParameterOneString, rhs.ParameterOneString);
             ret.ParameterTwoRecord = object.Equals(item.ParameterTwoRecord, rhs.ParameterTwoRecord);
             ret.ParameterTwoNumber = item.ParameterTwoNumber == rhs.ParameterTwoNumber;
-            ret.ParameterTwoString = item.ParameterTwoString_IsSet == rhs.ParameterTwoString_IsSet && string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
+            ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
             ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
             ret.Unknown5 = item.Unknown5 == rhs.Unknown5;
@@ -1285,8 +1119,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public string ToString(
             IFunctionConditionDataGetter item,
-            string name = null,
-            FunctionConditionData_Mask<bool> printMask = null)
+            string? name = null,
+            FunctionConditionData_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1300,8 +1134,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void ToString(
             IFunctionConditionDataGetter item,
             FileGeneration fg,
-            string name = null,
-            FunctionConditionData_Mask<bool> printMask = null)
+            string? name = null,
+            FunctionConditionData_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1325,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IFunctionConditionDataGetter item,
             FileGeneration fg,
-            FunctionConditionData_Mask<bool> printMask = null)
+            FunctionConditionData_Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
@@ -1381,8 +1215,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionDataGetter item,
             FunctionConditionData_Mask<bool?> checkMask)
         {
-            if (checkMask.ParameterOneString.HasValue && checkMask.ParameterOneString.Value != item.ParameterOneString_IsSet) return false;
-            if (checkMask.ParameterTwoString.HasValue && checkMask.ParameterTwoString.Value != item.ParameterTwoString_IsSet) return false;
+            if (checkMask.ParameterOneString.HasValue && checkMask.ParameterOneString.Value != (item.ParameterOneString != null)) return false;
+            if (checkMask.ParameterTwoString.HasValue && checkMask.ParameterTwoString.Value != (item.ParameterTwoString != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1396,10 +1230,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Unknown2 = true;
             mask.ParameterOneRecord = true;
             mask.ParameterOneNumber = true;
-            mask.ParameterOneString = item.ParameterOneString_IsSet;
+            mask.ParameterOneString = (item.ParameterOneString != null);
             mask.ParameterTwoRecord = true;
             mask.ParameterTwoNumber = true;
-            mask.ParameterTwoString = item.ParameterTwoString_IsSet;
+            mask.ParameterTwoString = (item.ParameterTwoString != null);
             mask.Unknown3 = true;
             mask.Unknown4 = true;
             mask.Unknown5 = true;
@@ -1419,8 +1253,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFunctionConditionDataGetter lhs,
-            IFunctionConditionDataGetter rhs)
+            IFunctionConditionDataGetter? lhs,
+            IFunctionConditionDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1429,18 +1263,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
             if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
-            if (lhs.ParameterOneString_IsSet != rhs.ParameterOneString_IsSet) return false;
-            if (lhs.ParameterOneString_IsSet)
-            {
-                if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
-            }
+            if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
             if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
             if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
-            if (lhs.ParameterTwoString_IsSet != rhs.ParameterTwoString_IsSet) return false;
-            if (lhs.ParameterTwoString_IsSet)
-            {
-                if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
-            }
+            if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
             if (lhs.Unknown3 != rhs.Unknown3) return false;
             if (lhs.Unknown4 != rhs.Unknown4) return false;
             if (lhs.Unknown5 != rhs.Unknown5) return false;
@@ -1448,11 +1274,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            IConditionDataGetter lhs,
-            IConditionDataGetter rhs)
+            IConditionDataGetter? lhs,
+            IConditionDataGetter? rhs)
         {
             return Equals(
-                lhs: (IFunctionConditionDataGetter)lhs,
+                lhs: (IFunctionConditionDataGetter?)lhs,
                 rhs: rhs as IFunctionConditionDataGetter);
         }
         
@@ -1463,15 +1289,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.Unknown2).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.ParameterOneRecord).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.ParameterOneNumber).CombineHashCode(ret);
-            if (item.ParameterOneString_IsSet)
+            if (item.ParameterOneString.TryGet(out var ParameterOneStringitem))
             {
-                ret = HashHelper.GetHashCode(item.ParameterOneString).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ParameterOneStringitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.ParameterTwoRecord).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.ParameterTwoNumber).CombineHashCode(ret);
-            if (item.ParameterTwoString_IsSet)
+            if (item.ParameterTwoString.TryGet(out var ParameterTwoStringitem))
             {
-                ret = HashHelper.GetHashCode(item.ParameterTwoString).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ParameterTwoStringitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.Unknown3).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Unknown4).CombineHashCode(ret);
@@ -1516,8 +1342,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IFunctionConditionDataInternal item,
             IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1534,27 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
             {
-                errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneString);
-                try
-                {
-                    if (rhs.ParameterOneString_IsSet)
-                    {
-                        item.ParameterOneString = rhs.ParameterOneString;
-                    }
-                    else
-                    {
-                        item.ParameterOneString_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParameterOneString = rhs.ParameterOneString;
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
@@ -1566,27 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
             {
-                errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoString);
-                try
-                {
-                    if (rhs.ParameterTwoString_IsSet)
-                    {
-                        item.ParameterTwoString = rhs.ParameterTwoString;
-                    }
-                    else
-                    {
-                        item.ParameterTwoString_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParameterTwoString = rhs.ParameterTwoString;
             }
             DeepCopyFieldsFrom(
                 (IFunctionConditionData)item,
@@ -1598,8 +1384,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IFunctionConditionData item,
             IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1632,8 +1418,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyFieldsFrom(
             IConditionData item,
             IConditionDataGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFunctionConditionData)item,
@@ -1646,9 +1432,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public FunctionConditionData DeepCopy(
             IFunctionConditionDataGetter item,
-            FunctionConditionData_TranslationMask copyMask = null)
+            FunctionConditionData_TranslationMask? copyMask = null)
         {
-            FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).GetNew();
+            FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1658,9 +1444,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public FunctionConditionData DeepCopy(
             IFunctionConditionDataGetter item,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask copyMask = null)
+            FunctionConditionData_TranslationMask? copyMask = null)
         {
-            FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).GetNew();
+            FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1670,10 +1456,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public FunctionConditionData DeepCopy(
             IFunctionConditionDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()).GetNew();
+            FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1722,8 +1508,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteToNodeXml(
             IFunctionConditionDataGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             ConditionDataXmlWriteTranslation.WriteToNodeXml(
                 item: item,
@@ -1766,7 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)FunctionConditionData_FieldIndex.ParameterOneNumber,
                     errorMask: errorMask);
             }
-            if (item.ParameterOneString_IsSet
+            if ((item.ParameterOneString != null)
                 && (translationMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1794,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)FunctionConditionData_FieldIndex.ParameterTwoNumber,
                     errorMask: errorMask);
             }
-            if (item.ParameterTwoString_IsSet
+            if ((item.ParameterTwoString != null)
                 && (translationMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1836,9 +1622,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             XElement node,
             IFunctionConditionDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.FunctionConditionData");
             node.Add(elem);
@@ -1856,9 +1642,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFunctionConditionDataGetter)item,
@@ -1871,9 +1657,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             IConditionDataGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFunctionConditionDataGetter)item,
@@ -1892,8 +1678,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void FillPublicXml(
             IFunctionConditionDataInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1918,8 +1704,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionDataInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2146,8 +1932,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataGetter item,
             XElement node,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            string name = null)
+            FunctionConditionData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FunctionConditionDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2163,8 +1949,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataGetter item,
             string path,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            string name = null)
+            FunctionConditionData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2180,8 +1966,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataGetter item,
             Stream stream,
             out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask translationMask = null,
-            string name = null)
+            FunctionConditionData_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2203,14 +1989,15 @@ namespace Mutagen.Bethesda.Skyrim
 #region Mask
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public class FunctionConditionData_Mask<T> : ConditionData_Mask<T>, IMask<T>, IEquatable<FunctionConditionData_Mask<T>>
+    public class FunctionConditionData_Mask<T> :
+        ConditionData_Mask<T>,
+        IMask<T>,
+        IEquatable<FunctionConditionData_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public FunctionConditionData_Mask()
-        {
-        }
-
         public FunctionConditionData_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Function = initialValue;
             this.Unknown2 = initialValue;
@@ -2237,6 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             T Unknown3,
             T Unknown4,
             T Unknown5)
+        : base()
         {
             this.Function = Function;
             this.Unknown2 = Unknown2;
@@ -2250,6 +2038,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Unknown4 = Unknown4;
             this.Unknown5 = Unknown5;
         }
+
+        #pragma warning disable CS8618
+        protected FunctionConditionData_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -2360,14 +2155,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(FunctionConditionData_Mask<bool> printMask = null)
+        public string ToString(FunctionConditionData_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, FunctionConditionData_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, FunctionConditionData_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(FunctionConditionData_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2427,21 +2222,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public class FunctionConditionData_ErrorMask : ConditionData_ErrorMask, IErrorMask<FunctionConditionData_ErrorMask>
     {
         #region Members
-        public Exception Function;
-        public Exception Unknown2;
-        public Exception ParameterOneRecord;
-        public Exception ParameterOneNumber;
-        public Exception ParameterOneString;
-        public Exception ParameterTwoRecord;
-        public Exception ParameterTwoNumber;
-        public Exception ParameterTwoString;
-        public Exception Unknown3;
-        public Exception Unknown4;
-        public Exception Unknown5;
+        public Exception? Function;
+        public Exception? Unknown2;
+        public Exception? ParameterOneRecord;
+        public Exception? ParameterOneNumber;
+        public Exception? ParameterOneString;
+        public Exception? ParameterTwoRecord;
+        public Exception? ParameterTwoNumber;
+        public Exception? ParameterTwoString;
+        public Exception? Unknown3;
+        public Exception? Unknown4;
+        public Exception? Unknown5;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
             switch (enu)
@@ -2625,8 +2420,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Combine
-        public FunctionConditionData_ErrorMask Combine(FunctionConditionData_ErrorMask rhs)
+        public FunctionConditionData_ErrorMask Combine(FunctionConditionData_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new FunctionConditionData_ErrorMask();
             ret.Function = this.Function.Combine(rhs.Function);
             ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
@@ -2641,7 +2437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
             return ret;
         }
-        public static FunctionConditionData_ErrorMask Combine(FunctionConditionData_ErrorMask lhs, FunctionConditionData_ErrorMask rhs)
+        public static FunctionConditionData_ErrorMask? Combine(FunctionConditionData_ErrorMask? lhs, FunctionConditionData_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2651,7 +2447,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Factory
         public static new FunctionConditionData_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new FunctionConditionData_ErrorMask();
         }
         #endregion
@@ -2674,11 +2469,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Ctors
-        public FunctionConditionData_TranslationMask()
-            : base()
-        {
-        }
-
         public FunctionConditionData_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -2697,7 +2487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Function, null));
@@ -2758,7 +2548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IFunctionConditionDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -2770,7 +2560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFunctionConditionDataGetter)item,
@@ -2783,7 +2573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IConditionDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFunctionConditionDataGetter)item,
@@ -2853,9 +2643,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object XmlWriteTranslator => FunctionConditionDataXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((FunctionConditionDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2869,7 +2659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((FunctionConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2902,7 +2692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new FunctionConditionDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 4),

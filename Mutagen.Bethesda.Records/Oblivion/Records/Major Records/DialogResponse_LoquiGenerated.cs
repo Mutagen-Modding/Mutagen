@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public DialogResponse()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -109,72 +109,36 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
         #endregion
         #region ResponseText
-        public bool ResponseText_IsSet
-        {
-            get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText];
-            set => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IDialogResponseGetter.ResponseText_IsSet => ResponseText_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _ResponseText;
-        public String ResponseText
+        private String? _ResponseText;
+        public String? ResponseText
         {
             get => this._ResponseText;
-            set => ResponseText_Set(value);
+            set => this._ResponseText = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IDialogResponseGetter.ResponseText => this.ResponseText;
-        public void ResponseText_Set(
-            String value,
-            bool markSet = true)
-        {
-            _ResponseText = value;
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = markSet;
-        }
-        public void ResponseText_Unset()
-        {
-            this.ResponseText_Set(default(String), false);
-        }
+        String? IDialogResponseGetter.ResponseText => this.ResponseText;
         #endregion
         #region ActorNotes
-        public bool ActorNotes_IsSet
-        {
-            get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes];
-            set => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IDialogResponseGetter.ActorNotes_IsSet => ActorNotes_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _ActorNotes;
-        public String ActorNotes
+        private String? _ActorNotes;
+        public String? ActorNotes
         {
             get => this._ActorNotes;
-            set => ActorNotes_Set(value);
+            set => this._ActorNotes = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IDialogResponseGetter.ActorNotes => this.ActorNotes;
-        public void ActorNotes_Set(
-            String value,
-            bool markSet = true)
-        {
-            _ActorNotes = value;
-            _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = markSet;
-        }
-        public void ActorNotes_Unset()
-        {
-            this.ActorNotes_Set(default(String), false);
-        }
+        String? IDialogResponseGetter.ActorNotes => this.ActorNotes;
         #endregion
         #region TRDTDataTypeState
-        public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
+        public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             DialogResponseMixIn.ToString(
                 item: this,
@@ -187,15 +151,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IDialogResponseGetter rhs)) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(DialogResponse obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()).Equals(this, obj);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -206,9 +170,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((DialogResponseXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -221,11 +185,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static DialogResponse CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            DialogResponse_TranslationMask translationMask = null)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -235,38 +197,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromXml(
             XElement node,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static DialogResponse CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new DialogResponse() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new DialogResponse();
-            ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -275,12 +224,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            DialogResponse_TranslationMask translationMask = null)
+            DialogResponse_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -288,12 +235,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromXml(
             string path,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DialogResponse_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -301,13 +246,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DialogResponse_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -315,12 +258,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            DialogResponse_TranslationMask translationMask = null)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -328,12 +269,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromXml(
             Stream stream,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -341,13 +280,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DialogResponse_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -356,27 +293,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((DialogResponse_FieldIndex)index)
-            {
-                case DialogResponse_FieldIndex.ResponseText:
-                case DialogResponse_FieldIndex.ActorNotes:
-                    return _hasBeenSetTracker[index];
-                case DialogResponse_FieldIndex.Emotion:
-                case DialogResponse_FieldIndex.EmotionValue:
-                case DialogResponse_FieldIndex.Fluff1:
-                case DialogResponse_FieldIndex.ResponseNumber:
-                case DialogResponse_FieldIndex.Fluff2:
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogResponse_Registration.TRIGGERING_RECORD_TYPE;
@@ -395,7 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((DialogResponseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -418,10 +334,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new DialogResponse();
-            ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -439,7 +355,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((DialogResponseSetterCommon)((IDialogResponseGetter)this).CommonSetterInstance()).Clear(this);
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static DialogResponse GetNew()
@@ -456,27 +372,13 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IDialogResponse>
     {
         new EmotionType Emotion { get; set; }
-
         new Int32 EmotionValue { get; set; }
-
         new Byte[] Fluff1 { get; set; }
-
         new Byte ResponseNumber { get; set; }
-
         new Byte[] Fluff2 { get; set; }
-
-        new String ResponseText { get; set; }
-        new bool ResponseText_IsSet { get; set; }
-        void ResponseText_Set(String value, bool hasBeenSet = true);
-        void ResponseText_Unset();
-
-        new String ActorNotes { get; set; }
-        new bool ActorNotes_IsSet { get; set; }
-        void ActorNotes_Set(String value, bool hasBeenSet = true);
-        void ActorNotes_Unset();
-
+        new String? ResponseText { get; set; }
+        new String? ActorNotes { get; set; }
         new DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
-
     }
 
     public partial interface IDialogResponseGetter :
@@ -488,43 +390,17 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Emotion
         EmotionType Emotion { get; }
-
-        #endregion
-        #region EmotionValue
         Int32 EmotionValue { get; }
-
-        #endregion
-        #region Fluff1
         ReadOnlySpan<Byte> Fluff1 { get; }
-
-        #endregion
-        #region ResponseNumber
         Byte ResponseNumber { get; }
-
-        #endregion
-        #region Fluff2
         ReadOnlySpan<Byte> Fluff2 { get; }
-
-        #endregion
-        #region ResponseText
-        String ResponseText { get; }
-        bool ResponseText_IsSet { get; }
-
-        #endregion
-        #region ActorNotes
-        String ActorNotes { get; }
-        bool ActorNotes_IsSet { get; }
-
-        #endregion
-        #region TRDTDataTypeState
+        String? ResponseText { get; }
+        String? ActorNotes { get; }
         DialogResponse.TRDTDataType TRDTDataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -535,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IDialogResponse item)
         {
-            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static DialogResponse_Mask<bool> GetEqualsMask(
@@ -543,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogResponseGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetEqualsMask(
+            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -551,10 +427,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IDialogResponseGetter item,
-            string name = null,
-            DialogResponse_Mask<bool> printMask = null)
+            string? name = null,
+            DialogResponse_Mask<bool>? printMask = null)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).ToString(
+            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -563,10 +439,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IDialogResponseGetter item,
             FileGeneration fg,
-            string name = null,
-            DialogResponse_Mask<bool> printMask = null)
+            string? name = null,
+            DialogResponse_Mask<bool>? printMask = null)
         {
-            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).ToString(
+            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -577,15 +453,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             DialogResponse_Mask<bool?> checkMask)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).HasBeenSet(
+            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static DialogResponse_Mask<bool> GetHasBeenSetMask(this IDialogResponseGetter item)
         {
-            var ret = new DialogResponse_Mask<bool>();
-            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new DialogResponse_Mask<bool>(false);
+            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -595,16 +471,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             IDialogResponseGetter rhs)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).Equals(
+            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IDialogResponse lhs,
-            IDialogResponseGetter rhs)
+            IDialogResponseGetter rhs,
+            DialogResponse_TranslationMask? copyMask = null)
         {
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -614,23 +491,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
-            DialogResponse_TranslationMask copyMask)
-        {
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IDialogResponse lhs,
-            IDialogResponseGetter rhs,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask copyMask = null)
+            DialogResponse_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -641,10 +506,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -653,9 +518,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse DeepCopy(
             this IDialogResponseGetter item,
-            DialogResponse_TranslationMask copyMask = null)
+            DialogResponse_TranslationMask? copyMask = null)
         {
-            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -663,9 +528,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse DeepCopy(
             this IDialogResponseGetter item,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask copyMask = null)
+            DialogResponse_TranslationMask? copyMask = null)
         {
-            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -673,10 +538,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse DeepCopy(
             this IDialogResponseGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -687,12 +552,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            DialogResponse_TranslationMask translationMask = null)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -703,29 +566,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             XElement node,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IDialogResponse item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -734,13 +593,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            DialogResponse_TranslationMask translationMask = null)
+            DialogResponse_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -749,13 +606,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             string path,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DialogResponse_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -764,14 +619,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             string path,
-            ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DialogResponse_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -780,13 +633,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            DialogResponse_TranslationMask translationMask = null)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -795,13 +646,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             Stream stream,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            DialogResponse_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -810,14 +659,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            DialogResponse_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -843,9 +690,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -901,11 +748,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IDialogResponseGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IDialogResponse);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.DialogResponse";
 
@@ -915,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1107,14 +954,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1138,23 +985,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IDialogResponse item)
         {
             ClearPartial();
-            item.Emotion = default(EmotionType);
-            item.EmotionValue = default(Int32);
-            item.Fluff1 = default(Byte[]);
-            item.ResponseNumber = default(Byte);
-            item.Fluff2 = default(Byte[]);
-            item.ResponseText_Unset();
-            item.ActorNotes_Unset();
-            item.TRDTDataTypeState = default(DialogResponse.TRDTDataType);
+            item.Emotion = default;
+            item.EmotionValue = default;
+            item.Fluff1 = new byte[4];
+            item.ResponseNumber = default;
+            item.Fluff2 = new byte[3];
+            item.ResponseText = default;
+            item.ActorNotes = default;
+            item.TRDTDataTypeState = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IDialogResponse item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1192,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1238,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponse item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -1262,8 +1108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DialogResponse_Mask<bool>();
-            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new DialogResponse_Mask<bool>(false);
+            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1283,15 +1129,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Fluff1 = MemoryExtensions.SequenceEqual(item.Fluff1, rhs.Fluff1);
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
             ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
-            ret.ResponseText = item.ResponseText_IsSet == rhs.ResponseText_IsSet && string.Equals(item.ResponseText, rhs.ResponseText);
-            ret.ActorNotes = item.ActorNotes_IsSet == rhs.ActorNotes_IsSet && string.Equals(item.ActorNotes, rhs.ActorNotes);
+            ret.ResponseText = string.Equals(item.ResponseText, rhs.ResponseText);
+            ret.ActorNotes = string.Equals(item.ActorNotes, rhs.ActorNotes);
             ret.TRDTDataTypeState = item.TRDTDataTypeState == rhs.TRDTDataTypeState;
         }
         
         public string ToString(
             IDialogResponseGetter item,
-            string name = null,
-            DialogResponse_Mask<bool> printMask = null)
+            string? name = null,
+            DialogResponse_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1305,8 +1151,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IDialogResponseGetter item,
             FileGeneration fg,
-            string name = null,
-            DialogResponse_Mask<bool> printMask = null)
+            string? name = null,
+            DialogResponse_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1330,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IDialogResponseGetter item,
             FileGeneration fg,
-            DialogResponse_Mask<bool> printMask = null)
+            DialogResponse_Mask<bool>? printMask = null)
         {
             if (printMask?.Emotion ?? true)
             {
@@ -1370,8 +1216,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseGetter item,
             DialogResponse_Mask<bool?> checkMask)
         {
-            if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != item.ResponseText_IsSet) return false;
-            if (checkMask.ActorNotes.HasValue && checkMask.ActorNotes.Value != item.ActorNotes_IsSet) return false;
+            if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != (item.ResponseText != null)) return false;
+            if (checkMask.ActorNotes.HasValue && checkMask.ActorNotes.Value != (item.ActorNotes != null)) return false;
             return true;
         }
         
@@ -1384,15 +1230,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Fluff1 = true;
             mask.ResponseNumber = true;
             mask.Fluff2 = true;
-            mask.ResponseText = item.ResponseText_IsSet;
-            mask.ActorNotes = item.ActorNotes_IsSet;
+            mask.ResponseText = (item.ResponseText != null);
+            mask.ActorNotes = (item.ActorNotes != null);
             mask.TRDTDataTypeState = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDialogResponseGetter lhs,
-            IDialogResponseGetter rhs)
+            IDialogResponseGetter? lhs,
+            IDialogResponseGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1401,16 +1247,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!MemoryExtensions.SequenceEqual(lhs.Fluff1, rhs.Fluff1)) return false;
             if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Fluff2, rhs.Fluff2)) return false;
-            if (lhs.ResponseText_IsSet != rhs.ResponseText_IsSet) return false;
-            if (lhs.ResponseText_IsSet)
-            {
-                if (!string.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
-            }
-            if (lhs.ActorNotes_IsSet != rhs.ActorNotes_IsSet) return false;
-            if (lhs.ActorNotes_IsSet)
-            {
-                if (!string.Equals(lhs.ActorNotes, rhs.ActorNotes)) return false;
-            }
+            if (!string.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
+            if (!string.Equals(lhs.ActorNotes, rhs.ActorNotes)) return false;
             if (lhs.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
             return true;
         }
@@ -1423,13 +1261,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = HashHelper.GetHashCode(item.Fluff1).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.ResponseNumber).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Fluff2).CombineHashCode(ret);
-            if (item.ResponseText_IsSet)
+            if (item.ResponseText.TryGet(out var ResponseTextitem))
             {
-                ret = HashHelper.GetHashCode(item.ResponseText).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ResponseTextitem).CombineHashCode(ret);
             }
-            if (item.ActorNotes_IsSet)
+            if (item.ActorNotes.TryGet(out var ActorNotesitem))
             {
-                ret = HashHelper.GetHashCode(item.ActorNotes).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(ActorNotesitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.TRDTDataTypeState).CombineHashCode(ret);
             return ret;
@@ -1460,8 +1298,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IDialogResponse item,
             IDialogResponseGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
@@ -1485,51 +1323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
-                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
-                try
-                {
-                    if (rhs.ResponseText_IsSet)
-                    {
-                        item.ResponseText = rhs.ResponseText;
-                    }
-                    else
-                    {
-                        item.ResponseText_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ResponseText = rhs.ResponseText;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
             {
-                errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
-                try
-                {
-                    if (rhs.ActorNotes_IsSet)
-                    {
-                        item.ActorNotes = rhs.ActorNotes;
-                    }
-                    else
-                    {
-                        item.ActorNotes_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ActorNotes = rhs.ActorNotes;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
             {
@@ -1541,9 +1339,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DialogResponse DeepCopy(
             IDialogResponseGetter item,
-            DialogResponse_TranslationMask copyMask = null)
+            DialogResponse_TranslationMask? copyMask = null)
         {
-            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1553,9 +1351,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DialogResponse DeepCopy(
             IDialogResponseGetter item,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask copyMask = null)
+            DialogResponse_TranslationMask? copyMask = null)
         {
-            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1565,10 +1363,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DialogResponse DeepCopy(
             IDialogResponseGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1621,8 +1419,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IDialogResponseGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
             {
@@ -1672,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                 }
             }
-            if (item.ResponseText_IsSet
+            if ((item.ResponseText != null)
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1682,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogResponse_FieldIndex.ResponseText,
                     errorMask: errorMask);
             }
-            if (item.ActorNotes_IsSet
+            if ((item.ActorNotes != null)
                 && (translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1706,9 +1504,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IDialogResponseGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogResponse");
             node.Add(elem);
@@ -1726,9 +1524,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IDialogResponseGetter)item,
@@ -1741,10 +1539,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IDialogResponseGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1776,8 +1574,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IDialogResponse item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1802,8 +1600,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponse item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1850,6 +1648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
                         item.Fluff1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
+                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1886,6 +1685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
                         item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
+                            fallbackLength: 3,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1969,8 +1769,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             XElement node,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            string name = null)
+            DialogResponse_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1986,8 +1786,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             string path,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            string name = null)
+            DialogResponse_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2002,9 +1802,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2020,8 +1820,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             Stream stream,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask translationMask = null,
-            string name = null)
+            DialogResponse_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2036,9 +1836,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2053,9 +1853,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -2068,21 +1868,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             XElement node,
-            string name = null,
-            DialogResponse_TranslationMask translationMask = null)
+            string? name = null,
+            DialogResponse_TranslationMask? translationMask = null)
         {
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IDialogResponseGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2097,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2119,13 +1919,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class DialogResponse_Mask<T> : IMask<T>, IEquatable<DialogResponse_Mask<T>>
+    public class DialogResponse_Mask<T> :
+        IMask<T>,
+        IEquatable<DialogResponse_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public DialogResponse_Mask()
-        {
-        }
-
         public DialogResponse_Mask(T initialValue)
         {
             this.Emotion = initialValue;
@@ -2157,6 +1956,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ActorNotes = ActorNotes;
             this.TRDTDataTypeState = TRDTDataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected DialogResponse_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -2248,14 +2054,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(DialogResponse_Mask<bool> printMask = null)
+        public string ToString(DialogResponse_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, DialogResponse_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, DialogResponse_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(DialogResponse_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2303,8 +2109,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class DialogResponse_ErrorMask : IErrorMask, IErrorMask<DialogResponse_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -2316,18 +2122,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Emotion;
-        public Exception EmotionValue;
-        public Exception Fluff1;
-        public Exception ResponseNumber;
-        public Exception Fluff2;
-        public Exception ResponseText;
-        public Exception ActorNotes;
-        public Exception TRDTDataTypeState;
+        public Exception? Emotion;
+        public Exception? EmotionValue;
+        public Exception? Fluff1;
+        public Exception? ResponseNumber;
+        public Exception? Fluff2;
+        public Exception? ResponseText;
+        public Exception? ActorNotes;
+        public Exception? TRDTDataTypeState;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
             switch (enu)
@@ -2478,8 +2284,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public DialogResponse_ErrorMask Combine(DialogResponse_ErrorMask rhs)
+        public DialogResponse_ErrorMask Combine(DialogResponse_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new DialogResponse_ErrorMask();
             ret.Emotion = this.Emotion.Combine(rhs.Emotion);
             ret.EmotionValue = this.EmotionValue.Combine(rhs.EmotionValue);
@@ -2491,7 +2298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TRDTDataTypeState = this.TRDTDataTypeState.Combine(rhs.TRDTDataTypeState);
             return ret;
         }
-        public static DialogResponse_ErrorMask Combine(DialogResponse_ErrorMask lhs, DialogResponse_ErrorMask rhs)
+        public static DialogResponse_ErrorMask? Combine(DialogResponse_ErrorMask? lhs, DialogResponse_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2501,7 +2308,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static DialogResponse_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new DialogResponse_ErrorMask();
         }
         #endregion
@@ -2510,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class DialogResponse_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Emotion;
         public bool EmotionValue;
         public bool Fluff1;
@@ -2522,10 +2328,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public DialogResponse_TranslationMask()
-        {
-        }
-
         public DialogResponse_TranslationMask(bool defaultOn)
         {
             this.Emotion = defaultOn;
@@ -2543,13 +2345,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Emotion, null));
             ret.Add((EmotionValue, null));
@@ -2581,7 +2383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IDialogResponseGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             if (item.TRDTDataTypeState.HasFlag(DialogResponse.TRDTDataType.Has))
@@ -2602,31 +2404,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Fluff2);
                 }
             }
-            if (item.ResponseText_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ResponseText,
-                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.ActorNotes_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ActorNotes,
-                    header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ResponseText,
+                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActorNotes,
+                header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             IDialogResponseGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -2643,7 +2437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IDialogResponseGetter)item,
@@ -2700,7 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IDialogResponseGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IDialogResponseGetter.CommonSetterInstance() => null;
+        object? IDialogResponseGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IDialogResponseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2716,9 +2510,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((DialogResponseXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2734,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((DialogResponseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2746,39 +2540,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _TRDTLocation;
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
         #region Emotion
-        private int _EmotionLocation => _TRDTLocation.Value + 0x0;
+        private int _EmotionLocation => _TRDTLocation!.Value + 0x0;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
         public EmotionType Emotion => _Emotion_IsSet ? (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 4)) : default;
         #endregion
         #region EmotionValue
-        private int _EmotionValueLocation => _TRDTLocation.Value + 0x4;
+        private int _EmotionValueLocation => _TRDTLocation!.Value + 0x4;
         private bool _EmotionValue_IsSet => _TRDTLocation.HasValue;
         public Int32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionValueLocation, 4)) : default;
         #endregion
         #region Fluff1
-        private int _Fluff1Location => _TRDTLocation.Value + 0x8;
+        private int _Fluff1Location => _TRDTLocation!.Value + 0x8;
         private bool _Fluff1_IsSet => _TRDTLocation.HasValue;
         public ReadOnlySpan<Byte> Fluff1 => _Fluff1_IsSet ? _data.Span.Slice(_Fluff1Location, 4).ToArray() : default;
+        public bool Fluff1_IsSet => _Fluff1_IsSet;
         #endregion
         #region ResponseNumber
-        private int _ResponseNumberLocation => _TRDTLocation.Value + 0xC;
+        private int _ResponseNumberLocation => _TRDTLocation!.Value + 0xC;
         private bool _ResponseNumber_IsSet => _TRDTLocation.HasValue;
         public Byte ResponseNumber => _ResponseNumber_IsSet ? _data.Span[_ResponseNumberLocation] : default;
         #endregion
         #region Fluff2
-        private int _Fluff2Location => _TRDTLocation.Value + 0xD;
+        private int _Fluff2Location => _TRDTLocation!.Value + 0xD;
         private bool _Fluff2_IsSet => _TRDTLocation.HasValue;
         public ReadOnlySpan<Byte> Fluff2 => _Fluff2_IsSet ? _data.Span.Slice(_Fluff2Location, 3).ToArray() : default;
+        public bool Fluff2_IsSet => _Fluff2_IsSet;
         #endregion
         #region ResponseText
         private int? _ResponseTextLocation;
-        public bool ResponseText_IsSet => _ResponseTextLocation.HasValue;
-        public String ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ResponseTextLocation.Value, _package.Meta)) : default;
+        public String? ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ResponseTextLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region ActorNotes
         private int? _ActorNotesLocation;
-        public bool ActorNotes_IsSet => _ActorNotesLocation.HasValue;
-        public String ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ActorNotesLocation.Value, _package.Meta)) : default;
+        public String? ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ActorNotesLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2797,7 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static DialogResponseBinaryOverlay DialogResponseFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new DialogResponseBinaryOverlay(
                 bytes: stream.RemainingMemory,
@@ -2822,7 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

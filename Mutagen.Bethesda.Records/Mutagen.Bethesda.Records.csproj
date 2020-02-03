@@ -2,7 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>7.3</LangVersion>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -1557,6 +1556,12 @@
     <Compile Include="Skyrim\Records\Common Enums\Skill.cs" />
     <Compile Include="Skyrim\Records\Common Enums\VendorLocation.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ConditionFloat.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ConditionGlobal.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Relation_LoquiGenerated.cs">

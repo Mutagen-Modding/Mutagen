@@ -31,17 +31,15 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class CellCommon
         {
-            partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+            partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
             {
-                if (rhs.PathGrid_IsSet
-                    && rhs.PathGrid != null)
+                if (rhs.PathGrid.TryGet(out var pathGrid))
                 {
-                    obj.PathGrid = (PathGrid)rhs.PathGrid.Duplicate(getNextFormKey, duplicatedRecords);
+                    obj.PathGrid = (PathGrid)pathGrid.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                if (rhs.Landscape_IsSet
-                    && rhs.Landscape != null)
+                if (rhs.Landscape.TryGet(out var landscape))
                 {
-                    obj.Landscape = (Landscape)rhs.Landscape.Duplicate(getNextFormKey, duplicatedRecords);
+                    obj.Landscape = (Landscape)landscape.Duplicate(getNextFormKey, duplicatedRecords);
                 }
                 obj.Persistent.SetTo(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
                 obj.Temporary.SetTo(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords)));
@@ -177,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
                             default:
                                 throw new NotImplementedException();
                         }
-                        placed = null;
+                        placed = null!;
                         return false;
                     }
                     );
@@ -256,12 +254,12 @@ namespace Mutagen.Bethesda.Oblivion
                             default:
                                 if (ParseTemporaryOutliers(frame, obj, masterReferences))
                                 {
-                                    placed = null;
+                                    placed = null!;
                                     return false;
                                 }
                                 throw new NotImplementedException();
                         }
-                        placed = null;
+                        placed = null!;
                         return false;
                     });
             }
@@ -271,11 +269,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj, MasterReferences masterReferences)
             {
+                var pathGrid = obj.PathGrid;
+                var landscape = obj.Landscape;
                 if (obj.Persistent.Count == 0
                     && obj.Temporary.Count == 0
                     && obj.VisibleWhenDistant.Count == 0
-                    && !obj.PathGrid_IsSet
-                    && !obj.Landscape_IsSet) return;
+                    && pathGrid == null
+                    && landscape == null) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
@@ -306,8 +306,8 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     if (obj.Temporary.Count > 0
-                        || obj.PathGrid_IsSet
-                        || obj.Landscape_IsSet)
+                        || pathGrid != null
+                        || landscape != null)
                     {
                         using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                         {
@@ -317,15 +317,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 masterReferences);
                             writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                             writer.Write(obj.TemporaryTimestamp);
-                            if (obj.Landscape_IsSet)
+                            if (landscape != null)
                             {
-                                obj.Landscape.WriteToBinary(
+                                landscape.WriteToBinary(
                                     writer,
                                     masterReferences: masterReferences);
                             }
-                            if (obj.PathGrid_IsSet)
+                            if (pathGrid != null)
                             {
-                                obj.PathGrid.WriteToBinary(
+                                pathGrid.WriteToBinary(
                                     writer,
                                     masterReferences: masterReferences);
                             }
@@ -377,25 +377,23 @@ namespace Mutagen.Bethesda.Oblivion
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             private int? _pathgridLocation;
-            public bool PathGrid_IsSet => _pathgridLocation.HasValue;
-            public IPathGridGetter PathGrid => PathGridBinaryOverlay.PathGridFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_pathgridLocation.Value)), _package);
+            public IPathGridGetter? PathGrid => _pathgridLocation.HasValue ? PathGridBinaryOverlay.PathGridFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_pathgridLocation!.Value)), _package) : default;
 
             private int? _landscapeLocation;
-            public bool Landscape_IsSet => _landscapeLocation.HasValue;
-            public ILandscapeGetter Landscape => LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_landscapeLocation.Value)), _package);
+            public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_landscapeLocation!.Value)), _package) : default;
 
             public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
             private int? _persistentLocation;
-            public ReadOnlySpan<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_persistentLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public ReadOnlySpan<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
             public IReadOnlySetList<IPlacedGetter> Persistent { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
 
             private int? _temporaryLocation;
-            public ReadOnlySpan<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public ReadOnlySpan<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
             public IReadOnlySetList<IPlacedGetter> Temporary { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
 
             private int? _visibleWhenDistantLocation;
-            public ReadOnlySpan<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
+            public ReadOnlySpan<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
             public IReadOnlySetList<IPlacedGetter> VisibleWhenDistant { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
 
             public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)

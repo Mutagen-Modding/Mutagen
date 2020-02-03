@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -50,33 +51,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
-        public bool Model_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Grass_FieldIndex.Model];
-            set => _hasBeenSetTracker[(int)Grass_FieldIndex.Model] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IGrassGetter.Model_IsSet => Model_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model _Model;
-        public Model Model
+        private Model? _Model;
+        public Model? Model
         {
             get => _Model;
-            set => Model_Set(value);
-        }
-        public void Model_Set(
-            Model value,
-            bool hasBeenSet = true)
-        {
-            _Model = value;
-            _hasBeenSetTracker[(int)Grass_FieldIndex.Model] = hasBeenSet;
-        }
-        public void Model_Unset()
-        {
-            this.Model_Set(default(Model), false);
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IGrassGetter.Model => this.Model;
+        IModelGetter? IGrassGetter.Model => this.Model;
         #endregion
         #region Density
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -235,14 +218,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DATADataTypeState
-        public Grass.DATADataType DATADataTypeState { get; set; }
+        public Grass.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             GrassMixIn.ToString(
                 item: this,
@@ -255,15 +238,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IGrassGetter rhs)) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Grass obj)
         {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()).Equals(this, obj);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -272,9 +255,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((GrassXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -287,11 +270,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Grass CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Grass_TranslationMask translationMask = null)
+            Grass_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -301,38 +282,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass CreateFromXml(
             XElement node,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Grass_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Grass CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Grass() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Grass();
-            ((GrassSetterCommon)((IGrassGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((GrassSetterCommon)((IGrassGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -341,12 +309,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Grass_TranslationMask translationMask = null)
+            Grass_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -354,12 +320,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass CreateFromXml(
             string path,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Grass_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -367,13 +331,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Grass_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -381,12 +343,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Grass_TranslationMask translationMask = null)
+            Grass_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -394,12 +354,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass CreateFromXml(
             Stream stream,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Grass_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -407,13 +365,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Grass_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -422,31 +378,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Grass_FieldIndex)index)
-            {
-                case Grass_FieldIndex.Model:
-                    return _hasBeenSetTracker[index];
-                case Grass_FieldIndex.Density:
-                case Grass_FieldIndex.MinSlope:
-                case Grass_FieldIndex.MaxSlope:
-                case Grass_FieldIndex.Fluff1:
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                case Grass_FieldIndex.Fluff2:
-                case Grass_FieldIndex.UnitFromWaterMode:
-                case Grass_FieldIndex.PositionRange:
-                case Grass_FieldIndex.HeightRange:
-                case Grass_FieldIndex.ColorRange:
-                case Grass_FieldIndex.WavePeriod:
-                case Grass_FieldIndex.Flags:
-                case Grass_FieldIndex.DATADataTypeState:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Grass_Registration.TRIGGERING_RECORD_TYPE;
@@ -474,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((GrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -497,10 +428,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Grass CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Grass();
-            ((GrassSetterCommon)((IGrassGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((GrassSetterCommon)((IGrassGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -518,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((GrassSetterCommon)((IGrassGetter)this).CommonSetterInstance()).Clear(this);
+            ((GrassSetterCommon)((IGrassGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Grass GetNew()
@@ -535,37 +466,20 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IGrassInternal>
     {
-        new Model Model { get; set; }
-        new bool Model_IsSet { get; set; }
-        void Model_Set(Model value, bool hasBeenSet = true);
-        void Model_Unset();
-
+        new Model? Model { get; set; }
         new Byte Density { get; set; }
-
         new Byte MinSlope { get; set; }
-
         new Byte MaxSlope { get; set; }
-
         new Byte Fluff1 { get; set; }
-
         new UInt16 UnitFromWaterAmount { get; set; }
-
         new UInt16 Fluff2 { get; set; }
-
         new Grass.UnitFromWaterType UnitFromWaterMode { get; set; }
-
         new Single PositionRange { get; set; }
-
         new Single HeightRange { get; set; }
-
         new Single ColorRange { get; set; }
-
         new Single WavePeriod { get; set; }
-
         new Grass.GrassFlag Flags { get; set; }
-
         new Grass.DATADataType DATADataTypeState { get; set; }
-
     }
 
     public partial interface IGrassInternal :
@@ -581,63 +495,20 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        #region Model
-        IModelGetter Model { get; }
-        bool Model_IsSet { get; }
-
-        #endregion
-        #region Density
+        IModelGetter? Model { get; }
         Byte Density { get; }
-
-        #endregion
-        #region MinSlope
         Byte MinSlope { get; }
-
-        #endregion
-        #region MaxSlope
         Byte MaxSlope { get; }
-
-        #endregion
-        #region Fluff1
         Byte Fluff1 { get; }
-
-        #endregion
-        #region UnitFromWaterAmount
         UInt16 UnitFromWaterAmount { get; }
-
-        #endregion
-        #region Fluff2
         UInt16 Fluff2 { get; }
-
-        #endregion
-        #region UnitFromWaterMode
         Grass.UnitFromWaterType UnitFromWaterMode { get; }
-
-        #endregion
-        #region PositionRange
         Single PositionRange { get; }
-
-        #endregion
-        #region HeightRange
         Single HeightRange { get; }
-
-        #endregion
-        #region ColorRange
         Single ColorRange { get; }
-
-        #endregion
-        #region WavePeriod
         Single WavePeriod { get; }
-
-        #endregion
-        #region Flags
         Grass.GrassFlag Flags { get; }
-
-        #endregion
-        #region DATADataTypeState
         Grass.DATADataType DATADataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -648,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IGrassInternal item)
         {
-            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Grass_Mask<bool> GetEqualsMask(
@@ -656,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGrassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GrassCommon)((IGrassGetter)item).CommonInstance()).GetEqualsMask(
+            return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -664,10 +535,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IGrassGetter item,
-            string name = null,
-            Grass_Mask<bool> printMask = null)
+            string? name = null,
+            Grass_Mask<bool>? printMask = null)
         {
-            return ((GrassCommon)((IGrassGetter)item).CommonInstance()).ToString(
+            return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -676,10 +547,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IGrassGetter item,
             FileGeneration fg,
-            string name = null,
-            Grass_Mask<bool> printMask = null)
+            string? name = null,
+            Grass_Mask<bool>? printMask = null)
         {
-            ((GrassCommon)((IGrassGetter)item).CommonInstance()).ToString(
+            ((GrassCommon)((IGrassGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -690,15 +561,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             Grass_Mask<bool?> checkMask)
         {
-            return ((GrassCommon)((IGrassGetter)item).CommonInstance()).HasBeenSet(
+            return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Grass_Mask<bool> GetHasBeenSetMask(this IGrassGetter item)
         {
-            var ret = new Grass_Mask<bool>();
-            ((GrassCommon)((IGrassGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Grass_Mask<bool>(false);
+            ((GrassCommon)((IGrassGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -708,7 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             IGrassGetter rhs)
         {
-            return ((GrassCommon)((IGrassGetter)item).CommonInstance()).Equals(
+            return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -716,23 +587,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IGrassInternal lhs,
             IGrassGetter rhs,
-            Grass_TranslationMask copyMask)
-        {
-            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IGrassInternal lhs,
-            IGrassGetter rhs,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask copyMask = null)
+            Grass_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -743,10 +602,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IGrassInternal lhs,
             IGrassGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -755,9 +614,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass DeepCopy(
             this IGrassGetter item,
-            Grass_TranslationMask copyMask = null)
+            Grass_TranslationMask? copyMask = null)
         {
-            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -765,9 +624,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass DeepCopy(
             this IGrassGetter item,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask copyMask = null)
+            Grass_TranslationMask? copyMask = null)
         {
-            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -775,10 +634,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass DeepCopy(
             this IGrassGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -789,12 +648,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Grass_TranslationMask translationMask = null)
+            Grass_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -805,29 +662,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             XElement node,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Grass_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IGrassInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -836,13 +689,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Grass_TranslationMask translationMask = null)
+            Grass_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -851,13 +702,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             string path,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Grass_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -866,14 +715,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Grass_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -882,13 +729,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Grass_TranslationMask translationMask = null)
+            Grass_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -897,13 +742,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             Stream stream,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Grass_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -912,14 +755,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Grass_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Grass_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -945,9 +786,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -1014,11 +855,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IGrassGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IGrass);
 
-        public static readonly Type InternalSetterType = typeof(IGrassInternal);
+        public static readonly Type? InternalSetterType = typeof(IGrassInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Grass";
 
@@ -1028,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1287,14 +1128,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1318,20 +1159,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IGrassInternal item)
         {
             ClearPartial();
-            item.Model_Unset();
-            item.Density = default(Byte);
-            item.MinSlope = default(Byte);
-            item.MaxSlope = default(Byte);
-            item.Fluff1 = default(Byte);
-            item.UnitFromWaterAmount = default(UInt16);
-            item.Fluff2 = default(UInt16);
-            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-            item.PositionRange = default(Single);
-            item.HeightRange = default(Single);
-            item.ColorRange = default(Single);
-            item.WavePeriod = default(Single);
-            item.Flags = default(Grass.GrassFlag);
-            item.DATADataTypeState = default(Grass.DATADataType);
+            item.Model = null;
+            item.Density = default;
+            item.MinSlope = default;
+            item.MaxSlope = default;
+            item.Fluff1 = default;
+            item.UnitFromWaterAmount = default;
+            item.Fluff2 = default;
+            item.UnitFromWaterMode = default;
+            item.PositionRange = default;
+            item.HeightRange = default;
+            item.ColorRange = default;
+            item.WavePeriod = default;
+            item.Flags = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1350,8 +1191,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1372,9 +1213,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IGrassInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1422,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1472,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IGrassInternal>(
                 record: item,
@@ -1496,8 +1336,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Grass_Mask<bool>();
-            ((GrassCommon)((IGrassGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Grass_Mask<bool>(false);
+            ((GrassCommon)((IGrassGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1513,8 +1353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
@@ -1537,8 +1375,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IGrassGetter item,
-            string name = null,
-            Grass_Mask<bool> printMask = null)
+            string? name = null,
+            Grass_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1552,8 +1390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IGrassGetter item,
             FileGeneration fg,
-            string name = null,
-            Grass_Mask<bool> printMask = null)
+            string? name = null,
+            Grass_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1577,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IGrassGetter item,
             FileGeneration fg,
-            Grass_Mask<bool> printMask = null)
+            Grass_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1645,8 +1483,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassGetter item,
             Grass_Mask<bool?> checkMask)
         {
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1656,7 +1494,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassGetter item,
             Grass_Mask<bool> mask)
         {
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Density = true;
             mask.MinSlope = true;
             mask.MaxSlope = true;
@@ -1713,17 +1552,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGrassGetter lhs,
-            IGrassGetter rhs)
+            IGrassGetter? lhs,
+            IGrassGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (lhs.Density != rhs.Density) return false;
             if (lhs.MinSlope != rhs.MinSlope) return false;
             if (lhs.MaxSlope != rhs.MaxSlope) return false;
@@ -1741,29 +1576,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IGrassGetter)lhs,
+                lhs: (IGrassGetter?)lhs,
                 rhs: rhs as IGrassGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IGrassGetter)lhs,
+                lhs: (IGrassGetter?)lhs,
                 rhs: rhs as IGrassGetter);
         }
         
         public virtual int GetHashCode(IGrassGetter item)
         {
             int ret = 0;
-            if (item.Model_IsSet)
+            if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.Density).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.MinSlope).CombineHashCode(ret);
@@ -1810,9 +1645,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Grass obj, Grass rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Grass(getNextFormKey());
             ret.DeepCopyFieldsFrom((Grass)item);
@@ -1832,8 +1667,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IGrassInternal item,
             IGrassGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1845,8 +1680,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IGrass item,
             IGrassGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1858,17 +1693,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model_IsSet)
+                    if(rhs.Model.TryGet(out var rhsModel))
                     {
-                        item.Model = rhs.Model.DeepCopy(
+                        item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
                     }
                     else
                     {
-                        item.Model_Set(
-                            value: default(Model),
-                            hasBeenSet: false);
+                        item.Model = default;
                     }
                 }
                 catch (Exception ex)
@@ -1938,8 +1771,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IGrassInternal)item,
@@ -1951,8 +1784,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IGrass)item,
@@ -1964,8 +1797,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IGrassInternal)item,
@@ -1977,8 +1810,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IGrass)item,
@@ -1991,9 +1824,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Grass DeepCopy(
             IGrassGetter item,
-            Grass_TranslationMask copyMask = null)
+            Grass_TranslationMask? copyMask = null)
         {
-            Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()).GetNew();
+            Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2003,9 +1836,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Grass DeepCopy(
             IGrassGetter item,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask copyMask = null)
+            Grass_TranslationMask? copyMask = null)
         {
-            Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()).GetNew();
+            Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2015,10 +1848,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Grass DeepCopy(
             IGrassGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()).GetNew();
+            Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -2067,15 +1900,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IGrassGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Model_IsSet
+            if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
                 var loquiItem = item.Model;
@@ -2212,9 +2045,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IGrassGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Grass");
             node.Add(elem);
@@ -2232,9 +2065,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -2247,9 +2080,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -2262,9 +2095,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -2283,8 +2116,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IGrassInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -2309,8 +2142,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2591,8 +2424,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             XElement node,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            string name = null)
+            Grass_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GrassXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2608,8 +2441,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             string path,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            string name = null)
+            Grass_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2625,8 +2458,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             Stream stream,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask translationMask = null,
-            string name = null)
+            Grass_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2648,16 +2481,17 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Grass_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Grass_Mask<T>>
+    public class Grass_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Grass_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Grass_Mask()
-        {
-        }
-
         public Grass_Mask(T initialValue)
+        : base(initialValue)
         {
-            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
             this.Density = initialValue;
             this.MinSlope = initialValue;
             this.MaxSlope = initialValue;
@@ -2693,13 +2527,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T WavePeriod,
             T Flags,
             T DATADataTypeState)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
-            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
             this.Density = Density;
             this.MinSlope = MinSlope;
             this.MaxSlope = MaxSlope;
@@ -2714,10 +2549,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = Flags;
             this.DATADataTypeState = DATADataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected Grass_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
-        public MaskItem<T, Model_Mask<T>> Model { get; set; }
+        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
         public T Density;
         public T MinSlope;
         public T MaxSlope;
@@ -2820,10 +2662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Grass_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            if (this.Model != null)
-            {
-                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            }
+            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             obj.Density = eval(this.Density);
             obj.MinSlope = eval(this.MinSlope);
             obj.MaxSlope = eval(this.MaxSlope);
@@ -2846,14 +2685,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Grass_Mask<bool> printMask = null)
+        public string ToString(Grass_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Grass_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Grass_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Grass_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2925,24 +2764,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Grass_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Grass_ErrorMask>
     {
         #region Members
-        public MaskItem<Exception, Model_ErrorMask> Model;
-        public Exception Density;
-        public Exception MinSlope;
-        public Exception MaxSlope;
-        public Exception Fluff1;
-        public Exception UnitFromWaterAmount;
-        public Exception Fluff2;
-        public Exception UnitFromWaterMode;
-        public Exception PositionRange;
-        public Exception HeightRange;
-        public Exception ColorRange;
-        public Exception WavePeriod;
-        public Exception Flags;
-        public Exception DATADataTypeState;
+        public MaskItem<Exception?, Model_ErrorMask?>? Model;
+        public Exception? Density;
+        public Exception? MinSlope;
+        public Exception? MaxSlope;
+        public Exception? Fluff1;
+        public Exception? UnitFromWaterAmount;
+        public Exception? Fluff2;
+        public Exception? UnitFromWaterMode;
+        public Exception? PositionRange;
+        public Exception? HeightRange;
+        public Exception? ColorRange;
+        public Exception? WavePeriod;
+        public Exception? Flags;
+        public Exception? DATADataTypeState;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
@@ -2986,7 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Grass_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
                     break;
                 case Grass_FieldIndex.Density:
                     this.Density = ex;
@@ -3039,7 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Grass_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
                     break;
                 case Grass_FieldIndex.Density:
                     this.Density = (Exception)obj;
@@ -3156,10 +2995,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Grass_ErrorMask Combine(Grass_ErrorMask rhs)
+        public Grass_ErrorMask Combine(Grass_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Grass_ErrorMask();
-            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
+            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
             ret.Density = this.Density.Combine(rhs.Density);
             ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
             ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
@@ -3175,7 +3015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
             return ret;
         }
-        public static Grass_ErrorMask Combine(Grass_ErrorMask lhs, Grass_ErrorMask rhs)
+        public static Grass_ErrorMask? Combine(Grass_ErrorMask? lhs, Grass_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -3185,7 +3025,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new Grass_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Grass_ErrorMask();
         }
         #endregion
@@ -3194,7 +3033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Grass_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
-        public MaskItem<bool, Model_TranslationMask> Model;
+        public MaskItem<bool, Model_TranslationMask?> Model;
         public bool Density;
         public bool MinSlope;
         public bool MaxSlope;
@@ -3211,15 +3050,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public Grass_TranslationMask()
-            : base()
-        {
-        }
-
         public Grass_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
-            this.Model = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
             this.Density = defaultOn;
             this.MinSlope = defaultOn;
             this.MaxSlope = defaultOn;
@@ -3237,7 +3071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
@@ -3282,7 +3116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IGrassGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -3290,14 +3124,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Model_IsSet)
             {
                 var loquiItem = item.Model;
-                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
             if (item.DATADataTypeState.HasFlag(Grass.DATADataType.Has))
             {
@@ -3337,7 +3173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IGrassGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -3360,7 +3196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -3373,7 +3209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -3386,7 +3222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IGrassGetter)item,
@@ -3439,9 +3275,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((GrassXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -3455,7 +3291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((GrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3465,68 +3301,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         private int? _DATALocation;
         public Grass.DATADataType DATADataTypeState { get; private set; }
         #region Density
-        private int _DensityLocation => _DATALocation.Value + 0x0;
+        private int _DensityLocation => _DATALocation!.Value + 0x0;
         private bool _Density_IsSet => _DATALocation.HasValue;
         public Byte Density => _Density_IsSet ? _data.Span[_DensityLocation] : default;
         #endregion
         #region MinSlope
-        private int _MinSlopeLocation => _DATALocation.Value + 0x1;
+        private int _MinSlopeLocation => _DATALocation!.Value + 0x1;
         private bool _MinSlope_IsSet => _DATALocation.HasValue;
         public Byte MinSlope => _MinSlope_IsSet ? _data.Span[_MinSlopeLocation] : default;
         #endregion
         #region MaxSlope
-        private int _MaxSlopeLocation => _DATALocation.Value + 0x2;
+        private int _MaxSlopeLocation => _DATALocation!.Value + 0x2;
         private bool _MaxSlope_IsSet => _DATALocation.HasValue;
         public Byte MaxSlope => _MaxSlope_IsSet ? _data.Span[_MaxSlopeLocation] : default;
         #endregion
         #region Fluff1
-        private int _Fluff1Location => _DATALocation.Value + 0x3;
+        private int _Fluff1Location => _DATALocation!.Value + 0x3;
         private bool _Fluff1_IsSet => _DATALocation.HasValue;
         public Byte Fluff1 => _Fluff1_IsSet ? _data.Span[_Fluff1Location] : default;
         #endregion
         #region UnitFromWaterAmount
-        private int _UnitFromWaterAmountLocation => _DATALocation.Value + 0x4;
+        private int _UnitFromWaterAmountLocation => _DATALocation!.Value + 0x4;
         private bool _UnitFromWaterAmount_IsSet => _DATALocation.HasValue;
         public UInt16 UnitFromWaterAmount => _UnitFromWaterAmount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_UnitFromWaterAmountLocation, 2)) : default;
         #endregion
         #region Fluff2
-        private int _Fluff2Location => _DATALocation.Value + 0x6;
+        private int _Fluff2Location => _DATALocation!.Value + 0x6;
         private bool _Fluff2_IsSet => _DATALocation.HasValue;
         public UInt16 Fluff2 => _Fluff2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_Fluff2Location, 2)) : default;
         #endregion
         #region UnitFromWaterMode
-        private int _UnitFromWaterModeLocation => _DATALocation.Value + 0x8;
+        private int _UnitFromWaterModeLocation => _DATALocation!.Value + 0x8;
         private bool _UnitFromWaterMode_IsSet => _DATALocation.HasValue;
         public Grass.UnitFromWaterType UnitFromWaterMode => _UnitFromWaterMode_IsSet ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_UnitFromWaterModeLocation, 4)) : default;
         #endregion
         #region PositionRange
-        private int _PositionRangeLocation => _DATALocation.Value + 0xC;
+        private int _PositionRangeLocation => _DATALocation!.Value + 0xC;
         private bool _PositionRange_IsSet => _DATALocation.HasValue;
         public Single PositionRange => _PositionRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_PositionRangeLocation, 4)) : default;
         #endregion
         #region HeightRange
-        private int _HeightRangeLocation => _DATALocation.Value + 0x10;
+        private int _HeightRangeLocation => _DATALocation!.Value + 0x10;
         private bool _HeightRange_IsSet => _DATALocation.HasValue;
         public Single HeightRange => _HeightRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HeightRangeLocation, 4)) : default;
         #endregion
         #region ColorRange
-        private int _ColorRangeLocation => _DATALocation.Value + 0x14;
+        private int _ColorRangeLocation => _DATALocation!.Value + 0x14;
         private bool _ColorRange_IsSet => _DATALocation.HasValue;
         public Single ColorRange => _ColorRange_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorRangeLocation, 4)) : default;
         #endregion
         #region WavePeriod
-        private int _WavePeriodLocation => _DATALocation.Value + 0x18;
+        private int _WavePeriodLocation => _DATALocation!.Value + 0x18;
         private bool _WavePeriod_IsSet => _DATALocation.HasValue;
         public Single WavePeriod => _WavePeriod_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_WavePeriodLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation.Value + 0x1C;
+        private int _FlagsLocation => _DATALocation!.Value + 0x1C;
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
@@ -3547,7 +3383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static GrassBinaryOverlay GrassFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new GrassBinaryOverlay(
@@ -3575,7 +3411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

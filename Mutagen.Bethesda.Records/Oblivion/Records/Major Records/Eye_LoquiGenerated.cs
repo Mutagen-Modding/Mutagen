@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -51,98 +52,44 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        public bool Name_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Eye_FieldIndex.Name];
-            set => _hasBeenSetTracker[(int)Eye_FieldIndex.Name] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IEyeGetter.Name_IsSet => Name_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Name;
-        public String Name
+        private String? _Name;
+        public String? Name
         {
             get => this._Name;
-            set => Name_Set(value);
+            set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IEyeGetter.Name => this.Name;
-        public void Name_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Name = value;
-            _hasBeenSetTracker[(int)Eye_FieldIndex.Name] = markSet;
-        }
-        public void Name_Unset()
-        {
-            this.Name_Set(default(String), false);
-        }
+        String? IEyeGetter.Name => this.Name;
         #endregion
         #region Icon
-        public bool Icon_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Eye_FieldIndex.Icon];
-            set => _hasBeenSetTracker[(int)Eye_FieldIndex.Icon] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IEyeGetter.Icon_IsSet => Icon_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Icon;
-        public String Icon
+        private String? _Icon;
+        public String? Icon
         {
             get => this._Icon;
-            set => Icon_Set(value);
+            set => this._Icon = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IEyeGetter.Icon => this.Icon;
-        public void Icon_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Icon = value;
-            _hasBeenSetTracker[(int)Eye_FieldIndex.Icon] = markSet;
-        }
-        public void Icon_Unset()
-        {
-            this.Icon_Set(default(String), false);
-        }
+        String? IEyeGetter.Icon => this.Icon;
         #endregion
         #region Flags
-        public bool Flags_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Eye_FieldIndex.Flags];
-            set => _hasBeenSetTracker[(int)Eye_FieldIndex.Flags] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IEyeGetter.Flags_IsSet => Flags_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Eye.Flag _Flags;
-        public Eye.Flag Flags
+        private Eye.Flag? _Flags;
+        public Eye.Flag? Flags
         {
             get => this._Flags;
-            set => Flags_Set(value);
+            set => this._Flags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Eye.Flag IEyeGetter.Flags => this.Flags;
-        public void Flags_Set(
-            Eye.Flag value,
-            bool markSet = true)
-        {
-            _Flags = value;
-            _hasBeenSetTracker[(int)Eye_FieldIndex.Flags] = markSet;
-        }
-        public void Flags_Unset()
-        {
-            this.Flags_Set(default(Eye.Flag), false);
-        }
+        Eye.Flag? IEyeGetter.Flags => this.Flags;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             EyeMixIn.ToString(
                 item: this,
@@ -155,15 +102,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IEyeGetter rhs)) return false;
-            return ((EyeCommon)((IEyeGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Eye obj)
         {
-            return ((EyeCommon)((IEyeGetter)this).CommonInstance()).Equals(this, obj);
+            return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EyeCommon)((IEyeGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((EyeCommon)((IEyeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -172,9 +119,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((EyeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -187,11 +134,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Eye CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Eye_TranslationMask translationMask = null)
+            Eye_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -201,38 +146,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static Eye CreateFromXml(
             XElement node,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Eye_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Eye CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Eye() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Eye();
-            ((EyeSetterCommon)((IEyeGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((EyeSetterCommon)((IEyeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -241,12 +173,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Eye CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Eye_TranslationMask translationMask = null)
+            Eye_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -254,12 +184,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Eye CreateFromXml(
             string path,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Eye_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -267,13 +195,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Eye CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Eye_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -281,12 +207,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Eye CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Eye_TranslationMask translationMask = null)
+            Eye_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -294,12 +218,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Eye CreateFromXml(
             Stream stream,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Eye_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -307,13 +229,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Eye CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Eye_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -322,19 +242,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Eye_FieldIndex)index)
-            {
-                case Eye_FieldIndex.Name:
-                case Eye_FieldIndex.Icon:
-                case Eye_FieldIndex.Flags:
-                    return _hasBeenSetTracker[index];
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Eye_Registration.TRIGGERING_RECORD_TYPE;
@@ -357,7 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((EyeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -380,10 +287,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Eye CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Eye();
-            ((EyeSetterCommon)((IEyeGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((EyeSetterCommon)((IEyeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -401,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((EyeSetterCommon)((IEyeGetter)this).CommonSetterInstance()).Clear(this);
+            ((EyeSetterCommon)((IEyeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Eye GetNew()
@@ -418,21 +325,9 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IEyeInternal>
     {
-        new String Name { get; set; }
-        new bool Name_IsSet { get; set; }
-        void Name_Set(String value, bool hasBeenSet = true);
-        void Name_Unset();
-
-        new String Icon { get; set; }
-        new bool Icon_IsSet { get; set; }
-        void Icon_Set(String value, bool hasBeenSet = true);
-        void Icon_Unset();
-
-        new Eye.Flag Flags { get; set; }
-        new bool Flags_IsSet { get; set; }
-        void Flags_Set(Eye.Flag value, bool hasBeenSet = true);
-        void Flags_Unset();
-
+        new String? Name { get; set; }
+        new String? Icon { get; set; }
+        new Eye.Flag? Flags { get; set; }
     }
 
     public partial interface IEyeInternal :
@@ -448,21 +343,9 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        #region Name
-        String Name { get; }
-        bool Name_IsSet { get; }
-
-        #endregion
-        #region Icon
-        String Icon { get; }
-        bool Icon_IsSet { get; }
-
-        #endregion
-        #region Flags
-        Eye.Flag Flags { get; }
-        bool Flags_IsSet { get; }
-
-        #endregion
+        String? Name { get; }
+        String? Icon { get; }
+        Eye.Flag? Flags { get; }
 
     }
 
@@ -473,7 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IEyeInternal item)
         {
-            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Eye_Mask<bool> GetEqualsMask(
@@ -481,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
             IEyeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()).GetEqualsMask(
+            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -489,10 +372,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IEyeGetter item,
-            string name = null,
-            Eye_Mask<bool> printMask = null)
+            string? name = null,
+            Eye_Mask<bool>? printMask = null)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()).ToString(
+            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -501,10 +384,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IEyeGetter item,
             FileGeneration fg,
-            string name = null,
-            Eye_Mask<bool> printMask = null)
+            string? name = null,
+            Eye_Mask<bool>? printMask = null)
         {
-            ((EyeCommon)((IEyeGetter)item).CommonInstance()).ToString(
+            ((EyeCommon)((IEyeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -515,15 +398,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeGetter item,
             Eye_Mask<bool?> checkMask)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()).HasBeenSet(
+            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Eye_Mask<bool> GetHasBeenSetMask(this IEyeGetter item)
         {
-            var ret = new Eye_Mask<bool>();
-            ((EyeCommon)((IEyeGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Eye_Mask<bool>(false);
+            ((EyeCommon)((IEyeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -533,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeGetter item,
             IEyeGetter rhs)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()).Equals(
+            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -541,23 +424,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEyeInternal lhs,
             IEyeGetter rhs,
-            Eye_TranslationMask copyMask)
-        {
-            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IEyeInternal lhs,
-            IEyeGetter rhs,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask copyMask = null)
+            Eye_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -568,10 +439,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEyeInternal lhs,
             IEyeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -580,9 +451,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Eye DeepCopy(
             this IEyeGetter item,
-            Eye_TranslationMask copyMask = null)
+            Eye_TranslationMask? copyMask = null)
         {
-            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -590,9 +461,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Eye DeepCopy(
             this IEyeGetter item,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask copyMask = null)
+            Eye_TranslationMask? copyMask = null)
         {
-            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -600,10 +471,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Eye DeepCopy(
             this IEyeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -614,12 +485,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEyeInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Eye_TranslationMask translationMask = null)
+            Eye_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -630,29 +499,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternal item,
             XElement node,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Eye_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IEyeInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -661,13 +526,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEyeInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Eye_TranslationMask translationMask = null)
+            Eye_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -676,13 +539,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternal item,
             string path,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Eye_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -691,14 +552,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEyeInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Eye_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -707,13 +566,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEyeInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Eye_TranslationMask translationMask = null)
+            Eye_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -722,13 +579,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternal item,
             Stream stream,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Eye_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -737,14 +592,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEyeInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Eye_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Eye_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -770,9 +623,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -828,11 +681,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IEyeGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IEye);
 
-        public static readonly Type InternalSetterType = typeof(IEyeInternal);
+        public static readonly Type? InternalSetterType = typeof(IEyeInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Eye";
 
@@ -842,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -980,14 +833,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1011,9 +864,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEyeInternal item)
         {
             ClearPartial();
-            item.Name_Unset();
-            item.Icon_Unset();
-            item.Flags_Unset();
+            item.Name = default;
+            item.Icon = default;
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -1032,8 +885,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1051,9 +904,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IEyeInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1101,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1143,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IEyeInternal>(
                 record: item,
@@ -1167,8 +1019,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Eye_Mask<bool>();
-            ((EyeCommon)((IEyeGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Eye_Mask<bool>(false);
+            ((EyeCommon)((IEyeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1183,16 +1035,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.Flags = item.Flags_IsSet == rhs.Flags_IsSet && item.Flags == rhs.Flags;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Icon = string.Equals(item.Icon, rhs.Icon);
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
             IEyeGetter item,
-            string name = null,
-            Eye_Mask<bool> printMask = null)
+            string? name = null,
+            Eye_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1206,8 +1058,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IEyeGetter item,
             FileGeneration fg,
-            string name = null,
-            Eye_Mask<bool> printMask = null)
+            string? name = null,
+            Eye_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1231,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IEyeGetter item,
             FileGeneration fg,
-            Eye_Mask<bool> printMask = null)
+            Eye_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1255,9 +1107,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeGetter item,
             Eye_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1267,9 +1119,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeGetter item,
             Eye_Mask<bool> mask)
         {
-            mask.Name = item.Name_IsSet;
-            mask.Icon = item.Icon_IsSet;
-            mask.Flags = item.Flags_IsSet;
+            mask.Name = (item.Name != null);
+            mask.Icon = (item.Icon != null);
+            mask.Flags = (item.Flags != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1313,62 +1165,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IEyeGetter lhs,
-            IEyeGetter rhs)
+            IEyeGetter? lhs,
+            IEyeGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
-            if (lhs.Icon_IsSet)
-            {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            }
-            if (lhs.Flags_IsSet != rhs.Flags_IsSet) return false;
-            if (lhs.Flags_IsSet)
-            {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
             return true;
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEyeGetter)lhs,
+                lhs: (IEyeGetter?)lhs,
                 rhs: rhs as IEyeGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEyeGetter)lhs,
+                lhs: (IEyeGetter?)lhs,
                 rhs: rhs as IEyeGetter);
         }
         
         public virtual int GetHashCode(IEyeGetter item)
         {
             int ret = 0;
-            if (item.Name_IsSet)
+            if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
             }
-            if (item.Icon_IsSet)
+            if (item.Icon.TryGet(out var Iconitem))
             {
-                ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Iconitem).CombineHashCode(ret);
             }
-            if (item.Flags_IsSet)
+            if (item.Flags.TryGet(out var Flagsitem))
             {
-                ret = HashHelper.GetHashCode(item.Flags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Flagsitem).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1402,9 +1242,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Eye obj, Eye rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Eye obj, Eye rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Eye(getNextFormKey());
             ret.DeepCopyFieldsFrom((Eye)item);
@@ -1424,8 +1264,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEyeInternal item,
             IEyeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1437,8 +1277,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEye item,
             IEyeGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1447,83 +1287,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Name) ?? true))
             {
-                errorMask?.PushIndex((int)Eye_FieldIndex.Name);
-                try
-                {
-                    if (rhs.Name_IsSet)
-                    {
-                        item.Name = rhs.Name;
-                    }
-                    else
-                    {
-                        item.Name_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Name = rhs.Name;
             }
             if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Icon) ?? true))
             {
-                errorMask?.PushIndex((int)Eye_FieldIndex.Icon);
-                try
-                {
-                    if (rhs.Icon_IsSet)
-                    {
-                        item.Icon = rhs.Icon;
-                    }
-                    else
-                    {
-                        item.Icon_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Icon = rhs.Icon;
             }
             if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)Eye_FieldIndex.Flags);
-                try
-                {
-                    if (rhs.Flags_IsSet)
-                    {
-                        item.Flags = rhs.Flags;
-                    }
-                    else
-                    {
-                        item.Flags_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
             }
         }
         
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEyeInternal)item,
@@ -1535,8 +1315,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEye)item,
@@ -1548,8 +1328,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEyeInternal)item,
@@ -1561,8 +1341,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IEye)item,
@@ -1575,9 +1355,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Eye DeepCopy(
             IEyeGetter item,
-            Eye_TranslationMask copyMask = null)
+            Eye_TranslationMask? copyMask = null)
         {
-            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()).GetNew();
+            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1587,9 +1367,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Eye DeepCopy(
             IEyeGetter item,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask copyMask = null)
+            Eye_TranslationMask? copyMask = null)
         {
-            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()).GetNew();
+            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1599,10 +1379,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Eye DeepCopy(
             IEyeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()).GetNew();
+            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1651,15 +1431,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IEyeGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Name_IsSet
+            if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Eye_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1669,7 +1449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Eye_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Icon_IsSet
+            if ((item.Icon != null)
                 && (translationMask?.GetShouldTranslate((int)Eye_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1679,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Eye_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Flags_IsSet
+            if ((item.Flags != null)
                 && (translationMask?.GetShouldTranslate((int)Eye_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Eye.Flag>.Instance.Write(
@@ -1694,9 +1474,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IEyeGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Eye");
             node.Add(elem);
@@ -1714,9 +1494,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IEyeGetter)item,
@@ -1729,9 +1509,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IEyeGetter)item,
@@ -1744,9 +1524,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IEyeGetter)item,
@@ -1765,8 +1545,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IEyeInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1791,8 +1571,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1873,8 +1653,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeGetter item,
             XElement node,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            string name = null)
+            Eye_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((EyeXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1890,8 +1670,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeGetter item,
             string path,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            string name = null)
+            Eye_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1907,8 +1687,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeGetter item,
             Stream stream,
             out Eye_ErrorMask errorMask,
-            Eye_TranslationMask translationMask = null,
-            string name = null)
+            Eye_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1930,14 +1710,15 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Eye_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Eye_Mask<T>>
+    public class Eye_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Eye_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Eye_Mask()
-        {
-        }
-
         public Eye_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Name = initialValue;
             this.Icon = initialValue;
@@ -1953,16 +1734,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T Name,
             T Icon,
             T Flags)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
             this.Name = Name;
             this.Icon = Icon;
             this.Flags = Flags;
         }
+
+        #pragma warning disable CS8618
+        protected Eye_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -2033,14 +1822,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Eye_Mask<bool> printMask = null)
+        public string ToString(Eye_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Eye_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Eye_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Eye_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2068,13 +1857,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Eye_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Eye_ErrorMask>
     {
         #region Members
-        public Exception Name;
-        public Exception Icon;
-        public Exception Flags;
+        public Exception? Name;
+        public Exception? Icon;
+        public Exception? Flags;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Eye_FieldIndex enu = (Eye_FieldIndex)index;
             switch (enu)
@@ -2178,15 +1967,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Eye_ErrorMask Combine(Eye_ErrorMask rhs)
+        public Eye_ErrorMask Combine(Eye_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Eye_ErrorMask();
             ret.Name = this.Name.Combine(rhs.Name);
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             return ret;
         }
-        public static Eye_ErrorMask Combine(Eye_ErrorMask lhs, Eye_ErrorMask rhs)
+        public static Eye_ErrorMask? Combine(Eye_ErrorMask? lhs, Eye_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2196,7 +1986,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new Eye_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Eye_ErrorMask();
         }
         #endregion
@@ -2211,11 +2000,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public Eye_TranslationMask()
-            : base()
-        {
-        }
-
         public Eye_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
@@ -2226,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Name, null));
@@ -2249,7 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IEyeGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -2257,40 +2041,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Eye_Registration.FULL_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Icon_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Icon,
-                    header: recordTypeConverter.ConvertToCustom(Eye_Registration.ICON_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Flags_IsSet)
-            {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1,
-                    header: recordTypeConverter.ConvertToCustom(Eye_Registration.DATA_HEADER),
-                    nullable: false);
-            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Eye_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Icon,
+                header: recordTypeConverter.ConvertToCustom(Eye_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(Eye_Registration.DATA_HEADER));
         }
 
         public void Write(
             MutagenWriter writer,
             IEyeGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2313,7 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IEyeGetter)item,
@@ -2326,7 +2098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IEyeGetter)item,
@@ -2339,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IEyeGetter)item,
@@ -2392,9 +2164,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((EyeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2408,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((EyeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2419,18 +2191,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public bool Name_IsSet => _NameLocation.HasValue;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Icon
         private int? _IconLocation;
-        public bool Icon_IsSet => _IconLocation.HasValue;
-        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Eye.Flag Flags => (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
+        private bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Eye.Flag? Flags => Flags_IsSet ? (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eye.Flag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2449,7 +2219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static EyeBinaryOverlay EyeFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new EyeBinaryOverlay(
@@ -2477,7 +2247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

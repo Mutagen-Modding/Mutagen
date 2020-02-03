@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
 
     public interface IMajorRecordCommonGetter : IFormKey, IDuplicatable, IXmlFolderItem
     {
-        string EditorID { get; }
+        string? EditorID { get; }
         bool IsCompressed { get; }
         int MajorRecordFlagsRaw { get; }
         new FormKey FormKey { get; }

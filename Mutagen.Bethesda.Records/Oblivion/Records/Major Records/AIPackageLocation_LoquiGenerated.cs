@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,14 +42,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public AIPackageLocation()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Type
-        public AIPackageLocation.LocationType Type { get; set; }
+        public AIPackageLocation.LocationType Type { get; set; } = default;
         #endregion
         #region LocationReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -58,14 +58,14 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
-        public Single Radius { get; set; }
+        public Single Radius { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             AIPackageLocationMixIn.ToString(
                 item: this,
@@ -78,15 +78,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IAIPackageLocationGetter rhs)) return false;
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(AIPackageLocation obj)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()).Equals(this, obj);
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -97,9 +97,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((AIPackageLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -112,11 +112,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageLocation CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageLocation_TranslationMask translationMask = null)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -126,38 +124,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation CreateFromXml(
             XElement node,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static AIPackageLocation CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new AIPackageLocation() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new AIPackageLocation();
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -166,12 +151,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageLocation_TranslationMask translationMask = null)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -179,12 +162,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation CreateFromXml(
             string path,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -192,13 +173,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -206,12 +185,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageLocation_TranslationMask translationMask = null)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -219,12 +196,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation CreateFromXml(
             Stream stream,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -232,13 +207,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -247,21 +220,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((AIPackageLocation_FieldIndex)index)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                case AIPackageLocation_FieldIndex.LocationReference:
-                case AIPackageLocation_FieldIndex.Radius:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageLocation_Registration.TRIGGERING_RECORD_TYPE;
@@ -277,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -300,10 +258,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new AIPackageLocation();
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -321,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)this).CommonSetterInstance()).Clear(this);
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static AIPackageLocation GetNew()
@@ -338,10 +296,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
-
         new IFormIDLink<IPlaced> LocationReference { get; }
         new Single Radius { get; set; }
-
     }
 
     public partial interface IAIPackageLocationGetter :
@@ -354,20 +310,12 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Type
         AIPackageLocation.LocationType Type { get; }
-
-        #endregion
-        #region LocationReference
         IFormIDLinkGetter<IPlacedGetter> LocationReference { get; }
-        #endregion
-        #region Radius
         Single Radius { get; }
-
-        #endregion
 
     }
 
@@ -378,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IAIPackageLocation item)
         {
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static AIPackageLocation_Mask<bool> GetEqualsMask(
@@ -386,7 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetEqualsMask(
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -394,10 +342,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IAIPackageLocationGetter item,
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageLocation_Mask<bool>? printMask = null)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).ToString(
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -406,10 +354,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IAIPackageLocationGetter item,
             FileGeneration fg,
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageLocation_Mask<bool>? printMask = null)
         {
-            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).ToString(
+            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -420,15 +368,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             AIPackageLocation_Mask<bool?> checkMask)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).HasBeenSet(
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
         {
-            var ret = new AIPackageLocation_Mask<bool>();
-            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new AIPackageLocation_Mask<bool>(false);
+            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -438,16 +386,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).Equals(
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IAIPackageLocation lhs,
-            IAIPackageLocationGetter rhs)
+            IAIPackageLocationGetter rhs,
+            AIPackageLocation_TranslationMask? copyMask = null)
         {
-            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -457,23 +406,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IAIPackageLocation lhs,
             IAIPackageLocationGetter rhs,
-            AIPackageLocation_TranslationMask copyMask)
-        {
-            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IAIPackageLocation lhs,
-            IAIPackageLocationGetter rhs,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask copyMask = null)
+            AIPackageLocation_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -484,10 +421,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IAIPackageLocation lhs,
             IAIPackageLocationGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -496,9 +433,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation DeepCopy(
             this IAIPackageLocationGetter item,
-            AIPackageLocation_TranslationMask copyMask = null)
+            AIPackageLocation_TranslationMask? copyMask = null)
         {
-            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -506,9 +443,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation DeepCopy(
             this IAIPackageLocationGetter item,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask copyMask = null)
+            AIPackageLocation_TranslationMask? copyMask = null)
         {
-            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -516,10 +453,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation DeepCopy(
             this IAIPackageLocationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -530,12 +467,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageLocation_TranslationMask translationMask = null)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -546,29 +481,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation item,
             XElement node,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -577,13 +508,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageLocation_TranslationMask translationMask = null)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -592,13 +521,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation item,
             string path,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -607,14 +534,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             string path,
-            ErrorMaskBuilder errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -623,13 +548,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            AIPackageLocation_TranslationMask translationMask = null)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -638,13 +561,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation item,
             Stream stream,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -653,14 +574,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -686,9 +605,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -739,11 +658,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IAIPackageLocationGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IAIPackageLocation);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AIPackageLocation";
 
@@ -753,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -888,14 +807,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -919,18 +838,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IAIPackageLocation item)
         {
             ClearPartial();
-            item.Type = default(AIPackageLocation.LocationType);
+            item.Type = default;
             item.LocationReference.Unset();
-            item.Radius = default(Single);
+            item.Radius = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IAIPackageLocation item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -971,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocation item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -997,8 +915,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackageLocation_Mask<bool>();
-            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new AIPackageLocation_Mask<bool>(false);
+            ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1020,8 +938,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IAIPackageLocationGetter item,
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageLocation_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1035,8 +953,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IAIPackageLocationGetter item,
             FileGeneration fg,
-            string name = null,
-            AIPackageLocation_Mask<bool> printMask = null)
+            string? name = null,
+            AIPackageLocation_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1060,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAIPackageLocationGetter item,
             FileGeneration fg,
-            AIPackageLocation_Mask<bool> printMask = null)
+            AIPackageLocation_Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
@@ -1094,8 +1012,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAIPackageLocationGetter lhs,
-            IAIPackageLocationGetter rhs)
+            IAIPackageLocationGetter? lhs,
+            IAIPackageLocationGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1140,8 +1058,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IAIPackageLocation item,
             IAIPackageLocationGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Type) ?? true))
             {
@@ -1161,9 +1079,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageLocation DeepCopy(
             IAIPackageLocationGetter item,
-            AIPackageLocation_TranslationMask copyMask = null)
+            AIPackageLocation_TranslationMask? copyMask = null)
         {
-            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1173,9 +1091,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AIPackageLocation DeepCopy(
             IAIPackageLocationGetter item,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask copyMask = null)
+            AIPackageLocation_TranslationMask? copyMask = null)
         {
-            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1185,10 +1103,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageLocation DeepCopy(
             IAIPackageLocationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1241,8 +1159,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IAIPackageLocationGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Type) ?? true))
             {
@@ -1276,9 +1194,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IAIPackageLocationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AIPackageLocation");
             node.Add(elem);
@@ -1296,9 +1214,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IAIPackageLocationGetter)item,
@@ -1311,10 +1229,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IAIPackageLocationGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1346,8 +1264,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IAIPackageLocation item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1372,8 +1290,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocation item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1449,8 +1367,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             XElement node,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            string name = null)
+            AIPackageLocation_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1466,8 +1384,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             string path,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            string name = null)
+            AIPackageLocation_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1482,9 +1400,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1500,8 +1418,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             Stream stream,
             out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask translationMask = null,
-            string name = null)
+            AIPackageLocation_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1516,9 +1434,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1533,9 +1451,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1548,21 +1466,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             XElement node,
-            string name = null,
-            AIPackageLocation_TranslationMask translationMask = null)
+            string? name = null,
+            AIPackageLocation_TranslationMask? translationMask = null)
         {
             ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1577,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1599,13 +1517,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class AIPackageLocation_Mask<T> : IMask<T>, IEquatable<AIPackageLocation_Mask<T>>
+    public class AIPackageLocation_Mask<T> :
+        IMask<T>,
+        IEquatable<AIPackageLocation_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public AIPackageLocation_Mask()
-        {
-        }
-
         public AIPackageLocation_Mask(T initialValue)
         {
             this.Type = initialValue;
@@ -1622,6 +1539,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LocationReference = LocationReference;
             this.Radius = Radius;
         }
+
+        #pragma warning disable CS8618
+        protected AIPackageLocation_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1688,14 +1612,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(AIPackageLocation_Mask<bool> printMask = null)
+        public string ToString(AIPackageLocation_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, AIPackageLocation_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, AIPackageLocation_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(AIPackageLocation_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1723,8 +1647,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class AIPackageLocation_ErrorMask : IErrorMask, IErrorMask<AIPackageLocation_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1736,13 +1660,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Type;
-        public Exception LocationReference;
-        public Exception Radius;
+        public Exception? Type;
+        public Exception? LocationReference;
+        public Exception? Radius;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
             switch (enu)
@@ -1843,15 +1767,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public AIPackageLocation_ErrorMask Combine(AIPackageLocation_ErrorMask rhs)
+        public AIPackageLocation_ErrorMask Combine(AIPackageLocation_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new AIPackageLocation_ErrorMask();
             ret.Type = this.Type.Combine(rhs.Type);
             ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
             ret.Radius = this.Radius.Combine(rhs.Radius);
             return ret;
         }
-        public static AIPackageLocation_ErrorMask Combine(AIPackageLocation_ErrorMask lhs, AIPackageLocation_ErrorMask rhs)
+        public static AIPackageLocation_ErrorMask? Combine(AIPackageLocation_ErrorMask? lhs, AIPackageLocation_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1861,7 +1786,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static AIPackageLocation_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new AIPackageLocation_ErrorMask();
         }
         #endregion
@@ -1870,17 +1794,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class AIPackageLocation_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Type;
         public bool LocationReference;
         public bool Radius;
         #endregion
 
         #region Ctors
-        public AIPackageLocation_TranslationMask()
-        {
-        }
-
         public AIPackageLocation_TranslationMask(bool defaultOn)
         {
             this.Type = defaultOn;
@@ -1893,13 +1813,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Type, null));
             ret.Add((LocationReference, null));
@@ -1938,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IAIPackageLocationGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1956,7 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IAIPackageLocationGetter)item,
@@ -2013,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IAIPackageLocationGetter.CommonSetterInstance() => null;
+        object? IAIPackageLocationGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2030,9 +1950,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((AIPackageLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2048,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((AIPackageLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2058,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public IFormIDLinkGetter<IPlacedGetter> LocationReference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormIDLinkGetter<IPlacedGetter> LocationReference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public Single Radius => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2077,7 +1997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static AIPackageLocationBinaryOverlay AIPackageLocationFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AIPackageLocationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

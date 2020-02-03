@@ -196,14 +196,28 @@ namespace Mutagen.Bethesda.Generation
             // Quick hack.  Real solution should use reflection to investigate the interface
             if (loquiType.RefType == LoquiType.LoquiRefType.Interface)
             {
-                fg.AppendLine($"yield return {loquiAccessor}{(generic == null ? string.Empty : " as TMajor")};");
+                if (generic == null)
+                {
+                    fg.AppendLine($"yield return {loquiAccessor};");
+                }
+                else
+                {
+                    fg.AppendLine($"yield return ({loquiAccessor} as TMajor)!;");
+                }
                 return;
             }
 
             if (loquiType.TargetObjectGeneration != null
                 && await loquiType.TargetObjectGeneration.IsMajorRecord())
             {
-                fg.AppendLine($"yield return {loquiAccessor}{(generic == null ? string.Empty : " as TMajor")};");
+                if (generic == null)
+                {
+                    fg.AppendLine($"yield return {loquiAccessor};");
+                }
+                else
+                {
+                    fg.AppendLine($"yield return ({loquiAccessor} as TMajor)!;");
+                }
             }
             if (await HasMajorRecords(loquiType, includeBaseClass: true) == Case.No)
             {
@@ -212,7 +226,14 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords{(generic == null ? null : $"<{generic}>")}())");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"yield return item{(generic == null ? string.Empty : " as TMajor")};");
+                if (generic == null)
+                {
+                    fg.AppendLine($"yield return item;");
+                }
+                else
+                {
+                    fg.AppendLine($"yield return (item as TMajor)!;");
+                }
             }
         }
 
@@ -237,7 +258,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"yield return item as {nameof(IMajorRecordCommon)};");
+                        fg.AppendLine($"yield return (item as {nameof(IMajorRecordCommon)})!;");
                     }
                 }
                 else
@@ -273,25 +294,15 @@ namespace Mutagen.Bethesda.Generation
                                     case SingletonLevel.None:
                                         if (loqui.HasBeenSet)
                                         {
-                                            fg.AppendLine($"if ({loqui.HasBeenSetAccessor($"{accessor}.{loqui.Name}")})");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                // Query item once, for binary overlay optimization
-                                                fg.AppendLine($"var {loqui.Name}item = {accessor}.{loqui.Name};");
-                                                fg.AppendLine($"if ({loqui.Name}item != null)");
-                                                using (new BraceWrapper(fg))
-                                                {
-                                                    fg.AppendLines(subFg);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            fg.AppendLine($"if ({accessor}.{loqui.Name} != null)");
+                                            fg.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
                                             using (new BraceWrapper(fg))
                                             {
                                                 fg.AppendLines(subFg);
                                             }
+                                        }
+                                        else
+                                        {
+                                            fg.AppendLines(subFg);
                                         }
                                         break;
                                     case SingletonLevel.NotNull:
@@ -406,7 +417,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords<TMajor>(obj))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine("yield return item as TMajor;");
+                        fg.AppendLine("yield return (item as TMajor)!;");
                     }
                 }
                 else
@@ -444,7 +455,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("yield return item as TMajor;");
+                                fg.AppendLine("yield return (item as TMajor)!;");
                             }
                             fg.AppendLine("yield break;");
                         }
@@ -489,25 +500,15 @@ namespace Mutagen.Bethesda.Generation
                                     case SingletonLevel.None:
                                         if (loqui.HasBeenSet)
                                         {
-                                            fieldGen.AppendLine($"if ({loqui.HasBeenSetAccessor($"{accessor}.{loqui.Name}")})");
-                                            using (new BraceWrapper(fieldGen))
-                                            {
-                                                // Query item once, for binary overlay optimization
-                                                fieldGen.AppendLine($"var {loqui.Name}item = {accessor}.{loqui.Name};");
-                                                fieldGen.AppendLine($"if ({loqui.Name}item != null)");
-                                                using (new BraceWrapper(fieldGen))
-                                                {
-                                                    fieldGen.AppendLines(subFg);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            fieldGen.AppendLine($"if ({accessor}.{loqui.Name} != null)");
+                                            fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
                                             using (new BraceWrapper(fieldGen))
                                             {
                                                 fieldGen.AppendLines(subFg);
                                             }
+                                        }
+                                        else
+                                        {
+                                            fieldGen.AppendLines(subFg);
                                         }
                                         break;
                                     case SingletonLevel.NotNull:
@@ -530,7 +531,7 @@ namespace Mutagen.Bethesda.Generation
                                         fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
                                         using (new BraceWrapper(fieldGen))
                                         {
-                                            fieldGen.AppendLine($"yield return item as TMajor;");
+                                            fieldGen.AppendLine($"yield return (item as TMajor)!;");
                                         }
                                     }
                                 }
@@ -578,7 +579,7 @@ namespace Mutagen.Bethesda.Generation
                                         fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.Items)");
                                         using (new BraceWrapper(fieldGen))
                                         {
-                                            fieldGen.AppendLine($"yield return item as TMajor;");
+                                            fieldGen.AppendLine($"yield return (item as TMajor)!;");
                                         }
                                     }
                                 }

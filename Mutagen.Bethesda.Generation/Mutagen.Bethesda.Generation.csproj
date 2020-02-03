@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
 </Project>

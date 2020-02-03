@@ -45,19 +45,24 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
-            if (data.HasTrigger)
+            if (typeGen.HasBeenSet)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
-            }            
-            if (data.RecordType.HasValue)
-            {
-                if (dataType != null)
+                if (typeGen.CanBeNullable(getter: true))
                 {
-                    throw new ArgumentException();
+                    dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte?);");
                 }
-                dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default;");
+                else
+                {
+                    fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
+                    if (dataType != null)
+                    {
+                        throw new ArgumentException();
+                    }
+                    dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte?);");
+                }
             }
             else
             {

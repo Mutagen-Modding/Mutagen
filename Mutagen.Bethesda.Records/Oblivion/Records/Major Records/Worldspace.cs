@@ -29,15 +29,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static readonly Worldspace_TranslationMask XmlFolderTranslation = new Worldspace_TranslationMask(true)
         {
-            SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask>(false, null),
-            Road = new MaskItem<bool, Road_TranslationMask>(false, null),
-            TopCell = new MaskItem<bool, Cell_TranslationMask>(false, null),
+            SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask?>(false, null),
+            Road = new MaskItem<bool, Road_TranslationMask?>(false, null),
+            TopCell = new MaskItem<bool, Cell_TranslationMask?>(false, null),
         };
         private static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslation.GetCrystal();
 
         private static readonly WorldspaceBlock_TranslationMask BlockXmlFolderTranslation = new WorldspaceBlock_TranslationMask(true)
         {
-            Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask>(false, null),
+            Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask?>(false, null),
             BlockNumberX = false,
             BlockNumberY = false,
         };
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<TryGet<Worldspace>> TryCreateXmFolder(
             DirectoryPath dir,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
         {
             var path = Path.Combine(dir.Path, $"{nameof(Worldspace)}.xml");
             if (!File.Exists(path))
@@ -165,14 +165,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override async Task WriteToXmlFolder(
-            DirectoryPath? dir, 
+            DirectoryPath dir, 
             string name, 
             XElement node, 
             int counter,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
         {
-            dir = new DirectoryPath(Path.Combine(dir.Value.Path, FolderTranslation.GetFileString(this, counter)));
-            dir.Value.Create();
+            dir = new DirectoryPath(Path.Combine(dir.Path, FolderTranslation.GetFileString(this, counter)));
+            dir.Create();
 
             var worldspaceNode = new XElement("topnode");
             this.WriteToXml(
@@ -180,20 +180,18 @@ namespace Mutagen.Bethesda.Oblivion
                 node: worldspaceNode,
                 errorMask: errorMask,
                 translationMask: XmlFolderTranslationCrystal);
-            worldspaceNode.Elements().First().SaveIfChanged(Path.Combine(dir.Value.Path, $"{nameof(Worldspace)}.xml"));
-            if (this.Road_IsSet
-                && this.Road != null)
+            worldspaceNode.Elements().First().SaveIfChanged(Path.Combine(dir.Path, $"{nameof(Worldspace)}.xml"));
+            if (this.Road.TryGet(out var road))
             {
-                this.Road.WriteToXml(
-                    path: Path.Combine(dir.Value.Path, $"{nameof(Road)}.xml"),
+                road.WriteToXml(
+                    path: Path.Combine(dir.Path, $"{nameof(Road)}.xml"),
                     errorMask: errorMask,
                     translationMask: null);
             }
-            if (this.TopCell_IsSet
-                && this.TopCell != null)
+            if (this.TopCell.TryGet(out var topCell))
             {
-                this.TopCell.WriteToXml(
-                    path: Path.Combine(dir.Value.Path, $"{nameof(TopCell)}.xml"),
+                topCell.WriteToXml(
+                    path: Path.Combine(dir.Path, $"{nameof(TopCell)}.xml"),
                     errorMask: errorMask,
                     translationMask: null);
             }
@@ -205,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
                 blockTasks.Add(Task.Run(async () =>
                 {
                     List<Task> subBlockTasks = new List<Task>();
-                    var blockDir = new DirectoryPath(Path.Combine(dir.Value.Path, $"SubCells/{blockStamp} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
+                    var blockDir = new DirectoryPath(Path.Combine(dir.Path, $"SubCells/{blockStamp} - ({block.BlockNumberX}X, {block.BlockNumberY}Y)/"));
                     blockDir.Create();
                     int subBlockCount = 0;
                     block.WriteToXml(
@@ -236,25 +234,23 @@ namespace Mutagen.Bethesda.Oblivion
         {
             private static WorldspaceBlock_TranslationMask duplicateBlockCopyMask = new WorldspaceBlock_TranslationMask(true)
             {
-                Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask>(false, default)
+                Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask?>(false, default)
             };
 
             private static WorldspaceSubBlock_TranslationMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_TranslationMask(true)
             {
-                Items = new MaskItem<bool, Cell_TranslationMask>(false, default)
+                Items = new MaskItem<bool, Cell_TranslationMask?>(false, default)
             };
 
-            partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+            partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
             {
-                if (rhs.Road_IsSet
-                    && rhs.Road != null)
+                if (rhs.Road.TryGet(out var road))
                 {
-                    obj.Road = (Road)rhs.Road.Duplicate(getNextFormKey, duplicatedRecords);
+                    obj.Road = (Road)road.Duplicate(getNextFormKey, duplicatedRecords);
                 }
-                if (rhs.TopCell_IsSet
-                    && rhs.TopCell != null)
+                if (rhs.TopCell.TryGet(out var topCell))
                 {
-                    obj.TopCell = (Cell)rhs.TopCell.Duplicate(getNextFormKey, duplicatedRecords);
+                    obj.TopCell = (Cell)topCell.Duplicate(getNextFormKey, duplicatedRecords);
                 }
                 obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
                 {
@@ -299,9 +295,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj, MasterReferences masterReferences)
             {
+                var road = obj.Road;
+                var topCell = obj.TopCell;
                 if (obj.SubCells.Count == 0
-                    && !obj.Road_IsSet
-                    && !obj.TopCell_IsSet) return;
+                    && road != null
+                    && topCell != null) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
@@ -311,15 +309,15 @@ namespace Mutagen.Bethesda.Oblivion
                     writer.Write((int)GroupTypeEnum.WorldChildren);
                     writer.Write(obj.SubCellsTimestamp);
 
-                    if (obj.Road_IsSet)
+                    if (road != null)
                     {
-                        obj.Road.WriteToBinary(
+                        road.WriteToBinary(
                             writer,
                             masterReferences: masterReferences);
                     }
-                    if (obj.TopCell_IsSet)
+                    if (topCell != null)
                     {
-                        obj.TopCell.WriteToBinary(
+                        topCell.WriteToBinary(
                             writer,
                             masterReferences: masterReferences);
                     }
@@ -409,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                obj.Road_Unset();
+                                obj.Road = default;
                             }
                             break;
                         case 0x4C4C4543: // "CELL":
@@ -422,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             else
                             {
-                                obj.TopCell_Unset();
+                                obj.TopCell = default;
                             }
                             break;
                         case 0x50555247: // "GRUP":
@@ -442,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return;
                     }
                 }
-            }
+            }   
         }
 
         public partial class WorldspaceBinaryOverlay
@@ -450,12 +448,10 @@ namespace Mutagen.Bethesda.Oblivion
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             private int? _RoadLocation;
-            public bool Road_IsSet => this._RoadLocation.HasValue;
-            public IRoadGetter Road => RoadBinaryOverlay.RoadFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_RoadLocation.Value)), _package);
+            public IRoadGetter? Road => _RoadLocation.HasValue ? RoadBinaryOverlay.RoadFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_RoadLocation!.Value)), _package) : default;
 
             private int? _TopCellLocation;
-            public bool TopCell_IsSet => this._TopCellLocation.HasValue;
-            public ICellGetter TopCell => CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_TopCellLocation.Value)), _package);
+            public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package) : default;
 
             public ReadOnlySpan<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
@@ -472,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
                 _OffsetDataLocation = (ushort)(stream.Position - offset);
                 if (this.UsingOffsetLength)
                 {
-                    var offsetLenFrame = _package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation.Value));
+                    var offsetLenFrame = _package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
                     stream.Position += checked((int)(_package.Meta.SubConstants.HeaderLength + BinaryPrimitives.ReadUInt32LittleEndian(offsetLenFrame.ContentSpan)));
                 }
             }
@@ -481,13 +477,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (this.UsingOffsetLength)
                 {
-                    var lenFrame = this._package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation.Value));
+                    var lenFrame = this._package.Meta.SubRecordFrame(_data.Slice(_OffsetLengthLocation!.Value));
                     var len = BinaryPrimitives.ReadInt32LittleEndian(lenFrame.ContentSpan);
-                    return _data.Slice(_OffsetDataLocation.Value + this._package.Meta.SubConstants.HeaderLength, len);
+                    return _data.Slice(_OffsetDataLocation!.Value + this._package.Meta.SubConstants.HeaderLength, len);
                 }
                 else
                 {
-                    var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation.Value));
+                    var spanFrame = this._package.Meta.SubRecordFrame(this._data.Slice(_OffsetDataLocation!.Value));
                     return spanFrame.ContentSpan;
                 }
             }

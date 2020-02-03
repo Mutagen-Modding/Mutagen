@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -22,15 +23,15 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -51,62 +52,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        public bool Name_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Flora_FieldIndex.Name];
-            set => _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFloraGetter.Name_IsSet => Name_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _Name;
-        public String Name
+        private String? _Name;
+        public String? Name
         {
             get => this._Name;
-            set => Name_Set(value);
+            set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IFloraGetter.Name => this.Name;
-        public void Name_Set(
-            String value,
-            bool markSet = true)
-        {
-            _Name = value;
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = markSet;
-        }
-        public void Name_Unset()
-        {
-            this.Name_Set(default(String), false);
-        }
+        String? IFloraGetter.Name => this.Name;
         #endregion
         #region Model
-        public bool Model_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Flora_FieldIndex.Model];
-            set => _hasBeenSetTracker[(int)Flora_FieldIndex.Model] = value;
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IFloraGetter.Model_IsSet => Model_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model _Model;
-        public Model Model
+        private Model? _Model;
+        public Model? Model
         {
             get => _Model;
-            set => Model_Set(value);
-        }
-        public void Model_Set(
-            Model value,
-            bool hasBeenSet = true)
-        {
-            _Model = value;
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Model] = hasBeenSet;
-        }
-        public void Model_Unset()
-        {
-            this.Model_Set(default(Model), false);
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter IFloraGetter.Model => this.Model;
+        IModelGetter? IFloraGetter.Model => this.Model;
         #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -175,14 +140,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PFPCDataTypeState
-        public Flora.PFPCDataType PFPCDataTypeState { get; set; }
+        public Flora.PFPCDataType PFPCDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
 
         public override void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             FloraMixIn.ToString(
                 item: this,
@@ -195,15 +160,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IFloraGetter rhs)) return false;
-            return ((FloraCommon)((IFloraGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Flora obj)
         {
-            return ((FloraCommon)((IFloraGetter)this).CommonInstance()).Equals(this, obj);
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((FloraCommon)((IFloraGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((FloraCommon)((IFloraGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -212,9 +177,9 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object XmlWriteTranslator => FloraXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((FloraXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -227,11 +192,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Flora CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Flora_TranslationMask translationMask = null)
+            Flora_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -241,38 +204,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora CreateFromXml(
             XElement node,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Flora_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public new static Flora CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Flora() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Flora();
-            ((FloraSetterCommon)((IFloraGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((FloraSetterCommon)((IFloraGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -281,12 +231,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Flora_TranslationMask translationMask = null)
+            Flora_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -294,12 +242,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora CreateFromXml(
             string path,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Flora_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -307,13 +253,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Flora_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -321,12 +265,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Flora_TranslationMask translationMask = null)
+            Flora_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -334,12 +276,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora CreateFromXml(
             Stream stream,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Flora_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -347,13 +287,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Flora_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -362,26 +300,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        protected override bool GetHasBeenSet(int index)
-        {
-            switch ((Flora_FieldIndex)index)
-            {
-                case Flora_FieldIndex.Name:
-                case Flora_FieldIndex.Model:
-                case Flora_FieldIndex.Script:
-                case Flora_FieldIndex.Ingredient:
-                    return _hasBeenSetTracker[index];
-                case Flora_FieldIndex.Spring:
-                case Flora_FieldIndex.Summer:
-                case Flora_FieldIndex.Fall:
-                case Flora_FieldIndex.Winter:
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    return true;
-                default:
-                    return base.GetHasBeenSet(index);
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Flora_Registration.TRIGGERING_RECORD_TYPE;
@@ -411,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((FloraBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -434,10 +352,10 @@ namespace Mutagen.Bethesda.Oblivion
         public new static Flora CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Flora();
-            ((FloraSetterCommon)((IFloraGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((FloraSetterCommon)((IFloraGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -455,7 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((FloraSetterCommon)((IFloraGetter)this).CommonSetterInstance()).Clear(this);
+            ((FloraSetterCommon)((IFloraGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static new Flora GetNew()
@@ -472,28 +390,15 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IFloraInternal>
     {
-        new String Name { get; set; }
-        new bool Name_IsSet { get; set; }
-        void Name_Set(String value, bool hasBeenSet = true);
-        void Name_Unset();
-
-        new Model Model { get; set; }
-        new bool Model_IsSet { get; set; }
-        void Model_Set(Model value, bool hasBeenSet = true);
-        void Model_Unset();
-
+        new String? Name { get; set; }
+        new Model? Model { get; set; }
         new IFormIDSetLink<Script> Script { get; }
         new IFormIDSetLink<Ingredient> Ingredient { get; }
         new Byte Spring { get; set; }
-
         new Byte Summer { get; set; }
-
         new Byte Fall { get; set; }
-
         new Byte Winter { get; set; }
-
         new Flora.PFPCDataType PFPCDataTypeState { get; set; }
-
     }
 
     public partial interface IFloraInternal :
@@ -510,42 +415,15 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
-        #region Name
-        String Name { get; }
-        bool Name_IsSet { get; }
-
-        #endregion
-        #region Model
-        IModelGetter Model { get; }
-        bool Model_IsSet { get; }
-
-        #endregion
-        #region Script
+        String? Name { get; }
+        IModelGetter? Model { get; }
         IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        #endregion
-        #region Ingredient
         IFormIDSetLinkGetter<IIngredientGetter> Ingredient { get; }
-        #endregion
-        #region Spring
         Byte Spring { get; }
-
-        #endregion
-        #region Summer
         Byte Summer { get; }
-
-        #endregion
-        #region Fall
         Byte Fall { get; }
-
-        #endregion
-        #region Winter
         Byte Winter { get; }
-
-        #endregion
-        #region PFPCDataTypeState
         Flora.PFPCDataType PFPCDataTypeState { get; }
-
-        #endregion
 
     }
 
@@ -556,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IFloraInternal item)
         {
-            ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Flora_Mask<bool> GetEqualsMask(
@@ -564,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
             IFloraGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FloraCommon)((IFloraGetter)item).CommonInstance()).GetEqualsMask(
+            return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -572,10 +450,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IFloraGetter item,
-            string name = null,
-            Flora_Mask<bool> printMask = null)
+            string? name = null,
+            Flora_Mask<bool>? printMask = null)
         {
-            return ((FloraCommon)((IFloraGetter)item).CommonInstance()).ToString(
+            return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -584,10 +462,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IFloraGetter item,
             FileGeneration fg,
-            string name = null,
-            Flora_Mask<bool> printMask = null)
+            string? name = null,
+            Flora_Mask<bool>? printMask = null)
         {
-            ((FloraCommon)((IFloraGetter)item).CommonInstance()).ToString(
+            ((FloraCommon)((IFloraGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -598,15 +476,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             Flora_Mask<bool?> checkMask)
         {
-            return ((FloraCommon)((IFloraGetter)item).CommonInstance()).HasBeenSet(
+            return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Flora_Mask<bool> GetHasBeenSetMask(this IFloraGetter item)
         {
-            var ret = new Flora_Mask<bool>();
-            ((FloraCommon)((IFloraGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Flora_Mask<bool>(false);
+            ((FloraCommon)((IFloraGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -616,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             IFloraGetter rhs)
         {
-            return ((FloraCommon)((IFloraGetter)item).CommonInstance()).Equals(
+            return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
@@ -624,23 +502,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IFloraInternal lhs,
             IFloraGetter rhs,
-            Flora_TranslationMask copyMask)
-        {
-            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IFloraInternal lhs,
-            IFloraGetter rhs,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask copyMask = null)
+            Flora_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -651,10 +517,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IFloraInternal lhs,
             IFloraGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -663,9 +529,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora DeepCopy(
             this IFloraGetter item,
-            Flora_TranslationMask copyMask = null)
+            Flora_TranslationMask? copyMask = null)
         {
-            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -673,9 +539,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora DeepCopy(
             this IFloraGetter item,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask copyMask = null)
+            Flora_TranslationMask? copyMask = null)
         {
-            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -683,10 +549,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora DeepCopy(
             this IFloraGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -697,12 +563,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Flora_TranslationMask translationMask = null)
+            Flora_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -713,29 +577,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             XElement node,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Flora_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IFloraInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -744,13 +604,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Flora_TranslationMask translationMask = null)
+            Flora_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -759,13 +617,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             string path,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Flora_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -774,14 +630,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Flora_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -790,13 +644,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Flora_TranslationMask translationMask = null)
+            Flora_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -805,13 +657,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             Stream stream,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Flora_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -820,14 +670,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Flora_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Flora_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -853,9 +701,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -917,11 +765,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IFloraGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IFlora);
 
-        public static readonly Type InternalSetterType = typeof(IFloraInternal);
+        public static readonly Type? InternalSetterType = typeof(IFloraInternal);
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Flora";
 
@@ -931,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -1138,14 +986,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -1169,15 +1017,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IFloraInternal item)
         {
             ClearPartial();
-            item.Name_Unset();
-            item.Model_Unset();
+            item.Name = default;
+            item.Model = null;
             item.Script.Unset();
             item.Ingredient.Unset();
-            item.Spring = default(Byte);
-            item.Summer = default(Byte);
-            item.Fall = default(Byte);
-            item.Winter = default(Byte);
-            item.PFPCDataTypeState = default(Flora.PFPCDataType);
+            item.Spring = default;
+            item.Summer = default;
+            item.Fall = default;
+            item.Winter = default;
+            item.PFPCDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1196,8 +1044,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1218,9 +1066,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IFloraInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1268,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1336,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IFloraInternal>(
                 record: item,
@@ -1360,8 +1207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Flora_Mask<bool>();
-            ((FloraCommon)((IFloraGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Flora_Mask<bool>(false);
+            ((FloraCommon)((IFloraGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1376,10 +1223,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
+            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model_IsSet,
-                rhs.Model_IsSet,
                 item.Model,
                 rhs.Model,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
@@ -1396,8 +1241,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IFloraGetter item,
-            string name = null,
-            Flora_Mask<bool> printMask = null)
+            string? name = null,
+            Flora_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1411,8 +1256,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IFloraGetter item,
             FileGeneration fg,
-            string name = null,
-            Flora_Mask<bool> printMask = null)
+            string? name = null,
+            Flora_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1436,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IFloraGetter item,
             FileGeneration fg,
-            Flora_Mask<bool> printMask = null)
+            Flora_Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1484,9 +1329,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraGetter item,
             Flora_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script.HasBeenSet) return false;
             if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != item.Ingredient.HasBeenSet) return false;
             return base.HasBeenSet(
@@ -1498,8 +1343,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraGetter item,
             Flora_Mask<bool> mask)
         {
-            mask.Name = item.Name_IsSet;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
             mask.Ingredient = item.Ingredient.HasBeenSet;
             mask.Spring = true;
@@ -1550,32 +1396,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFloraGetter lhs,
-            IFloraGetter rhs)
+            IFloraGetter? lhs,
+            IFloraGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Name_IsSet != rhs.Name_IsSet) return false;
-            if (lhs.Name_IsSet)
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if (lhs.Model_IsSet != rhs.Model_IsSet) return false;
-            if (lhs.Model_IsSet)
-            {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            }
-            if (lhs.Script.HasBeenSet != rhs.Script.HasBeenSet) return false;
-            if (lhs.Script.HasBeenSet)
-            {
-                if (!lhs.Script.Equals(rhs.Script)) return false;
-            }
-            if (lhs.Ingredient.HasBeenSet != rhs.Ingredient.HasBeenSet) return false;
-            if (lhs.Ingredient.HasBeenSet)
-            {
-                if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
-            }
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!lhs.Script.Equals(rhs.Script)) return false;
+            if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             if (lhs.Spring != rhs.Spring) return false;
             if (lhs.Summer != rhs.Summer) return false;
             if (lhs.Fall != rhs.Fall) return false;
@@ -1585,41 +1415,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IOblivionMajorRecordGetter lhs,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter? lhs,
+            IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IFloraGetter)lhs,
+                lhs: (IFloraGetter?)lhs,
                 rhs: rhs as IFloraGetter);
         }
         
         public override bool Equals(
-            IMajorRecordGetter lhs,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IFloraGetter)lhs,
+                lhs: (IFloraGetter?)lhs,
                 rhs: rhs as IFloraGetter);
         }
         
         public virtual int GetHashCode(IFloraGetter item)
         {
             int ret = 0;
-            if (item.Name_IsSet)
+            if (item.Name.TryGet(out var Nameitem))
             {
-                ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Nameitem).CombineHashCode(ret);
             }
-            if (item.Model_IsSet)
+            if (item.Model.TryGet(out var Modelitem))
             {
-                ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Modelitem).CombineHashCode(ret);
             }
-            if (item.Script.HasBeenSet)
+            if (item.Script.TryGet(out var Scriptitem))
             {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Scriptitem).CombineHashCode(ret);
             }
-            if (item.Ingredient.HasBeenSet)
+            if (item.Ingredient.TryGet(out var Ingredientitem))
             {
-                ret = HashHelper.GetHashCode(item.Ingredient).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Ingredientitem).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(item.Spring).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Summer).CombineHashCode(ret);
@@ -1660,9 +1490,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
+        partial void PostDuplicate(Flora obj, Flora rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Flora(getNextFormKey());
             ret.DeepCopyFieldsFrom((Flora)item);
@@ -1682,8 +1512,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IFloraInternal item,
             IFloraGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1695,8 +1525,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IFlora item,
             IFloraGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             base.DeepCopyFieldsFrom(
                 item,
@@ -1705,44 +1535,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Name);
-                try
-                {
-                    if (rhs.Name_IsSet)
-                    {
-                        item.Name = rhs.Name;
-                    }
-                    else
-                    {
-                        item.Name_Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Name = rhs.Name;
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Model_IsSet)
+                    if(rhs.Model.TryGet(out var rhsModel))
                     {
-                        item.Model = rhs.Model.DeepCopy(
+                        item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
                             copyMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
                     }
                     else
                     {
-                        item.Model_Set(
-                            value: default(Model),
-                            hasBeenSet: false);
+                        item.Model = default;
                     }
                 }
                 catch (Exception ex)
@@ -1757,37 +1565,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Script);
-                try
-                {
-                    item.Script.SetToFormKey(rhs: rhs.Script);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Script.SetToFormKey(rhs: rhs.Script);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
-                try
-                {
-                    item.Ingredient.SetToFormKey(rhs: rhs.Ingredient);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Ingredient.SetToFormKey(rhs: rhs.Ingredient);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
             {
@@ -1814,8 +1596,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFloraInternal)item,
@@ -1827,8 +1609,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFlora)item,
@@ -1840,8 +1622,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFloraInternal)item,
@@ -1853,8 +1635,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             this.DeepCopyFieldsFrom(
                 item: (IFlora)item,
@@ -1867,9 +1649,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Flora DeepCopy(
             IFloraGetter item,
-            Flora_TranslationMask copyMask = null)
+            Flora_TranslationMask? copyMask = null)
         {
-            Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()).GetNew();
+            Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1879,9 +1661,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Flora DeepCopy(
             IFloraGetter item,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask copyMask = null)
+            Flora_TranslationMask? copyMask = null)
         {
-            Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()).GetNew();
+            Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1891,10 +1673,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Flora DeepCopy(
             IFloraGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()).GetNew();
+            Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1943,15 +1725,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IFloraGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Name_IsSet
+            if ((item.Name != null)
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1961,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Flora_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Model_IsSet
+            if ((item.Model != null)
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
                 var loquiItem = item.Model;
@@ -2046,9 +1828,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IFloraGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Flora");
             node.Add(elem);
@@ -2066,9 +1848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2081,9 +1863,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2096,9 +1878,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             XElement node,
             IMajorRecordGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2117,8 +1899,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IFloraInternal item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -2143,8 +1925,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraInternal item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -2337,8 +2119,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             XElement node,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            string name = null)
+            Flora_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FloraXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -2354,8 +2136,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             string path,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            string name = null)
+            Flora_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2371,8 +2153,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             Stream stream,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask translationMask = null,
-            string name = null)
+            Flora_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -2394,17 +2176,18 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Flora_Mask<T> : OblivionMajorRecord_Mask<T>, IMask<T>, IEquatable<Flora_Mask<T>>
+    public class Flora_Mask<T> :
+        OblivionMajorRecord_Mask<T>,
+        IMask<T>,
+        IEquatable<Flora_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Flora_Mask()
-        {
-        }
-
         public Flora_Mask(T initialValue)
+        : base(initialValue)
         {
             this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
             this.Script = initialValue;
             this.Ingredient = initialValue;
             this.Spring = initialValue;
@@ -2429,14 +2212,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             T Fall,
             T Winter,
             T PFPCDataTypeState)
+        : base(
+            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+            FormKey: FormKey,
+            Version: Version,
+            EditorID: EditorID,
+            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
         {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
             this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
             this.Script = Script;
             this.Ingredient = Ingredient;
             this.Spring = Spring;
@@ -2445,11 +2229,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Winter = Winter;
             this.PFPCDataTypeState = PFPCDataTypeState;
         }
+
+        #pragma warning disable CS8618
+        protected Flora_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
         public T Name;
-        public MaskItem<T, Model_Mask<T>> Model { get; set; }
+        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
         public T Script;
         public T Ingredient;
         public T Spring;
@@ -2532,10 +2323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Name = eval(this.Name);
-            if (this.Model != null)
-            {
-                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            }
+            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             obj.Script = eval(this.Script);
             obj.Ingredient = eval(this.Ingredient);
             obj.Spring = eval(this.Spring);
@@ -2552,14 +2340,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Flora_Mask<bool> printMask = null)
+        public string ToString(Flora_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Flora_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Flora_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Flora_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -2611,19 +2399,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Flora_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Flora_ErrorMask>
     {
         #region Members
-        public Exception Name;
-        public MaskItem<Exception, Model_ErrorMask> Model;
-        public Exception Script;
-        public Exception Ingredient;
-        public Exception Spring;
-        public Exception Summer;
-        public Exception Fall;
-        public Exception Winter;
-        public Exception PFPCDataTypeState;
+        public Exception? Name;
+        public MaskItem<Exception?, Model_ErrorMask?>? Model;
+        public Exception? Script;
+        public Exception? Ingredient;
+        public Exception? Spring;
+        public Exception? Summer;
+        public Exception? Fall;
+        public Exception? Winter;
+        public Exception? PFPCDataTypeState;
         #endregion
 
         #region IErrorMask
-        public override object GetNthMask(int index)
+        public override object? GetNthMask(int index)
         {
             Flora_FieldIndex enu = (Flora_FieldIndex)index;
             switch (enu)
@@ -2660,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Name = ex;
                     break;
                 case Flora_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
                     break;
                 case Flora_FieldIndex.Script:
                     this.Script = ex;
@@ -2698,7 +2486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Name = (Exception)obj;
                     break;
                 case Flora_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
                     break;
                 case Flora_FieldIndex.Script:
                     this.Script = (Exception)obj;
@@ -2787,11 +2575,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Flora_ErrorMask Combine(Flora_ErrorMask rhs)
+        public Flora_ErrorMask Combine(Flora_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Flora_ErrorMask();
             ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
+            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
             ret.Script = this.Script.Combine(rhs.Script);
             ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
             ret.Spring = this.Spring.Combine(rhs.Spring);
@@ -2801,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PFPCDataTypeState = this.PFPCDataTypeState.Combine(rhs.PFPCDataTypeState);
             return ret;
         }
-        public static Flora_ErrorMask Combine(Flora_ErrorMask lhs, Flora_ErrorMask rhs)
+        public static Flora_ErrorMask? Combine(Flora_ErrorMask? lhs, Flora_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2811,7 +2600,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static new Flora_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Flora_ErrorMask();
         }
         #endregion
@@ -2821,7 +2609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public bool Name;
-        public MaskItem<bool, Model_TranslationMask> Model;
+        public MaskItem<bool, Model_TranslationMask?> Model;
         public bool Script;
         public bool Ingredient;
         public bool Spring;
@@ -2832,16 +2620,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Ctors
-        public Flora_TranslationMask()
-            : base()
-        {
-        }
-
         public Flora_TranslationMask(bool defaultOn)
             : base(defaultOn)
         {
             this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask>(defaultOn, null);
+            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
             this.Script = defaultOn;
             this.Ingredient = defaultOn;
             this.Spring = defaultOn;
@@ -2853,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        protected override void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             base.GetCrystal(ret);
             ret.Add((Name, null));
@@ -2893,7 +2676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_RecordTypes(
             IFloraGetter item,
             MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
@@ -2901,42 +2684,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences);
-            if (item.Name_IsSet)
-            {
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
-                    nullable: false,
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (item.Model_IsSet)
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Flora_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
             {
                 var loquiItem = item.Model;
-                ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
-                    item: loquiItem,
-                    writer: writer,
-                    masterReferences: masterReferences,
-                    recordTypeConverter: null);
+                if (loquiItem != null)
+                {
+                    ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
             }
-            if (item.Script.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Script,
-                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
-            if (item.Ingredient.HasBeenSet)
-            {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Ingredient,
-                    header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
-                    nullable: false,
-                    masterReferences: masterReferences);
-            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Script,
+                header: recordTypeConverter.ConvertToCustom(Flora_Registration.SCRI_HEADER),
+                masterReferences: masterReferences);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Ingredient,
+                header: recordTypeConverter.ConvertToCustom(Flora_Registration.PFIG_HEADER),
+                masterReferences: masterReferences);
             if (item.PFPCDataTypeState.HasFlag(Flora.PFPCDataType.Has))
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, recordTypeConverter.ConvertToCustom(Flora_Registration.PFPC_HEADER)))
@@ -2953,7 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IFloraGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2976,7 +2749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -2989,7 +2762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -3002,7 +2775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IFloraGetter)item,
@@ -3056,9 +2829,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object XmlWriteTranslator => FloraXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((FloraXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -3072,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((FloraBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3083,42 +2856,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public bool Name_IsSet => _NameLocation.HasValue;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Model
-        public IModelGetter Model { get; private set; }
+        public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
+        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
         public bool Ingredient_IsSet => _IngredientLocation.HasValue;
-        public IFormIDSetLinkGetter<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormIDSetLink<IIngredientGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.Meta)))) : FormIDSetLink<IIngredientGetter>.Empty;
+        public IFormIDSetLinkGetter<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormIDSetLink<IIngredientGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.Meta)))) : FormIDSetLink<IIngredientGetter>.Empty;
         #endregion
         private int? _PFPCLocation;
         public Flora.PFPCDataType PFPCDataTypeState { get; private set; }
         #region Spring
-        private int _SpringLocation => _PFPCLocation.Value + 0x0;
+        private int _SpringLocation => _PFPCLocation!.Value + 0x0;
         private bool _Spring_IsSet => _PFPCLocation.HasValue;
         public Byte Spring => _Spring_IsSet ? _data.Span[_SpringLocation] : default;
         #endregion
         #region Summer
-        private int _SummerLocation => _PFPCLocation.Value + 0x1;
+        private int _SummerLocation => _PFPCLocation!.Value + 0x1;
         private bool _Summer_IsSet => _PFPCLocation.HasValue;
         public Byte Summer => _Summer_IsSet ? _data.Span[_SummerLocation] : default;
         #endregion
         #region Fall
-        private int _FallLocation => _PFPCLocation.Value + 0x2;
+        private int _FallLocation => _PFPCLocation!.Value + 0x2;
         private bool _Fall_IsSet => _PFPCLocation.HasValue;
         public Byte Fall => _Fall_IsSet ? _data.Span[_FallLocation] : default;
         #endregion
         #region Winter
-        private int _WinterLocation => _PFPCLocation.Value + 0x3;
+        private int _WinterLocation => _PFPCLocation!.Value + 0x3;
         private bool _Winter_IsSet => _PFPCLocation.HasValue;
         public Byte Winter => _Winter_IsSet ? _data.Span[_WinterLocation] : default;
         #endregion
@@ -3139,7 +2911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static FloraBinaryOverlay FloraFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
             var ret = new FloraBinaryOverlay(
@@ -3167,7 +2939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)

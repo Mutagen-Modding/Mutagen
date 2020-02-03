@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}FilePathBinaryTranslation.Instance.Write"))
+                $"{this.Namespace}FilePathBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
@@ -36,7 +36,6 @@ namespace Mutagen.Bethesda.Generation
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
-                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
                 else
                 {

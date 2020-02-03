@@ -70,11 +70,6 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
-            if (loquiGen.TryGetFieldData(out var data)
-                && data.MarkerType.HasValue)
-            {
-                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
-            }
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
             if (isGroup)
@@ -82,32 +77,44 @@ namespace Mutagen.Bethesda.Generation
                 var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
                 fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
             }
-            using (new BraceWrapper(fg, doIt: isGroup || (!this.Module.TranslationMaskParameter && !typeGen.HasBeenSet)))
+            using (new BraceWrapper(fg))
             {
                 // We want to cache retrievals, in case it's a wrapper being written
                 fg.AppendLine($"var loquiItem = {itemAccessor.DirectAccess};");
-                string line;
-                if (loquiGen.TargetObjectGeneration != null)
+                if (typeGen.HasBeenSet)
                 {
-                    line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
+                    fg.AppendLine("if (loquiItem != null)");
                 }
-                else
+                using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
                 {
-                    line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
-                }
-                using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
-                {
-                    args.Add($"item: loquiItem");
-                    args.Add($"writer: {writerAccessor}");
-                    args.Add($"masterReferences: masterReferences");
-                    if (data?.RecordTypeConverter != null
-                        && data.RecordTypeConverter.FromConversions.Count > 0)
+                    if (loquiGen.TryGetFieldData(out var data)
+                        && data.MarkerType.HasValue)
                     {
-                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                        fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+                    }
+                    string line;
+                    if (loquiGen.TargetObjectGeneration != null)
+                    {
+                        line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
                     }
                     else
                     {
-                        args.Add($"recordTypeConverter: null");
+                        line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)})loquiItem).{this.Module.TranslationWriteItemMember})";
+                    }
+                    using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
+                    {
+                        args.Add($"item: loquiItem");
+                        args.Add($"writer: {writerAccessor}");
+                        args.Add($"masterReferences: masterReferences");
+                        if (data?.RecordTypeConverter != null
+                            && data.RecordTypeConverter.FromConversions.Count > 0)
+                        {
+                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                        }
+                        else
+                        {
+                            args.Add($"recordTypeConverter: null");
+                        }
                     }
                 }
             }
@@ -271,12 +278,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (loqui.SingletonType != SingletonLevel.None)
                         {
-                            fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name};");
-                            fg.AppendLine($"public bool {typeGen.Name}_IsSet => true;");
+                            fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name};");
                         }
                         else
                         {
-                            fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }}");
+                            fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
                             if (typeGen.HasBeenSet)
                             {
                                 fg.AppendLine($"public bool {typeGen.Name}_IsSet => {typeGen.Name} != null;");
@@ -306,7 +312,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 fg.Append($"private ");
                             }
-                            fg.Append($"{loqui.Interface(getter: true, internalInterface: true)} ");
+                            fg.Append($"{loqui.Interface(getter: true, internalInterface: true)}{(typeGen.CanBeNullable(getter: true) ? "?" : null)} ");
                             if (loqui.SingletonType != SingletonLevel.None)
                             {
                                 fg.Append("_");
@@ -315,7 +321,7 @@ namespace Mutagen.Bethesda.Generation
                             if (!severalSubTypes)
                             {
                                 fg.Append($" => _{typeGen.Name}_IsSet ? ");
-                                fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location.Value.Min", $"_{typeGen.Name}Location.Value.Max")}), _package");
+                                fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}), _package");
                                 if (loqui.SingletonType == SingletonLevel.None)
                                 {
                                     fg.Append($", {recConverter}");
@@ -346,7 +352,7 @@ namespace Mutagen.Bethesda.Generation
                                             using (new DepthWrapper(fg))
                                             using (new LineWrapper(fg))
                                             {
-                                                fg.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location.Value.Min", $"_{subLoq.Name}Location.Value.Max")}), _package");
+                                                fg.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}), _package");
                                                 if (loqui.SingletonType == SingletonLevel.None)
                                                 {
                                                     fg.Append($", {recConverter}");
@@ -384,7 +390,7 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}), _package) : default;");
+                fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}), _package) : default;");
             }
 
             if (loqui.SingletonType != SingletonLevel.None)

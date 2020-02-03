@@ -10,10 +10,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public override GameSettingType SettingType => GameSettingType.Int;
 
-        public float RawData
+        public float? RawData
         {
             get => this.Data;
-            set => this.Data = (int)value;
+            set => this.Data = value.HasValue ? (int)value.Value : default;
         }
     }
 }

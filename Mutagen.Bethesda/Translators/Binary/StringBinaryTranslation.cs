@@ -12,22 +12,6 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<string> item)
-        {
-            if (Parse(
-                frame,
-                out string subItem))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
-        }
-
         public virtual bool Parse(
             MutagenFrame frame,
             out string item)
@@ -36,24 +20,6 @@ namespace Mutagen.Bethesda.Binary
                 frame: frame,
                 parseWhole: true,
                 item: out item);
-        }
-
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<string> item,
-            bool parseWhole)
-        {
-            if (Parse(
-                frame,
-                parseWhole,
-                out string subItem))
-            {
-                item.Item = subItem;
-            }
-            else
-            {
-                item.Unset();
-            }
         }
 
         public bool Parse(
@@ -119,42 +85,10 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IHasItemGetter<string> item,
-            StringBinaryType binaryType = StringBinaryType.NullTerminate)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                binaryType: binaryType);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<string> item,
-            StringBinaryType binaryType = StringBinaryType.NullTerminate)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                binaryType: binaryType);
-        }
-
-        public void Write(
-            MutagenWriter writer,
             string item,
             RecordType header,
-            bool nullable,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            if (item == null)
-            {
-                if (nullable)
-                {
-                    return;
-                }
-                throw new ArgumentException("Non optional string was null.");
-            }
             using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
             {
                 this.Write(
@@ -164,35 +98,20 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public void Write(
+        public void WriteNullable(
             MutagenWriter writer,
-            IHasBeenSetItemGetter<string> item,
+            string? item,
             RecordType header,
-            bool nullable,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                nullable,
-                binaryType: binaryType);
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<string> item,
-            RecordType header,
-            bool nullable,
-            StringBinaryType binaryType = StringBinaryType.NullTerminate)
-        {
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                nullable,
-                binaryType: binaryType);
+            if (item == null) return;
+            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            {
+                this.Write(
+                    writer,
+                    item,
+                    binaryType: binaryType);
+            }
         }
 
         public void Write(MutagenWriter writer, string item, long length)

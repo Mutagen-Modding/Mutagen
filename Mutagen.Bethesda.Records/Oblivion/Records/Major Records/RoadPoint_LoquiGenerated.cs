@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,14 +42,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RoadPoint()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Point
-        public P3Float Point { get; set; }
+        public P3Float Point { get; set; } = default;
         #endregion
         #region NumConnectionsFluffBytes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             RoadPointMixIn.ToString(
                 item: this,
@@ -91,15 +91,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRoadPointGetter rhs)) return false;
-            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(RoadPoint obj)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()).Equals(this, obj);
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -110,9 +110,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RoadPointXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -125,11 +125,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RoadPoint CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            RoadPoint_TranslationMask translationMask = null)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -139,38 +137,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint CreateFromXml(
             XElement node,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static RoadPoint CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new RoadPoint() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new RoadPoint();
-            ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -179,12 +164,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RoadPoint CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            RoadPoint_TranslationMask translationMask = null)
+            RoadPoint_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -192,12 +175,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint CreateFromXml(
             string path,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RoadPoint_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -205,13 +186,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RoadPoint CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RoadPoint_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -219,12 +198,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RoadPoint CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            RoadPoint_TranslationMask translationMask = null)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -232,12 +209,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint CreateFromXml(
             Stream stream,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -245,13 +220,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RoadPoint CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RoadPoint_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -260,21 +233,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((RoadPoint_FieldIndex)index)
-            {
-                case RoadPoint_FieldIndex.Point:
-                case RoadPoint_FieldIndex.NumConnectionsFluffBytes:
-                case RoadPoint_FieldIndex.Connections:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -284,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -307,10 +265,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new RoadPoint();
-            ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -328,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((RoadPointSetterCommon)((IRoadPointGetter)this).CommonSetterInstance()).Clear(this);
+            ((RoadPointSetterCommon)((IRoadPointGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static RoadPoint GetNew()
@@ -345,9 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRoadPoint>
     {
         new P3Float Point { get; set; }
-
         new Byte[] NumConnectionsFluffBytes { get; set; }
-
         new IExtendedList<P3Float> Connections { get; }
     }
 
@@ -360,20 +316,12 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Point
         P3Float Point { get; }
-
-        #endregion
-        #region NumConnectionsFluffBytes
         ReadOnlySpan<Byte> NumConnectionsFluffBytes { get; }
-
-        #endregion
-        #region Connections
         IReadOnlyList<P3Float> Connections { get; }
-        #endregion
 
     }
 
@@ -384,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRoadPoint item)
         {
-            ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static RoadPoint_Mask<bool> GetEqualsMask(
@@ -392,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRoadPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetEqualsMask(
+            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -400,10 +348,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IRoadPointGetter item,
-            string name = null,
-            RoadPoint_Mask<bool> printMask = null)
+            string? name = null,
+            RoadPoint_Mask<bool>? printMask = null)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).ToString(
+            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -412,10 +360,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IRoadPointGetter item,
             FileGeneration fg,
-            string name = null,
-            RoadPoint_Mask<bool> printMask = null)
+            string? name = null,
+            RoadPoint_Mask<bool>? printMask = null)
         {
-            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).ToString(
+            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -426,15 +374,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             RoadPoint_Mask<bool?> checkMask)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).HasBeenSet(
+            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static RoadPoint_Mask<bool> GetHasBeenSetMask(this IRoadPointGetter item)
         {
-            var ret = new RoadPoint_Mask<bool>();
-            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new RoadPoint_Mask<bool>(false);
+            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -444,16 +392,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             IRoadPointGetter rhs)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).Equals(
+            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IRoadPoint lhs,
-            IRoadPointGetter rhs)
+            IRoadPointGetter rhs,
+            RoadPoint_TranslationMask? copyMask = null)
         {
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -463,23 +412,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
-            RoadPoint_TranslationMask copyMask)
-        {
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IRoadPoint lhs,
-            IRoadPointGetter rhs,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask copyMask = null)
+            RoadPoint_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -490,10 +427,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -502,9 +439,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RoadPoint DeepCopy(
             this IRoadPointGetter item,
-            RoadPoint_TranslationMask copyMask = null)
+            RoadPoint_TranslationMask? copyMask = null)
         {
-            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -512,9 +449,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint DeepCopy(
             this IRoadPointGetter item,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask copyMask = null)
+            RoadPoint_TranslationMask? copyMask = null)
         {
-            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -522,10 +459,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RoadPoint DeepCopy(
             this IRoadPointGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -536,12 +473,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadPoint item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            RoadPoint_TranslationMask translationMask = null)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -552,29 +487,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint item,
             XElement node,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IRoadPoint item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -583,13 +514,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadPoint item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            RoadPoint_TranslationMask translationMask = null)
+            RoadPoint_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -598,13 +527,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint item,
             string path,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RoadPoint_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -613,14 +540,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadPoint item,
             string path,
-            ErrorMaskBuilder errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RoadPoint_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -629,13 +554,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadPoint item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            RoadPoint_TranslationMask translationMask = null)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -644,13 +567,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint item,
             Stream stream,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            RoadPoint_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -659,14 +580,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadPoint item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            RoadPoint_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -692,9 +611,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -745,11 +664,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRoadPointGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IRoadPoint);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RoadPoint";
 
@@ -759,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -893,14 +812,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -924,8 +843,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRoadPoint item)
         {
             ClearPartial();
-            item.Point = default(P3Float);
-            item.NumConnectionsFluffBytes = default(Byte[]);
+            item.Point = default;
+            item.NumConnectionsFluffBytes = new byte[3];
             item.Connections.Clear();
         }
         
@@ -933,9 +852,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void CopyInFromXml(
             IRoadPoint item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -976,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPoint item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
@@ -999,8 +917,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RoadPoint_Mask<bool>();
-            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new RoadPoint_Mask<bool>(false);
+            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1025,8 +943,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IRoadPointGetter item,
-            string name = null,
-            RoadPoint_Mask<bool> printMask = null)
+            string? name = null,
+            RoadPoint_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1040,8 +958,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IRoadPointGetter item,
             FileGeneration fg,
-            string name = null,
-            RoadPoint_Mask<bool> printMask = null)
+            string? name = null,
+            RoadPoint_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1065,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRoadPointGetter item,
             FileGeneration fg,
-            RoadPoint_Mask<bool> printMask = null)
+            RoadPoint_Mask<bool>? printMask = null)
         {
             if (printMask?.Point ?? true)
             {
@@ -1108,13 +1026,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Point = true;
             mask.NumConnectionsFluffBytes = true;
-            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, null);
+            mask.Connections = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRoadPointGetter lhs,
-            IRoadPointGetter rhs)
+            IRoadPointGetter? lhs,
+            IRoadPointGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1158,8 +1076,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRoadPoint item,
             IRoadPointGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Point) ?? true))
             {
@@ -1192,9 +1110,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RoadPoint DeepCopy(
             IRoadPointGetter item,
-            RoadPoint_TranslationMask copyMask = null)
+            RoadPoint_TranslationMask? copyMask = null)
         {
-            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1204,9 +1122,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RoadPoint DeepCopy(
             IRoadPointGetter item,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask copyMask = null)
+            RoadPoint_TranslationMask? copyMask = null)
         {
-            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1216,10 +1134,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RoadPoint DeepCopy(
             IRoadPointGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1272,8 +1190,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IRoadPointGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)RoadPoint_FieldIndex.Point) ?? true))
             {
@@ -1302,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RoadPoint_FieldIndex.Connections,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)RoadPoint_FieldIndex.Connections),
-                    transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder listSubMask, TranslationCrystal listTranslMask) =>
+                    transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         P3FloatXmlTranslation.Instance.Write(
                             node: subNode,
@@ -1316,9 +1234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IRoadPointGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RoadPoint");
             node.Add(elem);
@@ -1336,9 +1254,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IRoadPointGetter)item,
@@ -1351,10 +1269,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IRoadPointGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1386,8 +1304,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IRoadPoint item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1412,8 +1330,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPoint item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1441,6 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
                         item.NumConnectionsFluffBytes = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
+                            fallbackLength: 3,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1498,8 +1417,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             XElement node,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            string name = null)
+            RoadPoint_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RoadPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1515,8 +1434,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             string path,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            string name = null)
+            RoadPoint_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1531,9 +1450,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadPointGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1549,8 +1468,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             Stream stream,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask translationMask = null,
-            string name = null)
+            RoadPoint_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1565,9 +1484,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadPointGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1582,9 +1501,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadPointGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((RoadPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1597,21 +1516,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadPointGetter item,
             XElement node,
-            string name = null,
-            RoadPoint_TranslationMask translationMask = null)
+            string? name = null,
+            RoadPoint_TranslationMask? translationMask = null)
         {
             ((RoadPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IRoadPointGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RoadPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1626,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadPointGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RoadPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1648,18 +1567,17 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class RoadPoint_Mask<T> : IMask<T>, IEquatable<RoadPoint_Mask<T>>
+    public class RoadPoint_Mask<T> :
+        IMask<T>,
+        IEquatable<RoadPoint_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public RoadPoint_Mask()
-        {
-        }
-
         public RoadPoint_Mask(T initialValue)
         {
             this.Point = initialValue;
             this.NumConnectionsFluffBytes = initialValue;
-            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
         }
 
         public RoadPoint_Mask(
@@ -1669,14 +1587,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Point = Point;
             this.NumConnectionsFluffBytes = NumConnectionsFluffBytes;
-            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, null);
+            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, Enumerable.Empty<(int Index, T Value)>());
         }
+
+        #pragma warning disable CS8618
+        protected RoadPoint_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
         public T Point;
         public T NumConnectionsFluffBytes;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>> Connections;
+        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Connections;
         #endregion
 
         #region Equals
@@ -1739,17 +1664,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.NumConnectionsFluffBytes = eval(this.NumConnectionsFluffBytes);
             if (Connections != null)
             {
-                obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Connections.Overall), default);
+                obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Connections.Overall), Enumerable.Empty<(int Index, R Value)>());
                 if (Connections.Specific != null)
                 {
-                    List<(int Index, R Item)> l = new List<(int Index, R Item)>();
+                    var l = new List<(int Index, R Item)>();
                     obj.Connections.Specific = l;
                     foreach (var item in Connections.Specific.WithIndex())
                     {
-                        (int Index, R Item) mask = default;
-                        mask.Index = item.Index;
-                        mask.Item = eval(item.Item.Value);
-                        l.Add(mask);
+                        R mask = eval(item.Item.Value);
+                        l.Add((item.Index, mask));
                     }
                 }
             }
@@ -1762,14 +1685,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(RoadPoint_Mask<bool> printMask = null)
+        public string ToString(RoadPoint_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, RoadPoint_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, RoadPoint_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(RoadPoint_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1789,20 +1712,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Connections.Overall != null)
+                        if (Connections != null)
                         {
-                            fg.AppendLine(Connections.Overall.ToString());
-                        }
-                        if (Connections.Specific != null)
-                        {
-                            foreach (var subItem in Connections.Specific)
+                            if (Connections.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                fg.AppendLine(Connections.Overall.ToString());
+                            }
+                            if (Connections.Specific != null)
+                            {
+                                foreach (var subItem in Connections.Specific)
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendLine($" => {subItem}");
+                                    }
+                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
@@ -1818,8 +1744,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class RoadPoint_ErrorMask : IErrorMask, IErrorMask<RoadPoint_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1831,13 +1757,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Point;
-        public Exception NumConnectionsFluffBytes;
-        public MaskItem<Exception, IEnumerable<(int Index, Exception Value)>> Connections;
+        public Exception? Point;
+        public Exception? NumConnectionsFluffBytes;
+        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Connections;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             RoadPoint_FieldIndex enu = (RoadPoint_FieldIndex)index;
             switch (enu)
@@ -1865,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.NumConnectionsFluffBytes = ex;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this.Connections = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(ex, null);
+                    this.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1884,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.NumConnectionsFluffBytes = (Exception)obj;
                     break;
                 case RoadPoint_FieldIndex.Connections:
-                    this.Connections = (MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>)obj;
+                    this.Connections = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1937,20 +1863,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Connections.Overall != null)
+                if (Connections != null)
                 {
-                    fg.AppendLine(Connections.Overall.ToString());
-                }
-                if (Connections.Specific != null)
-                {
-                    foreach (var subItem in Connections.Specific)
+                    if (Connections.Overall != null)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        fg.AppendLine(Connections.Overall.ToString());
+                    }
+                    if (Connections.Specific != null)
+                    {
+                        foreach (var subItem in Connections.Specific)
                         {
-                            fg.AppendLine($" => {subItem}");
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($" => {subItem}");
+                            }
+                            fg.AppendLine("]");
                         }
-                        fg.AppendLine("]");
                     }
                 }
             }
@@ -1959,15 +1888,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public RoadPoint_ErrorMask Combine(RoadPoint_ErrorMask rhs)
+        public RoadPoint_ErrorMask Combine(RoadPoint_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new RoadPoint_ErrorMask();
             ret.Point = this.Point.Combine(rhs.Point);
             ret.NumConnectionsFluffBytes = this.NumConnectionsFluffBytes.Combine(rhs.NumConnectionsFluffBytes);
-            ret.Connections = new MaskItem<Exception, IEnumerable<(int Index, Exception Value)>>(this.Connections.Overall.Combine(rhs.Connections.Overall), new List<(int Index, Exception Value)>(this.Connections.Specific.And(rhs.Connections.Specific)));
+            ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
             return ret;
         }
-        public static RoadPoint_ErrorMask Combine(RoadPoint_ErrorMask lhs, RoadPoint_ErrorMask rhs)
+        public static RoadPoint_ErrorMask? Combine(RoadPoint_ErrorMask? lhs, RoadPoint_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1977,7 +1907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static RoadPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new RoadPoint_ErrorMask();
         }
         #endregion
@@ -1986,17 +1915,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class RoadPoint_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Point;
         public bool NumConnectionsFluffBytes;
         public bool Connections;
         #endregion
 
         #region Ctors
-        public RoadPoint_TranslationMask()
-        {
-        }
-
         public RoadPoint_TranslationMask(bool defaultOn)
         {
             this.Point = defaultOn;
@@ -2009,13 +1934,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Point, null));
             ret.Add((NumConnectionsFluffBytes, null));
@@ -2053,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRoadPointGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
@@ -2065,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IRoadPointGetter)item,
@@ -2122,7 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IRoadPointGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IRoadPointGetter.CommonSetterInstance() => null;
+        object? IRoadPointGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IRoadPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -2138,9 +2063,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RoadPointXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -2156,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2185,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RoadPointBinaryOverlay RoadPointFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RoadPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 15),

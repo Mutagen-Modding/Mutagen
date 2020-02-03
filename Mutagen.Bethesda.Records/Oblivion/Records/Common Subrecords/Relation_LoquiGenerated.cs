@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Loqui;
+using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
@@ -19,9 +20,8 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
-using Loqui.Internal;
 using System.Diagnostics;
-using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
@@ -29,6 +29,7 @@ using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
 #endregion
 
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
@@ -41,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Relation()
         {
-            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -55,14 +55,14 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
         #endregion
         #region Modifier
-        public Int32 Modifier { get; set; }
+        public Int32 Modifier { get; set; } = default;
         #endregion
 
         #region To String
 
         public void ToString(
             FileGeneration fg,
-            string name = null)
+            string? name = null)
         {
             RelationMixIn.ToString(
                 item: this,
@@ -75,15 +75,15 @@ namespace Mutagen.Bethesda.Oblivion
         public override bool Equals(object obj)
         {
             if (!(obj is IRelationGetter rhs)) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()).Equals(this, rhs);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
         public bool Equals(Relation obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()).Equals(this, obj);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()).GetHashCode(this);
+        public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -94,9 +94,9 @@ namespace Mutagen.Bethesda.Oblivion
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RelationXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -109,11 +109,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Relation CreateFromXml(
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Relation_TranslationMask translationMask = null)
+            Relation_TranslationMask? translationMask = null)
         {
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -123,38 +121,25 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation CreateFromXml(
             XElement node,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Relation_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
         public static Relation CreateFromXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            switch (missing)
-            {
-                case MissingCreate.New:
-                case MissingCreate.Null:
-                    if (node == null) return missing == MissingCreate.New ? new Relation() : null;
-                    break;
-                default:
-                    break;
-            }
             var ret = new Relation();
-            ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()).CopyInFromXml(
+            ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -163,12 +148,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Relation_TranslationMask translationMask = null)
+            Relation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -176,12 +159,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation CreateFromXml(
             string path,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Relation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -189,13 +170,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             string path,
-            ErrorMaskBuilder errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Relation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -203,12 +182,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Relation_TranslationMask translationMask = null)
+            Relation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -216,12 +193,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation CreateFromXml(
             Stream stream,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Relation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -229,13 +204,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Relation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -244,20 +217,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly BitArray _hasBeenSetTracker;
-        protected bool GetHasBeenSet(int index)
-        {
-            switch ((Relation_FieldIndex)index)
-            {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return true;
-                default:
-                    throw new ArgumentException($"Unknown field index: {index}");
-            }
-        }
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Relation_Registration.TRIGGERING_RECORD_TYPE;
@@ -273,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RelationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -296,10 +255,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new Relation();
-            ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()).CopyInFromBinary(
+            ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -317,7 +276,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IClearable.Clear()
         {
-            ((RelationSetterCommon)((IRelationGetter)this).CommonSetterInstance()).Clear(this);
+            ((RelationSetterCommon)((IRelationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
         internal static Relation GetNew()
@@ -335,7 +294,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new IFormIDLink<Faction> Faction { get; }
         new Int32 Modifier { get; set; }
-
     }
 
     public partial interface IRelationGetter :
@@ -348,16 +306,11 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterInstance();
+        object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        #region Faction
         IFormIDLinkGetter<IFactionGetter> Faction { get; }
-        #endregion
-        #region Modifier
         Int32 Modifier { get; }
-
-        #endregion
 
     }
 
@@ -368,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void Clear(this IRelation item)
         {
-            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).Clear(item: item);
+            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static Relation_Mask<bool> GetEqualsMask(
@@ -376,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRelationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RelationCommon)((IRelationGetter)item).CommonInstance()).GetEqualsMask(
+            return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
@@ -384,10 +337,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static string ToString(
             this IRelationGetter item,
-            string name = null,
-            Relation_Mask<bool> printMask = null)
+            string? name = null,
+            Relation_Mask<bool>? printMask = null)
         {
-            return ((RelationCommon)((IRelationGetter)item).CommonInstance()).ToString(
+            return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
@@ -396,10 +349,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void ToString(
             this IRelationGetter item,
             FileGeneration fg,
-            string name = null,
-            Relation_Mask<bool> printMask = null)
+            string? name = null,
+            Relation_Mask<bool>? printMask = null)
         {
-            ((RelationCommon)((IRelationGetter)item).CommonInstance()).ToString(
+            ((RelationCommon)((IRelationGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -410,15 +363,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             Relation_Mask<bool?> checkMask)
         {
-            return ((RelationCommon)((IRelationGetter)item).CommonInstance()).HasBeenSet(
+            return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
         public static Relation_Mask<bool> GetHasBeenSetMask(this IRelationGetter item)
         {
-            var ret = new Relation_Mask<bool>();
-            ((RelationCommon)((IRelationGetter)item).CommonInstance()).FillHasBeenSetMask(
+            var ret = new Relation_Mask<bool>(false);
+            ((RelationCommon)((IRelationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
@@ -428,16 +381,17 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             IRelationGetter rhs)
         {
-            return ((RelationCommon)((IRelationGetter)item).CommonInstance()).Equals(
+            return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyFieldsFrom(
             this IRelation lhs,
-            IRelationGetter rhs)
+            IRelationGetter rhs,
+            Relation_TranslationMask? copyMask = null)
         {
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -447,23 +401,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRelation lhs,
             IRelationGetter rhs,
-            Relation_TranslationMask copyMask)
-        {
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
-                item: lhs,
-                rhs: rhs,
-                errorMask: default,
-                copyMask: copyMask?.GetCrystal());
-        }
-
-        public static void DeepCopyFieldsFrom(
-            this IRelation lhs,
-            IRelationGetter rhs,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask copyMask = null)
+            Relation_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -474,10 +416,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRelation lhs,
             IRelationGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -486,9 +428,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation DeepCopy(
             this IRelationGetter item,
-            Relation_TranslationMask copyMask = null)
+            Relation_TranslationMask? copyMask = null)
         {
-            return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
@@ -496,9 +438,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation DeepCopy(
             this IRelationGetter item,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask copyMask = null)
+            Relation_TranslationMask? copyMask = null)
         {
-            return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -506,10 +448,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation DeepCopy(
             this IRelationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+            return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -520,12 +462,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             XElement node,
-            MissingCreate missing = MissingCreate.New,
-            Relation_TranslationMask translationMask = null)
+            Relation_TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: null,
                 translationMask: translationMask?.GetCrystal());
@@ -536,29 +476,25 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation item,
             XElement node,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Relation_TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMaskBuilder,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
             errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
             this IRelation item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
-            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).CopyInFromXml(
+            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -567,13 +503,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             string path,
-            MissingCreate missing = MissingCreate.New,
-            Relation_TranslationMask translationMask = null)
+            Relation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -582,13 +516,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation item,
             string path,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Relation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -597,14 +529,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             string path,
-            ErrorMaskBuilder errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Relation_TranslationMask? translationMask = null)
         {
-            var node = System.IO.File.Exists(path) ? XDocument.Load(path).Root : null;
+            var node = XDocument.Load(path).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -613,13 +543,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             Stream stream,
-            MissingCreate missing = MissingCreate.New,
-            Relation_TranslationMask translationMask = null)
+            Relation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 translationMask: translationMask);
         }
@@ -628,13 +556,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation item,
             Stream stream,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            Relation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: out errorMask,
                 translationMask: translationMask);
@@ -643,14 +569,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            Relation_TranslationMask translationMask = null,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            Relation_TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
                 item: item,
-                missing: missing,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask?.GetCrystal());
@@ -676,9 +600,9 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
-            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).CopyInFromBinary(
+            ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
@@ -728,11 +652,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type GetterType = typeof(IRelationGetter);
 
-        public static readonly Type InternalGetterType = null;
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(IRelation);
 
-        public static readonly Type InternalSetterType = null;
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.Relation";
 
@@ -742,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const byte GenericCount = 0;
 
-        public static readonly Type GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = null;
 
         public static ushort? GetNameIndex(StringCaseAgnostic str)
         {
@@ -866,14 +790,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Type ILoquiRegistration.ErrorMaskType => ErrorMaskType;
         Type ILoquiRegistration.ClassType => ClassType;
         Type ILoquiRegistration.SetterType => SetterType;
-        Type ILoquiRegistration.InternalSetterType => InternalSetterType;
+        Type? ILoquiRegistration.InternalSetterType => InternalSetterType;
         Type ILoquiRegistration.GetterType => GetterType;
-        Type ILoquiRegistration.InternalGetterType => InternalGetterType;
+        Type? ILoquiRegistration.InternalGetterType => InternalGetterType;
         string ILoquiRegistration.FullName => FullName;
         string ILoquiRegistration.Name => Name;
         string ILoquiRegistration.Namespace => Namespace;
         byte ILoquiRegistration.GenericCount => GenericCount;
-        Type ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
+        Type? ILoquiRegistration.GenericRegistrationType => GenericRegistrationType;
         ushort? ILoquiRegistration.GetNameIndex(StringCaseAgnostic name) => GetNameIndex(name);
         bool ILoquiRegistration.GetNthIsEnumerable(ushort index) => GetNthIsEnumerable(index);
         bool ILoquiRegistration.GetNthIsLoqui(ushort index) => GetNthIsLoqui(index);
@@ -898,16 +822,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Faction.Unset();
-            item.Modifier = default(Int32);
+            item.Modifier = default;
         }
         
         #region Xml Translation
         public void CopyInFromXml(
             IRelation item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            MissingCreate missing = MissingCreate.New)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -947,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -973,8 +896,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Relation_Mask<bool>();
-            ((RelationCommon)((IRelationGetter)item).CommonInstance()).FillEqualsMask(
+            var ret = new Relation_Mask<bool>(false);
+            ((RelationCommon)((IRelationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -995,8 +918,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public string ToString(
             IRelationGetter item,
-            string name = null,
-            Relation_Mask<bool> printMask = null)
+            string? name = null,
+            Relation_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1010,8 +933,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void ToString(
             IRelationGetter item,
             FileGeneration fg,
-            string name = null,
-            Relation_Mask<bool> printMask = null)
+            string? name = null,
+            Relation_Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1035,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRelationGetter item,
             FileGeneration fg,
-            Relation_Mask<bool> printMask = null)
+            Relation_Mask<bool>? printMask = null)
         {
             if (printMask?.Faction ?? true)
             {
@@ -1064,8 +987,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRelationGetter lhs,
-            IRelationGetter rhs)
+            IRelationGetter? lhs,
+            IRelationGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1108,8 +1031,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRelation item,
             IRelationGetter rhs,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
@@ -1125,9 +1048,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Relation DeepCopy(
             IRelationGetter item,
-            Relation_TranslationMask copyMask = null)
+            Relation_TranslationMask? copyMask = null)
         {
-            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()).GetNew();
+            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1137,9 +1060,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Relation DeepCopy(
             IRelationGetter item,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask copyMask = null)
+            Relation_TranslationMask? copyMask = null)
         {
-            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()).GetNew();
+            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1149,10 +1072,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Relation DeepCopy(
             IRelationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal copyMask = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask = null)
         {
-            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()).GetNew();
+            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
@@ -1205,8 +1128,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteToNodeXml(
             IRelationGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
@@ -1231,9 +1154,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IRelationGetter item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Relation");
             node.Add(elem);
@@ -1251,9 +1174,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             object item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             Write(
                 item: (IRelationGetter)item,
@@ -1266,10 +1189,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             XElement node,
             IRelationGetter item,
-            ErrorMaskBuilder errorMask,
+            ErrorMaskBuilder? errorMask,
             int fieldIndex,
-            TranslationCrystal translationMask,
-            string name = null)
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             try
             {
@@ -1301,8 +1224,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void FillPublicXml(
             IRelation item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             try
             {
@@ -1327,8 +1250,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             XElement node,
             string name,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
         {
             switch (name)
             {
@@ -1386,8 +1309,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             XElement node,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            string name = null)
+            Relation_TranslationMask? translationMask = null,
+            string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1403,8 +1326,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             string path,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            string name = null)
+            Relation_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1419,9 +1342,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1437,8 +1360,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             Stream stream,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask translationMask = null,
-            string name = null)
+            Relation_TranslationMask? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1453,9 +1376,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             Stream stream,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1470,9 +1393,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask = null,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask = null,
+            string? name = null)
         {
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1485,21 +1408,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             XElement node,
-            string name = null,
-            Relation_TranslationMask translationMask = null)
+            string? name = null,
+            Relation_TranslationMask? translationMask = null)
         {
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: null,
-                translationMask: translationMask.GetCrystal());
+                translationMask: translationMask?.GetCrystal());
         }
 
         public static void WriteToXml(
             this IRelationGetter item,
             string path,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1514,7 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             Stream stream,
-            string name = null)
+            string? name = null)
         {
             var node = new XElement("topnode");
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1536,13 +1459,12 @@ namespace Mutagen.Bethesda.Oblivion
 #region Mask
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public class Relation_Mask<T> : IMask<T>, IEquatable<Relation_Mask<T>>
+    public class Relation_Mask<T> :
+        IMask<T>,
+        IEquatable<Relation_Mask<T>>
+        where T : notnull
     {
         #region Ctors
-        public Relation_Mask()
-        {
-        }
-
         public Relation_Mask(T initialValue)
         {
             this.Faction = initialValue;
@@ -1556,6 +1478,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Faction = Faction;
             this.Modifier = Modifier;
         }
+
+        #pragma warning disable CS8618
+        protected Relation_Mask()
+        {
+        }
+        #pragma warning restore CS8618
+
         #endregion
 
         #region Members
@@ -1617,14 +1546,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Relation_Mask<bool> printMask = null)
+        public string ToString(Relation_Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Relation_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Relation_Mask<bool>? printMask = null)
         {
             fg.AppendLine($"{nameof(Relation_Mask<T>)} =>");
             fg.AppendLine("[");
@@ -1648,8 +1577,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Relation_ErrorMask : IErrorMask, IErrorMask<Relation_ErrorMask>
     {
         #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
+        public Exception? Overall { get; set; }
+        private List<string>? _warnings;
         public List<string> Warnings
         {
             get
@@ -1661,12 +1590,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception Faction;
-        public Exception Modifier;
+        public Exception? Faction;
+        public Exception? Modifier;
         #endregion
 
         #region IErrorMask
-        public object GetNthMask(int index)
+        public object? GetNthMask(int index)
         {
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
@@ -1757,14 +1686,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public Relation_ErrorMask Combine(Relation_ErrorMask rhs)
+        public Relation_ErrorMask Combine(Relation_ErrorMask? rhs)
         {
+            if (rhs == null) return this;
             var ret = new Relation_ErrorMask();
             ret.Faction = this.Faction.Combine(rhs.Faction);
             ret.Modifier = this.Modifier.Combine(rhs.Modifier);
             return ret;
         }
-        public static Relation_ErrorMask Combine(Relation_ErrorMask lhs, Relation_ErrorMask rhs)
+        public static Relation_ErrorMask? Combine(Relation_ErrorMask? lhs, Relation_ErrorMask? rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1774,7 +1704,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Factory
         public static Relation_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
-            if (errorMask?.Empty ?? true) return null;
             return new Relation_ErrorMask();
         }
         #endregion
@@ -1783,16 +1712,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public class Relation_TranslationMask : ITranslationMask
     {
         #region Members
-        private TranslationCrystal _crystal;
+        private TranslationCrystal? _crystal;
         public bool Faction;
         public bool Modifier;
         #endregion
 
         #region Ctors
-        public Relation_TranslationMask()
-        {
-        }
-
         public Relation_TranslationMask(bool defaultOn)
         {
             this.Faction = defaultOn;
@@ -1804,13 +1729,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public TranslationCrystal GetCrystal()
         {
             if (_crystal != null) return _crystal;
-            List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
+            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
             GetCrystal(ret);
             _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 
-        protected void GetCrystal(List<(bool On, TranslationCrystal SubCrystal)> ret)
+        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
         {
             ret.Add((Faction, null));
             ret.Add((Modifier, null));
@@ -1842,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IRelationGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -1860,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             Write(
                 item: (IRelationGetter)item,
@@ -1917,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         object IRelationGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IRelationGetter.CommonSetterInstance() => null;
+        object? IRelationGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
         object IRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
@@ -1934,9 +1859,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask,
-            string name = null)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
         {
             ((RelationXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
@@ -1952,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             ((RelationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1961,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: null);
         }
 
-        public IFormIDLinkGetter<IFactionGetter> Faction => new FormIDLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IFactionGetter> Faction => new FormIDLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -1980,7 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static RelationBinaryOverlay RelationFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RelationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),

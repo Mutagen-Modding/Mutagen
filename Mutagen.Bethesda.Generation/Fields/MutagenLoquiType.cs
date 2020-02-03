@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Generation
                 case LoquiRefType.Generic:
                     if (deepCopy)
                     {
-                        fg.AppendLine($"{retAccessor}r.DeepCopy() as {_generic};");
+                        fg.AppendLine($"{retAccessor}(r.DeepCopy() as {_generic})!;");
                     }
                     else
                     {
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Generation
                 case LoquiRefType.Interface:
                     if (deepCopy)
                     {
-                        fg.AppendLine($"{retAccessor}r.DeepCopy() as {this.TypeName(getter: false, internalInterface: true)};");
+                        fg.AppendLine($"{retAccessor}(r.DeepCopy() as {this.TypeName(getter: false, internalInterface: true)})!;");
                     }
                     else
                     {
