@@ -408,14 +408,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGetEventData lhs,
             IGetEventDataGetter rhs,
             out GetEventData_ErrorMask errorMask,
             GetEventData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -423,13 +423,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGetEventData lhs,
             IGetEventDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1192,13 +1192,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly GetEventDataSetterTranslationCommon Instance = new GetEventDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGetEventData item,
             IGetEventDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1234,13 +1234,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IConditionData item,
             IConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGetEventData)item,
                 rhs: (IGetEventDataGetter)rhs,
                 errorMask: errorMask,
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GetEventData_TranslationMask? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GetEventData_TranslationMask? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

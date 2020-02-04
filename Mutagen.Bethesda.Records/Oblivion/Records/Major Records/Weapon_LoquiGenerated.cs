@@ -585,14 +585,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWeaponInternal lhs,
             IWeaponGetter rhs,
             out Weapon_ErrorMask errorMask,
             Weapon_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeaponSetterTranslationCommon)((IWeaponGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WeaponSetterTranslationCommon)((IWeaponGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -600,13 +600,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWeaponInternal lhs,
             IWeaponGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WeaponSetterTranslationCommon)((IWeaponGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WeaponSetterTranslationCommon)((IWeaponGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Weapon(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Weapon)item);
+            ret.DeepCopyIn((Weapon)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Weapon)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1787,26 +1787,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly WeaponSetterTranslationCommon Instance = new WeaponSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IWeaponInternal item,
             IWeaponGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IWeapon item,
             IWeaponGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1895,78 +1895,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IItemAbstractInternal item,
             IItemAbstractGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWeaponInternal)item,
                 rhs: (IWeaponGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IItemAbstract item,
             IItemAbstractGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWeapon)item,
                 rhs: (IWeaponGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWeaponInternal)item,
                 rhs: (IWeaponGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWeapon)item,
                 rhs: (IWeaponGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWeaponInternal)item,
                 rhs: (IWeaponGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWeapon)item,
                 rhs: (IWeaponGetter)rhs,
                 errorMask: errorMask,
@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Weapon_TranslationMask? copyMask = null)
         {
             Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Weapon_TranslationMask? copyMask = null)
         {
             Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -2005,7 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var wrapper = SkyrimMod.CreateFromBinaryOverlay(file.Path);
             var ret = new SkyrimMod(this.ModKey);
-            ret.DeepCopyFieldsFrom(wrapper);
+            ret.DeepCopyIn(wrapper);
             return ret;
         }
 

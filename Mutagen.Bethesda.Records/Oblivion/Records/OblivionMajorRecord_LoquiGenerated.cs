@@ -369,14 +369,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IOblivionMajorRecordInternal lhs,
             IOblivionMajorRecordGetter rhs,
             out OblivionMajorRecord_ErrorMask errorMask,
             OblivionMajorRecord_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -384,13 +384,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IOblivionMajorRecordInternal lhs,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1276,26 +1276,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly OblivionMajorRecordSetterTranslationCommon Instance = new OblivionMajorRecordSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1306,26 +1306,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IOblivionMajorRecordInternal)item,
                 rhs: (IOblivionMajorRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IOblivionMajorRecord)item,
                 rhs: (IOblivionMajorRecordGetter)rhs,
                 errorMask: errorMask,
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_TranslationMask? copyMask = null)
         {
             OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMajorRecord_TranslationMask? copyMask = null)
         {
             OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -414,26 +414,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs,
             RegionData_TranslationMask? copyMask = null)
         {
-            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs,
             out RegionData_ErrorMask errorMask,
             RegionData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RegionDataSetterTranslationCommon Instance = new RegionDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IRegionDataInternal item,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1164,14 +1164,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DataType = rhs.DataType;
             }
-            DeepCopyFieldsFrom(
+            DeepCopyIn(
                 (IRegionData)item,
                 (IRegionDataGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IRegionData item,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_TranslationMask? copyMask = null)
         {
             RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_TranslationMask? copyMask = null)
         {
             RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

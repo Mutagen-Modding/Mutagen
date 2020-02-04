@@ -922,14 +922,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWaterInternal lhs,
             IWaterGetter rhs,
             out Water_ErrorMask errorMask,
             Water_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -937,13 +937,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWaterInternal lhs,
             IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -2518,7 +2518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Water(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Water)item);
+            ret.DeepCopyIn((Water)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Water)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2532,26 +2532,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IWaterInternal item,
             IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IWater item,
             IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -2712,52 +2712,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWaterInternal)item,
                 rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWater)item,
                 rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWaterInternal)item,
                 rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IWater)item,
                 rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
@@ -2771,7 +2771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Water_TranslationMask? copyMask = null)
         {
             Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -2783,7 +2783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Water_TranslationMask? copyMask = null)
         {
             Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -2796,7 +2796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

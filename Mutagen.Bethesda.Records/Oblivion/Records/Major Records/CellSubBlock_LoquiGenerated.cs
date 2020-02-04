@@ -420,26 +420,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICellSubBlock lhs,
             ICellSubBlockGetter rhs,
             CellSubBlock_TranslationMask? copyMask = null)
         {
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICellSubBlock lhs,
             ICellSubBlockGetter rhs,
             out CellSubBlock_ErrorMask errorMask,
             CellSubBlock_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -447,13 +447,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CellSubBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICellSubBlock lhs,
             ICellSubBlockGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly CellSubBlockSetterTranslationCommon Instance = new CellSubBlockSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICellSubBlock item,
             ICellSubBlockGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             converter: (r) =>
                             {
                                 var copyRet = new Cell(r.FormKey);
-                                copyRet.DeepCopyFieldsFrom(
+                                copyRet.DeepCopyIn(
                                     rhs: r,
                                     copyMask: default(TranslationCrystal),
                                     errorMask: errorMask);
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellSubBlock_TranslationMask? copyMask = null)
         {
             CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellSubBlock_TranslationMask? copyMask = null)
         {
             CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -255,11 +255,11 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
                 {
                     var blockRet = new WorldspaceBlock();
-                    blockRet.DeepCopyFieldsFrom(block, duplicateBlockCopyMask);
+                    blockRet.DeepCopyIn(block, duplicateBlockCopyMask);
                     blockRet.Items.SetTo(block.Items.Select((subBlock) =>
                     {
                         var subBlockRet = new WorldspaceSubBlock();
-                        subBlockRet.DeepCopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
+                        subBlockRet.DeepCopyIn(subBlock, duplicateSubBlockCopyMask);
                         subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
                         return subBlockRet;
                     }));

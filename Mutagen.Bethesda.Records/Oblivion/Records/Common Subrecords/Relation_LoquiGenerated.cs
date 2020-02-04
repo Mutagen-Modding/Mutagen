@@ -386,26 +386,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRelation lhs,
             IRelationGetter rhs,
             Relation_TranslationMask? copyMask = null)
         {
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRelation lhs,
             IRelationGetter rhs,
             out Relation_ErrorMask errorMask,
             Relation_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -413,13 +413,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRelation lhs,
             IRelationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RelationSetterTranslationCommon Instance = new RelationSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IRelation item,
             IRelationGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Relation_TranslationMask? copyMask = null)
         {
             Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Relation_TranslationMask? copyMask = null)
         {
             Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

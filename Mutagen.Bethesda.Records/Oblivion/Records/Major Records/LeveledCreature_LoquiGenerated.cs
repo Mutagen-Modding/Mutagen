@@ -442,14 +442,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILeveledCreatureInternal lhs,
             ILeveledCreatureGetter rhs,
             out LeveledCreature_ErrorMask errorMask,
             LeveledCreature_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -457,13 +457,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILeveledCreatureInternal lhs,
             ILeveledCreatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new LeveledCreature(getNextFormKey());
-            ret.DeepCopyFieldsFrom((LeveledCreature)item);
+            ret.DeepCopyIn((LeveledCreature)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LeveledCreature)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1418,26 +1418,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly LeveledCreatureSetterTranslationCommon Instance = new LeveledCreatureSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ILeveledCreatureInternal item,
             ILeveledCreatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ILeveledCreature item,
             ILeveledCreatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1491,78 +1491,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             INPCSpawnInternal item,
             INPCSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILeveledCreatureInternal)item,
                 rhs: (ILeveledCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             INPCSpawn item,
             INPCSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILeveledCreature)item,
                 rhs: (ILeveledCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILeveledCreatureInternal)item,
                 rhs: (ILeveledCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILeveledCreature)item,
                 rhs: (ILeveledCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILeveledCreatureInternal)item,
                 rhs: (ILeveledCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILeveledCreature)item,
                 rhs: (ILeveledCreatureGetter)rhs,
                 errorMask: errorMask,
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledCreature_TranslationMask? copyMask = null)
         {
             LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledCreature_TranslationMask? copyMask = null)
         {
             LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -401,26 +401,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs,
             ScriptMetaSummary_TranslationMask? copyMask = null)
         {
-            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs,
             out ScriptMetaSummary_ErrorMask errorMask,
             ScriptMetaSummary_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -428,13 +428,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ScriptMetaSummarySetterTranslationCommon Instance = new ScriptMetaSummarySetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IScriptMetaSummary item,
             IScriptMetaSummaryGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_TranslationMask? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_TranslationMask? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

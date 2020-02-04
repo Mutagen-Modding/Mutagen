@@ -379,26 +379,26 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
             ObjectBounds_TranslationMask? copyMask = null)
         {
-            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
             out ObjectBounds_ErrorMask errorMask,
             ObjectBounds_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -406,13 +406,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly ObjectBoundsSetterTranslationCommon Instance = new ObjectBoundsSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IObjectBounds item,
             IObjectBoundsGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectBounds_TranslationMask? copyMask = null)
         {
             ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectBounds_TranslationMask? copyMask = null)
         {
             ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1065,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

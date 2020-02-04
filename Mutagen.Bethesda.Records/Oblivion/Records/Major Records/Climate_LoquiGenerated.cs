@@ -553,14 +553,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IClimateInternal lhs,
             IClimateGetter rhs,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -568,13 +568,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IClimateInternal lhs,
             IClimateGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Climate(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Climate)item);
+            ret.DeepCopyIn((Climate)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Climate)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1669,26 +1669,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly ClimateSetterTranslationCommon Instance = new ClimateSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IClimateInternal item,
             IClimateGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IClimate item,
             IClimateGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1792,52 +1792,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IClimateInternal)item,
                 rhs: (IClimateGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IClimate)item,
                 rhs: (IClimateGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IClimateInternal)item,
                 rhs: (IClimateGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IClimate)item,
                 rhs: (IClimateGetter)rhs,
                 errorMask: errorMask,
@@ -1851,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Climate_TranslationMask? copyMask = null)
         {
             Climate ret = (Climate)((ClimateCommon)((IClimateGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Climate_TranslationMask? copyMask = null)
         {
             Climate ret = (Climate)((ClimateCommon)((IClimateGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1876,7 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Climate ret = (Climate)((ClimateCommon)((IClimateGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

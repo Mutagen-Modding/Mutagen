@@ -407,26 +407,26 @@ namespace Mutagen.Bethesda
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
             MajorRecord_TranslationMask? copyMask = null)
         {
-            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -434,13 +434,13 @@ namespace Mutagen.Bethesda
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly MajorRecordSetterTranslationCommon Instance = new MajorRecordSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1404,14 +1404,14 @@ namespace Mutagen.Bethesda.Internals
             {
                 item.FormKey = rhs.FormKey;
             }
-            DeepCopyFieldsFrom(
+            DeepCopyIn(
                 (IMajorRecord)item,
                 (IMajorRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1438,7 +1438,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_TranslationMask? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_TranslationMask? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Internals
             TranslationCrystal? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

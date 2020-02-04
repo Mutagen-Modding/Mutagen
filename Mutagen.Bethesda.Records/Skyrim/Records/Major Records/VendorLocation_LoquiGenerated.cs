@@ -391,26 +391,26 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IVendorLocation lhs,
             IVendorLocationGetter rhs,
             VendorLocation_TranslationMask? copyMask = null)
         {
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IVendorLocation lhs,
             IVendorLocationGetter rhs,
             out VendorLocation_ErrorMask errorMask,
             VendorLocation_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -418,13 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = VendorLocation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IVendorLocation lhs,
             IVendorLocationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly VendorLocationSetterTranslationCommon Instance = new VendorLocationSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IVendorLocation item,
             IVendorLocationGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VendorLocation_TranslationMask? copyMask = null)
         {
             VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VendorLocation_TranslationMask? copyMask = null)
         {
             VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

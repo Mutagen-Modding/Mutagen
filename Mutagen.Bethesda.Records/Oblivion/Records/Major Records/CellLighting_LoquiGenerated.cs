@@ -416,26 +416,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICellLighting lhs,
             ICellLightingGetter rhs,
             CellLighting_TranslationMask? copyMask = null)
         {
-            ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICellLighting lhs,
             ICellLightingGetter rhs,
             out CellLighting_ErrorMask errorMask,
             CellLighting_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -443,13 +443,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICellLighting lhs,
             ICellLightingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly CellLightingSetterTranslationCommon Instance = new CellLightingSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICellLighting item,
             ICellLightingGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellLighting_TranslationMask? copyMask = null)
         {
             CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellLighting_TranslationMask? copyMask = null)
         {
             CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

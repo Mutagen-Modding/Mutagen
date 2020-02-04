@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3e4d7f6d7affbd660e20293e67d6a75ee656c84d</Sha>
+         <Sha>209357f59ce3cfec2b90466b93f64f59352e65b4</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-02-2020 20:59:52</CommitDate>
-         <Description>Added nullable error</Description>
+         <CommitDate>02-02-2020 23:43:35</CommitDate>
+         <Description>Fixes for unit tests not running</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>665a862194de43c335507761a3523efd591ecbc0</Sha>
+         <Sha>44de5e1d151e4551ad3e07fed11129451b7f31b5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-02-2020 21:00:27</CommitDate>
-         <Description>Some work on nullable for generation content</Description>
+         <CommitDate>02-03-2020 23:23:47</CommitDate>
+         <Description>CopyFieldsFrom -&gt; CopyIn</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null)
         {
             var ret = new CellBlock();
-            ret.DeepCopyFieldsFrom(this, duplicateMask);
+            ret.DeepCopyIn(this, duplicateMask);
             ret.SubBlocks.SetTo(this.SubBlocks.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
             return ret;
         }

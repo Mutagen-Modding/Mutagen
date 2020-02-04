@@ -476,26 +476,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
             DialogResponse_TranslationMask? copyMask = null)
         {
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
             out DialogResponse_ErrorMask errorMask,
             DialogResponse_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -503,13 +503,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly DialogResponseSetterTranslationCommon Instance = new DialogResponseSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IDialogResponse item,
             IDialogResponseGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogResponse_TranslationMask? copyMask = null)
         {
             DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogResponse_TranslationMask? copyMask = null)
         {
             DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

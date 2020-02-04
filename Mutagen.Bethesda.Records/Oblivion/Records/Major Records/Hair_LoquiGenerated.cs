@@ -434,14 +434,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IHairInternal lhs,
             IHairGetter rhs,
             out Hair_ErrorMask errorMask,
             Hair_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -449,13 +449,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IHairInternal lhs,
             IHairGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Hair(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Hair)item);
+            ret.DeepCopyIn((Hair)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Hair)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1315,26 +1315,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly HairSetterTranslationCommon Instance = new HairSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IHairInternal item,
             IHairGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IHair item,
             IHairGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1379,52 +1379,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IHairInternal)item,
                 rhs: (IHairGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IHair)item,
                 rhs: (IHairGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IHairInternal)item,
                 rhs: (IHairGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IHair)item,
                 rhs: (IHairGetter)rhs,
                 errorMask: errorMask,
@@ -1438,7 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Hair_TranslationMask? copyMask = null)
         {
             Hair ret = (Hair)((HairCommon)((IHairGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Hair_TranslationMask? copyMask = null)
         {
             Hair ret = (Hair)((HairCommon)((IHairGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Hair ret = (Hair)((HairCommon)((IHairGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -384,26 +384,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IModStats lhs,
             IModStatsGetter rhs,
             ModStats_TranslationMask? copyMask = null)
         {
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IModStats lhs,
             IModStatsGetter rhs,
             out ModStats_ErrorMask errorMask,
             ModStats_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IModStats lhs,
             IModStatsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ModStatsSetterTranslationCommon Instance = new ModStatsSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IModStats item,
             IModStatsGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModStats_TranslationMask? copyMask = null)
         {
             ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModStats_TranslationMask? copyMask = null)
         {
             ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

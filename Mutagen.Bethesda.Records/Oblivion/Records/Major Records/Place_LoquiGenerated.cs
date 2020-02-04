@@ -368,14 +368,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
             out Place_ErrorMask errorMask,
             Place_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -383,13 +383,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1145,78 +1145,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly PlaceSetterTranslationCommon Instance = new PlaceSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IPlaceInternal item,
             IPlaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public virtual void DeepCopyFieldsFrom(
+        public virtual void DeepCopyIn(
             IPlace item,
             IPlaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlaceInternal)item,
                 rhs: (IPlaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlace)item,
                 rhs: (IPlaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlaceInternal)item,
                 rhs: (IPlaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlace)item,
                 rhs: (IPlaceGetter)rhs,
                 errorMask: errorMask,
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Place_TranslationMask? copyMask = null)
         {
             Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Place_TranslationMask? copyMask = null)
         {
             Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Place ret = (Place)((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -394,14 +394,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGameSettingBoolInternal lhs,
             IGameSettingBoolGetter rhs,
             out GameSettingBool_ErrorMask errorMask,
             GameSettingBool_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -409,13 +409,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGameSettingBoolInternal lhs,
             IGameSettingBoolGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1202,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new GameSettingBool(getNextFormKey());
-            ret.DeepCopyFieldsFrom((GameSettingBool)item);
+            ret.DeepCopyIn((GameSettingBool)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GameSettingBool)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1216,26 +1216,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly GameSettingBoolSetterTranslationCommon Instance = new GameSettingBoolSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGameSettingBoolInternal item,
             IGameSettingBoolGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGameSettingBool item,
             IGameSettingBoolGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1246,78 +1246,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IGameSettingInternal item,
             IGameSettingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingBoolInternal)item,
                 rhs: (IGameSettingBoolGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IGameSetting item,
             IGameSettingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingBool)item,
                 rhs: (IGameSettingBoolGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingBoolInternal)item,
                 rhs: (IGameSettingBoolGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingBool)item,
                 rhs: (IGameSettingBoolGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingBoolInternal)item,
                 rhs: (IGameSettingBoolGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingBool)item,
                 rhs: (IGameSettingBoolGetter)rhs,
                 errorMask: errorMask,
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GameSettingBool_TranslationMask? copyMask = null)
         {
             GameSettingBool ret = (GameSettingBool)((GameSettingBoolCommon)((IGameSettingBoolGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GameSettingBool_TranslationMask? copyMask = null)
         {
             GameSettingBool ret = (GameSettingBool)((GameSettingBoolCommon)((IGameSettingBoolGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             GameSettingBool ret = (GameSettingBool)((GameSettingBoolCommon)((IGameSettingBoolGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

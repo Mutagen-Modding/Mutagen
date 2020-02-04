@@ -436,14 +436,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISubspaceInternal lhs,
             ISubspaceGetter rhs,
             out Subspace_ErrorMask errorMask,
             Subspace_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -451,13 +451,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISubspaceInternal lhs,
             ISubspaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Subspace(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Subspace)item);
+            ret.DeepCopyIn((Subspace)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Subspace)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1277,26 +1277,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SubspaceSetterTranslationCommon Instance = new SubspaceSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISubspaceInternal item,
             ISubspaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISubspace item,
             ISubspaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1319,52 +1319,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISubspaceInternal)item,
                 rhs: (ISubspaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISubspace)item,
                 rhs: (ISubspaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISubspaceInternal)item,
                 rhs: (ISubspaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISubspace)item,
                 rhs: (ISubspaceGetter)rhs,
                 errorMask: errorMask,
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Subspace_TranslationMask? copyMask = null)
         {
             Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Subspace_TranslationMask? copyMask = null)
         {
             Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

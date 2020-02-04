@@ -426,26 +426,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
             MagicEffectSubData_TranslationMask? copyMask = null)
         {
-            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
             out MagicEffectSubData_ErrorMask errorMask,
             MagicEffectSubData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -453,13 +453,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly MagicEffectSubDataSetterTranslationCommon Instance = new MagicEffectSubDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IMagicEffectSubData item,
             IMagicEffectSubDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectSubData_TranslationMask? copyMask = null)
         {
             MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectSubData_TranslationMask? copyMask = null)
         {
             MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

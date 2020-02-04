@@ -538,26 +538,26 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IModHeader lhs,
             IModHeaderGetter rhs,
             ModHeader_TranslationMask? copyMask = null)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IModHeader lhs,
             IModHeaderGetter rhs,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -565,13 +565,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IModHeader lhs,
             IModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly ModHeaderSetterTranslationCommon Instance = new ModHeaderSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IModHeader item,
             IModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1742,7 +1742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModHeader_TranslationMask? copyMask = null)
         {
             ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModHeader_TranslationMask? copyMask = null)
         {
             ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1767,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

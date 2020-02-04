@@ -404,26 +404,26 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRank lhs,
             IRankGetter rhs,
             Rank_TranslationMask? copyMask = null)
         {
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRank lhs,
             IRankGetter rhs,
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -431,13 +431,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRank lhs,
             IRankGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RankSetterTranslationCommon Instance = new RankSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IRank item,
             IRankGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_TranslationMask? copyMask = null)
         {
             Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_TranslationMask? copyMask = null)
         {
             Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

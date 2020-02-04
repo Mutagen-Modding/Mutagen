@@ -386,26 +386,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWeatherSound lhs,
             IWeatherSoundGetter rhs,
             WeatherSound_TranslationMask? copyMask = null)
         {
-            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWeatherSound lhs,
             IWeatherSoundGetter rhs,
             out WeatherSound_ErrorMask errorMask,
             WeatherSound_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -413,13 +413,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = WeatherSound_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IWeatherSound lhs,
             IWeatherSoundGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly WeatherSoundSetterTranslationCommon Instance = new WeatherSoundSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IWeatherSound item,
             IWeatherSoundGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherSound_TranslationMask? copyMask = null)
         {
             WeatherSound ret = (WeatherSound)((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherSound_TranslationMask? copyMask = null)
         {
             WeatherSound ret = (WeatherSound)((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             WeatherSound ret = (WeatherSound)((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

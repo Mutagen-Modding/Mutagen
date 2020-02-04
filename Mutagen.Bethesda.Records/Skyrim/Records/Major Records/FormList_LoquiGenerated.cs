@@ -381,14 +381,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFormListInternal lhs,
             IFormListGetter rhs,
             out FormList_ErrorMask errorMask,
             FormList_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -396,13 +396,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = FormList_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFormListInternal lhs,
             IFormListGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new FormList(getNextFormKey());
-            ret.DeepCopyFieldsFrom((FormList)item);
+            ret.DeepCopyIn((FormList)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (FormList)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1100,78 +1100,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly FormListSetterTranslationCommon Instance = new FormListSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFormListInternal item,
             IFormListGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFormList item,
             IFormListGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFormListInternal)item,
                 rhs: (IFormListGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFormList)item,
                 rhs: (IFormListGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFormListInternal)item,
                 rhs: (IFormListGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFormList)item,
                 rhs: (IFormListGetter)rhs,
                 errorMask: errorMask,
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormList_TranslationMask? copyMask = null)
         {
             FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormList_TranslationMask? copyMask = null)
         {
             FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -438,14 +438,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IBirthsignInternal lhs,
             IBirthsignGetter rhs,
             out Birthsign_ErrorMask errorMask,
             Birthsign_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -453,13 +453,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IBirthsignInternal lhs,
             IBirthsignGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Birthsign(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Birthsign)item);
+            ret.DeepCopyIn((Birthsign)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Birthsign)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1336,26 +1336,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly BirthsignSetterTranslationCommon Instance = new BirthsignSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IBirthsignInternal item,
             IBirthsignGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IBirthsign item,
             IBirthsignGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1400,52 +1400,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IBirthsignInternal)item,
                 rhs: (IBirthsignGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IBirthsign)item,
                 rhs: (IBirthsignGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IBirthsignInternal)item,
                 rhs: (IBirthsignGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IBirthsign)item,
                 rhs: (IBirthsignGetter)rhs,
                 errorMask: errorMask,
@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_TranslationMask? copyMask = null)
         {
             Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Birthsign_TranslationMask? copyMask = null)
         {
             Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1484,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

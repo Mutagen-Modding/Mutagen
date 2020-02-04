@@ -384,26 +384,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs,
             AIPackageTarget_TranslationMask? copyMask = null)
         {
-            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs,
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly AIPackageTargetSetterTranslationCommon Instance = new AIPackageTargetSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IAIPackageTarget item,
             IAIPackageTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageTarget_TranslationMask? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageTarget_TranslationMask? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

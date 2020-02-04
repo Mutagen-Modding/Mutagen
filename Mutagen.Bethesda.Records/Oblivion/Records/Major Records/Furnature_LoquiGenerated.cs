@@ -437,14 +437,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFurnatureInternal lhs,
             IFurnatureGetter rhs,
             out Furnature_ErrorMask errorMask,
             Furnature_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -452,13 +452,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFurnatureInternal lhs,
             IFurnatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Furnature(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Furnature)item);
+            ret.DeepCopyIn((Furnature)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Furnature)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1320,26 +1320,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly FurnatureSetterTranslationCommon Instance = new FurnatureSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFurnatureInternal item,
             IFurnatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFurnature item,
             IFurnatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1391,52 +1391,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFurnatureInternal)item,
                 rhs: (IFurnatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFurnature)item,
                 rhs: (IFurnatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFurnatureInternal)item,
                 rhs: (IFurnatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFurnature)item,
                 rhs: (IFurnatureGetter)rhs,
                 errorMask: errorMask,
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Furnature_TranslationMask? copyMask = null)
         {
             Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Furnature_TranslationMask? copyMask = null)
         {
             Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

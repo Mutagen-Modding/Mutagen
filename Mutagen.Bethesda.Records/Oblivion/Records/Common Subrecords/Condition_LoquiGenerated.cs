@@ -428,26 +428,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
             Condition_TranslationMask? copyMask = null)
         {
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -455,13 +455,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ConditionSetterTranslationCommon Instance = new ConditionSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICondition item,
             IConditionGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Condition_TranslationMask? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Condition_TranslationMask? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

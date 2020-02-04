@@ -405,26 +405,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFacePart lhs,
             IFacePartGetter rhs,
             FacePart_TranslationMask? copyMask = null)
         {
-            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFacePart lhs,
             IFacePartGetter rhs,
             out FacePart_ErrorMask errorMask,
             FacePart_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -432,13 +432,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFacePart lhs,
             IFacePartGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly FacePartSetterTranslationCommon Instance = new FacePartSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFacePart item,
             IFacePartGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FacePart_TranslationMask? copyMask = null)
         {
             FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FacePart_TranslationMask? copyMask = null)
         {
             FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

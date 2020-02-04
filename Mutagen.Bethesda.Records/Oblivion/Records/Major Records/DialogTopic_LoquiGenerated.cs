@@ -462,14 +462,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDialogTopicInternal lhs,
             IDialogTopicGetter rhs,
             out DialogTopic_ErrorMask errorMask,
             DialogTopic_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -477,13 +477,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDialogTopicInternal lhs,
             IDialogTopicGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new DialogTopic(getNextFormKey());
-            ret.DeepCopyFieldsFrom((DialogTopic)item);
+            ret.DeepCopyIn((DialogTopic)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1489,26 +1489,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly DialogTopicSetterTranslationCommon Instance = new DialogTopicSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IDialogTopicInternal item,
             IDialogTopicGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IDialogTopic item,
             IDialogTopicGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             converter: (r) =>
                             {
                                 var copyRet = new DialogItem(r.FormKey);
-                                copyRet.DeepCopyFieldsFrom(
+                                copyRet.DeepCopyIn(
                                     rhs: r,
                                     copyMask: default(TranslationCrystal),
                                     errorMask: errorMask);
@@ -1587,52 +1587,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IDialogTopicInternal)item,
                 rhs: (IDialogTopicGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IDialogTopic)item,
                 rhs: (IDialogTopicGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IDialogTopicInternal)item,
                 rhs: (IDialogTopicGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IDialogTopic)item,
                 rhs: (IDialogTopicGetter)rhs,
                 errorMask: errorMask,
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopic_TranslationMask? copyMask = null)
         {
             DialogTopic ret = (DialogTopic)((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogTopic_TranslationMask? copyMask = null)
         {
             DialogTopic ret = (DialogTopic)((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             DialogTopic ret = (DialogTopic)((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

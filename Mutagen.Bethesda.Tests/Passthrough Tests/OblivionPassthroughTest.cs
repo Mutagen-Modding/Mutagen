@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path);
             var ret = new OblivionMod(this.ModKey);
-            ret.DeepCopyFieldsFrom(wrapper);
+            ret.DeepCopyIn(wrapper);
             return ret;
         }
 

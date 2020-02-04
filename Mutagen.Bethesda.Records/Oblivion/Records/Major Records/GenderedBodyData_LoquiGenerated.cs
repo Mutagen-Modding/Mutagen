@@ -392,26 +392,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs,
             GenderedBodyData_TranslationMask? copyMask = null)
         {
-            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -419,13 +419,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly GenderedBodyDataSetterTranslationCommon Instance = new GenderedBodyDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGenderedBodyData item,
             IGenderedBodyDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedBodyData_TranslationMask? copyMask = null)
         {
             GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedBodyData_TranslationMask? copyMask = null)
         {
             GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -424,14 +424,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILoadScreenInternal lhs,
             ILoadScreenGetter rhs,
             out LoadScreen_ErrorMask errorMask,
             LoadScreen_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -439,13 +439,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILoadScreenInternal lhs,
             ILoadScreenGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new LoadScreen(getNextFormKey());
-            ret.DeepCopyFieldsFrom((LoadScreen)item);
+            ret.DeepCopyIn((LoadScreen)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LoadScreen)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1294,26 +1294,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly LoadScreenSetterTranslationCommon Instance = new LoadScreenSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ILoadScreenInternal item,
             ILoadScreenGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ILoadScreen item,
             ILoadScreenGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1359,52 +1359,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILoadScreenInternal)item,
                 rhs: (ILoadScreenGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILoadScreen)item,
                 rhs: (ILoadScreenGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILoadScreenInternal)item,
                 rhs: (ILoadScreenGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ILoadScreen)item,
                 rhs: (ILoadScreenGetter)rhs,
                 errorMask: errorMask,
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoadScreen_TranslationMask? copyMask = null)
         {
             LoadScreen ret = (LoadScreen)((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoadScreen_TranslationMask? copyMask = null)
         {
             LoadScreen ret = (LoadScreen)((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             LoadScreen ret = (LoadScreen)((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

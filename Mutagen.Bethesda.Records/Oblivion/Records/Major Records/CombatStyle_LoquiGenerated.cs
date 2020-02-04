@@ -983,14 +983,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICombatStyleInternal lhs,
             ICombatStyleGetter rhs,
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -998,13 +998,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICombatStyleInternal lhs,
             ICombatStyleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new CombatStyle(getNextFormKey());
-            ret.DeepCopyFieldsFrom((CombatStyle)item);
+            ret.DeepCopyIn((CombatStyle)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (CombatStyle)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2631,26 +2631,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly CombatStyleSetterTranslationCommon Instance = new CombatStyleSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICombatStyleInternal item,
             ICombatStyleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICombatStyle item,
             ICombatStyleGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -2831,52 +2831,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ICombatStyleInternal)item,
                 rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ICombatStyle)item,
                 rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ICombatStyleInternal)item,
                 rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ICombatStyle)item,
                 rhs: (ICombatStyleGetter)rhs,
                 errorMask: errorMask,
@@ -2890,7 +2890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_TranslationMask? copyMask = null)
         {
             CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -2902,7 +2902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyle_TranslationMask? copyMask = null)
         {
             CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -2915,7 +2915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

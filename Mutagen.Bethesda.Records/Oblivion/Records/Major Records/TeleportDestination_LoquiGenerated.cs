@@ -391,26 +391,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
             TeleportDestination_TranslationMask? copyMask = null)
         {
-            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -418,13 +418,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly TeleportDestinationSetterTranslationCommon Instance = new TeleportDestinationSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ITeleportDestination item,
             ITeleportDestinationGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_TranslationMask? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination_TranslationMask? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

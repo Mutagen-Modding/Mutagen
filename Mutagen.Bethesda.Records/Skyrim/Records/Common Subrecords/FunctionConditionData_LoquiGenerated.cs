@@ -474,14 +474,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFunctionConditionDataInternal lhs,
             IFunctionConditionDataGetter rhs,
             out FunctionConditionData_ErrorMask errorMask,
             FunctionConditionData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -489,13 +489,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IFunctionConditionDataInternal lhs,
             IFunctionConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1339,13 +1339,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly FunctionConditionDataSetterTranslationCommon Instance = new FunctionConditionDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFunctionConditionDataInternal item,
             IFunctionConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1374,20 +1374,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ParameterTwoString = rhs.ParameterTwoString;
             }
-            DeepCopyFieldsFrom(
+            DeepCopyIn(
                 (IFunctionConditionData)item,
                 (IFunctionConditionDataGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IFunctionConditionData item,
             IFunctionConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1415,13 +1415,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IConditionData item,
             IConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IFunctionConditionData)item,
                 rhs: (IFunctionConditionDataGetter)rhs,
                 errorMask: errorMask,
@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FunctionConditionData_TranslationMask? copyMask = null)
         {
             FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FunctionConditionData_TranslationMask? copyMask = null)
         {
             FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

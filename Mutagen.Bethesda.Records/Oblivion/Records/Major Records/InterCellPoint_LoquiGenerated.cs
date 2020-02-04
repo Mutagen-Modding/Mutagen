@@ -375,26 +375,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
             InterCellPoint_TranslationMask? copyMask = null)
         {
-            ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
             out InterCellPoint_ErrorMask errorMask,
             InterCellPoint_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -402,13 +402,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly InterCellPointSetterTranslationCommon Instance = new InterCellPointSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IInterCellPoint item,
             IInterCellPointGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             InterCellPoint_TranslationMask? copyMask = null)
         {
             InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             InterCellPoint_TranslationMask? copyMask = null)
         {
             InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

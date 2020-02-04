@@ -426,26 +426,26 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDecal lhs,
             IDecalGetter rhs,
             Decal_TranslationMask? copyMask = null)
         {
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDecal lhs,
             IDecalGetter rhs,
             out Decal_ErrorMask errorMask,
             Decal_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -453,13 +453,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDecal lhs,
             IDecalGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly DecalSetterTranslationCommon Instance = new DecalSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IDecal item,
             IDecalGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Decal_TranslationMask? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Decal_TranslationMask? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

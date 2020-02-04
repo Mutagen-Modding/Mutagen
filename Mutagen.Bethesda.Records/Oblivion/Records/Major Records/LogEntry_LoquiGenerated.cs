@@ -425,26 +425,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILogEntry lhs,
             ILogEntryGetter rhs,
             LogEntry_TranslationMask? copyMask = null)
         {
-            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILogEntry lhs,
             ILogEntryGetter rhs,
             out LogEntry_ErrorMask errorMask,
             LogEntry_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -452,13 +452,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ILogEntry lhs,
             ILogEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly LogEntrySetterTranslationCommon Instance = new LogEntrySetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ILogEntry item,
             ILogEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry_TranslationMask? copyMask = null)
         {
             LogEntry ret = (LogEntry)((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry_TranslationMask? copyMask = null)
         {
             LogEntry ret = (LogEntry)((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             LogEntry ret = (LogEntry)((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

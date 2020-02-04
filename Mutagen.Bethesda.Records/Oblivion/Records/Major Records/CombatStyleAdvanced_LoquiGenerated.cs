@@ -474,26 +474,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
             CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
             out CombatStyleAdvanced_ErrorMask errorMask,
             CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -501,13 +501,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly CombatStyleAdvancedSetterTranslationCommon Instance = new CombatStyleAdvancedSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICombatStyleAdvanced item,
             ICombatStyleAdvancedGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
             CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1641,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleAdvanced_TranslationMask? copyMask = null)
         {
             CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

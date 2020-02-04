@@ -395,26 +395,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPointToReferenceMapping lhs,
             IPointToReferenceMappingGetter rhs,
             PointToReferenceMapping_TranslationMask? copyMask = null)
         {
-            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPointToReferenceMapping lhs,
             IPointToReferenceMappingGetter rhs,
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -422,13 +422,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPointToReferenceMapping lhs,
             IPointToReferenceMappingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly PointToReferenceMappingSetterTranslationCommon Instance = new PointToReferenceMappingSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IPointToReferenceMapping item,
             IPointToReferenceMappingGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PointToReferenceMapping_TranslationMask? copyMask = null)
         {
             PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PointToReferenceMapping_TranslationMask? copyMask = null)
         {
             PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

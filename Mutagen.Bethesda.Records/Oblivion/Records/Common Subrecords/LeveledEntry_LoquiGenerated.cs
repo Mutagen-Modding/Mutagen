@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+        public static void DeepCopyIn<T, TGetter, T_TranslMask>(
             this ILeveledEntry<T> lhs,
             ILeveledEntryGetter<TGetter> rhs,
             LeveledEntry_TranslationMask<T_TranslMask>? copyMask = null)
@@ -460,14 +460,14 @@ namespace Mutagen.Bethesda.Oblivion
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask
         {
-            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom<T, TGetter>(
+            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
+        public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
             this ILeveledEntry<T> lhs,
             ILeveledEntryGetter<TGetter> rhs,
             out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom<T, TGetter>(
+            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom<T, TGetter>(
+        public static void DeepCopyIn<T, TGetter>(
             this ILeveledEntry<T> lhs,
             ILeveledEntryGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom<T, TGetter>(
+            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly LeveledEntrySetterTranslationCommon Instance = new LeveledEntrySetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom<T, TGetter>(
+        public void DeepCopyIn<T, TGetter>(
             ILeveledEntry<T> item,
             ILeveledEntryGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask
         {
             LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
-            ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            ret.DeepCopyIn<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask
         {
             LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
-            ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
+            ret.DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<TGetter>)((ILeveledEntryGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
-            ret.DeepCopyFieldsFrom<T, TGetter>(
+            ret.DeepCopyIn<T, TGetter>(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

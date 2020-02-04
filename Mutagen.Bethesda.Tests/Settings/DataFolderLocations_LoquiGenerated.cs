@@ -326,26 +326,26 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs,
             DataFolderLocations_TranslationMask? copyMask = null)
         {
-            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -353,13 +353,13 @@ namespace Mutagen.Bethesda.Tests
             errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly DataFolderLocationsSetterTranslationCommon Instance = new DataFolderLocationsSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IDataFolderLocations item,
             IDataFolderLocationsGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             DataFolderLocations_TranslationMask? copyMask = null)
         {
             DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsCommon)((IDataFolderLocationsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             DataFolderLocations_TranslationMask? copyMask = null)
         {
             DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsCommon)((IDataFolderLocationsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? copyMask = null)
         {
             DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsCommon)((IDataFolderLocationsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

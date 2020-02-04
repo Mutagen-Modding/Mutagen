@@ -397,26 +397,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
             RoadPoint_TranslationMask? copyMask = null)
         {
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
             out RoadPoint_ErrorMask errorMask,
             RoadPoint_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -424,13 +424,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RoadPointSetterTranslationCommon Instance = new RoadPointSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IRoadPoint item,
             IRoadPointGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RoadPoint_TranslationMask? copyMask = null)
         {
             RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RoadPoint_TranslationMask? copyMask = null)
         {
             RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

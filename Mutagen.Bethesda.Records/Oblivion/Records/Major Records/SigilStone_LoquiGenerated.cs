@@ -502,14 +502,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISigilStoneInternal lhs,
             ISigilStoneGetter rhs,
             out SigilStone_ErrorMask errorMask,
             SigilStone_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -517,13 +517,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISigilStoneInternal lhs,
             ISigilStoneGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new SigilStone(getNextFormKey());
-            ret.DeepCopyFieldsFrom((SigilStone)item);
+            ret.DeepCopyIn((SigilStone)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (SigilStone)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1587,26 +1587,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SigilStoneSetterTranslationCommon Instance = new SigilStoneSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISigilStoneInternal item,
             ISigilStoneGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISigilStone item,
             ISigilStoneGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1698,78 +1698,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IItemAbstractInternal item,
             IItemAbstractGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISigilStoneInternal)item,
                 rhs: (ISigilStoneGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IItemAbstract item,
             IItemAbstractGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISigilStone)item,
                 rhs: (ISigilStoneGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISigilStoneInternal)item,
                 rhs: (ISigilStoneGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISigilStone)item,
                 rhs: (ISigilStoneGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISigilStoneInternal)item,
                 rhs: (ISigilStoneGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISigilStone)item,
                 rhs: (ISigilStoneGetter)rhs,
                 errorMask: errorMask,
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SigilStone_TranslationMask? copyMask = null)
         {
             SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SigilStone_TranslationMask? copyMask = null)
         {
             SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1808,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

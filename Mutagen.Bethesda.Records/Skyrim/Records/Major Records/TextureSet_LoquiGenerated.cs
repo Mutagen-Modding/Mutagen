@@ -433,14 +433,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITextureSetInternal lhs,
             ITextureSetGetter rhs,
             out TextureSet_ErrorMask errorMask,
             TextureSet_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -448,13 +448,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITextureSetInternal lhs,
             ITextureSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new TextureSet(getNextFormKey());
-            ret.DeepCopyFieldsFrom((TextureSet)item);
+            ret.DeepCopyIn((TextureSet)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (TextureSet)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1346,26 +1346,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly TextureSetSetterTranslationCommon Instance = new TextureSetSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ITextureSetInternal item,
             ITextureSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ITextureSet item,
             ITextureSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1454,52 +1454,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ITextureSetInternal)item,
                 rhs: (ITextureSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ITextureSet)item,
                 rhs: (ITextureSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ITextureSetInternal)item,
                 rhs: (ITextureSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ITextureSet)item,
                 rhs: (ITextureSetGetter)rhs,
                 errorMask: errorMask,
@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TextureSet_TranslationMask? copyMask = null)
         {
             TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TextureSet_TranslationMask? copyMask = null)
         {
             TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

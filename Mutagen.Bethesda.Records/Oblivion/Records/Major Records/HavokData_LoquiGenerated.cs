@@ -384,26 +384,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IHavokData lhs,
             IHavokDataGetter rhs,
             HavokData_TranslationMask? copyMask = null)
         {
-            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IHavokData lhs,
             IHavokDataGetter rhs,
             out HavokData_ErrorMask errorMask,
             HavokData_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IHavokData lhs,
             IHavokDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly HavokDataSetterTranslationCommon Instance = new HavokDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IHavokData item,
             IHavokDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             HavokData_TranslationMask? copyMask = null)
         {
             HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             HavokData_TranslationMask? copyMask = null)
         {
             HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

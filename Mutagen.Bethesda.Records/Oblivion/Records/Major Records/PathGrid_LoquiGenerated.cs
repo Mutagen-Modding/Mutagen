@@ -443,14 +443,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPathGridInternal lhs,
             IPathGridGetter rhs,
             out PathGrid_ErrorMask errorMask,
             PathGrid_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -458,13 +458,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPathGridInternal lhs,
             IPathGridGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new PathGrid(getNextFormKey());
-            ret.DeepCopyFieldsFrom((PathGrid)item);
+            ret.DeepCopyIn((PathGrid)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (PathGrid)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1378,26 +1378,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly PathGridSetterTranslationCommon Instance = new PathGridSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IPathGridInternal item,
             IPathGridGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IPathGrid item,
             IPathGridGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1508,52 +1508,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPathGridInternal)item,
                 rhs: (IPathGridGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPathGrid)item,
                 rhs: (IPathGridGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPathGridInternal)item,
                 rhs: (IPathGridGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPathGrid)item,
                 rhs: (IPathGridGetter)rhs,
                 errorMask: errorMask,
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGrid_TranslationMask? copyMask = null)
         {
             PathGrid ret = (PathGrid)((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1579,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGrid_TranslationMask? copyMask = null)
         {
             PathGrid ret = (PathGrid)((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             PathGrid ret = (PathGrid)((PathGridCommon)((IPathGridGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

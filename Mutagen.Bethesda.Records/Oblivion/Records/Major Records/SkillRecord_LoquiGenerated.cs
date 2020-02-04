@@ -557,14 +557,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISkillRecordInternal lhs,
             ISkillRecordGetter rhs,
             out SkillRecord_ErrorMask errorMask,
             SkillRecord_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -572,13 +572,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISkillRecordInternal lhs,
             ISkillRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new SkillRecord(getNextFormKey());
-            ret.DeepCopyFieldsFrom((SkillRecord)item);
+            ret.DeepCopyIn((SkillRecord)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (SkillRecord)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1678,26 +1678,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SkillRecordSetterTranslationCommon Instance = new SkillRecordSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISkillRecordInternal item,
             ISkillRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISkillRecord item,
             ISkillRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1756,52 +1756,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISkillRecordInternal)item,
                 rhs: (ISkillRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISkillRecord)item,
                 rhs: (ISkillRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISkillRecordInternal)item,
                 rhs: (ISkillRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISkillRecord)item,
                 rhs: (ISkillRecordGetter)rhs,
                 errorMask: errorMask,
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_TranslationMask? copyMask = null)
         {
             SkillRecord ret = (SkillRecord)((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_TranslationMask? copyMask = null)
         {
             SkillRecord ret = (SkillRecord)((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             SkillRecord ret = (SkillRecord)((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

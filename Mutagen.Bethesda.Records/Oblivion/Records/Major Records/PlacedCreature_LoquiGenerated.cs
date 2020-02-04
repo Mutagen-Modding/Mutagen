@@ -509,14 +509,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPlacedCreatureInternal lhs,
             IPlacedCreatureGetter rhs,
             out PlacedCreature_ErrorMask errorMask,
             PlacedCreature_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlacedCreatureSetterTranslationCommon)((IPlacedCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PlacedCreatureSetterTranslationCommon)((IPlacedCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -524,13 +524,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PlacedCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPlacedCreatureInternal lhs,
             IPlacedCreatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlacedCreatureSetterTranslationCommon)((IPlacedCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PlacedCreatureSetterTranslationCommon)((IPlacedCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new PlacedCreature(getNextFormKey());
-            ret.DeepCopyFieldsFrom((PlacedCreature)item);
+            ret.DeepCopyIn((PlacedCreature)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (PlacedCreature)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1580,26 +1580,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly PlacedCreatureSetterTranslationCommon Instance = new PlacedCreatureSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IPlacedCreatureInternal item,
             IPlacedCreatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IPlacedCreature item,
             IPlacedCreatureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1675,52 +1675,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlacedCreatureInternal)item,
                 rhs: (IPlacedCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlacedCreature)item,
                 rhs: (IPlacedCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlacedCreatureInternal)item,
                 rhs: (IPlacedCreatureGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IPlacedCreature)item,
                 rhs: (IPlacedCreatureGetter)rhs,
                 errorMask: errorMask,
@@ -1734,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_TranslationMask? copyMask = null)
         {
             PlacedCreature ret = (PlacedCreature)((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedCreature_TranslationMask? copyMask = null)
         {
             PlacedCreature ret = (PlacedCreature)((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1759,7 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             PlacedCreature ret = (PlacedCreature)((PlacedCreatureCommon)((IPlacedCreatureGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

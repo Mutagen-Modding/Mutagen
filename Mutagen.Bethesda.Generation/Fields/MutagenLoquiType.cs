@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
                 case LoquiRefType.Direct:
                     fg.AppendLine($"var copyRet = new {this.TargetObjectGeneration.ObjectName}({rhsAccessor}.FormKey);");
                     using (var args = new ArgsWrapper(fg,
-                        $"copyRet.{(deepCopy ? "Deep" : null)}CopyFieldsFrom"))
+                        $"copyRet.{(deepCopy ? "Deep" : null)}CopyIn"))
                     {
                         args.Add($"rhs: {rhsAccessor}");
                         if (this.RefType == LoquiRefType.Direct)

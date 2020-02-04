@@ -394,14 +394,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGlobalFloatInternal lhs,
             IGlobalFloatGetter rhs,
             out GlobalFloat_ErrorMask errorMask,
             GlobalFloat_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GlobalFloatSetterTranslationCommon)((IGlobalFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GlobalFloatSetterTranslationCommon)((IGlobalFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -409,13 +409,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GlobalFloat_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGlobalFloatInternal lhs,
             IGlobalFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GlobalFloatSetterTranslationCommon)((IGlobalFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GlobalFloatSetterTranslationCommon)((IGlobalFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new GlobalFloat(getNextFormKey());
-            ret.DeepCopyFieldsFrom((GlobalFloat)item);
+            ret.DeepCopyIn((GlobalFloat)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GlobalFloat)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1214,26 +1214,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly GlobalFloatSetterTranslationCommon Instance = new GlobalFloatSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGlobalFloatInternal item,
             IGlobalFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGlobalFloat item,
             IGlobalFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1244,78 +1244,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IGlobalInternal item,
             IGlobalGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGlobalFloatInternal)item,
                 rhs: (IGlobalFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IGlobal item,
             IGlobalGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGlobalFloat)item,
                 rhs: (IGlobalFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGlobalFloatInternal)item,
                 rhs: (IGlobalFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGlobalFloat)item,
                 rhs: (IGlobalFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGlobalFloatInternal)item,
                 rhs: (IGlobalFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGlobalFloat)item,
                 rhs: (IGlobalFloatGetter)rhs,
                 errorMask: errorMask,
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GlobalFloat_TranslationMask? copyMask = null)
         {
             GlobalFloat ret = (GlobalFloat)((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GlobalFloat_TranslationMask? copyMask = null)
         {
             GlobalFloat ret = (GlobalFloat)((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             GlobalFloat ret = (GlobalFloat)((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

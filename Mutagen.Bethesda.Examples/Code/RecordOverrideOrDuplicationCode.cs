@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Examples
             // By duplicating it, we instead create a copy with a new FormKey, originating from our outgoing mod.  
             // This creates a record duplication, rather than an override
             var armorDuplicate = outgoingMod.Armors.AddNew();
-            armorDuplicate.DeepCopyFieldsFrom(sourceArmor);
+            armorDuplicate.DeepCopyIn(sourceArmor);
             armorDuplicate.Name = $"Duplicated {sourceArmor.Name}";
 
             // Export both the overridden original record, as well as a duplicate new record

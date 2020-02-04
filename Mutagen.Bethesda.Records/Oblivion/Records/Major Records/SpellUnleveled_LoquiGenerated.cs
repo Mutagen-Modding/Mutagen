@@ -468,14 +468,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISpellUnleveledInternal lhs,
             ISpellUnleveledGetter rhs,
             out SpellUnleveled_ErrorMask errorMask,
             SpellUnleveled_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -483,13 +483,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ISpellUnleveledInternal lhs,
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new SpellUnleveled(getNextFormKey());
-            ret.DeepCopyFieldsFrom((SpellUnleveled)item);
+            ret.DeepCopyIn((SpellUnleveled)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (SpellUnleveled)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1472,26 +1472,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly SpellUnleveledSetterTranslationCommon Instance = new SpellUnleveledSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISpellUnleveledInternal item,
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ISpellUnleveled item,
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1549,104 +1549,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISpellInternal item,
             ISpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveledInternal)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISpell item,
             ISpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveled)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISpellAbstractInternal item,
             ISpellAbstractGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveledInternal)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISpellAbstract item,
             ISpellAbstractGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveled)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveledInternal)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveled)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveledInternal)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (ISpellUnleveled)item,
                 rhs: (ISpellUnleveledGetter)rhs,
                 errorMask: errorMask,
@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SpellUnleveled_TranslationMask? copyMask = null)
         {
             SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1672,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SpellUnleveled_TranslationMask? copyMask = null)
         {
             SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1685,7 +1685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -396,14 +396,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IKeywordInternal lhs,
             IKeywordGetter rhs,
             out Keyword_ErrorMask errorMask,
             Keyword_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IKeywordInternal lhs,
             IKeywordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new Keyword(getNextFormKey());
-            ret.DeepCopyFieldsFrom((Keyword)item);
+            ret.DeepCopyIn((Keyword)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Keyword)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1176,26 +1176,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new static readonly KeywordSetterTranslationCommon Instance = new KeywordSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IKeywordInternal item,
             IKeywordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IKeyword item,
             IKeywordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1206,52 +1206,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IKeywordInternal)item,
                 rhs: (IKeywordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IKeyword)item,
                 rhs: (IKeywordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IKeywordInternal)item,
                 rhs: (IKeywordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IKeyword)item,
                 rhs: (IKeywordGetter)rhs,
                 errorMask: errorMask,
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Keyword_TranslationMask? copyMask = null)
         {
             Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Keyword_TranslationMask? copyMask = null)
         {
             Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask = null)
         {
             Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

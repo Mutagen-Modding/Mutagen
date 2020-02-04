@@ -384,26 +384,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRaceStatsGendered lhs,
             IRaceStatsGenderedGetter rhs,
             RaceStatsGendered_TranslationMask? copyMask = null)
         {
-            ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRaceStatsGendered lhs,
             IRaceStatsGenderedGetter rhs,
             out RaceStatsGendered_ErrorMask errorMask,
             RaceStatsGendered_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -411,13 +411,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RaceStatsGendered_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRaceStatsGendered lhs,
             IRaceStatsGenderedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RaceStatsGenderedSetterTranslationCommon Instance = new RaceStatsGenderedSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IRaceStatsGendered item,
             IRaceStatsGenderedGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceStatsGendered_TranslationMask? copyMask = null)
         {
             RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedCommon)((IRaceStatsGenderedGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceStatsGendered_TranslationMask? copyMask = null)
         {
             RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedCommon)((IRaceStatsGenderedGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedCommon)((IRaceStatsGenderedGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -2375,26 +2375,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
             OblivionMod_TranslationMask? copyMask = null)
         {
-            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -2402,13 +2402,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -7004,7 +7004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly OblivionModSetterTranslationCommon Instance = new OblivionModSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IOblivionMod item,
             IOblivionModGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -7015,7 +7015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
                 try
                 {
-                    item.ModHeader.DeepCopyFieldsFrom(
+                    item.ModHeader.DeepCopyIn(
                         rhs: rhs.ModHeader,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.ModHeader));
@@ -7035,7 +7035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                 try
                 {
-                    item.GameSettings.DeepCopyFieldsFrom(
+                    item.GameSettings.DeepCopyIn(
                         rhs: rhs.GameSettings,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.GameSettings));
@@ -7055,7 +7055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                 try
                 {
-                    item.Globals.DeepCopyFieldsFrom(
+                    item.Globals.DeepCopyIn(
                         rhs: rhs.Globals,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Globals));
@@ -7075,7 +7075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                 try
                 {
-                    item.Classes.DeepCopyFieldsFrom(
+                    item.Classes.DeepCopyIn(
                         rhs: rhs.Classes,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Classes));
@@ -7095,7 +7095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.DeepCopyFieldsFrom(
+                    item.Factions.DeepCopyIn(
                         rhs: rhs.Factions,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Factions));
@@ -7115,7 +7115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                 try
                 {
-                    item.Hairs.DeepCopyFieldsFrom(
+                    item.Hairs.DeepCopyIn(
                         rhs: rhs.Hairs,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Hairs));
@@ -7135,7 +7135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                 try
                 {
-                    item.Eyes.DeepCopyFieldsFrom(
+                    item.Eyes.DeepCopyIn(
                         rhs: rhs.Eyes,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Eyes));
@@ -7155,7 +7155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                 try
                 {
-                    item.Races.DeepCopyFieldsFrom(
+                    item.Races.DeepCopyIn(
                         rhs: rhs.Races,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Races));
@@ -7175,7 +7175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.DeepCopyFieldsFrom(
+                    item.Sounds.DeepCopyIn(
                         rhs: rhs.Sounds,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Sounds));
@@ -7195,7 +7195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                 try
                 {
-                    item.Skills.DeepCopyFieldsFrom(
+                    item.Skills.DeepCopyIn(
                         rhs: rhs.Skills,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Skills));
@@ -7215,7 +7215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                 try
                 {
-                    item.MagicEffects.DeepCopyFieldsFrom(
+                    item.MagicEffects.DeepCopyIn(
                         rhs: rhs.MagicEffects,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.MagicEffects));
@@ -7235,7 +7235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                 try
                 {
-                    item.Scripts.DeepCopyFieldsFrom(
+                    item.Scripts.DeepCopyIn(
                         rhs: rhs.Scripts,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Scripts));
@@ -7255,7 +7255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                 try
                 {
-                    item.LandTextures.DeepCopyFieldsFrom(
+                    item.LandTextures.DeepCopyIn(
                         rhs: rhs.LandTextures,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LandTextures));
@@ -7275,7 +7275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                 try
                 {
-                    item.Enchantments.DeepCopyFieldsFrom(
+                    item.Enchantments.DeepCopyIn(
                         rhs: rhs.Enchantments,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Enchantments));
@@ -7295,7 +7295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.DeepCopyFieldsFrom(
+                    item.Spells.DeepCopyIn(
                         rhs: rhs.Spells,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Spells));
@@ -7315,7 +7315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                 try
                 {
-                    item.Birthsigns.DeepCopyFieldsFrom(
+                    item.Birthsigns.DeepCopyIn(
                         rhs: rhs.Birthsigns,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Birthsigns));
@@ -7335,7 +7335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                 try
                 {
-                    item.Activators.DeepCopyFieldsFrom(
+                    item.Activators.DeepCopyIn(
                         rhs: rhs.Activators,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Activators));
@@ -7355,7 +7355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                 try
                 {
-                    item.AlchemicalApparatus.DeepCopyFieldsFrom(
+                    item.AlchemicalApparatus.DeepCopyIn(
                         rhs: rhs.AlchemicalApparatus,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AlchemicalApparatus));
@@ -7375,7 +7375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                 try
                 {
-                    item.Armors.DeepCopyFieldsFrom(
+                    item.Armors.DeepCopyIn(
                         rhs: rhs.Armors,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Armors));
@@ -7395,7 +7395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                 try
                 {
-                    item.Books.DeepCopyFieldsFrom(
+                    item.Books.DeepCopyIn(
                         rhs: rhs.Books,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Books));
@@ -7415,7 +7415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                 try
                 {
-                    item.Clothes.DeepCopyFieldsFrom(
+                    item.Clothes.DeepCopyIn(
                         rhs: rhs.Clothes,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Clothes));
@@ -7435,7 +7435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                 try
                 {
-                    item.Containers.DeepCopyFieldsFrom(
+                    item.Containers.DeepCopyIn(
                         rhs: rhs.Containers,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Containers));
@@ -7455,7 +7455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                 try
                 {
-                    item.Doors.DeepCopyFieldsFrom(
+                    item.Doors.DeepCopyIn(
                         rhs: rhs.Doors,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Doors));
@@ -7475,7 +7475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                 try
                 {
-                    item.Ingredients.DeepCopyFieldsFrom(
+                    item.Ingredients.DeepCopyIn(
                         rhs: rhs.Ingredients,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ingredients));
@@ -7495,7 +7495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                 try
                 {
-                    item.Lights.DeepCopyFieldsFrom(
+                    item.Lights.DeepCopyIn(
                         rhs: rhs.Lights,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Lights));
@@ -7515,7 +7515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                 try
                 {
-                    item.Miscellaneous.DeepCopyFieldsFrom(
+                    item.Miscellaneous.DeepCopyIn(
                         rhs: rhs.Miscellaneous,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Miscellaneous));
@@ -7535,7 +7535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                 try
                 {
-                    item.Statics.DeepCopyFieldsFrom(
+                    item.Statics.DeepCopyIn(
                         rhs: rhs.Statics,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Statics));
@@ -7555,7 +7555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                 try
                 {
-                    item.Grasses.DeepCopyFieldsFrom(
+                    item.Grasses.DeepCopyIn(
                         rhs: rhs.Grasses,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Grasses));
@@ -7575,7 +7575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                 try
                 {
-                    item.Trees.DeepCopyFieldsFrom(
+                    item.Trees.DeepCopyIn(
                         rhs: rhs.Trees,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Trees));
@@ -7595,7 +7595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                 try
                 {
-                    item.Flora.DeepCopyFieldsFrom(
+                    item.Flora.DeepCopyIn(
                         rhs: rhs.Flora,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Flora));
@@ -7615,7 +7615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                 try
                 {
-                    item.Furnature.DeepCopyFieldsFrom(
+                    item.Furnature.DeepCopyIn(
                         rhs: rhs.Furnature,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Furnature));
@@ -7635,7 +7635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                 try
                 {
-                    item.Weapons.DeepCopyFieldsFrom(
+                    item.Weapons.DeepCopyIn(
                         rhs: rhs.Weapons,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weapons));
@@ -7655,7 +7655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                 try
                 {
-                    item.Ammo.DeepCopyFieldsFrom(
+                    item.Ammo.DeepCopyIn(
                         rhs: rhs.Ammo,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammo));
@@ -7675,7 +7675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                 try
                 {
-                    item.NPCs.DeepCopyFieldsFrom(
+                    item.NPCs.DeepCopyIn(
                         rhs: rhs.NPCs,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.NPCs));
@@ -7695,7 +7695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                 try
                 {
-                    item.Creatures.DeepCopyFieldsFrom(
+                    item.Creatures.DeepCopyIn(
                         rhs: rhs.Creatures,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Creatures));
@@ -7715,7 +7715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                 try
                 {
-                    item.LeveledCreatures.DeepCopyFieldsFrom(
+                    item.LeveledCreatures.DeepCopyIn(
                         rhs: rhs.LeveledCreatures,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledCreatures));
@@ -7735,7 +7735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                 try
                 {
-                    item.SoulGems.DeepCopyFieldsFrom(
+                    item.SoulGems.DeepCopyIn(
                         rhs: rhs.SoulGems,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SoulGems));
@@ -7755,7 +7755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                 try
                 {
-                    item.Keys.DeepCopyFieldsFrom(
+                    item.Keys.DeepCopyIn(
                         rhs: rhs.Keys,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Keys));
@@ -7775,7 +7775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                 try
                 {
-                    item.Potions.DeepCopyFieldsFrom(
+                    item.Potions.DeepCopyIn(
                         rhs: rhs.Potions,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Potions));
@@ -7795,7 +7795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                 try
                 {
-                    item.Subspaces.DeepCopyFieldsFrom(
+                    item.Subspaces.DeepCopyIn(
                         rhs: rhs.Subspaces,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Subspaces));
@@ -7815,7 +7815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                 try
                 {
-                    item.SigilStones.DeepCopyFieldsFrom(
+                    item.SigilStones.DeepCopyIn(
                         rhs: rhs.SigilStones,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.SigilStones));
@@ -7835,7 +7835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                 try
                 {
-                    item.LeveledItems.DeepCopyFieldsFrom(
+                    item.LeveledItems.DeepCopyIn(
                         rhs: rhs.LeveledItems,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledItems));
@@ -7855,7 +7855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                 try
                 {
-                    item.Weathers.DeepCopyFieldsFrom(
+                    item.Weathers.DeepCopyIn(
                         rhs: rhs.Weathers,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weathers));
@@ -7875,7 +7875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                 try
                 {
-                    item.Climates.DeepCopyFieldsFrom(
+                    item.Climates.DeepCopyIn(
                         rhs: rhs.Climates,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Climates));
@@ -7895,7 +7895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                 try
                 {
-                    item.Regions.DeepCopyFieldsFrom(
+                    item.Regions.DeepCopyIn(
                         rhs: rhs.Regions,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Regions));
@@ -7915,7 +7915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                 try
                 {
-                    item.Cells.DeepCopyFieldsFrom(
+                    item.Cells.DeepCopyIn(
                         rhs: rhs.Cells,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Cells));
@@ -7935,7 +7935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                 try
                 {
-                    item.Worldspaces.DeepCopyFieldsFrom(
+                    item.Worldspaces.DeepCopyIn(
                         rhs: rhs.Worldspaces,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Worldspaces));
@@ -7955,7 +7955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                 try
                 {
-                    item.DialogTopics.DeepCopyFieldsFrom(
+                    item.DialogTopics.DeepCopyIn(
                         rhs: rhs.DialogTopics,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.DialogTopics));
@@ -7975,7 +7975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                 try
                 {
-                    item.Quests.DeepCopyFieldsFrom(
+                    item.Quests.DeepCopyIn(
                         rhs: rhs.Quests,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Quests));
@@ -7995,7 +7995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                 try
                 {
-                    item.IdleAnimations.DeepCopyFieldsFrom(
+                    item.IdleAnimations.DeepCopyIn(
                         rhs: rhs.IdleAnimations,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.IdleAnimations));
@@ -8015,7 +8015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                 try
                 {
-                    item.AIPackages.DeepCopyFieldsFrom(
+                    item.AIPackages.DeepCopyIn(
                         rhs: rhs.AIPackages,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AIPackages));
@@ -8035,7 +8035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                 try
                 {
-                    item.CombatStyles.DeepCopyFieldsFrom(
+                    item.CombatStyles.DeepCopyIn(
                         rhs: rhs.CombatStyles,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.CombatStyles));
@@ -8055,7 +8055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                 try
                 {
-                    item.LoadScreens.DeepCopyFieldsFrom(
+                    item.LoadScreens.DeepCopyIn(
                         rhs: rhs.LoadScreens,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LoadScreens));
@@ -8075,7 +8075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                 try
                 {
-                    item.LeveledSpells.DeepCopyFieldsFrom(
+                    item.LeveledSpells.DeepCopyIn(
                         rhs: rhs.LeveledSpells,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.LeveledSpells));
@@ -8095,7 +8095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                 try
                 {
-                    item.AnimatedObjects.DeepCopyFieldsFrom(
+                    item.AnimatedObjects.DeepCopyIn(
                         rhs: rhs.AnimatedObjects,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.AnimatedObjects));
@@ -8115,7 +8115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                 try
                 {
-                    item.Waters.DeepCopyFieldsFrom(
+                    item.Waters.DeepCopyIn(
                         rhs: rhs.Waters,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Waters));
@@ -8135,7 +8135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                 try
                 {
-                    item.EffectShaders.DeepCopyFieldsFrom(
+                    item.EffectShaders.DeepCopyIn(
                         rhs: rhs.EffectShaders,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.EffectShaders));
@@ -8159,7 +8159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_TranslationMask? copyMask = null)
         {
             OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -8171,7 +8171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_TranslationMask? copyMask = null)
         {
             OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -8184,7 +8184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

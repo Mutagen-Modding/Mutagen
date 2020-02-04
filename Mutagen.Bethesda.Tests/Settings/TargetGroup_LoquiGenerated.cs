@@ -336,26 +336,26 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITargetGroup lhs,
             ITargetGroupGetter rhs,
             TargetGroup_TranslationMask? copyMask = null)
         {
-            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITargetGroup lhs,
             ITargetGroupGetter rhs,
             out TargetGroup_ErrorMask errorMask,
             TargetGroup_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -363,13 +363,13 @@ namespace Mutagen.Bethesda.Tests
             errorMask = TargetGroup_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ITargetGroup lhs,
             ITargetGroupGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly TargetGroupSetterTranslationCommon Instance = new TargetGroupSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ITargetGroup item,
             ITargetGroupGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TargetGroup_TranslationMask? copyMask = null)
         {
             TargetGroup ret = (TargetGroup)((TargetGroupCommon)((ITargetGroupGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TargetGroup_TranslationMask? copyMask = null)
         {
             TargetGroup ret = (TargetGroup)((TargetGroupCommon)((ITargetGroupGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? copyMask = null)
         {
             TargetGroup ret = (TargetGroup)((TargetGroupCommon)((ITargetGroupGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

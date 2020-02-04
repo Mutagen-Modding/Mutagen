@@ -399,26 +399,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRankPlacement lhs,
             IRankPlacementGetter rhs,
             RankPlacement_TranslationMask? copyMask = null)
         {
-            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRankPlacement lhs,
             IRankPlacementGetter rhs,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -426,13 +426,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RankPlacement_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IRankPlacement lhs,
             IRankPlacementGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RankPlacementSetterTranslationCommon Instance = new RankPlacementSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IRankPlacement item,
             IRankPlacementGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RankPlacement_TranslationMask? copyMask = null)
         {
             RankPlacement ret = (RankPlacement)((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RankPlacement_TranslationMask? copyMask = null)
         {
             RankPlacement ret = (RankPlacement)((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             RankPlacement ret = (RankPlacement)((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

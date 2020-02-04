@@ -357,26 +357,26 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
             PassthroughSettings_TranslationMask? copyMask = null)
         {
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -384,13 +384,13 @@ namespace Mutagen.Bethesda.Tests
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static readonly PassthroughSettingsSetterTranslationCommon Instance = new PassthroughSettingsSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IPassthroughSettings item,
             IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_TranslationMask? copyMask = null)
         {
             PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_TranslationMask? copyMask = null)
         {
             PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TranslationCrystal? copyMask = null)
         {
             PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -394,14 +394,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGameSettingFloatInternal lhs,
             IGameSettingFloatGetter rhs,
             out GameSettingFloat_ErrorMask errorMask,
             GameSettingFloat_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -409,13 +409,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this IGameSettingFloatInternal lhs,
             IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
             var ret = new GameSettingFloat(getNextFormKey());
-            ret.DeepCopyFieldsFrom((GameSettingFloat)item);
+            ret.DeepCopyIn((GameSettingFloat)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GameSettingFloat)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1204,26 +1204,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new static readonly GameSettingFloatSetterTranslationCommon Instance = new GameSettingFloatSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGameSettingFloatInternal item,
             IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
         }
         
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             IGameSettingFloat item,
             IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            base.DeepCopyFieldsFrom(
+            base.DeepCopyIn(
                 item,
                 rhs,
                 errorMask,
@@ -1234,78 +1234,78 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IGameSettingInternal item,
             IGameSettingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingFloatInternal)item,
                 rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IGameSetting item,
             IGameSettingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingFloat)item,
                 rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingFloatInternal)item,
                 rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingFloat)item,
                 rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingFloatInternal)item,
                 rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
-        public override void DeepCopyFieldsFrom(
+        public override void DeepCopyIn(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            this.DeepCopyFieldsFrom(
+            this.DeepCopyIn(
                 item: (IGameSettingFloat)item,
                 rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GameSettingFloat_TranslationMask? copyMask = null)
         {
             GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GameSettingFloat_TranslationMask? copyMask = null)
         {
             GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);

@@ -399,26 +399,26 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICreatureSound lhs,
             ICreatureSoundGetter rhs,
             CreatureSound_TranslationMask? copyMask = null)
         {
-            ((CreatureSoundSetterTranslationCommon)((ICreatureSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CreatureSoundSetterTranslationCommon)((ICreatureSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
                 copyMask: default);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICreatureSound lhs,
             ICreatureSoundGetter rhs,
             out CreatureSound_ErrorMask errorMask,
             CreatureSound_TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CreatureSoundSetterTranslationCommon)((ICreatureSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CreatureSoundSetterTranslationCommon)((ICreatureSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -426,13 +426,13 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CreatureSound_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom(
+        public static void DeepCopyIn(
             this ICreatureSound lhs,
             ICreatureSoundGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CreatureSoundSetterTranslationCommon)((ICreatureSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyFieldsFrom(
+            ((CreatureSoundSetterTranslationCommon)((ICreatureSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly CreatureSoundSetterTranslationCommon Instance = new CreatureSoundSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public void DeepCopyIn(
             ICreatureSound item,
             ICreatureSoundGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureSound_TranslationMask? copyMask = null)
         {
             CreatureSound ret = (CreatureSound)((CreatureSoundCommon)((ICreatureSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureSound_TranslationMask? copyMask = null)
         {
             CreatureSound ret = (CreatureSound)((CreatureSoundCommon)((ICreatureSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
                 copyMask: copyMask);
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask = null)
         {
             CreatureSound ret = (CreatureSound)((CreatureSoundCommon)((ICreatureSoundGetter)item).CommonInstance()!).GetNew();
-            ret.DeepCopyFieldsFrom(
+            ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
                 copyMask: copyMask);
