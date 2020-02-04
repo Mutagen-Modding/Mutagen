@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LogEntry CreateFromXml(
             XElement node,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -156,15 +156,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LogEntry CreateFromXml(
             XElement node,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry CreateFromXml(
             string path,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry CreateFromXml(
             string path,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LogEntry CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry CreateFromXml(
             Stream stream,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -228,8 +228,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry CreateFromXml(
             Stream stream,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LogEntry CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -252,6 +252,424 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Flags = initialValue;
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Entry = initialValue;
+                this.ResultScript = new MaskItem<T, ScriptFields.Mask<T>?>(initialValue, new ScriptFields.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T Flags,
+                T Conditions,
+                T Entry,
+                T ResultScript)
+            {
+                this.Flags = Flags;
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.Entry = Entry;
+                this.ResultScript = new MaskItem<T, ScriptFields.Mask<T>?>(ResultScript, new ScriptFields.Mask<T>(ResultScript));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Flags;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
+            public T Entry;
+            public MaskItem<T, ScriptFields.Mask<T>?>? ResultScript { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Entry, rhs.Entry)) return false;
+                if (!object.Equals(this.ResultScript, rhs.ResultScript)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
+                ret = ret.CombineHashCode(this.Entry?.GetHashCode());
+                ret = ret.CombineHashCode(this.ResultScript?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Flags)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Entry)) return false;
+                if (ResultScript != null)
+                {
+                    if (!eval(this.ResultScript.Overall)) return false;
+                    if (this.ResultScript.Specific != null && !this.ResultScript.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new LogEntry.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Flags = eval(this.Flags);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Entry = eval(this.Entry);
+                obj.ResultScript = this.ResultScript == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.ResultScript.Overall), this.ResultScript.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(LogEntry.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, LogEntry.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(LogEntry.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Conditions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Conditions != null)
+                            {
+                                if (Conditions.Overall != null)
+                                {
+                                    fg.AppendLine(Conditions.Overall.ToString());
+                                }
+                                if (Conditions.Specific != null)
+                                {
+                                    foreach (var subItem in Conditions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Entry ?? true)
+                    {
+                        fg.AppendLine($"Entry => {Entry}");
+                    }
+                    if (printMask?.ResultScript?.Overall ?? true)
+                    {
+                        ResultScript?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? Entry;
+            public MaskItem<Exception?, ScriptFields.ErrorMask?>? ResultScript;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
+                switch (enu)
+                {
+                    case LogEntry_FieldIndex.Flags:
+                        return Flags;
+                    case LogEntry_FieldIndex.Conditions:
+                        return Conditions;
+                    case LogEntry_FieldIndex.Entry:
+                        return Entry;
+                    case LogEntry_FieldIndex.ResultScript:
+                        return ResultScript;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
+                switch (enu)
+                {
+                    case LogEntry_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case LogEntry_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LogEntry_FieldIndex.Entry:
+                        this.Entry = ex;
+                        break;
+                    case LogEntry_FieldIndex.ResultScript:
+                        this.ResultScript = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
+                switch (enu)
+                {
+                    case LogEntry_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case LogEntry_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case LogEntry_FieldIndex.Entry:
+                        this.Entry = (Exception)obj;
+                        break;
+                    case LogEntry_FieldIndex.ResultScript:
+                        this.ResultScript = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (Conditions != null) return true;
+                if (Entry != null) return true;
+                if (ResultScript != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Conditions != null)
+                    {
+                        if (Conditions.Overall != null)
+                        {
+                            fg.AppendLine(Conditions.Overall.ToString());
+                        }
+                        if (Conditions.Specific != null)
+                        {
+                            foreach (var subItem in Conditions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Entry => {Entry}");
+                ResultScript?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Entry = this.Entry.Combine(rhs.Entry);
+                ret.ResultScript = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ExceptionExt.Combine(this.ResultScript?.Overall, rhs.ResultScript?.Overall), (this.ResultScript?.Specific as IErrorMask<ScriptFields.ErrorMask>)?.Combine(rhs.ResultScript?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Flags;
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool Entry;
+            public MaskItem<bool, ScriptFields.TranslationMask?> ResultScript;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Flags = defaultOn;
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.Entry = defaultOn;
+                this.ResultScript = new MaskItem<bool, ScriptFields.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Flags, null));
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Entry, null));
+                ret.Add((ResultScript?.Overall ?? true, ResultScript?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -363,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LogEntrySetterCommon)((ILogEntryGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LogEntry_Mask<bool> GetEqualsMask(
+        public static LogEntry.Mask<bool> GetEqualsMask(
             this ILogEntryGetter item,
             ILogEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -377,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILogEntryGetter item,
             string? name = null,
-            LogEntry_Mask<bool>? printMask = null)
+            LogEntry.Mask<bool>? printMask = null)
         {
             return ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -389,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntryGetter item,
             FileGeneration fg,
             string? name = null,
-            LogEntry_Mask<bool>? printMask = null)
+            LogEntry.Mask<bool>? printMask = null)
         {
             ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -400,16 +818,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILogEntryGetter item,
-            LogEntry_Mask<bool?> checkMask)
+            LogEntry.Mask<bool?> checkMask)
         {
             return ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LogEntry_Mask<bool> GetHasBeenSetMask(this ILogEntryGetter item)
+        public static LogEntry.Mask<bool> GetHasBeenSetMask(this ILogEntryGetter item)
         {
-            var ret = new LogEntry_Mask<bool>(false);
+            var ret = new LogEntry.Mask<bool>(false);
             ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -428,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILogEntry lhs,
             ILogEntryGetter rhs,
-            LogEntry_TranslationMask? copyMask = null)
+            LogEntry.TranslationMask? copyMask = null)
         {
             ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -440,8 +858,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILogEntry lhs,
             ILogEntryGetter rhs,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? copyMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -449,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -467,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry DeepCopy(
             this ILogEntryGetter item,
-            LogEntry_TranslationMask? copyMask = null)
+            LogEntry.TranslationMask? copyMask = null)
         {
             return ((LogEntrySetterTranslationCommon)((ILogEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -476,8 +894,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LogEntry DeepCopy(
             this ILogEntryGetter item,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? copyMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? copyMask = null)
         {
             return ((LogEntrySetterTranslationCommon)((ILogEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -501,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILogEntry item,
             XElement node,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -514,8 +932,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILogEntry item,
             XElement node,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -523,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -542,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILogEntry item,
             string path,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -554,8 +972,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILogEntry item,
             string path,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -569,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntry item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -582,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILogEntry item,
             Stream stream,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -594,8 +1012,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILogEntry item,
             Stream stream,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -609,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntry item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -685,9 +1103,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(LogEntry_Mask<>);
+        public static readonly Type MaskType = typeof(LogEntry.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LogEntry_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LogEntry.ErrorMask);
 
         public static readonly Type ClassType = typeof(LogEntry);
 
@@ -1032,12 +1450,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly LogEntryCommon Instance = new LogEntryCommon();
 
-        public LogEntry_Mask<bool> GetEqualsMask(
+        public LogEntry.Mask<bool> GetEqualsMask(
             ILogEntryGetter item,
             ILogEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LogEntry_Mask<bool>(false);
+            var ret = new LogEntry.Mask<bool>(false);
             ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1049,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILogEntryGetter item,
             ILogEntryGetter rhs,
-            LogEntry_Mask<bool> ret,
+            LogEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1069,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILogEntryGetter item,
             string? name = null,
-            LogEntry_Mask<bool>? printMask = null)
+            LogEntry.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1084,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILogEntryGetter item,
             FileGeneration fg,
             string? name = null,
-            LogEntry_Mask<bool>? printMask = null)
+            LogEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1108,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILogEntryGetter item,
             FileGeneration fg,
-            LogEntry_Mask<bool>? printMask = null)
+            LogEntry.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
@@ -1144,7 +1562,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILogEntryGetter item,
-            LogEntry_Mask<bool?> checkMask)
+            LogEntry.Mask<bool?> checkMask)
         {
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != item.Conditions.HasBeenSet) return false;
@@ -1156,13 +1574,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ILogEntryGetter item,
-            LogEntry_Mask<bool> mask)
+            LogEntry.Mask<bool> mask)
         {
             mask.Flags = (item.Flags != null);
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Entry = (item.Entry != null);
             var itemResultScript = item.ResultScript;
-            mask.ResultScript = new MaskItem<bool, ScriptFields_Mask<bool>?>(itemResultScript != null, itemResultScript?.GetHasBeenSetMask());
+            mask.ResultScript = new MaskItem<bool, ScriptFields.Mask<bool>?>(itemResultScript != null, itemResultScript?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1304,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LogEntry DeepCopy(
             ILogEntryGetter item,
-            LogEntry_TranslationMask? copyMask = null)
+            LogEntry.TranslationMask? copyMask = null)
         {
             LogEntry ret = (LogEntry)((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1315,8 +1733,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LogEntry DeepCopy(
             ILogEntryGetter item,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? copyMask = null)
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? copyMask = null)
         {
             LogEntry ret = (LogEntry)((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1645,8 +2063,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILogEntryGetter item,
             XElement node,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null,
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1656,14 +2074,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILogEntryGetter item,
             string path,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null,
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1696,8 +2114,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILogEntryGetter item,
             Stream stream,
-            out LogEntry_ErrorMask errorMask,
-            LogEntry_TranslationMask? translationMask = null,
+            out LogEntry.ErrorMask errorMask,
+            LogEntry.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1746,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntryGetter item,
             XElement node,
             string? name = null,
-            LogEntry_TranslationMask? translationMask = null)
+            LogEntry.TranslationMask? translationMask = null)
         {
             ((LogEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1790,425 +2208,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class LogEntry_Mask<T> :
-        IMask<T>,
-        IEquatable<LogEntry_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public LogEntry_Mask(T initialValue)
-        {
-            this.Flags = initialValue;
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.Entry = initialValue;
-            this.ResultScript = new MaskItem<T, ScriptFields_Mask<T>?>(initialValue, new ScriptFields_Mask<T>(initialValue));
-        }
-
-        public LogEntry_Mask(
-            T Flags,
-            T Conditions,
-            T Entry,
-            T ResultScript)
-        {
-            this.Flags = Flags;
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.Entry = Entry;
-            this.ResultScript = new MaskItem<T, ScriptFields_Mask<T>?>(ResultScript, new ScriptFields_Mask<T>(ResultScript));
-        }
-
-        #pragma warning disable CS8618
-        protected LogEntry_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Flags;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>? Conditions;
-        public T Entry;
-        public MaskItem<T, ScriptFields_Mask<T>?>? ResultScript { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LogEntry_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(LogEntry_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-            if (!object.Equals(this.Entry, rhs.Entry)) return false;
-            if (!object.Equals(this.ResultScript, rhs.ResultScript)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-            ret = ret.CombineHashCode(this.Entry?.GetHashCode());
-            ret = ret.CombineHashCode(this.ResultScript?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Flags)) return false;
-            if (this.Conditions != null)
-            {
-                if (!eval(this.Conditions.Overall)) return false;
-                if (this.Conditions.Specific != null)
-                {
-                    foreach (var item in this.Conditions.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Entry)) return false;
-            if (ResultScript != null)
-            {
-                if (!eval(this.ResultScript.Overall)) return false;
-                if (this.ResultScript.Specific != null && !this.ResultScript.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public LogEntry_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new LogEntry_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(LogEntry_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Flags = eval(this.Flags);
-            if (Conditions != null)
-            {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition_Mask<R>?>>());
-                if (Conditions.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Condition_Mask<R>?>>();
-                    obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Condition_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Entry = eval(this.Entry);
-            obj.ResultScript = this.ResultScript == null ? null : new MaskItem<R, ScriptFields_Mask<R>?>(eval(this.ResultScript.Overall), this.ResultScript.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(LogEntry_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, LogEntry_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(LogEntry_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Conditions != null)
-                        {
-                            if (Conditions.Overall != null)
-                            {
-                                fg.AppendLine(Conditions.Overall.ToString());
-                            }
-                            if (Conditions.Specific != null)
-                            {
-                                foreach (var subItem in Conditions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Entry ?? true)
-                {
-                    fg.AppendLine($"Entry => {Entry}");
-                }
-                if (printMask?.ResultScript?.Overall ?? true)
-                {
-                    ResultScript?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class LogEntry_ErrorMask : IErrorMask, IErrorMask<LogEntry_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Flags;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>? Conditions;
-        public Exception? Entry;
-        public MaskItem<Exception?, ScriptFields_ErrorMask?>? ResultScript;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    return Flags;
-                case LogEntry_FieldIndex.Conditions:
-                    return Conditions;
-                case LogEntry_FieldIndex.Entry:
-                    return Entry;
-                case LogEntry_FieldIndex.ResultScript:
-                    return ResultScript;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ex, null);
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    this.Entry = ex;
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    this.ResultScript = new MaskItem<Exception?, ScriptFields_ErrorMask?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            LogEntry_FieldIndex enu = (LogEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case LogEntry_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case LogEntry_FieldIndex.Conditions:
-                    this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>)obj;
-                    break;
-                case LogEntry_FieldIndex.Entry:
-                    this.Entry = (Exception)obj;
-                    break;
-                case LogEntry_FieldIndex.ResultScript:
-                    this.ResultScript = (MaskItem<Exception?, ScriptFields_ErrorMask?>?)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Flags != null) return true;
-            if (Conditions != null) return true;
-            if (Entry != null) return true;
-            if (ResultScript != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("LogEntry_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("Conditions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Conditions != null)
-                {
-                    if (Conditions.Overall != null)
-                    {
-                        fg.AppendLine(Conditions.Overall.ToString());
-                    }
-                    if (Conditions.Specific != null)
-                    {
-                        foreach (var subItem in Conditions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Entry => {Entry}");
-            ResultScript?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public LogEntry_ErrorMask Combine(LogEntry_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new LogEntry_ErrorMask();
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-            ret.Entry = this.Entry.Combine(rhs.Entry);
-            ret.ResultScript = new MaskItem<Exception?, ScriptFields_ErrorMask?>(ExceptionExt.Combine(this.ResultScript?.Overall, rhs.ResultScript?.Overall), (this.ResultScript?.Specific as IErrorMask<ScriptFields_ErrorMask>)?.Combine(rhs.ResultScript?.Specific));
-            return ret;
-        }
-        public static LogEntry_ErrorMask? Combine(LogEntry_ErrorMask? lhs, LogEntry_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static LogEntry_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new LogEntry_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class LogEntry_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Flags;
-        public MaskItem<bool, Condition_TranslationMask?> Conditions;
-        public bool Entry;
-        public MaskItem<bool, ScriptFields_TranslationMask?> ResultScript;
-        #endregion
-
-        #region Ctors
-        public LogEntry_TranslationMask(bool defaultOn)
-        {
-            this.Flags = defaultOn;
-            this.Conditions = new MaskItem<bool, Condition_TranslationMask?>(defaultOn, null);
-            this.Entry = defaultOn;
-            this.ResultScript = new MaskItem<bool, ScriptFields_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Flags, null));
-            ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-            ret.Add((Entry, null));
-            ret.Add((ResultScript?.Overall ?? true, ResultScript?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

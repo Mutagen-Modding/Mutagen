@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod CreateFromXml(
             XElement node,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -566,15 +566,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static OblivionMod CreateFromXml(
             XElement node,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OblivionMod.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod CreateFromXml(
             string path,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -604,8 +604,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod CreateFromXml(
             string path,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod CreateFromXml(
             Stream stream,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -638,8 +638,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod CreateFromXml(
             Stream stream,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -662,6 +662,2006 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(initialValue, new ModHeader.Mask<T>(initialValue));
+                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Globals = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Classes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Factions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Hairs = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Eyes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Races = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Sounds = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Skills = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.MagicEffects = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Scripts = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.LandTextures = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Enchantments = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Spells = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Birthsigns = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Activators = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.AlchemicalApparatus = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Armors = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Books = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Clothes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Containers = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Doors = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Ingredients = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Lights = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Miscellaneous = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Statics = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Grasses = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Trees = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Flora = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Furnature = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Weapons = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Ammo = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.NPCs = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Creatures = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.LeveledCreatures = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.SoulGems = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Keys = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Potions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Subspaces = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.SigilStones = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.LeveledItems = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Weathers = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Climates = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Regions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Cells = new MaskItem<T, ListGroup.Mask<T>?>(initialValue, new ListGroup.Mask<T>(initialValue));
+                this.Worldspaces = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.DialogTopics = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Quests = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.IdleAnimations = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.AIPackages = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.CombatStyles = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.LoadScreens = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.LeveledSpells = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.AnimatedObjects = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Waters = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.EffectShaders = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T ModHeader,
+                T GameSettings,
+                T Globals,
+                T Classes,
+                T Factions,
+                T Hairs,
+                T Eyes,
+                T Races,
+                T Sounds,
+                T Skills,
+                T MagicEffects,
+                T Scripts,
+                T LandTextures,
+                T Enchantments,
+                T Spells,
+                T Birthsigns,
+                T Activators,
+                T AlchemicalApparatus,
+                T Armors,
+                T Books,
+                T Clothes,
+                T Containers,
+                T Doors,
+                T Ingredients,
+                T Lights,
+                T Miscellaneous,
+                T Statics,
+                T Grasses,
+                T Trees,
+                T Flora,
+                T Furnature,
+                T Weapons,
+                T Ammo,
+                T NPCs,
+                T Creatures,
+                T LeveledCreatures,
+                T SoulGems,
+                T Keys,
+                T Potions,
+                T Subspaces,
+                T SigilStones,
+                T LeveledItems,
+                T Weathers,
+                T Climates,
+                T Regions,
+                T Cells,
+                T Worldspaces,
+                T DialogTopics,
+                T Quests,
+                T IdleAnimations,
+                T AIPackages,
+                T CombatStyles,
+                T LoadScreens,
+                T LeveledSpells,
+                T AnimatedObjects,
+                T Waters,
+                T EffectShaders)
+            {
+                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(ModHeader, new ModHeader.Mask<T>(ModHeader));
+                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(GameSettings, new Group.Mask<T>(GameSettings));
+                this.Globals = new MaskItem<T, Group.Mask<T>?>(Globals, new Group.Mask<T>(Globals));
+                this.Classes = new MaskItem<T, Group.Mask<T>?>(Classes, new Group.Mask<T>(Classes));
+                this.Factions = new MaskItem<T, Group.Mask<T>?>(Factions, new Group.Mask<T>(Factions));
+                this.Hairs = new MaskItem<T, Group.Mask<T>?>(Hairs, new Group.Mask<T>(Hairs));
+                this.Eyes = new MaskItem<T, Group.Mask<T>?>(Eyes, new Group.Mask<T>(Eyes));
+                this.Races = new MaskItem<T, Group.Mask<T>?>(Races, new Group.Mask<T>(Races));
+                this.Sounds = new MaskItem<T, Group.Mask<T>?>(Sounds, new Group.Mask<T>(Sounds));
+                this.Skills = new MaskItem<T, Group.Mask<T>?>(Skills, new Group.Mask<T>(Skills));
+                this.MagicEffects = new MaskItem<T, Group.Mask<T>?>(MagicEffects, new Group.Mask<T>(MagicEffects));
+                this.Scripts = new MaskItem<T, Group.Mask<T>?>(Scripts, new Group.Mask<T>(Scripts));
+                this.LandTextures = new MaskItem<T, Group.Mask<T>?>(LandTextures, new Group.Mask<T>(LandTextures));
+                this.Enchantments = new MaskItem<T, Group.Mask<T>?>(Enchantments, new Group.Mask<T>(Enchantments));
+                this.Spells = new MaskItem<T, Group.Mask<T>?>(Spells, new Group.Mask<T>(Spells));
+                this.Birthsigns = new MaskItem<T, Group.Mask<T>?>(Birthsigns, new Group.Mask<T>(Birthsigns));
+                this.Activators = new MaskItem<T, Group.Mask<T>?>(Activators, new Group.Mask<T>(Activators));
+                this.AlchemicalApparatus = new MaskItem<T, Group.Mask<T>?>(AlchemicalApparatus, new Group.Mask<T>(AlchemicalApparatus));
+                this.Armors = new MaskItem<T, Group.Mask<T>?>(Armors, new Group.Mask<T>(Armors));
+                this.Books = new MaskItem<T, Group.Mask<T>?>(Books, new Group.Mask<T>(Books));
+                this.Clothes = new MaskItem<T, Group.Mask<T>?>(Clothes, new Group.Mask<T>(Clothes));
+                this.Containers = new MaskItem<T, Group.Mask<T>?>(Containers, new Group.Mask<T>(Containers));
+                this.Doors = new MaskItem<T, Group.Mask<T>?>(Doors, new Group.Mask<T>(Doors));
+                this.Ingredients = new MaskItem<T, Group.Mask<T>?>(Ingredients, new Group.Mask<T>(Ingredients));
+                this.Lights = new MaskItem<T, Group.Mask<T>?>(Lights, new Group.Mask<T>(Lights));
+                this.Miscellaneous = new MaskItem<T, Group.Mask<T>?>(Miscellaneous, new Group.Mask<T>(Miscellaneous));
+                this.Statics = new MaskItem<T, Group.Mask<T>?>(Statics, new Group.Mask<T>(Statics));
+                this.Grasses = new MaskItem<T, Group.Mask<T>?>(Grasses, new Group.Mask<T>(Grasses));
+                this.Trees = new MaskItem<T, Group.Mask<T>?>(Trees, new Group.Mask<T>(Trees));
+                this.Flora = new MaskItem<T, Group.Mask<T>?>(Flora, new Group.Mask<T>(Flora));
+                this.Furnature = new MaskItem<T, Group.Mask<T>?>(Furnature, new Group.Mask<T>(Furnature));
+                this.Weapons = new MaskItem<T, Group.Mask<T>?>(Weapons, new Group.Mask<T>(Weapons));
+                this.Ammo = new MaskItem<T, Group.Mask<T>?>(Ammo, new Group.Mask<T>(Ammo));
+                this.NPCs = new MaskItem<T, Group.Mask<T>?>(NPCs, new Group.Mask<T>(NPCs));
+                this.Creatures = new MaskItem<T, Group.Mask<T>?>(Creatures, new Group.Mask<T>(Creatures));
+                this.LeveledCreatures = new MaskItem<T, Group.Mask<T>?>(LeveledCreatures, new Group.Mask<T>(LeveledCreatures));
+                this.SoulGems = new MaskItem<T, Group.Mask<T>?>(SoulGems, new Group.Mask<T>(SoulGems));
+                this.Keys = new MaskItem<T, Group.Mask<T>?>(Keys, new Group.Mask<T>(Keys));
+                this.Potions = new MaskItem<T, Group.Mask<T>?>(Potions, new Group.Mask<T>(Potions));
+                this.Subspaces = new MaskItem<T, Group.Mask<T>?>(Subspaces, new Group.Mask<T>(Subspaces));
+                this.SigilStones = new MaskItem<T, Group.Mask<T>?>(SigilStones, new Group.Mask<T>(SigilStones));
+                this.LeveledItems = new MaskItem<T, Group.Mask<T>?>(LeveledItems, new Group.Mask<T>(LeveledItems));
+                this.Weathers = new MaskItem<T, Group.Mask<T>?>(Weathers, new Group.Mask<T>(Weathers));
+                this.Climates = new MaskItem<T, Group.Mask<T>?>(Climates, new Group.Mask<T>(Climates));
+                this.Regions = new MaskItem<T, Group.Mask<T>?>(Regions, new Group.Mask<T>(Regions));
+                this.Cells = new MaskItem<T, ListGroup.Mask<T>?>(Cells, new ListGroup.Mask<T>(Cells));
+                this.Worldspaces = new MaskItem<T, Group.Mask<T>?>(Worldspaces, new Group.Mask<T>(Worldspaces));
+                this.DialogTopics = new MaskItem<T, Group.Mask<T>?>(DialogTopics, new Group.Mask<T>(DialogTopics));
+                this.Quests = new MaskItem<T, Group.Mask<T>?>(Quests, new Group.Mask<T>(Quests));
+                this.IdleAnimations = new MaskItem<T, Group.Mask<T>?>(IdleAnimations, new Group.Mask<T>(IdleAnimations));
+                this.AIPackages = new MaskItem<T, Group.Mask<T>?>(AIPackages, new Group.Mask<T>(AIPackages));
+                this.CombatStyles = new MaskItem<T, Group.Mask<T>?>(CombatStyles, new Group.Mask<T>(CombatStyles));
+                this.LoadScreens = new MaskItem<T, Group.Mask<T>?>(LoadScreens, new Group.Mask<T>(LoadScreens));
+                this.LeveledSpells = new MaskItem<T, Group.Mask<T>?>(LeveledSpells, new Group.Mask<T>(LeveledSpells));
+                this.AnimatedObjects = new MaskItem<T, Group.Mask<T>?>(AnimatedObjects, new Group.Mask<T>(AnimatedObjects));
+                this.Waters = new MaskItem<T, Group.Mask<T>?>(Waters, new Group.Mask<T>(Waters));
+                this.EffectShaders = new MaskItem<T, Group.Mask<T>?>(EffectShaders, new Group.Mask<T>(EffectShaders));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, ModHeader.Mask<T>?>? ModHeader { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? GameSettings { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Globals { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Classes { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Factions { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Hairs { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Eyes { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Races { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Sounds { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Skills { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? MagicEffects { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Scripts { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? LandTextures { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Enchantments { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Spells { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Birthsigns { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Activators { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? AlchemicalApparatus { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Armors { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Books { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Clothes { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Containers { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Doors { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Ingredients { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Lights { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Miscellaneous { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Statics { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Grasses { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Trees { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Flora { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Furnature { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Weapons { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Ammo { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? NPCs { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Creatures { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? LeveledCreatures { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? SoulGems { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Keys { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Potions { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Subspaces { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? SigilStones { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? LeveledItems { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Weathers { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Climates { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Regions { get; set; }
+            public MaskItem<T, ListGroup.Mask<T>?>? Cells { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Worldspaces { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? DialogTopics { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Quests { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? IdleAnimations { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? AIPackages { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? CombatStyles { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? LoadScreens { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? LeveledSpells { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? AnimatedObjects { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Waters { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? EffectShaders { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
+                if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
+                if (!object.Equals(this.Globals, rhs.Globals)) return false;
+                if (!object.Equals(this.Classes, rhs.Classes)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
+                if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
+                if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+                if (!object.Equals(this.Races, rhs.Races)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                if (!object.Equals(this.Skills, rhs.Skills)) return false;
+                if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
+                if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
+                if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
+                if (!object.Equals(this.Enchantments, rhs.Enchantments)) return false;
+                if (!object.Equals(this.Spells, rhs.Spells)) return false;
+                if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
+                if (!object.Equals(this.Activators, rhs.Activators)) return false;
+                if (!object.Equals(this.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
+                if (!object.Equals(this.Armors, rhs.Armors)) return false;
+                if (!object.Equals(this.Books, rhs.Books)) return false;
+                if (!object.Equals(this.Clothes, rhs.Clothes)) return false;
+                if (!object.Equals(this.Containers, rhs.Containers)) return false;
+                if (!object.Equals(this.Doors, rhs.Doors)) return false;
+                if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
+                if (!object.Equals(this.Lights, rhs.Lights)) return false;
+                if (!object.Equals(this.Miscellaneous, rhs.Miscellaneous)) return false;
+                if (!object.Equals(this.Statics, rhs.Statics)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.Trees, rhs.Trees)) return false;
+                if (!object.Equals(this.Flora, rhs.Flora)) return false;
+                if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
+                if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
+                if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
+                if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
+                if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
+                if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
+                if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
+                if (!object.Equals(this.Keys, rhs.Keys)) return false;
+                if (!object.Equals(this.Potions, rhs.Potions)) return false;
+                if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
+                if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
+                if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
+                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                if (!object.Equals(this.Climates, rhs.Climates)) return false;
+                if (!object.Equals(this.Regions, rhs.Regions)) return false;
+                if (!object.Equals(this.Cells, rhs.Cells)) return false;
+                if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
+                if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
+                if (!object.Equals(this.Quests, rhs.Quests)) return false;
+                if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
+                if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
+                if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
+                if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
+                if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
+                if (!object.Equals(this.Waters, rhs.Waters)) return false;
+                if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
+                ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
+                ret = ret.CombineHashCode(this.Globals?.GetHashCode());
+                ret = ret.CombineHashCode(this.Classes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Factions?.GetHashCode());
+                ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
+                ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Races?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
+                ret = ret.CombineHashCode(this.Skills?.GetHashCode());
+                ret = ret.CombineHashCode(this.MagicEffects?.GetHashCode());
+                ret = ret.CombineHashCode(this.Scripts?.GetHashCode());
+                ret = ret.CombineHashCode(this.LandTextures?.GetHashCode());
+                ret = ret.CombineHashCode(this.Enchantments?.GetHashCode());
+                ret = ret.CombineHashCode(this.Spells?.GetHashCode());
+                ret = ret.CombineHashCode(this.Birthsigns?.GetHashCode());
+                ret = ret.CombineHashCode(this.Activators?.GetHashCode());
+                ret = ret.CombineHashCode(this.AlchemicalApparatus?.GetHashCode());
+                ret = ret.CombineHashCode(this.Armors?.GetHashCode());
+                ret = ret.CombineHashCode(this.Books?.GetHashCode());
+                ret = ret.CombineHashCode(this.Clothes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Containers?.GetHashCode());
+                ret = ret.CombineHashCode(this.Doors?.GetHashCode());
+                ret = ret.CombineHashCode(this.Ingredients?.GetHashCode());
+                ret = ret.CombineHashCode(this.Lights?.GetHashCode());
+                ret = ret.CombineHashCode(this.Miscellaneous?.GetHashCode());
+                ret = ret.CombineHashCode(this.Statics?.GetHashCode());
+                ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
+                ret = ret.CombineHashCode(this.Trees?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flora?.GetHashCode());
+                ret = ret.CombineHashCode(this.Furnature?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weapons?.GetHashCode());
+                ret = ret.CombineHashCode(this.Ammo?.GetHashCode());
+                ret = ret.CombineHashCode(this.NPCs?.GetHashCode());
+                ret = ret.CombineHashCode(this.Creatures?.GetHashCode());
+                ret = ret.CombineHashCode(this.LeveledCreatures?.GetHashCode());
+                ret = ret.CombineHashCode(this.SoulGems?.GetHashCode());
+                ret = ret.CombineHashCode(this.Keys?.GetHashCode());
+                ret = ret.CombineHashCode(this.Potions?.GetHashCode());
+                ret = ret.CombineHashCode(this.Subspaces?.GetHashCode());
+                ret = ret.CombineHashCode(this.SigilStones?.GetHashCode());
+                ret = ret.CombineHashCode(this.LeveledItems?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
+                ret = ret.CombineHashCode(this.Climates?.GetHashCode());
+                ret = ret.CombineHashCode(this.Regions?.GetHashCode());
+                ret = ret.CombineHashCode(this.Cells?.GetHashCode());
+                ret = ret.CombineHashCode(this.Worldspaces?.GetHashCode());
+                ret = ret.CombineHashCode(this.DialogTopics?.GetHashCode());
+                ret = ret.CombineHashCode(this.Quests?.GetHashCode());
+                ret = ret.CombineHashCode(this.IdleAnimations?.GetHashCode());
+                ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
+                ret = ret.CombineHashCode(this.CombatStyles?.GetHashCode());
+                ret = ret.CombineHashCode(this.LoadScreens?.GetHashCode());
+                ret = ret.CombineHashCode(this.LeveledSpells?.GetHashCode());
+                ret = ret.CombineHashCode(this.AnimatedObjects?.GetHashCode());
+                ret = ret.CombineHashCode(this.Waters?.GetHashCode());
+                ret = ret.CombineHashCode(this.EffectShaders?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (ModHeader != null)
+                {
+                    if (!eval(this.ModHeader.Overall)) return false;
+                    if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
+                }
+                if (GameSettings != null)
+                {
+                    if (!eval(this.GameSettings.Overall)) return false;
+                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
+                }
+                if (Globals != null)
+                {
+                    if (!eval(this.Globals.Overall)) return false;
+                    if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
+                }
+                if (Classes != null)
+                {
+                    if (!eval(this.Classes.Overall)) return false;
+                    if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
+                }
+                if (Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
+                }
+                if (Hairs != null)
+                {
+                    if (!eval(this.Hairs.Overall)) return false;
+                    if (this.Hairs.Specific != null && !this.Hairs.Specific.AllEqual(eval)) return false;
+                }
+                if (Eyes != null)
+                {
+                    if (!eval(this.Eyes.Overall)) return false;
+                    if (this.Eyes.Specific != null && !this.Eyes.Specific.AllEqual(eval)) return false;
+                }
+                if (Races != null)
+                {
+                    if (!eval(this.Races.Overall)) return false;
+                    if (this.Races.Specific != null && !this.Races.Specific.AllEqual(eval)) return false;
+                }
+                if (Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
+                }
+                if (Skills != null)
+                {
+                    if (!eval(this.Skills.Overall)) return false;
+                    if (this.Skills.Specific != null && !this.Skills.Specific.AllEqual(eval)) return false;
+                }
+                if (MagicEffects != null)
+                {
+                    if (!eval(this.MagicEffects.Overall)) return false;
+                    if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.AllEqual(eval)) return false;
+                }
+                if (Scripts != null)
+                {
+                    if (!eval(this.Scripts.Overall)) return false;
+                    if (this.Scripts.Specific != null && !this.Scripts.Specific.AllEqual(eval)) return false;
+                }
+                if (LandTextures != null)
+                {
+                    if (!eval(this.LandTextures.Overall)) return false;
+                    if (this.LandTextures.Specific != null && !this.LandTextures.Specific.AllEqual(eval)) return false;
+                }
+                if (Enchantments != null)
+                {
+                    if (!eval(this.Enchantments.Overall)) return false;
+                    if (this.Enchantments.Specific != null && !this.Enchantments.Specific.AllEqual(eval)) return false;
+                }
+                if (Spells != null)
+                {
+                    if (!eval(this.Spells.Overall)) return false;
+                    if (this.Spells.Specific != null && !this.Spells.Specific.AllEqual(eval)) return false;
+                }
+                if (Birthsigns != null)
+                {
+                    if (!eval(this.Birthsigns.Overall)) return false;
+                    if (this.Birthsigns.Specific != null && !this.Birthsigns.Specific.AllEqual(eval)) return false;
+                }
+                if (Activators != null)
+                {
+                    if (!eval(this.Activators.Overall)) return false;
+                    if (this.Activators.Specific != null && !this.Activators.Specific.AllEqual(eval)) return false;
+                }
+                if (AlchemicalApparatus != null)
+                {
+                    if (!eval(this.AlchemicalApparatus.Overall)) return false;
+                    if (this.AlchemicalApparatus.Specific != null && !this.AlchemicalApparatus.Specific.AllEqual(eval)) return false;
+                }
+                if (Armors != null)
+                {
+                    if (!eval(this.Armors.Overall)) return false;
+                    if (this.Armors.Specific != null && !this.Armors.Specific.AllEqual(eval)) return false;
+                }
+                if (Books != null)
+                {
+                    if (!eval(this.Books.Overall)) return false;
+                    if (this.Books.Specific != null && !this.Books.Specific.AllEqual(eval)) return false;
+                }
+                if (Clothes != null)
+                {
+                    if (!eval(this.Clothes.Overall)) return false;
+                    if (this.Clothes.Specific != null && !this.Clothes.Specific.AllEqual(eval)) return false;
+                }
+                if (Containers != null)
+                {
+                    if (!eval(this.Containers.Overall)) return false;
+                    if (this.Containers.Specific != null && !this.Containers.Specific.AllEqual(eval)) return false;
+                }
+                if (Doors != null)
+                {
+                    if (!eval(this.Doors.Overall)) return false;
+                    if (this.Doors.Specific != null && !this.Doors.Specific.AllEqual(eval)) return false;
+                }
+                if (Ingredients != null)
+                {
+                    if (!eval(this.Ingredients.Overall)) return false;
+                    if (this.Ingredients.Specific != null && !this.Ingredients.Specific.AllEqual(eval)) return false;
+                }
+                if (Lights != null)
+                {
+                    if (!eval(this.Lights.Overall)) return false;
+                    if (this.Lights.Specific != null && !this.Lights.Specific.AllEqual(eval)) return false;
+                }
+                if (Miscellaneous != null)
+                {
+                    if (!eval(this.Miscellaneous.Overall)) return false;
+                    if (this.Miscellaneous.Specific != null && !this.Miscellaneous.Specific.AllEqual(eval)) return false;
+                }
+                if (Statics != null)
+                {
+                    if (!eval(this.Statics.Overall)) return false;
+                    if (this.Statics.Specific != null && !this.Statics.Specific.AllEqual(eval)) return false;
+                }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.AllEqual(eval)) return false;
+                }
+                if (Trees != null)
+                {
+                    if (!eval(this.Trees.Overall)) return false;
+                    if (this.Trees.Specific != null && !this.Trees.Specific.AllEqual(eval)) return false;
+                }
+                if (Flora != null)
+                {
+                    if (!eval(this.Flora.Overall)) return false;
+                    if (this.Flora.Specific != null && !this.Flora.Specific.AllEqual(eval)) return false;
+                }
+                if (Furnature != null)
+                {
+                    if (!eval(this.Furnature.Overall)) return false;
+                    if (this.Furnature.Specific != null && !this.Furnature.Specific.AllEqual(eval)) return false;
+                }
+                if (Weapons != null)
+                {
+                    if (!eval(this.Weapons.Overall)) return false;
+                    if (this.Weapons.Specific != null && !this.Weapons.Specific.AllEqual(eval)) return false;
+                }
+                if (Ammo != null)
+                {
+                    if (!eval(this.Ammo.Overall)) return false;
+                    if (this.Ammo.Specific != null && !this.Ammo.Specific.AllEqual(eval)) return false;
+                }
+                if (NPCs != null)
+                {
+                    if (!eval(this.NPCs.Overall)) return false;
+                    if (this.NPCs.Specific != null && !this.NPCs.Specific.AllEqual(eval)) return false;
+                }
+                if (Creatures != null)
+                {
+                    if (!eval(this.Creatures.Overall)) return false;
+                    if (this.Creatures.Specific != null && !this.Creatures.Specific.AllEqual(eval)) return false;
+                }
+                if (LeveledCreatures != null)
+                {
+                    if (!eval(this.LeveledCreatures.Overall)) return false;
+                    if (this.LeveledCreatures.Specific != null && !this.LeveledCreatures.Specific.AllEqual(eval)) return false;
+                }
+                if (SoulGems != null)
+                {
+                    if (!eval(this.SoulGems.Overall)) return false;
+                    if (this.SoulGems.Specific != null && !this.SoulGems.Specific.AllEqual(eval)) return false;
+                }
+                if (Keys != null)
+                {
+                    if (!eval(this.Keys.Overall)) return false;
+                    if (this.Keys.Specific != null && !this.Keys.Specific.AllEqual(eval)) return false;
+                }
+                if (Potions != null)
+                {
+                    if (!eval(this.Potions.Overall)) return false;
+                    if (this.Potions.Specific != null && !this.Potions.Specific.AllEqual(eval)) return false;
+                }
+                if (Subspaces != null)
+                {
+                    if (!eval(this.Subspaces.Overall)) return false;
+                    if (this.Subspaces.Specific != null && !this.Subspaces.Specific.AllEqual(eval)) return false;
+                }
+                if (SigilStones != null)
+                {
+                    if (!eval(this.SigilStones.Overall)) return false;
+                    if (this.SigilStones.Specific != null && !this.SigilStones.Specific.AllEqual(eval)) return false;
+                }
+                if (LeveledItems != null)
+                {
+                    if (!eval(this.LeveledItems.Overall)) return false;
+                    if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.AllEqual(eval)) return false;
+                }
+                if (Weathers != null)
+                {
+                    if (!eval(this.Weathers.Overall)) return false;
+                    if (this.Weathers.Specific != null && !this.Weathers.Specific.AllEqual(eval)) return false;
+                }
+                if (Climates != null)
+                {
+                    if (!eval(this.Climates.Overall)) return false;
+                    if (this.Climates.Specific != null && !this.Climates.Specific.AllEqual(eval)) return false;
+                }
+                if (Regions != null)
+                {
+                    if (!eval(this.Regions.Overall)) return false;
+                    if (this.Regions.Specific != null && !this.Regions.Specific.AllEqual(eval)) return false;
+                }
+                if (Cells != null)
+                {
+                    if (!eval(this.Cells.Overall)) return false;
+                    if (this.Cells.Specific != null && !this.Cells.Specific.AllEqual(eval)) return false;
+                }
+                if (Worldspaces != null)
+                {
+                    if (!eval(this.Worldspaces.Overall)) return false;
+                    if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.AllEqual(eval)) return false;
+                }
+                if (DialogTopics != null)
+                {
+                    if (!eval(this.DialogTopics.Overall)) return false;
+                    if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.AllEqual(eval)) return false;
+                }
+                if (Quests != null)
+                {
+                    if (!eval(this.Quests.Overall)) return false;
+                    if (this.Quests.Specific != null && !this.Quests.Specific.AllEqual(eval)) return false;
+                }
+                if (IdleAnimations != null)
+                {
+                    if (!eval(this.IdleAnimations.Overall)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.AllEqual(eval)) return false;
+                }
+                if (AIPackages != null)
+                {
+                    if (!eval(this.AIPackages.Overall)) return false;
+                    if (this.AIPackages.Specific != null && !this.AIPackages.Specific.AllEqual(eval)) return false;
+                }
+                if (CombatStyles != null)
+                {
+                    if (!eval(this.CombatStyles.Overall)) return false;
+                    if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.AllEqual(eval)) return false;
+                }
+                if (LoadScreens != null)
+                {
+                    if (!eval(this.LoadScreens.Overall)) return false;
+                    if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.AllEqual(eval)) return false;
+                }
+                if (LeveledSpells != null)
+                {
+                    if (!eval(this.LeveledSpells.Overall)) return false;
+                    if (this.LeveledSpells.Specific != null && !this.LeveledSpells.Specific.AllEqual(eval)) return false;
+                }
+                if (AnimatedObjects != null)
+                {
+                    if (!eval(this.AnimatedObjects.Overall)) return false;
+                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.AllEqual(eval)) return false;
+                }
+                if (Waters != null)
+                {
+                    if (!eval(this.Waters.Overall)) return false;
+                    if (this.Waters.Specific != null && !this.Waters.Specific.AllEqual(eval)) return false;
+                }
+                if (EffectShaders != null)
+                {
+                    if (!eval(this.EffectShaders.Overall)) return false;
+                    if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new OblivionMod.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
+                obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
+                obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
+                obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
+                obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
+                obj.Races = this.Races == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
+                obj.Skills = this.Skills == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Skills.Overall), this.Skills.Specific?.Translate(eval));
+                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
+                obj.Scripts = this.Scripts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scripts.Overall), this.Scripts.Specific?.Translate(eval));
+                obj.LandTextures = this.LandTextures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LandTextures.Overall), this.LandTextures.Specific?.Translate(eval));
+                obj.Enchantments = this.Enchantments == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Enchantments.Overall), this.Enchantments.Specific?.Translate(eval));
+                obj.Spells = this.Spells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
+                obj.Birthsigns = this.Birthsigns == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Birthsigns.Overall), this.Birthsigns.Specific?.Translate(eval));
+                obj.Activators = this.Activators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
+                obj.AlchemicalApparatus = this.AlchemicalApparatus == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AlchemicalApparatus.Overall), this.AlchemicalApparatus.Specific?.Translate(eval));
+                obj.Armors = this.Armors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
+                obj.Books = this.Books == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
+                obj.Clothes = this.Clothes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Clothes.Overall), this.Clothes.Specific?.Translate(eval));
+                obj.Containers = this.Containers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
+                obj.Doors = this.Doors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
+                obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
+                obj.Lights = this.Lights == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
+                obj.Miscellaneous = this.Miscellaneous == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Miscellaneous.Overall), this.Miscellaneous.Specific?.Translate(eval));
+                obj.Statics = this.Statics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Trees = this.Trees == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
+                obj.Flora = this.Flora == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Flora.Overall), this.Flora.Specific?.Translate(eval));
+                obj.Furnature = this.Furnature == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Furnature.Overall), this.Furnature.Specific?.Translate(eval));
+                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
+                obj.Ammo = this.Ammo == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammo.Overall), this.Ammo.Specific?.Translate(eval));
+                obj.NPCs = this.NPCs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.NPCs.Overall), this.NPCs.Specific?.Translate(eval));
+                obj.Creatures = this.Creatures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
+                obj.LeveledCreatures = this.LeveledCreatures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledCreatures.Overall), this.LeveledCreatures.Specific?.Translate(eval));
+                obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
+                obj.Keys = this.Keys == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
+                obj.Potions = this.Potions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Potions.Overall), this.Potions.Specific?.Translate(eval));
+                obj.Subspaces = this.Subspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Subspaces.Overall), this.Subspaces.Specific?.Translate(eval));
+                obj.SigilStones = this.SigilStones == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SigilStones.Overall), this.SigilStones.Specific?.Translate(eval));
+                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
+                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
+                obj.Climates = this.Climates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
+                obj.Regions = this.Regions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
+                obj.Cells = this.Cells == null ? null : new MaskItem<R, ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
+                obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
+                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
+                obj.Quests = this.Quests == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.AIPackages = this.AIPackages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AIPackages.Overall), this.AIPackages.Specific?.Translate(eval));
+                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
+                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Waters = this.Waters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
+                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(OblivionMod.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, OblivionMod.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(OblivionMod.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.ModHeader?.Overall ?? true)
+                    {
+                        ModHeader?.ToString(fg);
+                    }
+                    if (printMask?.GameSettings?.Overall ?? true)
+                    {
+                        GameSettings?.ToString(fg);
+                    }
+                    if (printMask?.Globals?.Overall ?? true)
+                    {
+                        Globals?.ToString(fg);
+                    }
+                    if (printMask?.Classes?.Overall ?? true)
+                    {
+                        Classes?.ToString(fg);
+                    }
+                    if (printMask?.Factions?.Overall ?? true)
+                    {
+                        Factions?.ToString(fg);
+                    }
+                    if (printMask?.Hairs?.Overall ?? true)
+                    {
+                        Hairs?.ToString(fg);
+                    }
+                    if (printMask?.Eyes?.Overall ?? true)
+                    {
+                        Eyes?.ToString(fg);
+                    }
+                    if (printMask?.Races?.Overall ?? true)
+                    {
+                        Races?.ToString(fg);
+                    }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        Sounds?.ToString(fg);
+                    }
+                    if (printMask?.Skills?.Overall ?? true)
+                    {
+                        Skills?.ToString(fg);
+                    }
+                    if (printMask?.MagicEffects?.Overall ?? true)
+                    {
+                        MagicEffects?.ToString(fg);
+                    }
+                    if (printMask?.Scripts?.Overall ?? true)
+                    {
+                        Scripts?.ToString(fg);
+                    }
+                    if (printMask?.LandTextures?.Overall ?? true)
+                    {
+                        LandTextures?.ToString(fg);
+                    }
+                    if (printMask?.Enchantments?.Overall ?? true)
+                    {
+                        Enchantments?.ToString(fg);
+                    }
+                    if (printMask?.Spells?.Overall ?? true)
+                    {
+                        Spells?.ToString(fg);
+                    }
+                    if (printMask?.Birthsigns?.Overall ?? true)
+                    {
+                        Birthsigns?.ToString(fg);
+                    }
+                    if (printMask?.Activators?.Overall ?? true)
+                    {
+                        Activators?.ToString(fg);
+                    }
+                    if (printMask?.AlchemicalApparatus?.Overall ?? true)
+                    {
+                        AlchemicalApparatus?.ToString(fg);
+                    }
+                    if (printMask?.Armors?.Overall ?? true)
+                    {
+                        Armors?.ToString(fg);
+                    }
+                    if (printMask?.Books?.Overall ?? true)
+                    {
+                        Books?.ToString(fg);
+                    }
+                    if (printMask?.Clothes?.Overall ?? true)
+                    {
+                        Clothes?.ToString(fg);
+                    }
+                    if (printMask?.Containers?.Overall ?? true)
+                    {
+                        Containers?.ToString(fg);
+                    }
+                    if (printMask?.Doors?.Overall ?? true)
+                    {
+                        Doors?.ToString(fg);
+                    }
+                    if (printMask?.Ingredients?.Overall ?? true)
+                    {
+                        Ingredients?.ToString(fg);
+                    }
+                    if (printMask?.Lights?.Overall ?? true)
+                    {
+                        Lights?.ToString(fg);
+                    }
+                    if (printMask?.Miscellaneous?.Overall ?? true)
+                    {
+                        Miscellaneous?.ToString(fg);
+                    }
+                    if (printMask?.Statics?.Overall ?? true)
+                    {
+                        Statics?.ToString(fg);
+                    }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.ToString(fg);
+                    }
+                    if (printMask?.Trees?.Overall ?? true)
+                    {
+                        Trees?.ToString(fg);
+                    }
+                    if (printMask?.Flora?.Overall ?? true)
+                    {
+                        Flora?.ToString(fg);
+                    }
+                    if (printMask?.Furnature?.Overall ?? true)
+                    {
+                        Furnature?.ToString(fg);
+                    }
+                    if (printMask?.Weapons?.Overall ?? true)
+                    {
+                        Weapons?.ToString(fg);
+                    }
+                    if (printMask?.Ammo?.Overall ?? true)
+                    {
+                        Ammo?.ToString(fg);
+                    }
+                    if (printMask?.NPCs?.Overall ?? true)
+                    {
+                        NPCs?.ToString(fg);
+                    }
+                    if (printMask?.Creatures?.Overall ?? true)
+                    {
+                        Creatures?.ToString(fg);
+                    }
+                    if (printMask?.LeveledCreatures?.Overall ?? true)
+                    {
+                        LeveledCreatures?.ToString(fg);
+                    }
+                    if (printMask?.SoulGems?.Overall ?? true)
+                    {
+                        SoulGems?.ToString(fg);
+                    }
+                    if (printMask?.Keys?.Overall ?? true)
+                    {
+                        Keys?.ToString(fg);
+                    }
+                    if (printMask?.Potions?.Overall ?? true)
+                    {
+                        Potions?.ToString(fg);
+                    }
+                    if (printMask?.Subspaces?.Overall ?? true)
+                    {
+                        Subspaces?.ToString(fg);
+                    }
+                    if (printMask?.SigilStones?.Overall ?? true)
+                    {
+                        SigilStones?.ToString(fg);
+                    }
+                    if (printMask?.LeveledItems?.Overall ?? true)
+                    {
+                        LeveledItems?.ToString(fg);
+                    }
+                    if (printMask?.Weathers?.Overall ?? true)
+                    {
+                        Weathers?.ToString(fg);
+                    }
+                    if (printMask?.Climates?.Overall ?? true)
+                    {
+                        Climates?.ToString(fg);
+                    }
+                    if (printMask?.Regions?.Overall ?? true)
+                    {
+                        Regions?.ToString(fg);
+                    }
+                    if (printMask?.Cells?.Overall ?? true)
+                    {
+                        Cells?.ToString(fg);
+                    }
+                    if (printMask?.Worldspaces?.Overall ?? true)
+                    {
+                        Worldspaces?.ToString(fg);
+                    }
+                    if (printMask?.DialogTopics?.Overall ?? true)
+                    {
+                        DialogTopics?.ToString(fg);
+                    }
+                    if (printMask?.Quests?.Overall ?? true)
+                    {
+                        Quests?.ToString(fg);
+                    }
+                    if (printMask?.IdleAnimations?.Overall ?? true)
+                    {
+                        IdleAnimations?.ToString(fg);
+                    }
+                    if (printMask?.AIPackages?.Overall ?? true)
+                    {
+                        AIPackages?.ToString(fg);
+                    }
+                    if (printMask?.CombatStyles?.Overall ?? true)
+                    {
+                        CombatStyles?.ToString(fg);
+                    }
+                    if (printMask?.LoadScreens?.Overall ?? true)
+                    {
+                        LoadScreens?.ToString(fg);
+                    }
+                    if (printMask?.LeveledSpells?.Overall ?? true)
+                    {
+                        LeveledSpells?.ToString(fg);
+                    }
+                    if (printMask?.AnimatedObjects?.Overall ?? true)
+                    {
+                        AnimatedObjects?.ToString(fg);
+                    }
+                    if (printMask?.Waters?.Overall ?? true)
+                    {
+                        Waters?.ToString(fg);
+                    }
+                    if (printMask?.EffectShaders?.Overall ?? true)
+                    {
+                        EffectShaders?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public MaskItem<Exception?, ModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
+            public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
+            public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
+            public MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
+            public MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>? Eyes;
+            public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
+            public MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>? Sounds;
+            public MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>? Skills;
+            public MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
+            public MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>? Scripts;
+            public MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>? LandTextures;
+            public MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>? Enchantments;
+            public MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>? Spells;
+            public MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>? Birthsigns;
+            public MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>? Activators;
+            public MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatus;
+            public MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>? Armors;
+            public MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>? Books;
+            public MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>? Clothes;
+            public MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>? Containers;
+            public MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>? Doors;
+            public MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
+            public MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>? Lights;
+            public MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>? Miscellaneous;
+            public MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>? Statics;
+            public MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
+            public MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>? Trees;
+            public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Flora;
+            public MaskItem<Exception?, Group.ErrorMask<Furnature.ErrorMask>?>? Furnature;
+            public MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
+            public MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>? Ammo;
+            public MaskItem<Exception?, Group.ErrorMask<NPC.ErrorMask>?>? NPCs;
+            public MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>? Creatures;
+            public MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>? LeveledCreatures;
+            public MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
+            public MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>? Keys;
+            public MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>? Potions;
+            public MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>? Subspaces;
+            public MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>? SigilStones;
+            public MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
+            public MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>? Weathers;
+            public MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>? Climates;
+            public MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>? Regions;
+            public MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
+            public MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
+            public MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
+            public MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
+            public MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>? AIPackages;
+            public MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
+            public MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>? LeveledSpells;
+            public MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>? Waters;
+            public MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
+                switch (enu)
+                {
+                    case OblivionMod_FieldIndex.ModHeader:
+                        return ModHeader;
+                    case OblivionMod_FieldIndex.GameSettings:
+                        return GameSettings;
+                    case OblivionMod_FieldIndex.Globals:
+                        return Globals;
+                    case OblivionMod_FieldIndex.Classes:
+                        return Classes;
+                    case OblivionMod_FieldIndex.Factions:
+                        return Factions;
+                    case OblivionMod_FieldIndex.Hairs:
+                        return Hairs;
+                    case OblivionMod_FieldIndex.Eyes:
+                        return Eyes;
+                    case OblivionMod_FieldIndex.Races:
+                        return Races;
+                    case OblivionMod_FieldIndex.Sounds:
+                        return Sounds;
+                    case OblivionMod_FieldIndex.Skills:
+                        return Skills;
+                    case OblivionMod_FieldIndex.MagicEffects:
+                        return MagicEffects;
+                    case OblivionMod_FieldIndex.Scripts:
+                        return Scripts;
+                    case OblivionMod_FieldIndex.LandTextures:
+                        return LandTextures;
+                    case OblivionMod_FieldIndex.Enchantments:
+                        return Enchantments;
+                    case OblivionMod_FieldIndex.Spells:
+                        return Spells;
+                    case OblivionMod_FieldIndex.Birthsigns:
+                        return Birthsigns;
+                    case OblivionMod_FieldIndex.Activators:
+                        return Activators;
+                    case OblivionMod_FieldIndex.AlchemicalApparatus:
+                        return AlchemicalApparatus;
+                    case OblivionMod_FieldIndex.Armors:
+                        return Armors;
+                    case OblivionMod_FieldIndex.Books:
+                        return Books;
+                    case OblivionMod_FieldIndex.Clothes:
+                        return Clothes;
+                    case OblivionMod_FieldIndex.Containers:
+                        return Containers;
+                    case OblivionMod_FieldIndex.Doors:
+                        return Doors;
+                    case OblivionMod_FieldIndex.Ingredients:
+                        return Ingredients;
+                    case OblivionMod_FieldIndex.Lights:
+                        return Lights;
+                    case OblivionMod_FieldIndex.Miscellaneous:
+                        return Miscellaneous;
+                    case OblivionMod_FieldIndex.Statics:
+                        return Statics;
+                    case OblivionMod_FieldIndex.Grasses:
+                        return Grasses;
+                    case OblivionMod_FieldIndex.Trees:
+                        return Trees;
+                    case OblivionMod_FieldIndex.Flora:
+                        return Flora;
+                    case OblivionMod_FieldIndex.Furnature:
+                        return Furnature;
+                    case OblivionMod_FieldIndex.Weapons:
+                        return Weapons;
+                    case OblivionMod_FieldIndex.Ammo:
+                        return Ammo;
+                    case OblivionMod_FieldIndex.NPCs:
+                        return NPCs;
+                    case OblivionMod_FieldIndex.Creatures:
+                        return Creatures;
+                    case OblivionMod_FieldIndex.LeveledCreatures:
+                        return LeveledCreatures;
+                    case OblivionMod_FieldIndex.SoulGems:
+                        return SoulGems;
+                    case OblivionMod_FieldIndex.Keys:
+                        return Keys;
+                    case OblivionMod_FieldIndex.Potions:
+                        return Potions;
+                    case OblivionMod_FieldIndex.Subspaces:
+                        return Subspaces;
+                    case OblivionMod_FieldIndex.SigilStones:
+                        return SigilStones;
+                    case OblivionMod_FieldIndex.LeveledItems:
+                        return LeveledItems;
+                    case OblivionMod_FieldIndex.Weathers:
+                        return Weathers;
+                    case OblivionMod_FieldIndex.Climates:
+                        return Climates;
+                    case OblivionMod_FieldIndex.Regions:
+                        return Regions;
+                    case OblivionMod_FieldIndex.Cells:
+                        return Cells;
+                    case OblivionMod_FieldIndex.Worldspaces:
+                        return Worldspaces;
+                    case OblivionMod_FieldIndex.DialogTopics:
+                        return DialogTopics;
+                    case OblivionMod_FieldIndex.Quests:
+                        return Quests;
+                    case OblivionMod_FieldIndex.IdleAnimations:
+                        return IdleAnimations;
+                    case OblivionMod_FieldIndex.AIPackages:
+                        return AIPackages;
+                    case OblivionMod_FieldIndex.CombatStyles:
+                        return CombatStyles;
+                    case OblivionMod_FieldIndex.LoadScreens:
+                        return LoadScreens;
+                    case OblivionMod_FieldIndex.LeveledSpells:
+                        return LeveledSpells;
+                    case OblivionMod_FieldIndex.AnimatedObjects:
+                        return AnimatedObjects;
+                    case OblivionMod_FieldIndex.Waters:
+                        return Waters;
+                    case OblivionMod_FieldIndex.EffectShaders:
+                        return EffectShaders;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
+                switch (enu)
+                {
+                    case OblivionMod_FieldIndex.ModHeader:
+                        this.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.GameSettings:
+                        this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Globals:
+                        this.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Classes:
+                        this.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Hairs:
+                        this.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Eyes:
+                        this.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Races:
+                        this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Skills:
+                        this.Skills = new MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.MagicEffects:
+                        this.MagicEffects = new MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Scripts:
+                        this.Scripts = new MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.LandTextures:
+                        this.LandTextures = new MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Enchantments:
+                        this.Enchantments = new MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Spells:
+                        this.Spells = new MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Birthsigns:
+                        this.Birthsigns = new MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Activators:
+                        this.Activators = new MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.AlchemicalApparatus:
+                        this.AlchemicalApparatus = new MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Armors:
+                        this.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Books:
+                        this.Books = new MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Clothes:
+                        this.Clothes = new MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Containers:
+                        this.Containers = new MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Doors:
+                        this.Doors = new MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Ingredients:
+                        this.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Lights:
+                        this.Lights = new MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Miscellaneous:
+                        this.Miscellaneous = new MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Statics:
+                        this.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Trees:
+                        this.Trees = new MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Flora:
+                        this.Flora = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Furnature:
+                        this.Furnature = new MaskItem<Exception?, Group.ErrorMask<Furnature.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Weapons:
+                        this.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Ammo:
+                        this.Ammo = new MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.NPCs:
+                        this.NPCs = new MaskItem<Exception?, Group.ErrorMask<NPC.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Creatures:
+                        this.Creatures = new MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.LeveledCreatures:
+                        this.LeveledCreatures = new MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.SoulGems:
+                        this.SoulGems = new MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Keys:
+                        this.Keys = new MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Potions:
+                        this.Potions = new MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Subspaces:
+                        this.Subspaces = new MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.SigilStones:
+                        this.SigilStones = new MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.LeveledItems:
+                        this.LeveledItems = new MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Weathers:
+                        this.Weathers = new MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Climates:
+                        this.Climates = new MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Regions:
+                        this.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Cells:
+                        this.Cells = new MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Worldspaces:
+                        this.Worldspaces = new MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.DialogTopics:
+                        this.DialogTopics = new MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Quests:
+                        this.Quests = new MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = new MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.AIPackages:
+                        this.AIPackages = new MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.CombatStyles:
+                        this.CombatStyles = new MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.LoadScreens:
+                        this.LoadScreens = new MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.LeveledSpells:
+                        this.LeveledSpells = new MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.Waters:
+                        this.Waters = new MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>(ex, null);
+                        break;
+                    case OblivionMod_FieldIndex.EffectShaders:
+                        this.EffectShaders = new MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
+                switch (enu)
+                {
+                    case OblivionMod_FieldIndex.ModHeader:
+                        this.ModHeader = (MaskItem<Exception?, ModHeader.ErrorMask?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.GameSettings:
+                        this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Globals:
+                        this.Globals = (MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Classes:
+                        this.Classes = (MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Hairs:
+                        this.Hairs = (MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Eyes:
+                        this.Eyes = (MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Races:
+                        this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Skills:
+                        this.Skills = (MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.MagicEffects:
+                        this.MagicEffects = (MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Scripts:
+                        this.Scripts = (MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.LandTextures:
+                        this.LandTextures = (MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Enchantments:
+                        this.Enchantments = (MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Spells:
+                        this.Spells = (MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Birthsigns:
+                        this.Birthsigns = (MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Activators:
+                        this.Activators = (MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.AlchemicalApparatus:
+                        this.AlchemicalApparatus = (MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Armors:
+                        this.Armors = (MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Books:
+                        this.Books = (MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Clothes:
+                        this.Clothes = (MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Containers:
+                        this.Containers = (MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Doors:
+                        this.Doors = (MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Ingredients:
+                        this.Ingredients = (MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Lights:
+                        this.Lights = (MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Miscellaneous:
+                        this.Miscellaneous = (MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Statics:
+                        this.Statics = (MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Trees:
+                        this.Trees = (MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Flora:
+                        this.Flora = (MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Furnature:
+                        this.Furnature = (MaskItem<Exception?, Group.ErrorMask<Furnature.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Weapons:
+                        this.Weapons = (MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Ammo:
+                        this.Ammo = (MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.NPCs:
+                        this.NPCs = (MaskItem<Exception?, Group.ErrorMask<NPC.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Creatures:
+                        this.Creatures = (MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.LeveledCreatures:
+                        this.LeveledCreatures = (MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.SoulGems:
+                        this.SoulGems = (MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Keys:
+                        this.Keys = (MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Potions:
+                        this.Potions = (MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Subspaces:
+                        this.Subspaces = (MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.SigilStones:
+                        this.SigilStones = (MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.LeveledItems:
+                        this.LeveledItems = (MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Weathers:
+                        this.Weathers = (MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Climates:
+                        this.Climates = (MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Regions:
+                        this.Regions = (MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Cells:
+                        this.Cells = (MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Worldspaces:
+                        this.Worldspaces = (MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.DialogTopics:
+                        this.DialogTopics = (MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Quests:
+                        this.Quests = (MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = (MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.AIPackages:
+                        this.AIPackages = (MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.CombatStyles:
+                        this.CombatStyles = (MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.LoadScreens:
+                        this.LoadScreens = (MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.LeveledSpells:
+                        this.LeveledSpells = (MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = (MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.Waters:
+                        this.Waters = (MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>?)obj;
+                        break;
+                    case OblivionMod_FieldIndex.EffectShaders:
+                        this.EffectShaders = (MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (ModHeader != null) return true;
+                if (GameSettings != null) return true;
+                if (Globals != null) return true;
+                if (Classes != null) return true;
+                if (Factions != null) return true;
+                if (Hairs != null) return true;
+                if (Eyes != null) return true;
+                if (Races != null) return true;
+                if (Sounds != null) return true;
+                if (Skills != null) return true;
+                if (MagicEffects != null) return true;
+                if (Scripts != null) return true;
+                if (LandTextures != null) return true;
+                if (Enchantments != null) return true;
+                if (Spells != null) return true;
+                if (Birthsigns != null) return true;
+                if (Activators != null) return true;
+                if (AlchemicalApparatus != null) return true;
+                if (Armors != null) return true;
+                if (Books != null) return true;
+                if (Clothes != null) return true;
+                if (Containers != null) return true;
+                if (Doors != null) return true;
+                if (Ingredients != null) return true;
+                if (Lights != null) return true;
+                if (Miscellaneous != null) return true;
+                if (Statics != null) return true;
+                if (Grasses != null) return true;
+                if (Trees != null) return true;
+                if (Flora != null) return true;
+                if (Furnature != null) return true;
+                if (Weapons != null) return true;
+                if (Ammo != null) return true;
+                if (NPCs != null) return true;
+                if (Creatures != null) return true;
+                if (LeveledCreatures != null) return true;
+                if (SoulGems != null) return true;
+                if (Keys != null) return true;
+                if (Potions != null) return true;
+                if (Subspaces != null) return true;
+                if (SigilStones != null) return true;
+                if (LeveledItems != null) return true;
+                if (Weathers != null) return true;
+                if (Climates != null) return true;
+                if (Regions != null) return true;
+                if (Cells != null) return true;
+                if (Worldspaces != null) return true;
+                if (DialogTopics != null) return true;
+                if (Quests != null) return true;
+                if (IdleAnimations != null) return true;
+                if (AIPackages != null) return true;
+                if (CombatStyles != null) return true;
+                if (LoadScreens != null) return true;
+                if (LeveledSpells != null) return true;
+                if (AnimatedObjects != null) return true;
+                if (Waters != null) return true;
+                if (EffectShaders != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                ModHeader?.ToString(fg);
+                GameSettings?.ToString(fg);
+                Globals?.ToString(fg);
+                Classes?.ToString(fg);
+                Factions?.ToString(fg);
+                Hairs?.ToString(fg);
+                Eyes?.ToString(fg);
+                Races?.ToString(fg);
+                Sounds?.ToString(fg);
+                Skills?.ToString(fg);
+                MagicEffects?.ToString(fg);
+                Scripts?.ToString(fg);
+                LandTextures?.ToString(fg);
+                Enchantments?.ToString(fg);
+                Spells?.ToString(fg);
+                Birthsigns?.ToString(fg);
+                Activators?.ToString(fg);
+                AlchemicalApparatus?.ToString(fg);
+                Armors?.ToString(fg);
+                Books?.ToString(fg);
+                Clothes?.ToString(fg);
+                Containers?.ToString(fg);
+                Doors?.ToString(fg);
+                Ingredients?.ToString(fg);
+                Lights?.ToString(fg);
+                Miscellaneous?.ToString(fg);
+                Statics?.ToString(fg);
+                Grasses?.ToString(fg);
+                Trees?.ToString(fg);
+                Flora?.ToString(fg);
+                Furnature?.ToString(fg);
+                Weapons?.ToString(fg);
+                Ammo?.ToString(fg);
+                NPCs?.ToString(fg);
+                Creatures?.ToString(fg);
+                LeveledCreatures?.ToString(fg);
+                SoulGems?.ToString(fg);
+                Keys?.ToString(fg);
+                Potions?.ToString(fg);
+                Subspaces?.ToString(fg);
+                SigilStones?.ToString(fg);
+                LeveledItems?.ToString(fg);
+                Weathers?.ToString(fg);
+                Climates?.ToString(fg);
+                Regions?.ToString(fg);
+                Cells?.ToString(fg);
+                Worldspaces?.ToString(fg);
+                DialogTopics?.ToString(fg);
+                Quests?.ToString(fg);
+                IdleAnimations?.ToString(fg);
+                AIPackages?.ToString(fg);
+                CombatStyles?.ToString(fg);
+                LoadScreens?.ToString(fg);
+                LeveledSpells?.ToString(fg);
+                AnimatedObjects?.ToString(fg);
+                Waters?.ToString(fg);
+                EffectShaders?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ExceptionExt.Combine(this.ModHeader?.Overall, rhs.ModHeader?.Overall), (this.ModHeader?.Specific as IErrorMask<ModHeader.ErrorMask>)?.Combine(rhs.ModHeader?.Specific));
+                ret.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ExceptionExt.Combine(this.GameSettings?.Overall, rhs.GameSettings?.Overall), (this.GameSettings?.Specific as IErrorMask<Group.ErrorMask<GameSetting.ErrorMask>>)?.Combine(rhs.GameSettings?.Specific));
+                ret.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ExceptionExt.Combine(this.Globals?.Overall, rhs.Globals?.Overall), (this.Globals?.Specific as IErrorMask<Group.ErrorMask<Global.ErrorMask>>)?.Combine(rhs.Globals?.Specific));
+                ret.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ExceptionExt.Combine(this.Classes?.Overall, rhs.Classes?.Overall), (this.Classes?.Specific as IErrorMask<Group.ErrorMask<Class.ErrorMask>>)?.Combine(rhs.Classes?.Specific));
+                ret.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), (this.Factions?.Specific as IErrorMask<Group.ErrorMask<Faction.ErrorMask>>)?.Combine(rhs.Factions?.Specific));
+                ret.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), (this.Hairs?.Specific as IErrorMask<Group.ErrorMask<Hair.ErrorMask>>)?.Combine(rhs.Hairs?.Specific));
+                ret.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), (this.Eyes?.Specific as IErrorMask<Group.ErrorMask<Eye.ErrorMask>>)?.Combine(rhs.Eyes?.Specific));
+                ret.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ExceptionExt.Combine(this.Races?.Overall, rhs.Races?.Overall), (this.Races?.Specific as IErrorMask<Group.ErrorMask<Race.ErrorMask>>)?.Combine(rhs.Races?.Specific));
+                ret.Sounds = new MaskItem<Exception?, Group.ErrorMask<Sound.ErrorMask>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), (this.Sounds?.Specific as IErrorMask<Group.ErrorMask<Sound.ErrorMask>>)?.Combine(rhs.Sounds?.Specific));
+                ret.Skills = new MaskItem<Exception?, Group.ErrorMask<SkillRecord.ErrorMask>?>(ExceptionExt.Combine(this.Skills?.Overall, rhs.Skills?.Overall), (this.Skills?.Specific as IErrorMask<Group.ErrorMask<SkillRecord.ErrorMask>>)?.Combine(rhs.Skills?.Specific));
+                ret.MagicEffects = new MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>(ExceptionExt.Combine(this.MagicEffects?.Overall, rhs.MagicEffects?.Overall), (this.MagicEffects?.Specific as IErrorMask<Group.ErrorMask<MagicEffect.ErrorMask>>)?.Combine(rhs.MagicEffects?.Specific));
+                ret.Scripts = new MaskItem<Exception?, Group.ErrorMask<Script.ErrorMask>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), (this.Scripts?.Specific as IErrorMask<Group.ErrorMask<Script.ErrorMask>>)?.Combine(rhs.Scripts?.Specific));
+                ret.LandTextures = new MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>(ExceptionExt.Combine(this.LandTextures?.Overall, rhs.LandTextures?.Overall), (this.LandTextures?.Specific as IErrorMask<Group.ErrorMask<LandTexture.ErrorMask>>)?.Combine(rhs.LandTextures?.Specific));
+                ret.Enchantments = new MaskItem<Exception?, Group.ErrorMask<Enchantment.ErrorMask>?>(ExceptionExt.Combine(this.Enchantments?.Overall, rhs.Enchantments?.Overall), (this.Enchantments?.Specific as IErrorMask<Group.ErrorMask<Enchantment.ErrorMask>>)?.Combine(rhs.Enchantments?.Specific));
+                ret.Spells = new MaskItem<Exception?, Group.ErrorMask<SpellUnleveled.ErrorMask>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), (this.Spells?.Specific as IErrorMask<Group.ErrorMask<SpellUnleveled.ErrorMask>>)?.Combine(rhs.Spells?.Specific));
+                ret.Birthsigns = new MaskItem<Exception?, Group.ErrorMask<Birthsign.ErrorMask>?>(ExceptionExt.Combine(this.Birthsigns?.Overall, rhs.Birthsigns?.Overall), (this.Birthsigns?.Specific as IErrorMask<Group.ErrorMask<Birthsign.ErrorMask>>)?.Combine(rhs.Birthsigns?.Specific));
+                ret.Activators = new MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>(ExceptionExt.Combine(this.Activators?.Overall, rhs.Activators?.Overall), (this.Activators?.Specific as IErrorMask<Group.ErrorMask<Activator.ErrorMask>>)?.Combine(rhs.Activators?.Specific));
+                ret.AlchemicalApparatus = new MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ExceptionExt.Combine(this.AlchemicalApparatus?.Overall, rhs.AlchemicalApparatus?.Overall), (this.AlchemicalApparatus?.Specific as IErrorMask<Group.ErrorMask<AlchemicalApparatus.ErrorMask>>)?.Combine(rhs.AlchemicalApparatus?.Specific));
+                ret.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ExceptionExt.Combine(this.Armors?.Overall, rhs.Armors?.Overall), (this.Armors?.Specific as IErrorMask<Group.ErrorMask<Armor.ErrorMask>>)?.Combine(rhs.Armors?.Specific));
+                ret.Books = new MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>(ExceptionExt.Combine(this.Books?.Overall, rhs.Books?.Overall), (this.Books?.Specific as IErrorMask<Group.ErrorMask<Book.ErrorMask>>)?.Combine(rhs.Books?.Specific));
+                ret.Clothes = new MaskItem<Exception?, Group.ErrorMask<Clothing.ErrorMask>?>(ExceptionExt.Combine(this.Clothes?.Overall, rhs.Clothes?.Overall), (this.Clothes?.Specific as IErrorMask<Group.ErrorMask<Clothing.ErrorMask>>)?.Combine(rhs.Clothes?.Specific));
+                ret.Containers = new MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>(ExceptionExt.Combine(this.Containers?.Overall, rhs.Containers?.Overall), (this.Containers?.Specific as IErrorMask<Group.ErrorMask<Container.ErrorMask>>)?.Combine(rhs.Containers?.Specific));
+                ret.Doors = new MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>(ExceptionExt.Combine(this.Doors?.Overall, rhs.Doors?.Overall), (this.Doors?.Specific as IErrorMask<Group.ErrorMask<Door.ErrorMask>>)?.Combine(rhs.Doors?.Specific));
+                ret.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ExceptionExt.Combine(this.Ingredients?.Overall, rhs.Ingredients?.Overall), (this.Ingredients?.Specific as IErrorMask<Group.ErrorMask<Ingredient.ErrorMask>>)?.Combine(rhs.Ingredients?.Specific));
+                ret.Lights = new MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>(ExceptionExt.Combine(this.Lights?.Overall, rhs.Lights?.Overall), (this.Lights?.Specific as IErrorMask<Group.ErrorMask<Light.ErrorMask>>)?.Combine(rhs.Lights?.Specific));
+                ret.Miscellaneous = new MaskItem<Exception?, Group.ErrorMask<Miscellaneous.ErrorMask>?>(ExceptionExt.Combine(this.Miscellaneous?.Overall, rhs.Miscellaneous?.Overall), (this.Miscellaneous?.Specific as IErrorMask<Group.ErrorMask<Miscellaneous.ErrorMask>>)?.Combine(rhs.Miscellaneous?.Specific));
+                ret.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ExceptionExt.Combine(this.Statics?.Overall, rhs.Statics?.Overall), (this.Statics?.Specific as IErrorMask<Group.ErrorMask<Static.ErrorMask>>)?.Combine(rhs.Statics?.Specific));
+                ret.Grasses = new MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), (this.Grasses?.Specific as IErrorMask<Group.ErrorMask<Grass.ErrorMask>>)?.Combine(rhs.Grasses?.Specific));
+                ret.Trees = new MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>(ExceptionExt.Combine(this.Trees?.Overall, rhs.Trees?.Overall), (this.Trees?.Specific as IErrorMask<Group.ErrorMask<Tree.ErrorMask>>)?.Combine(rhs.Trees?.Specific));
+                ret.Flora = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ExceptionExt.Combine(this.Flora?.Overall, rhs.Flora?.Overall), (this.Flora?.Specific as IErrorMask<Group.ErrorMask<Flora.ErrorMask>>)?.Combine(rhs.Flora?.Specific));
+                ret.Furnature = new MaskItem<Exception?, Group.ErrorMask<Furnature.ErrorMask>?>(ExceptionExt.Combine(this.Furnature?.Overall, rhs.Furnature?.Overall), (this.Furnature?.Specific as IErrorMask<Group.ErrorMask<Furnature.ErrorMask>>)?.Combine(rhs.Furnature?.Specific));
+                ret.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ExceptionExt.Combine(this.Weapons?.Overall, rhs.Weapons?.Overall), (this.Weapons?.Specific as IErrorMask<Group.ErrorMask<Weapon.ErrorMask>>)?.Combine(rhs.Weapons?.Specific));
+                ret.Ammo = new MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>(ExceptionExt.Combine(this.Ammo?.Overall, rhs.Ammo?.Overall), (this.Ammo?.Specific as IErrorMask<Group.ErrorMask<Ammo.ErrorMask>>)?.Combine(rhs.Ammo?.Specific));
+                ret.NPCs = new MaskItem<Exception?, Group.ErrorMask<NPC.ErrorMask>?>(ExceptionExt.Combine(this.NPCs?.Overall, rhs.NPCs?.Overall), (this.NPCs?.Specific as IErrorMask<Group.ErrorMask<NPC.ErrorMask>>)?.Combine(rhs.NPCs?.Specific));
+                ret.Creatures = new MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>(ExceptionExt.Combine(this.Creatures?.Overall, rhs.Creatures?.Overall), (this.Creatures?.Specific as IErrorMask<Group.ErrorMask<Creature.ErrorMask>>)?.Combine(rhs.Creatures?.Specific));
+                ret.LeveledCreatures = new MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>(ExceptionExt.Combine(this.LeveledCreatures?.Overall, rhs.LeveledCreatures?.Overall), (this.LeveledCreatures?.Specific as IErrorMask<Group.ErrorMask<LeveledCreature.ErrorMask>>)?.Combine(rhs.LeveledCreatures?.Specific));
+                ret.SoulGems = new MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>(ExceptionExt.Combine(this.SoulGems?.Overall, rhs.SoulGems?.Overall), (this.SoulGems?.Specific as IErrorMask<Group.ErrorMask<SoulGem.ErrorMask>>)?.Combine(rhs.SoulGems?.Specific));
+                ret.Keys = new MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>(ExceptionExt.Combine(this.Keys?.Overall, rhs.Keys?.Overall), (this.Keys?.Specific as IErrorMask<Group.ErrorMask<Key.ErrorMask>>)?.Combine(rhs.Keys?.Specific));
+                ret.Potions = new MaskItem<Exception?, Group.ErrorMask<Potion.ErrorMask>?>(ExceptionExt.Combine(this.Potions?.Overall, rhs.Potions?.Overall), (this.Potions?.Specific as IErrorMask<Group.ErrorMask<Potion.ErrorMask>>)?.Combine(rhs.Potions?.Specific));
+                ret.Subspaces = new MaskItem<Exception?, Group.ErrorMask<Subspace.ErrorMask>?>(ExceptionExt.Combine(this.Subspaces?.Overall, rhs.Subspaces?.Overall), (this.Subspaces?.Specific as IErrorMask<Group.ErrorMask<Subspace.ErrorMask>>)?.Combine(rhs.Subspaces?.Specific));
+                ret.SigilStones = new MaskItem<Exception?, Group.ErrorMask<SigilStone.ErrorMask>?>(ExceptionExt.Combine(this.SigilStones?.Overall, rhs.SigilStones?.Overall), (this.SigilStones?.Specific as IErrorMask<Group.ErrorMask<SigilStone.ErrorMask>>)?.Combine(rhs.SigilStones?.Specific));
+                ret.LeveledItems = new MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>(ExceptionExt.Combine(this.LeveledItems?.Overall, rhs.LeveledItems?.Overall), (this.LeveledItems?.Specific as IErrorMask<Group.ErrorMask<LeveledItem.ErrorMask>>)?.Combine(rhs.LeveledItems?.Specific));
+                ret.Weathers = new MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), (this.Weathers?.Specific as IErrorMask<Group.ErrorMask<Weather.ErrorMask>>)?.Combine(rhs.Weathers?.Specific));
+                ret.Climates = new MaskItem<Exception?, Group.ErrorMask<Climate.ErrorMask>?>(ExceptionExt.Combine(this.Climates?.Overall, rhs.Climates?.Overall), (this.Climates?.Specific as IErrorMask<Group.ErrorMask<Climate.ErrorMask>>)?.Combine(rhs.Climates?.Specific));
+                ret.Regions = new MaskItem<Exception?, Group.ErrorMask<Region.ErrorMask>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), (this.Regions?.Specific as IErrorMask<Group.ErrorMask<Region.ErrorMask>>)?.Combine(rhs.Regions?.Specific));
+                ret.Cells = new MaskItem<Exception?, ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), (this.Cells?.Specific as IErrorMask<ListGroup.ErrorMask<CellBlock.ErrorMask>>)?.Combine(rhs.Cells?.Specific));
+                ret.Worldspaces = new MaskItem<Exception?, Group.ErrorMask<Worldspace.ErrorMask>?>(ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), (this.Worldspaces?.Specific as IErrorMask<Group.ErrorMask<Worldspace.ErrorMask>>)?.Combine(rhs.Worldspaces?.Specific));
+                ret.DialogTopics = new MaskItem<Exception?, Group.ErrorMask<DialogTopic.ErrorMask>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), (this.DialogTopics?.Specific as IErrorMask<Group.ErrorMask<DialogTopic.ErrorMask>>)?.Combine(rhs.DialogTopics?.Specific));
+                ret.Quests = new MaskItem<Exception?, Group.ErrorMask<Quest.ErrorMask>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), (this.Quests?.Specific as IErrorMask<Group.ErrorMask<Quest.ErrorMask>>)?.Combine(rhs.Quests?.Specific));
+                ret.IdleAnimations = new MaskItem<Exception?, Group.ErrorMask<IdleAnimation.ErrorMask>?>(ExceptionExt.Combine(this.IdleAnimations?.Overall, rhs.IdleAnimations?.Overall), (this.IdleAnimations?.Specific as IErrorMask<Group.ErrorMask<IdleAnimation.ErrorMask>>)?.Combine(rhs.IdleAnimations?.Specific));
+                ret.AIPackages = new MaskItem<Exception?, Group.ErrorMask<AIPackage.ErrorMask>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), (this.AIPackages?.Specific as IErrorMask<Group.ErrorMask<AIPackage.ErrorMask>>)?.Combine(rhs.AIPackages?.Specific));
+                ret.CombatStyles = new MaskItem<Exception?, Group.ErrorMask<CombatStyle.ErrorMask>?>(ExceptionExt.Combine(this.CombatStyles?.Overall, rhs.CombatStyles?.Overall), (this.CombatStyles?.Specific as IErrorMask<Group.ErrorMask<CombatStyle.ErrorMask>>)?.Combine(rhs.CombatStyles?.Specific));
+                ret.LoadScreens = new MaskItem<Exception?, Group.ErrorMask<LoadScreen.ErrorMask>?>(ExceptionExt.Combine(this.LoadScreens?.Overall, rhs.LoadScreens?.Overall), (this.LoadScreens?.Specific as IErrorMask<Group.ErrorMask<LoadScreen.ErrorMask>>)?.Combine(rhs.LoadScreens?.Specific));
+                ret.LeveledSpells = new MaskItem<Exception?, Group.ErrorMask<LeveledSpell.ErrorMask>?>(ExceptionExt.Combine(this.LeveledSpells?.Overall, rhs.LeveledSpells?.Overall), (this.LeveledSpells?.Specific as IErrorMask<Group.ErrorMask<LeveledSpell.ErrorMask>>)?.Combine(rhs.LeveledSpells?.Specific));
+                ret.AnimatedObjects = new MaskItem<Exception?, Group.ErrorMask<AnimatedObject.ErrorMask>?>(ExceptionExt.Combine(this.AnimatedObjects?.Overall, rhs.AnimatedObjects?.Overall), (this.AnimatedObjects?.Specific as IErrorMask<Group.ErrorMask<AnimatedObject.ErrorMask>>)?.Combine(rhs.AnimatedObjects?.Specific));
+                ret.Waters = new MaskItem<Exception?, Group.ErrorMask<Water.ErrorMask>?>(ExceptionExt.Combine(this.Waters?.Overall, rhs.Waters?.Overall), (this.Waters?.Specific as IErrorMask<Group.ErrorMask<Water.ErrorMask>>)?.Combine(rhs.Waters?.Specific));
+                ret.EffectShaders = new MaskItem<Exception?, Group.ErrorMask<EffectShader.ErrorMask>?>(ExceptionExt.Combine(this.EffectShaders?.Overall, rhs.EffectShaders?.Overall), (this.EffectShaders?.Specific as IErrorMask<Group.ErrorMask<EffectShader.ErrorMask>>)?.Combine(rhs.EffectShaders?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public MaskItem<bool, ModHeader.TranslationMask?> ModHeader;
+            public MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?> GameSettings;
+            public MaskItem<bool, Group.TranslationMask<Global.TranslationMask>?> Globals;
+            public MaskItem<bool, Group.TranslationMask<Class.TranslationMask>?> Classes;
+            public MaskItem<bool, Group.TranslationMask<Faction.TranslationMask>?> Factions;
+            public MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?> Hairs;
+            public MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?> Eyes;
+            public MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?> Races;
+            public MaskItem<bool, Group.TranslationMask<Sound.TranslationMask>?> Sounds;
+            public MaskItem<bool, Group.TranslationMask<SkillRecord.TranslationMask>?> Skills;
+            public MaskItem<bool, Group.TranslationMask<MagicEffect.TranslationMask>?> MagicEffects;
+            public MaskItem<bool, Group.TranslationMask<Script.TranslationMask>?> Scripts;
+            public MaskItem<bool, Group.TranslationMask<LandTexture.TranslationMask>?> LandTextures;
+            public MaskItem<bool, Group.TranslationMask<Enchantment.TranslationMask>?> Enchantments;
+            public MaskItem<bool, Group.TranslationMask<SpellUnleveled.TranslationMask>?> Spells;
+            public MaskItem<bool, Group.TranslationMask<Birthsign.TranslationMask>?> Birthsigns;
+            public MaskItem<bool, Group.TranslationMask<Activator.TranslationMask>?> Activators;
+            public MaskItem<bool, Group.TranslationMask<AlchemicalApparatus.TranslationMask>?> AlchemicalApparatus;
+            public MaskItem<bool, Group.TranslationMask<Armor.TranslationMask>?> Armors;
+            public MaskItem<bool, Group.TranslationMask<Book.TranslationMask>?> Books;
+            public MaskItem<bool, Group.TranslationMask<Clothing.TranslationMask>?> Clothes;
+            public MaskItem<bool, Group.TranslationMask<Container.TranslationMask>?> Containers;
+            public MaskItem<bool, Group.TranslationMask<Door.TranslationMask>?> Doors;
+            public MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?> Ingredients;
+            public MaskItem<bool, Group.TranslationMask<Light.TranslationMask>?> Lights;
+            public MaskItem<bool, Group.TranslationMask<Miscellaneous.TranslationMask>?> Miscellaneous;
+            public MaskItem<bool, Group.TranslationMask<Static.TranslationMask>?> Statics;
+            public MaskItem<bool, Group.TranslationMask<Grass.TranslationMask>?> Grasses;
+            public MaskItem<bool, Group.TranslationMask<Tree.TranslationMask>?> Trees;
+            public MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?> Flora;
+            public MaskItem<bool, Group.TranslationMask<Furnature.TranslationMask>?> Furnature;
+            public MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?> Weapons;
+            public MaskItem<bool, Group.TranslationMask<Ammo.TranslationMask>?> Ammo;
+            public MaskItem<bool, Group.TranslationMask<NPC.TranslationMask>?> NPCs;
+            public MaskItem<bool, Group.TranslationMask<Creature.TranslationMask>?> Creatures;
+            public MaskItem<bool, Group.TranslationMask<LeveledCreature.TranslationMask>?> LeveledCreatures;
+            public MaskItem<bool, Group.TranslationMask<SoulGem.TranslationMask>?> SoulGems;
+            public MaskItem<bool, Group.TranslationMask<Key.TranslationMask>?> Keys;
+            public MaskItem<bool, Group.TranslationMask<Potion.TranslationMask>?> Potions;
+            public MaskItem<bool, Group.TranslationMask<Subspace.TranslationMask>?> Subspaces;
+            public MaskItem<bool, Group.TranslationMask<SigilStone.TranslationMask>?> SigilStones;
+            public MaskItem<bool, Group.TranslationMask<LeveledItem.TranslationMask>?> LeveledItems;
+            public MaskItem<bool, Group.TranslationMask<Weather.TranslationMask>?> Weathers;
+            public MaskItem<bool, Group.TranslationMask<Climate.TranslationMask>?> Climates;
+            public MaskItem<bool, Group.TranslationMask<Region.TranslationMask>?> Regions;
+            public MaskItem<bool, ListGroup.TranslationMask<CellBlock.TranslationMask>?> Cells;
+            public MaskItem<bool, Group.TranslationMask<Worldspace.TranslationMask>?> Worldspaces;
+            public MaskItem<bool, Group.TranslationMask<DialogTopic.TranslationMask>?> DialogTopics;
+            public MaskItem<bool, Group.TranslationMask<Quest.TranslationMask>?> Quests;
+            public MaskItem<bool, Group.TranslationMask<IdleAnimation.TranslationMask>?> IdleAnimations;
+            public MaskItem<bool, Group.TranslationMask<AIPackage.TranslationMask>?> AIPackages;
+            public MaskItem<bool, Group.TranslationMask<CombatStyle.TranslationMask>?> CombatStyles;
+            public MaskItem<bool, Group.TranslationMask<LoadScreen.TranslationMask>?> LoadScreens;
+            public MaskItem<bool, Group.TranslationMask<LeveledSpell.TranslationMask>?> LeveledSpells;
+            public MaskItem<bool, Group.TranslationMask<AnimatedObject.TranslationMask>?> AnimatedObjects;
+            public MaskItem<bool, Group.TranslationMask<Water.TranslationMask>?> Waters;
+            public MaskItem<bool, Group.TranslationMask<EffectShader.TranslationMask>?> EffectShaders;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.ModHeader = new MaskItem<bool, ModHeader.TranslationMask?>(defaultOn, null);
+                this.GameSettings = new MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?>(defaultOn, null);
+                this.Globals = new MaskItem<bool, Group.TranslationMask<Global.TranslationMask>?>(defaultOn, null);
+                this.Classes = new MaskItem<bool, Group.TranslationMask<Class.TranslationMask>?>(defaultOn, null);
+                this.Factions = new MaskItem<bool, Group.TranslationMask<Faction.TranslationMask>?>(defaultOn, null);
+                this.Hairs = new MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?>(defaultOn, null);
+                this.Eyes = new MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?>(defaultOn, null);
+                this.Races = new MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?>(defaultOn, null);
+                this.Sounds = new MaskItem<bool, Group.TranslationMask<Sound.TranslationMask>?>(defaultOn, null);
+                this.Skills = new MaskItem<bool, Group.TranslationMask<SkillRecord.TranslationMask>?>(defaultOn, null);
+                this.MagicEffects = new MaskItem<bool, Group.TranslationMask<MagicEffect.TranslationMask>?>(defaultOn, null);
+                this.Scripts = new MaskItem<bool, Group.TranslationMask<Script.TranslationMask>?>(defaultOn, null);
+                this.LandTextures = new MaskItem<bool, Group.TranslationMask<LandTexture.TranslationMask>?>(defaultOn, null);
+                this.Enchantments = new MaskItem<bool, Group.TranslationMask<Enchantment.TranslationMask>?>(defaultOn, null);
+                this.Spells = new MaskItem<bool, Group.TranslationMask<SpellUnleveled.TranslationMask>?>(defaultOn, null);
+                this.Birthsigns = new MaskItem<bool, Group.TranslationMask<Birthsign.TranslationMask>?>(defaultOn, null);
+                this.Activators = new MaskItem<bool, Group.TranslationMask<Activator.TranslationMask>?>(defaultOn, null);
+                this.AlchemicalApparatus = new MaskItem<bool, Group.TranslationMask<AlchemicalApparatus.TranslationMask>?>(defaultOn, null);
+                this.Armors = new MaskItem<bool, Group.TranslationMask<Armor.TranslationMask>?>(defaultOn, null);
+                this.Books = new MaskItem<bool, Group.TranslationMask<Book.TranslationMask>?>(defaultOn, null);
+                this.Clothes = new MaskItem<bool, Group.TranslationMask<Clothing.TranslationMask>?>(defaultOn, null);
+                this.Containers = new MaskItem<bool, Group.TranslationMask<Container.TranslationMask>?>(defaultOn, null);
+                this.Doors = new MaskItem<bool, Group.TranslationMask<Door.TranslationMask>?>(defaultOn, null);
+                this.Ingredients = new MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?>(defaultOn, null);
+                this.Lights = new MaskItem<bool, Group.TranslationMask<Light.TranslationMask>?>(defaultOn, null);
+                this.Miscellaneous = new MaskItem<bool, Group.TranslationMask<Miscellaneous.TranslationMask>?>(defaultOn, null);
+                this.Statics = new MaskItem<bool, Group.TranslationMask<Static.TranslationMask>?>(defaultOn, null);
+                this.Grasses = new MaskItem<bool, Group.TranslationMask<Grass.TranslationMask>?>(defaultOn, null);
+                this.Trees = new MaskItem<bool, Group.TranslationMask<Tree.TranslationMask>?>(defaultOn, null);
+                this.Flora = new MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?>(defaultOn, null);
+                this.Furnature = new MaskItem<bool, Group.TranslationMask<Furnature.TranslationMask>?>(defaultOn, null);
+                this.Weapons = new MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?>(defaultOn, null);
+                this.Ammo = new MaskItem<bool, Group.TranslationMask<Ammo.TranslationMask>?>(defaultOn, null);
+                this.NPCs = new MaskItem<bool, Group.TranslationMask<NPC.TranslationMask>?>(defaultOn, null);
+                this.Creatures = new MaskItem<bool, Group.TranslationMask<Creature.TranslationMask>?>(defaultOn, null);
+                this.LeveledCreatures = new MaskItem<bool, Group.TranslationMask<LeveledCreature.TranslationMask>?>(defaultOn, null);
+                this.SoulGems = new MaskItem<bool, Group.TranslationMask<SoulGem.TranslationMask>?>(defaultOn, null);
+                this.Keys = new MaskItem<bool, Group.TranslationMask<Key.TranslationMask>?>(defaultOn, null);
+                this.Potions = new MaskItem<bool, Group.TranslationMask<Potion.TranslationMask>?>(defaultOn, null);
+                this.Subspaces = new MaskItem<bool, Group.TranslationMask<Subspace.TranslationMask>?>(defaultOn, null);
+                this.SigilStones = new MaskItem<bool, Group.TranslationMask<SigilStone.TranslationMask>?>(defaultOn, null);
+                this.LeveledItems = new MaskItem<bool, Group.TranslationMask<LeveledItem.TranslationMask>?>(defaultOn, null);
+                this.Weathers = new MaskItem<bool, Group.TranslationMask<Weather.TranslationMask>?>(defaultOn, null);
+                this.Climates = new MaskItem<bool, Group.TranslationMask<Climate.TranslationMask>?>(defaultOn, null);
+                this.Regions = new MaskItem<bool, Group.TranslationMask<Region.TranslationMask>?>(defaultOn, null);
+                this.Cells = new MaskItem<bool, ListGroup.TranslationMask<CellBlock.TranslationMask>?>(defaultOn, null);
+                this.Worldspaces = new MaskItem<bool, Group.TranslationMask<Worldspace.TranslationMask>?>(defaultOn, null);
+                this.DialogTopics = new MaskItem<bool, Group.TranslationMask<DialogTopic.TranslationMask>?>(defaultOn, null);
+                this.Quests = new MaskItem<bool, Group.TranslationMask<Quest.TranslationMask>?>(defaultOn, null);
+                this.IdleAnimations = new MaskItem<bool, Group.TranslationMask<IdleAnimation.TranslationMask>?>(defaultOn, null);
+                this.AIPackages = new MaskItem<bool, Group.TranslationMask<AIPackage.TranslationMask>?>(defaultOn, null);
+                this.CombatStyles = new MaskItem<bool, Group.TranslationMask<CombatStyle.TranslationMask>?>(defaultOn, null);
+                this.LoadScreens = new MaskItem<bool, Group.TranslationMask<LoadScreen.TranslationMask>?>(defaultOn, null);
+                this.LeveledSpells = new MaskItem<bool, Group.TranslationMask<LeveledSpell.TranslationMask>?>(defaultOn, null);
+                this.AnimatedObjects = new MaskItem<bool, Group.TranslationMask<AnimatedObject.TranslationMask>?>(defaultOn, null);
+                this.Waters = new MaskItem<bool, Group.TranslationMask<Water.TranslationMask>?>(defaultOn, null);
+                this.EffectShaders = new MaskItem<bool, Group.TranslationMask<EffectShader.TranslationMask>?>(defaultOn, null);
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((ModHeader?.Overall ?? true, ModHeader?.Specific?.GetCrystal()));
+                ret.Add((GameSettings?.Overall ?? true, GameSettings?.Specific?.GetCrystal()));
+                ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
+                ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
+                ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+                ret.Add((Hairs?.Overall ?? true, Hairs?.Specific?.GetCrystal()));
+                ret.Add((Eyes?.Overall ?? true, Eyes?.Specific?.GetCrystal()));
+                ret.Add((Races?.Overall ?? true, Races?.Specific?.GetCrystal()));
+                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((Skills?.Overall ?? true, Skills?.Specific?.GetCrystal()));
+                ret.Add((MagicEffects?.Overall ?? true, MagicEffects?.Specific?.GetCrystal()));
+                ret.Add((Scripts?.Overall ?? true, Scripts?.Specific?.GetCrystal()));
+                ret.Add((LandTextures?.Overall ?? true, LandTextures?.Specific?.GetCrystal()));
+                ret.Add((Enchantments?.Overall ?? true, Enchantments?.Specific?.GetCrystal()));
+                ret.Add((Spells?.Overall ?? true, Spells?.Specific?.GetCrystal()));
+                ret.Add((Birthsigns?.Overall ?? true, Birthsigns?.Specific?.GetCrystal()));
+                ret.Add((Activators?.Overall ?? true, Activators?.Specific?.GetCrystal()));
+                ret.Add((AlchemicalApparatus?.Overall ?? true, AlchemicalApparatus?.Specific?.GetCrystal()));
+                ret.Add((Armors?.Overall ?? true, Armors?.Specific?.GetCrystal()));
+                ret.Add((Books?.Overall ?? true, Books?.Specific?.GetCrystal()));
+                ret.Add((Clothes?.Overall ?? true, Clothes?.Specific?.GetCrystal()));
+                ret.Add((Containers?.Overall ?? true, Containers?.Specific?.GetCrystal()));
+                ret.Add((Doors?.Overall ?? true, Doors?.Specific?.GetCrystal()));
+                ret.Add((Ingredients?.Overall ?? true, Ingredients?.Specific?.GetCrystal()));
+                ret.Add((Lights?.Overall ?? true, Lights?.Specific?.GetCrystal()));
+                ret.Add((Miscellaneous?.Overall ?? true, Miscellaneous?.Specific?.GetCrystal()));
+                ret.Add((Statics?.Overall ?? true, Statics?.Specific?.GetCrystal()));
+                ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
+                ret.Add((Trees?.Overall ?? true, Trees?.Specific?.GetCrystal()));
+                ret.Add((Flora?.Overall ?? true, Flora?.Specific?.GetCrystal()));
+                ret.Add((Furnature?.Overall ?? true, Furnature?.Specific?.GetCrystal()));
+                ret.Add((Weapons?.Overall ?? true, Weapons?.Specific?.GetCrystal()));
+                ret.Add((Ammo?.Overall ?? true, Ammo?.Specific?.GetCrystal()));
+                ret.Add((NPCs?.Overall ?? true, NPCs?.Specific?.GetCrystal()));
+                ret.Add((Creatures?.Overall ?? true, Creatures?.Specific?.GetCrystal()));
+                ret.Add((LeveledCreatures?.Overall ?? true, LeveledCreatures?.Specific?.GetCrystal()));
+                ret.Add((SoulGems?.Overall ?? true, SoulGems?.Specific?.GetCrystal()));
+                ret.Add((Keys?.Overall ?? true, Keys?.Specific?.GetCrystal()));
+                ret.Add((Potions?.Overall ?? true, Potions?.Specific?.GetCrystal()));
+                ret.Add((Subspaces?.Overall ?? true, Subspaces?.Specific?.GetCrystal()));
+                ret.Add((SigilStones?.Overall ?? true, SigilStones?.Specific?.GetCrystal()));
+                ret.Add((LeveledItems?.Overall ?? true, LeveledItems?.Specific?.GetCrystal()));
+                ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
+                ret.Add((Climates?.Overall ?? true, Climates?.Specific?.GetCrystal()));
+                ret.Add((Regions?.Overall ?? true, Regions?.Specific?.GetCrystal()));
+                ret.Add((Cells?.Overall ?? true, Cells?.Specific?.GetCrystal()));
+                ret.Add((Worldspaces?.Overall ?? true, Worldspaces?.Specific?.GetCrystal()));
+                ret.Add((DialogTopics?.Overall ?? true, DialogTopics?.Specific?.GetCrystal()));
+                ret.Add((Quests?.Overall ?? true, Quests?.Specific?.GetCrystal()));
+                ret.Add((IdleAnimations?.Overall ?? true, IdleAnimations?.Specific?.GetCrystal()));
+                ret.Add((AIPackages?.Overall ?? true, AIPackages?.Specific?.GetCrystal()));
+                ret.Add((CombatStyles?.Overall ?? true, CombatStyles?.Specific?.GetCrystal()));
+                ret.Add((LoadScreens?.Overall ?? true, LoadScreens?.Specific?.GetCrystal()));
+                ret.Add((LeveledSpells?.Overall ?? true, LeveledSpells?.Specific?.GetCrystal()));
+                ret.Add((AnimatedObjects?.Overall ?? true, AnimatedObjects?.Specific?.GetCrystal()));
+                ret.Add((Waters?.Overall ?? true, Waters?.Specific?.GetCrystal()));
+                ret.Add((EffectShaders?.Overall ?? true, EffectShaders?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -1400,7 +3400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: null);
         }
 
-        public static async Task<(OblivionMod Mod, OblivionMod_ErrorMask ErrorMask)> CreateFromXmlFolderWithErrorMask(
+        public static async Task<(OblivionMod Mod, OblivionMod.ErrorMask ErrorMask)> CreateFromXmlFolderWithErrorMask(
             DirectoryPath dir,
             ModKey modKey)
         {
@@ -1409,7 +3409,7 @@ namespace Mutagen.Bethesda.Oblivion
                 dir: dir,
                 modKey: modKey,
                 errorMask: errorMaskBuilder);
-            var errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
+            var errorMask = OblivionMod.ErrorMask.Factory(errorMaskBuilder);
             return (ret, errorMask);
         }
 
@@ -1708,7 +3708,7 @@ namespace Mutagen.Bethesda.Oblivion
             return item;
         }
 
-        public async Task<OblivionMod_ErrorMask?> WriteToXmlFolder(
+        public async Task<OblivionMod.ErrorMask?> WriteToXmlFolder(
             DirectoryPath dir,
             bool doMasks = true)
         {
@@ -1721,52 +3721,52 @@ namespace Mutagen.Bethesda.Oblivion
                     path: Path.Combine(dir.Path, "ModHeader.xml"),
                     errorMask: errorMaskBuilder,
                     translationMask: null)));
-                tasks.Add(Task.Run(() => GameSettings.WriteToXmlFolder<GameSetting, GameSetting_ErrorMask>(
+                tasks.Add(Task.Run(() => GameSettings.WriteToXmlFolder<GameSetting, GameSetting.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(GameSettings),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.GameSettings)));
-                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global_ErrorMask>(
+                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Globals),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Globals)));
-                tasks.Add(Task.Run(() => Classes.WriteToXmlFolder<Class, Class_ErrorMask>(
+                tasks.Add(Task.Run(() => Classes.WriteToXmlFolder<Class, Class.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Classes),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Classes)));
-                tasks.Add(Task.Run(() => Factions.WriteToXmlFolder<Faction, Faction_ErrorMask>(
+                tasks.Add(Task.Run(() => Factions.WriteToXmlFolder<Faction, Faction.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Factions),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Factions)));
-                tasks.Add(Task.Run(() => Hairs.WriteToXmlFolder<Hair, Hair_ErrorMask>(
+                tasks.Add(Task.Run(() => Hairs.WriteToXmlFolder<Hair, Hair.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Hairs),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Hairs)));
-                tasks.Add(Task.Run(() => Eyes.WriteToXmlFolder<Eye, Eye_ErrorMask>(
+                tasks.Add(Task.Run(() => Eyes.WriteToXmlFolder<Eye, Eye.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Eyes),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Eyes)));
-                tasks.Add(Task.Run(() => Races.WriteToXmlFolder<Race, Race_ErrorMask>(
+                tasks.Add(Task.Run(() => Races.WriteToXmlFolder<Race, Race.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Races),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Races)));
-                tasks.Add(Task.Run(() => Sounds.WriteToXmlFolder<Sound, Sound_ErrorMask>(
+                tasks.Add(Task.Run(() => Sounds.WriteToXmlFolder<Sound, Sound.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Sounds),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Sounds)));
-                tasks.Add(Task.Run(() => Skills.WriteToXmlFolder<SkillRecord, SkillRecord_ErrorMask>(
+                tasks.Add(Task.Run(() => Skills.WriteToXmlFolder<SkillRecord, SkillRecord.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Skills),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Skills)));
-                tasks.Add(Task.Run(() => MagicEffects.WriteToXmlFolder<MagicEffect, MagicEffect_ErrorMask>(
+                tasks.Add(Task.Run(() => MagicEffects.WriteToXmlFolder<MagicEffect, MagicEffect.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(MagicEffects),
                     errorMask: errorMaskBuilder,
@@ -1776,167 +3776,167 @@ namespace Mutagen.Bethesda.Oblivion
                     name: nameof(Scripts),
                     index: (int)OblivionMod_FieldIndex.Scripts,
                     errorMask: errorMaskBuilder)));
-                tasks.Add(Task.Run(() => LandTextures.WriteToXmlFolder<LandTexture, LandTexture_ErrorMask>(
+                tasks.Add(Task.Run(() => LandTextures.WriteToXmlFolder<LandTexture, LandTexture.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LandTextures),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LandTextures)));
-                tasks.Add(Task.Run(() => Enchantments.WriteToXmlFolder<Enchantment, Enchantment_ErrorMask>(
+                tasks.Add(Task.Run(() => Enchantments.WriteToXmlFolder<Enchantment, Enchantment.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Enchantments),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Enchantments)));
-                tasks.Add(Task.Run(() => Spells.WriteToXmlFolder<SpellUnleveled, SpellUnleveled_ErrorMask>(
+                tasks.Add(Task.Run(() => Spells.WriteToXmlFolder<SpellUnleveled, SpellUnleveled.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Spells),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Spells)));
-                tasks.Add(Task.Run(() => Birthsigns.WriteToXmlFolder<Birthsign, Birthsign_ErrorMask>(
+                tasks.Add(Task.Run(() => Birthsigns.WriteToXmlFolder<Birthsign, Birthsign.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Birthsigns),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Birthsigns)));
-                tasks.Add(Task.Run(() => Activators.WriteToXmlFolder<Activator, Activator_ErrorMask>(
+                tasks.Add(Task.Run(() => Activators.WriteToXmlFolder<Activator, Activator.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Activators),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Activators)));
-                tasks.Add(Task.Run(() => AlchemicalApparatus.WriteToXmlFolder<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>(
+                tasks.Add(Task.Run(() => AlchemicalApparatus.WriteToXmlFolder<AlchemicalApparatus, AlchemicalApparatus.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(AlchemicalApparatus),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.AlchemicalApparatus)));
-                tasks.Add(Task.Run(() => Armors.WriteToXmlFolder<Armor, Armor_ErrorMask>(
+                tasks.Add(Task.Run(() => Armors.WriteToXmlFolder<Armor, Armor.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Armors),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Armors)));
-                tasks.Add(Task.Run(() => Books.WriteToXmlFolder<Book, Book_ErrorMask>(
+                tasks.Add(Task.Run(() => Books.WriteToXmlFolder<Book, Book.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Books),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Books)));
-                tasks.Add(Task.Run(() => Clothes.WriteToXmlFolder<Clothing, Clothing_ErrorMask>(
+                tasks.Add(Task.Run(() => Clothes.WriteToXmlFolder<Clothing, Clothing.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Clothes),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Clothes)));
-                tasks.Add(Task.Run(() => Containers.WriteToXmlFolder<Container, Container_ErrorMask>(
+                tasks.Add(Task.Run(() => Containers.WriteToXmlFolder<Container, Container.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Containers),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Containers)));
-                tasks.Add(Task.Run(() => Doors.WriteToXmlFolder<Door, Door_ErrorMask>(
+                tasks.Add(Task.Run(() => Doors.WriteToXmlFolder<Door, Door.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Doors),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Doors)));
-                tasks.Add(Task.Run(() => Ingredients.WriteToXmlFolder<Ingredient, Ingredient_ErrorMask>(
+                tasks.Add(Task.Run(() => Ingredients.WriteToXmlFolder<Ingredient, Ingredient.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Ingredients),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Ingredients)));
-                tasks.Add(Task.Run(() => Lights.WriteToXmlFolder<Light, Light_ErrorMask>(
+                tasks.Add(Task.Run(() => Lights.WriteToXmlFolder<Light, Light.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Lights),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Lights)));
-                tasks.Add(Task.Run(() => Miscellaneous.WriteToXmlFolder<Miscellaneous, Miscellaneous_ErrorMask>(
+                tasks.Add(Task.Run(() => Miscellaneous.WriteToXmlFolder<Miscellaneous, Miscellaneous.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Miscellaneous),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Miscellaneous)));
-                tasks.Add(Task.Run(() => Statics.WriteToXmlFolder<Static, Static_ErrorMask>(
+                tasks.Add(Task.Run(() => Statics.WriteToXmlFolder<Static, Static.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Statics),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Statics)));
-                tasks.Add(Task.Run(() => Grasses.WriteToXmlFolder<Grass, Grass_ErrorMask>(
+                tasks.Add(Task.Run(() => Grasses.WriteToXmlFolder<Grass, Grass.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Grasses),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Grasses)));
-                tasks.Add(Task.Run(() => Trees.WriteToXmlFolder<Tree, Tree_ErrorMask>(
+                tasks.Add(Task.Run(() => Trees.WriteToXmlFolder<Tree, Tree.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Trees),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Trees)));
-                tasks.Add(Task.Run(() => Flora.WriteToXmlFolder<Flora, Flora_ErrorMask>(
+                tasks.Add(Task.Run(() => Flora.WriteToXmlFolder<Flora, Flora.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Flora),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Flora)));
-                tasks.Add(Task.Run(() => Furnature.WriteToXmlFolder<Furnature, Furnature_ErrorMask>(
+                tasks.Add(Task.Run(() => Furnature.WriteToXmlFolder<Furnature, Furnature.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Furnature),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Furnature)));
-                tasks.Add(Task.Run(() => Weapons.WriteToXmlFolder<Weapon, Weapon_ErrorMask>(
+                tasks.Add(Task.Run(() => Weapons.WriteToXmlFolder<Weapon, Weapon.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Weapons),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Weapons)));
-                tasks.Add(Task.Run(() => Ammo.WriteToXmlFolder<Ammo, Ammo_ErrorMask>(
+                tasks.Add(Task.Run(() => Ammo.WriteToXmlFolder<Ammo, Ammo.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Ammo),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Ammo)));
-                tasks.Add(Task.Run(() => NPCs.WriteToXmlFolder<NPC, NPC_ErrorMask>(
+                tasks.Add(Task.Run(() => NPCs.WriteToXmlFolder<NPC, NPC.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(NPCs),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.NPCs)));
-                tasks.Add(Task.Run(() => Creatures.WriteToXmlFolder<Creature, Creature_ErrorMask>(
+                tasks.Add(Task.Run(() => Creatures.WriteToXmlFolder<Creature, Creature.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Creatures),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Creatures)));
-                tasks.Add(Task.Run(() => LeveledCreatures.WriteToXmlFolder<LeveledCreature, LeveledCreature_ErrorMask>(
+                tasks.Add(Task.Run(() => LeveledCreatures.WriteToXmlFolder<LeveledCreature, LeveledCreature.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LeveledCreatures),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LeveledCreatures)));
-                tasks.Add(Task.Run(() => SoulGems.WriteToXmlFolder<SoulGem, SoulGem_ErrorMask>(
+                tasks.Add(Task.Run(() => SoulGems.WriteToXmlFolder<SoulGem, SoulGem.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(SoulGems),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.SoulGems)));
-                tasks.Add(Task.Run(() => Keys.WriteToXmlFolder<Key, Key_ErrorMask>(
+                tasks.Add(Task.Run(() => Keys.WriteToXmlFolder<Key, Key.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Keys),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Keys)));
-                tasks.Add(Task.Run(() => Potions.WriteToXmlFolder<Potion, Potion_ErrorMask>(
+                tasks.Add(Task.Run(() => Potions.WriteToXmlFolder<Potion, Potion.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Potions),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Potions)));
-                tasks.Add(Task.Run(() => Subspaces.WriteToXmlFolder<Subspace, Subspace_ErrorMask>(
+                tasks.Add(Task.Run(() => Subspaces.WriteToXmlFolder<Subspace, Subspace.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Subspaces),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Subspaces)));
-                tasks.Add(Task.Run(() => SigilStones.WriteToXmlFolder<SigilStone, SigilStone_ErrorMask>(
+                tasks.Add(Task.Run(() => SigilStones.WriteToXmlFolder<SigilStone, SigilStone.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(SigilStones),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.SigilStones)));
-                tasks.Add(Task.Run(() => LeveledItems.WriteToXmlFolder<LeveledItem, LeveledItem_ErrorMask>(
+                tasks.Add(Task.Run(() => LeveledItems.WriteToXmlFolder<LeveledItem, LeveledItem.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LeveledItems),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LeveledItems)));
-                tasks.Add(Task.Run(() => Weathers.WriteToXmlFolder<Weather, Weather_ErrorMask>(
+                tasks.Add(Task.Run(() => Weathers.WriteToXmlFolder<Weather, Weather.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Weathers),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Weathers)));
-                tasks.Add(Task.Run(() => Climates.WriteToXmlFolder<Climate, Climate_ErrorMask>(
+                tasks.Add(Task.Run(() => Climates.WriteToXmlFolder<Climate, Climate.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Climates),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Climates)));
-                tasks.Add(Task.Run(() => Regions.WriteToXmlFolder<Region, Region_ErrorMask>(
+                tasks.Add(Task.Run(() => Regions.WriteToXmlFolder<Region, Region.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Regions),
                     errorMask: errorMaskBuilder,
@@ -1951,52 +3951,52 @@ namespace Mutagen.Bethesda.Oblivion
                     name: nameof(Worldspaces),
                     index: (int)OblivionMod_FieldIndex.Worldspaces,
                     errorMask: errorMaskBuilder)));
-                tasks.Add(Task.Run(() => DialogTopics.WriteToXmlFolder<DialogTopic, DialogTopic_ErrorMask>(
+                tasks.Add(Task.Run(() => DialogTopics.WriteToXmlFolder<DialogTopic, DialogTopic.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(DialogTopics),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.DialogTopics)));
-                tasks.Add(Task.Run(() => Quests.WriteToXmlFolder<Quest, Quest_ErrorMask>(
+                tasks.Add(Task.Run(() => Quests.WriteToXmlFolder<Quest, Quest.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Quests),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Quests)));
-                tasks.Add(Task.Run(() => IdleAnimations.WriteToXmlFolder<IdleAnimation, IdleAnimation_ErrorMask>(
+                tasks.Add(Task.Run(() => IdleAnimations.WriteToXmlFolder<IdleAnimation, IdleAnimation.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(IdleAnimations),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.IdleAnimations)));
-                tasks.Add(Task.Run(() => AIPackages.WriteToXmlFolder<AIPackage, AIPackage_ErrorMask>(
+                tasks.Add(Task.Run(() => AIPackages.WriteToXmlFolder<AIPackage, AIPackage.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(AIPackages),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.AIPackages)));
-                tasks.Add(Task.Run(() => CombatStyles.WriteToXmlFolder<CombatStyle, CombatStyle_ErrorMask>(
+                tasks.Add(Task.Run(() => CombatStyles.WriteToXmlFolder<CombatStyle, CombatStyle.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(CombatStyles),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.CombatStyles)));
-                tasks.Add(Task.Run(() => LoadScreens.WriteToXmlFolder<LoadScreen, LoadScreen_ErrorMask>(
+                tasks.Add(Task.Run(() => LoadScreens.WriteToXmlFolder<LoadScreen, LoadScreen.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LoadScreens),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LoadScreens)));
-                tasks.Add(Task.Run(() => LeveledSpells.WriteToXmlFolder<LeveledSpell, LeveledSpell_ErrorMask>(
+                tasks.Add(Task.Run(() => LeveledSpells.WriteToXmlFolder<LeveledSpell, LeveledSpell.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LeveledSpells),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.LeveledSpells)));
-                tasks.Add(Task.Run(() => AnimatedObjects.WriteToXmlFolder<AnimatedObject, AnimatedObject_ErrorMask>(
+                tasks.Add(Task.Run(() => AnimatedObjects.WriteToXmlFolder<AnimatedObject, AnimatedObject.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(AnimatedObjects),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.AnimatedObjects)));
-                tasks.Add(Task.Run(() => Waters.WriteToXmlFolder<Water, Water_ErrorMask>(
+                tasks.Add(Task.Run(() => Waters.WriteToXmlFolder<Water, Water.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Waters),
                     errorMask: errorMaskBuilder,
                     index: (int)OblivionMod_FieldIndex.Waters)));
-                tasks.Add(Task.Run(() => EffectShaders.WriteToXmlFolder<EffectShader, EffectShader_ErrorMask>(
+                tasks.Add(Task.Run(() => EffectShaders.WriteToXmlFolder<EffectShader, EffectShader.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(EffectShaders),
                     errorMask: errorMaskBuilder,
@@ -2313,7 +4313,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static OblivionMod_Mask<bool> GetEqualsMask(
+        public static OblivionMod.Mask<bool> GetEqualsMask(
             this IOblivionModGetter item,
             IOblivionModGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -2327,7 +4327,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IOblivionModGetter item,
             string? name = null,
-            OblivionMod_Mask<bool>? printMask = null)
+            OblivionMod.Mask<bool>? printMask = null)
         {
             return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -2339,7 +4339,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             FileGeneration fg,
             string? name = null,
-            OblivionMod_Mask<bool>? printMask = null)
+            OblivionMod.Mask<bool>? printMask = null)
         {
             ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -2350,16 +4350,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IOblivionModGetter item,
-            OblivionMod_Mask<bool?> checkMask)
+            OblivionMod.Mask<bool?> checkMask)
         {
             return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static OblivionMod_Mask<bool> GetHasBeenSetMask(this IOblivionModGetter item)
+        public static OblivionMod.Mask<bool> GetHasBeenSetMask(this IOblivionModGetter item)
         {
-            var ret = new OblivionMod_Mask<bool>(false);
+            var ret = new OblivionMod.Mask<bool>(false);
             ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -2378,7 +4378,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
-            OblivionMod_TranslationMask? copyMask = null)
+            OblivionMod.TranslationMask? copyMask = null)
         {
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -2390,8 +4390,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? copyMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -2399,7 +4399,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OblivionMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -2417,7 +4417,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod DeepCopy(
             this IOblivionModGetter item,
-            OblivionMod_TranslationMask? copyMask = null)
+            OblivionMod.TranslationMask? copyMask = null)
         {
             return ((OblivionModSetterTranslationCommon)((IOblivionModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -2426,8 +4426,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod DeepCopy(
             this IOblivionModGetter item,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? copyMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? copyMask = null)
         {
             return ((OblivionModSetterTranslationCommon)((IOblivionModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -2451,7 +4451,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IOblivionMod item,
             XElement node,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -2464,8 +4464,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IOblivionMod item,
             XElement node,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -2473,7 +4473,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OblivionMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -2492,7 +4492,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IOblivionMod item,
             string path,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -2504,8 +4504,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IOblivionMod item,
             string path,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -2519,7 +4519,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             string path,
             ErrorMaskBuilder? errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -2532,7 +4532,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IOblivionMod item,
             Stream stream,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -2544,8 +4544,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IOblivionMod item,
             Stream stream,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -2559,7 +4559,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -2817,9 +4817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 57;
 
-        public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
+        public static readonly Type MaskType = typeof(OblivionMod.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(OblivionMod_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(OblivionMod.ErrorMask);
 
         public static readonly Type ClassType = typeof(OblivionMod);
 
@@ -4784,12 +6784,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly OblivionModCommon Instance = new OblivionModCommon();
 
-        public OblivionMod_Mask<bool> GetEqualsMask(
+        public OblivionMod.Mask<bool> GetEqualsMask(
             IOblivionModGetter item,
             IOblivionModGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new OblivionMod_Mask<bool>(false);
+            var ret = new OblivionMod.Mask<bool>(false);
             ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -4801,7 +6801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IOblivionModGetter item,
             IOblivionModGetter rhs,
-            OblivionMod_Mask<bool> ret,
+            OblivionMod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -4867,7 +6867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IOblivionModGetter item,
             string? name = null,
-            OblivionMod_Mask<bool>? printMask = null)
+            OblivionMod.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -4882,7 +6882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             FileGeneration fg,
             string? name = null,
-            OblivionMod_Mask<bool>? printMask = null)
+            OblivionMod.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -4906,7 +6906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IOblivionModGetter item,
             FileGeneration fg,
-            OblivionMod_Mask<bool>? printMask = null)
+            OblivionMod.Mask<bool>? printMask = null)
         {
             if (printMask?.ModHeader?.Overall ?? true)
             {
@@ -5140,72 +7140,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IOblivionModGetter item,
-            OblivionMod_Mask<bool?> checkMask)
+            OblivionMod.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IOblivionModGetter item,
-            OblivionMod_Mask<bool> mask)
+            OblivionMod.Mask<bool> mask)
         {
-            mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
-            mask.GameSettings = new MaskItem<bool, Group_Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
-            mask.Globals = new MaskItem<bool, Group_Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
-            mask.Classes = new MaskItem<bool, Group_Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
-            mask.Factions = new MaskItem<bool, Group_Mask<bool>?>(true, item.Factions?.GetHasBeenSetMask());
-            mask.Hairs = new MaskItem<bool, Group_Mask<bool>?>(true, item.Hairs?.GetHasBeenSetMask());
-            mask.Eyes = new MaskItem<bool, Group_Mask<bool>?>(true, item.Eyes?.GetHasBeenSetMask());
-            mask.Races = new MaskItem<bool, Group_Mask<bool>?>(true, item.Races?.GetHasBeenSetMask());
-            mask.Sounds = new MaskItem<bool, Group_Mask<bool>?>(true, item.Sounds?.GetHasBeenSetMask());
-            mask.Skills = new MaskItem<bool, Group_Mask<bool>?>(true, item.Skills?.GetHasBeenSetMask());
-            mask.MagicEffects = new MaskItem<bool, Group_Mask<bool>?>(true, item.MagicEffects?.GetHasBeenSetMask());
-            mask.Scripts = new MaskItem<bool, Group_Mask<bool>?>(true, item.Scripts?.GetHasBeenSetMask());
-            mask.LandTextures = new MaskItem<bool, Group_Mask<bool>?>(true, item.LandTextures?.GetHasBeenSetMask());
-            mask.Enchantments = new MaskItem<bool, Group_Mask<bool>?>(true, item.Enchantments?.GetHasBeenSetMask());
-            mask.Spells = new MaskItem<bool, Group_Mask<bool>?>(true, item.Spells?.GetHasBeenSetMask());
-            mask.Birthsigns = new MaskItem<bool, Group_Mask<bool>?>(true, item.Birthsigns?.GetHasBeenSetMask());
-            mask.Activators = new MaskItem<bool, Group_Mask<bool>?>(true, item.Activators?.GetHasBeenSetMask());
-            mask.AlchemicalApparatus = new MaskItem<bool, Group_Mask<bool>?>(true, item.AlchemicalApparatus?.GetHasBeenSetMask());
-            mask.Armors = new MaskItem<bool, Group_Mask<bool>?>(true, item.Armors?.GetHasBeenSetMask());
-            mask.Books = new MaskItem<bool, Group_Mask<bool>?>(true, item.Books?.GetHasBeenSetMask());
-            mask.Clothes = new MaskItem<bool, Group_Mask<bool>?>(true, item.Clothes?.GetHasBeenSetMask());
-            mask.Containers = new MaskItem<bool, Group_Mask<bool>?>(true, item.Containers?.GetHasBeenSetMask());
-            mask.Doors = new MaskItem<bool, Group_Mask<bool>?>(true, item.Doors?.GetHasBeenSetMask());
-            mask.Ingredients = new MaskItem<bool, Group_Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
-            mask.Lights = new MaskItem<bool, Group_Mask<bool>?>(true, item.Lights?.GetHasBeenSetMask());
-            mask.Miscellaneous = new MaskItem<bool, Group_Mask<bool>?>(true, item.Miscellaneous?.GetHasBeenSetMask());
-            mask.Statics = new MaskItem<bool, Group_Mask<bool>?>(true, item.Statics?.GetHasBeenSetMask());
-            mask.Grasses = new MaskItem<bool, Group_Mask<bool>?>(true, item.Grasses?.GetHasBeenSetMask());
-            mask.Trees = new MaskItem<bool, Group_Mask<bool>?>(true, item.Trees?.GetHasBeenSetMask());
-            mask.Flora = new MaskItem<bool, Group_Mask<bool>?>(true, item.Flora?.GetHasBeenSetMask());
-            mask.Furnature = new MaskItem<bool, Group_Mask<bool>?>(true, item.Furnature?.GetHasBeenSetMask());
-            mask.Weapons = new MaskItem<bool, Group_Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
-            mask.Ammo = new MaskItem<bool, Group_Mask<bool>?>(true, item.Ammo?.GetHasBeenSetMask());
-            mask.NPCs = new MaskItem<bool, Group_Mask<bool>?>(true, item.NPCs?.GetHasBeenSetMask());
-            mask.Creatures = new MaskItem<bool, Group_Mask<bool>?>(true, item.Creatures?.GetHasBeenSetMask());
-            mask.LeveledCreatures = new MaskItem<bool, Group_Mask<bool>?>(true, item.LeveledCreatures?.GetHasBeenSetMask());
-            mask.SoulGems = new MaskItem<bool, Group_Mask<bool>?>(true, item.SoulGems?.GetHasBeenSetMask());
-            mask.Keys = new MaskItem<bool, Group_Mask<bool>?>(true, item.Keys?.GetHasBeenSetMask());
-            mask.Potions = new MaskItem<bool, Group_Mask<bool>?>(true, item.Potions?.GetHasBeenSetMask());
-            mask.Subspaces = new MaskItem<bool, Group_Mask<bool>?>(true, item.Subspaces?.GetHasBeenSetMask());
-            mask.SigilStones = new MaskItem<bool, Group_Mask<bool>?>(true, item.SigilStones?.GetHasBeenSetMask());
-            mask.LeveledItems = new MaskItem<bool, Group_Mask<bool>?>(true, item.LeveledItems?.GetHasBeenSetMask());
-            mask.Weathers = new MaskItem<bool, Group_Mask<bool>?>(true, item.Weathers?.GetHasBeenSetMask());
-            mask.Climates = new MaskItem<bool, Group_Mask<bool>?>(true, item.Climates?.GetHasBeenSetMask());
-            mask.Regions = new MaskItem<bool, Group_Mask<bool>?>(true, item.Regions?.GetHasBeenSetMask());
-            mask.Cells = new MaskItem<bool, ListGroup_Mask<bool>?>(true, item.Cells?.GetHasBeenSetMask());
-            mask.Worldspaces = new MaskItem<bool, Group_Mask<bool>?>(true, item.Worldspaces?.GetHasBeenSetMask());
-            mask.DialogTopics = new MaskItem<bool, Group_Mask<bool>?>(true, item.DialogTopics?.GetHasBeenSetMask());
-            mask.Quests = new MaskItem<bool, Group_Mask<bool>?>(true, item.Quests?.GetHasBeenSetMask());
-            mask.IdleAnimations = new MaskItem<bool, Group_Mask<bool>?>(true, item.IdleAnimations?.GetHasBeenSetMask());
-            mask.AIPackages = new MaskItem<bool, Group_Mask<bool>?>(true, item.AIPackages?.GetHasBeenSetMask());
-            mask.CombatStyles = new MaskItem<bool, Group_Mask<bool>?>(true, item.CombatStyles?.GetHasBeenSetMask());
-            mask.LoadScreens = new MaskItem<bool, Group_Mask<bool>?>(true, item.LoadScreens?.GetHasBeenSetMask());
-            mask.LeveledSpells = new MaskItem<bool, Group_Mask<bool>?>(true, item.LeveledSpells?.GetHasBeenSetMask());
-            mask.AnimatedObjects = new MaskItem<bool, Group_Mask<bool>?>(true, item.AnimatedObjects?.GetHasBeenSetMask());
-            mask.Waters = new MaskItem<bool, Group_Mask<bool>?>(true, item.Waters?.GetHasBeenSetMask());
-            mask.EffectShaders = new MaskItem<bool, Group_Mask<bool>?>(true, item.EffectShaders?.GetHasBeenSetMask());
+            mask.ModHeader = new MaskItem<bool, ModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
+            mask.GameSettings = new MaskItem<bool, Group.Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
+            mask.Globals = new MaskItem<bool, Group.Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
+            mask.Classes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
+            mask.Factions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Factions?.GetHasBeenSetMask());
+            mask.Hairs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hairs?.GetHasBeenSetMask());
+            mask.Eyes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Eyes?.GetHasBeenSetMask());
+            mask.Races = new MaskItem<bool, Group.Mask<bool>?>(true, item.Races?.GetHasBeenSetMask());
+            mask.Sounds = new MaskItem<bool, Group.Mask<bool>?>(true, item.Sounds?.GetHasBeenSetMask());
+            mask.Skills = new MaskItem<bool, Group.Mask<bool>?>(true, item.Skills?.GetHasBeenSetMask());
+            mask.MagicEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.MagicEffects?.GetHasBeenSetMask());
+            mask.Scripts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scripts?.GetHasBeenSetMask());
+            mask.LandTextures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LandTextures?.GetHasBeenSetMask());
+            mask.Enchantments = new MaskItem<bool, Group.Mask<bool>?>(true, item.Enchantments?.GetHasBeenSetMask());
+            mask.Spells = new MaskItem<bool, Group.Mask<bool>?>(true, item.Spells?.GetHasBeenSetMask());
+            mask.Birthsigns = new MaskItem<bool, Group.Mask<bool>?>(true, item.Birthsigns?.GetHasBeenSetMask());
+            mask.Activators = new MaskItem<bool, Group.Mask<bool>?>(true, item.Activators?.GetHasBeenSetMask());
+            mask.AlchemicalApparatus = new MaskItem<bool, Group.Mask<bool>?>(true, item.AlchemicalApparatus?.GetHasBeenSetMask());
+            mask.Armors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Armors?.GetHasBeenSetMask());
+            mask.Books = new MaskItem<bool, Group.Mask<bool>?>(true, item.Books?.GetHasBeenSetMask());
+            mask.Clothes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Clothes?.GetHasBeenSetMask());
+            mask.Containers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Containers?.GetHasBeenSetMask());
+            mask.Doors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Doors?.GetHasBeenSetMask());
+            mask.Ingredients = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
+            mask.Lights = new MaskItem<bool, Group.Mask<bool>?>(true, item.Lights?.GetHasBeenSetMask());
+            mask.Miscellaneous = new MaskItem<bool, Group.Mask<bool>?>(true, item.Miscellaneous?.GetHasBeenSetMask());
+            mask.Statics = new MaskItem<bool, Group.Mask<bool>?>(true, item.Statics?.GetHasBeenSetMask());
+            mask.Grasses = new MaskItem<bool, Group.Mask<bool>?>(true, item.Grasses?.GetHasBeenSetMask());
+            mask.Trees = new MaskItem<bool, Group.Mask<bool>?>(true, item.Trees?.GetHasBeenSetMask());
+            mask.Flora = new MaskItem<bool, Group.Mask<bool>?>(true, item.Flora?.GetHasBeenSetMask());
+            mask.Furnature = new MaskItem<bool, Group.Mask<bool>?>(true, item.Furnature?.GetHasBeenSetMask());
+            mask.Weapons = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
+            mask.Ammo = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammo?.GetHasBeenSetMask());
+            mask.NPCs = new MaskItem<bool, Group.Mask<bool>?>(true, item.NPCs?.GetHasBeenSetMask());
+            mask.Creatures = new MaskItem<bool, Group.Mask<bool>?>(true, item.Creatures?.GetHasBeenSetMask());
+            mask.LeveledCreatures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledCreatures?.GetHasBeenSetMask());
+            mask.SoulGems = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoulGems?.GetHasBeenSetMask());
+            mask.Keys = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keys?.GetHasBeenSetMask());
+            mask.Potions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Potions?.GetHasBeenSetMask());
+            mask.Subspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Subspaces?.GetHasBeenSetMask());
+            mask.SigilStones = new MaskItem<bool, Group.Mask<bool>?>(true, item.SigilStones?.GetHasBeenSetMask());
+            mask.LeveledItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledItems?.GetHasBeenSetMask());
+            mask.Weathers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weathers?.GetHasBeenSetMask());
+            mask.Climates = new MaskItem<bool, Group.Mask<bool>?>(true, item.Climates?.GetHasBeenSetMask());
+            mask.Regions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Regions?.GetHasBeenSetMask());
+            mask.Cells = new MaskItem<bool, ListGroup.Mask<bool>?>(true, item.Cells?.GetHasBeenSetMask());
+            mask.Worldspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Worldspaces?.GetHasBeenSetMask());
+            mask.DialogTopics = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogTopics?.GetHasBeenSetMask());
+            mask.Quests = new MaskItem<bool, Group.Mask<bool>?>(true, item.Quests?.GetHasBeenSetMask());
+            mask.IdleAnimations = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleAnimations?.GetHasBeenSetMask());
+            mask.AIPackages = new MaskItem<bool, Group.Mask<bool>?>(true, item.AIPackages?.GetHasBeenSetMask());
+            mask.CombatStyles = new MaskItem<bool, Group.Mask<bool>?>(true, item.CombatStyles?.GetHasBeenSetMask());
+            mask.LoadScreens = new MaskItem<bool, Group.Mask<bool>?>(true, item.LoadScreens?.GetHasBeenSetMask());
+            mask.LeveledSpells = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledSpells?.GetHasBeenSetMask());
+            mask.AnimatedObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.AnimatedObjects?.GetHasBeenSetMask());
+            mask.Waters = new MaskItem<bool, Group.Mask<bool>?>(true, item.Waters?.GetHasBeenSetMask());
+            mask.EffectShaders = new MaskItem<bool, Group.Mask<bool>?>(true, item.EffectShaders?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -8156,7 +10156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public OblivionMod DeepCopy(
             IOblivionModGetter item,
-            OblivionMod_TranslationMask? copyMask = null)
+            OblivionMod.TranslationMask? copyMask = null)
         {
             OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -8167,8 +10167,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public OblivionMod DeepCopy(
             IOblivionModGetter item,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? copyMask = null)
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? copyMask = null)
         {
             OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -10033,8 +12033,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IOblivionModGetter item,
             XElement node,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null,
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -10044,14 +12044,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OblivionMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IOblivionModGetter item,
             string path,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null,
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -10084,8 +12084,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IOblivionModGetter item,
             Stream stream,
-            out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask? translationMask = null,
+            out OblivionMod.ErrorMask errorMask,
+            OblivionMod.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -10134,7 +12134,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             XElement node,
             string? name = null,
-            OblivionMod_TranslationMask? translationMask = null)
+            OblivionMod.TranslationMask? translationMask = null)
         {
             ((OblivionModXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -10178,2007 +12178,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class OblivionMod_Mask<T> :
-        IMask<T>,
-        IEquatable<OblivionMod_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public OblivionMod_Mask(T initialValue)
-        {
-            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>?>(initialValue, new ModHeader_Mask<T>(initialValue));
-            this.GameSettings = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Globals = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Classes = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Factions = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Hairs = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Eyes = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Races = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Sounds = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Skills = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.MagicEffects = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Scripts = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.LandTextures = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Enchantments = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Spells = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Birthsigns = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Activators = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.AlchemicalApparatus = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Armors = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Books = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Clothes = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Containers = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Doors = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Ingredients = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Lights = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Miscellaneous = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Statics = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Grasses = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Trees = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Flora = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Furnature = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Weapons = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Ammo = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.NPCs = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Creatures = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.LeveledCreatures = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.SoulGems = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Keys = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Potions = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Subspaces = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.SigilStones = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.LeveledItems = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Weathers = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Climates = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Regions = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Cells = new MaskItem<T, ListGroup_Mask<T>?>(initialValue, new ListGroup_Mask<T>(initialValue));
-            this.Worldspaces = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.DialogTopics = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Quests = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.IdleAnimations = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.AIPackages = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.CombatStyles = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.LoadScreens = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.LeveledSpells = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.AnimatedObjects = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Waters = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.EffectShaders = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-        }
-
-        public OblivionMod_Mask(
-            T ModHeader,
-            T GameSettings,
-            T Globals,
-            T Classes,
-            T Factions,
-            T Hairs,
-            T Eyes,
-            T Races,
-            T Sounds,
-            T Skills,
-            T MagicEffects,
-            T Scripts,
-            T LandTextures,
-            T Enchantments,
-            T Spells,
-            T Birthsigns,
-            T Activators,
-            T AlchemicalApparatus,
-            T Armors,
-            T Books,
-            T Clothes,
-            T Containers,
-            T Doors,
-            T Ingredients,
-            T Lights,
-            T Miscellaneous,
-            T Statics,
-            T Grasses,
-            T Trees,
-            T Flora,
-            T Furnature,
-            T Weapons,
-            T Ammo,
-            T NPCs,
-            T Creatures,
-            T LeveledCreatures,
-            T SoulGems,
-            T Keys,
-            T Potions,
-            T Subspaces,
-            T SigilStones,
-            T LeveledItems,
-            T Weathers,
-            T Climates,
-            T Regions,
-            T Cells,
-            T Worldspaces,
-            T DialogTopics,
-            T Quests,
-            T IdleAnimations,
-            T AIPackages,
-            T CombatStyles,
-            T LoadScreens,
-            T LeveledSpells,
-            T AnimatedObjects,
-            T Waters,
-            T EffectShaders)
-        {
-            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>?>(ModHeader, new ModHeader_Mask<T>(ModHeader));
-            this.GameSettings = new MaskItem<T, Group_Mask<T>?>(GameSettings, new Group_Mask<T>(GameSettings));
-            this.Globals = new MaskItem<T, Group_Mask<T>?>(Globals, new Group_Mask<T>(Globals));
-            this.Classes = new MaskItem<T, Group_Mask<T>?>(Classes, new Group_Mask<T>(Classes));
-            this.Factions = new MaskItem<T, Group_Mask<T>?>(Factions, new Group_Mask<T>(Factions));
-            this.Hairs = new MaskItem<T, Group_Mask<T>?>(Hairs, new Group_Mask<T>(Hairs));
-            this.Eyes = new MaskItem<T, Group_Mask<T>?>(Eyes, new Group_Mask<T>(Eyes));
-            this.Races = new MaskItem<T, Group_Mask<T>?>(Races, new Group_Mask<T>(Races));
-            this.Sounds = new MaskItem<T, Group_Mask<T>?>(Sounds, new Group_Mask<T>(Sounds));
-            this.Skills = new MaskItem<T, Group_Mask<T>?>(Skills, new Group_Mask<T>(Skills));
-            this.MagicEffects = new MaskItem<T, Group_Mask<T>?>(MagicEffects, new Group_Mask<T>(MagicEffects));
-            this.Scripts = new MaskItem<T, Group_Mask<T>?>(Scripts, new Group_Mask<T>(Scripts));
-            this.LandTextures = new MaskItem<T, Group_Mask<T>?>(LandTextures, new Group_Mask<T>(LandTextures));
-            this.Enchantments = new MaskItem<T, Group_Mask<T>?>(Enchantments, new Group_Mask<T>(Enchantments));
-            this.Spells = new MaskItem<T, Group_Mask<T>?>(Spells, new Group_Mask<T>(Spells));
-            this.Birthsigns = new MaskItem<T, Group_Mask<T>?>(Birthsigns, new Group_Mask<T>(Birthsigns));
-            this.Activators = new MaskItem<T, Group_Mask<T>?>(Activators, new Group_Mask<T>(Activators));
-            this.AlchemicalApparatus = new MaskItem<T, Group_Mask<T>?>(AlchemicalApparatus, new Group_Mask<T>(AlchemicalApparatus));
-            this.Armors = new MaskItem<T, Group_Mask<T>?>(Armors, new Group_Mask<T>(Armors));
-            this.Books = new MaskItem<T, Group_Mask<T>?>(Books, new Group_Mask<T>(Books));
-            this.Clothes = new MaskItem<T, Group_Mask<T>?>(Clothes, new Group_Mask<T>(Clothes));
-            this.Containers = new MaskItem<T, Group_Mask<T>?>(Containers, new Group_Mask<T>(Containers));
-            this.Doors = new MaskItem<T, Group_Mask<T>?>(Doors, new Group_Mask<T>(Doors));
-            this.Ingredients = new MaskItem<T, Group_Mask<T>?>(Ingredients, new Group_Mask<T>(Ingredients));
-            this.Lights = new MaskItem<T, Group_Mask<T>?>(Lights, new Group_Mask<T>(Lights));
-            this.Miscellaneous = new MaskItem<T, Group_Mask<T>?>(Miscellaneous, new Group_Mask<T>(Miscellaneous));
-            this.Statics = new MaskItem<T, Group_Mask<T>?>(Statics, new Group_Mask<T>(Statics));
-            this.Grasses = new MaskItem<T, Group_Mask<T>?>(Grasses, new Group_Mask<T>(Grasses));
-            this.Trees = new MaskItem<T, Group_Mask<T>?>(Trees, new Group_Mask<T>(Trees));
-            this.Flora = new MaskItem<T, Group_Mask<T>?>(Flora, new Group_Mask<T>(Flora));
-            this.Furnature = new MaskItem<T, Group_Mask<T>?>(Furnature, new Group_Mask<T>(Furnature));
-            this.Weapons = new MaskItem<T, Group_Mask<T>?>(Weapons, new Group_Mask<T>(Weapons));
-            this.Ammo = new MaskItem<T, Group_Mask<T>?>(Ammo, new Group_Mask<T>(Ammo));
-            this.NPCs = new MaskItem<T, Group_Mask<T>?>(NPCs, new Group_Mask<T>(NPCs));
-            this.Creatures = new MaskItem<T, Group_Mask<T>?>(Creatures, new Group_Mask<T>(Creatures));
-            this.LeveledCreatures = new MaskItem<T, Group_Mask<T>?>(LeveledCreatures, new Group_Mask<T>(LeveledCreatures));
-            this.SoulGems = new MaskItem<T, Group_Mask<T>?>(SoulGems, new Group_Mask<T>(SoulGems));
-            this.Keys = new MaskItem<T, Group_Mask<T>?>(Keys, new Group_Mask<T>(Keys));
-            this.Potions = new MaskItem<T, Group_Mask<T>?>(Potions, new Group_Mask<T>(Potions));
-            this.Subspaces = new MaskItem<T, Group_Mask<T>?>(Subspaces, new Group_Mask<T>(Subspaces));
-            this.SigilStones = new MaskItem<T, Group_Mask<T>?>(SigilStones, new Group_Mask<T>(SigilStones));
-            this.LeveledItems = new MaskItem<T, Group_Mask<T>?>(LeveledItems, new Group_Mask<T>(LeveledItems));
-            this.Weathers = new MaskItem<T, Group_Mask<T>?>(Weathers, new Group_Mask<T>(Weathers));
-            this.Climates = new MaskItem<T, Group_Mask<T>?>(Climates, new Group_Mask<T>(Climates));
-            this.Regions = new MaskItem<T, Group_Mask<T>?>(Regions, new Group_Mask<T>(Regions));
-            this.Cells = new MaskItem<T, ListGroup_Mask<T>?>(Cells, new ListGroup_Mask<T>(Cells));
-            this.Worldspaces = new MaskItem<T, Group_Mask<T>?>(Worldspaces, new Group_Mask<T>(Worldspaces));
-            this.DialogTopics = new MaskItem<T, Group_Mask<T>?>(DialogTopics, new Group_Mask<T>(DialogTopics));
-            this.Quests = new MaskItem<T, Group_Mask<T>?>(Quests, new Group_Mask<T>(Quests));
-            this.IdleAnimations = new MaskItem<T, Group_Mask<T>?>(IdleAnimations, new Group_Mask<T>(IdleAnimations));
-            this.AIPackages = new MaskItem<T, Group_Mask<T>?>(AIPackages, new Group_Mask<T>(AIPackages));
-            this.CombatStyles = new MaskItem<T, Group_Mask<T>?>(CombatStyles, new Group_Mask<T>(CombatStyles));
-            this.LoadScreens = new MaskItem<T, Group_Mask<T>?>(LoadScreens, new Group_Mask<T>(LoadScreens));
-            this.LeveledSpells = new MaskItem<T, Group_Mask<T>?>(LeveledSpells, new Group_Mask<T>(LeveledSpells));
-            this.AnimatedObjects = new MaskItem<T, Group_Mask<T>?>(AnimatedObjects, new Group_Mask<T>(AnimatedObjects));
-            this.Waters = new MaskItem<T, Group_Mask<T>?>(Waters, new Group_Mask<T>(Waters));
-            this.EffectShaders = new MaskItem<T, Group_Mask<T>?>(EffectShaders, new Group_Mask<T>(EffectShaders));
-        }
-
-        #pragma warning disable CS8618
-        protected OblivionMod_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, ModHeader_Mask<T>?>? ModHeader { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? GameSettings { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Globals { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Classes { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Factions { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Hairs { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Eyes { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Races { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Sounds { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Skills { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? MagicEffects { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Scripts { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? LandTextures { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Enchantments { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Spells { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Birthsigns { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Activators { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? AlchemicalApparatus { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Armors { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Books { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Clothes { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Containers { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Doors { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Ingredients { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Lights { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Miscellaneous { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Statics { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Grasses { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Trees { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Flora { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Furnature { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Weapons { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Ammo { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? NPCs { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Creatures { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? LeveledCreatures { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? SoulGems { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Keys { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Potions { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Subspaces { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? SigilStones { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? LeveledItems { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Weathers { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Climates { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Regions { get; set; }
-        public MaskItem<T, ListGroup_Mask<T>?>? Cells { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Worldspaces { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? DialogTopics { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Quests { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? IdleAnimations { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? AIPackages { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? CombatStyles { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? LoadScreens { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? LeveledSpells { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? AnimatedObjects { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Waters { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? EffectShaders { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is OblivionMod_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(OblivionMod_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
-            if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(this.Globals, rhs.Globals)) return false;
-            if (!object.Equals(this.Classes, rhs.Classes)) return false;
-            if (!object.Equals(this.Factions, rhs.Factions)) return false;
-            if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
-            if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(this.Races, rhs.Races)) return false;
-            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-            if (!object.Equals(this.Skills, rhs.Skills)) return false;
-            if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
-            if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
-            if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
-            if (!object.Equals(this.Enchantments, rhs.Enchantments)) return false;
-            if (!object.Equals(this.Spells, rhs.Spells)) return false;
-            if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
-            if (!object.Equals(this.Activators, rhs.Activators)) return false;
-            if (!object.Equals(this.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
-            if (!object.Equals(this.Armors, rhs.Armors)) return false;
-            if (!object.Equals(this.Books, rhs.Books)) return false;
-            if (!object.Equals(this.Clothes, rhs.Clothes)) return false;
-            if (!object.Equals(this.Containers, rhs.Containers)) return false;
-            if (!object.Equals(this.Doors, rhs.Doors)) return false;
-            if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
-            if (!object.Equals(this.Lights, rhs.Lights)) return false;
-            if (!object.Equals(this.Miscellaneous, rhs.Miscellaneous)) return false;
-            if (!object.Equals(this.Statics, rhs.Statics)) return false;
-            if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(this.Trees, rhs.Trees)) return false;
-            if (!object.Equals(this.Flora, rhs.Flora)) return false;
-            if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
-            if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
-            if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
-            if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
-            if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
-            if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
-            if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
-            if (!object.Equals(this.Keys, rhs.Keys)) return false;
-            if (!object.Equals(this.Potions, rhs.Potions)) return false;
-            if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
-            if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
-            if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
-            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
-            if (!object.Equals(this.Climates, rhs.Climates)) return false;
-            if (!object.Equals(this.Regions, rhs.Regions)) return false;
-            if (!object.Equals(this.Cells, rhs.Cells)) return false;
-            if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
-            if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
-            if (!object.Equals(this.Quests, rhs.Quests)) return false;
-            if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
-            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
-            if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
-            if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
-            if (!object.Equals(this.LeveledSpells, rhs.LeveledSpells)) return false;
-            if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
-            if (!object.Equals(this.Waters, rhs.Waters)) return false;
-            if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
-            ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
-            ret = ret.CombineHashCode(this.Globals?.GetHashCode());
-            ret = ret.CombineHashCode(this.Classes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Factions?.GetHashCode());
-            ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
-            ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Races?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
-            ret = ret.CombineHashCode(this.Skills?.GetHashCode());
-            ret = ret.CombineHashCode(this.MagicEffects?.GetHashCode());
-            ret = ret.CombineHashCode(this.Scripts?.GetHashCode());
-            ret = ret.CombineHashCode(this.LandTextures?.GetHashCode());
-            ret = ret.CombineHashCode(this.Enchantments?.GetHashCode());
-            ret = ret.CombineHashCode(this.Spells?.GetHashCode());
-            ret = ret.CombineHashCode(this.Birthsigns?.GetHashCode());
-            ret = ret.CombineHashCode(this.Activators?.GetHashCode());
-            ret = ret.CombineHashCode(this.AlchemicalApparatus?.GetHashCode());
-            ret = ret.CombineHashCode(this.Armors?.GetHashCode());
-            ret = ret.CombineHashCode(this.Books?.GetHashCode());
-            ret = ret.CombineHashCode(this.Clothes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Containers?.GetHashCode());
-            ret = ret.CombineHashCode(this.Doors?.GetHashCode());
-            ret = ret.CombineHashCode(this.Ingredients?.GetHashCode());
-            ret = ret.CombineHashCode(this.Lights?.GetHashCode());
-            ret = ret.CombineHashCode(this.Miscellaneous?.GetHashCode());
-            ret = ret.CombineHashCode(this.Statics?.GetHashCode());
-            ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
-            ret = ret.CombineHashCode(this.Trees?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flora?.GetHashCode());
-            ret = ret.CombineHashCode(this.Furnature?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weapons?.GetHashCode());
-            ret = ret.CombineHashCode(this.Ammo?.GetHashCode());
-            ret = ret.CombineHashCode(this.NPCs?.GetHashCode());
-            ret = ret.CombineHashCode(this.Creatures?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeveledCreatures?.GetHashCode());
-            ret = ret.CombineHashCode(this.SoulGems?.GetHashCode());
-            ret = ret.CombineHashCode(this.Keys?.GetHashCode());
-            ret = ret.CombineHashCode(this.Potions?.GetHashCode());
-            ret = ret.CombineHashCode(this.Subspaces?.GetHashCode());
-            ret = ret.CombineHashCode(this.SigilStones?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeveledItems?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
-            ret = ret.CombineHashCode(this.Climates?.GetHashCode());
-            ret = ret.CombineHashCode(this.Regions?.GetHashCode());
-            ret = ret.CombineHashCode(this.Cells?.GetHashCode());
-            ret = ret.CombineHashCode(this.Worldspaces?.GetHashCode());
-            ret = ret.CombineHashCode(this.DialogTopics?.GetHashCode());
-            ret = ret.CombineHashCode(this.Quests?.GetHashCode());
-            ret = ret.CombineHashCode(this.IdleAnimations?.GetHashCode());
-            ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
-            ret = ret.CombineHashCode(this.CombatStyles?.GetHashCode());
-            ret = ret.CombineHashCode(this.LoadScreens?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeveledSpells?.GetHashCode());
-            ret = ret.CombineHashCode(this.AnimatedObjects?.GetHashCode());
-            ret = ret.CombineHashCode(this.Waters?.GetHashCode());
-            ret = ret.CombineHashCode(this.EffectShaders?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (ModHeader != null)
-            {
-                if (!eval(this.ModHeader.Overall)) return false;
-                if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
-            }
-            if (GameSettings != null)
-            {
-                if (!eval(this.GameSettings.Overall)) return false;
-                if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
-            }
-            if (Globals != null)
-            {
-                if (!eval(this.Globals.Overall)) return false;
-                if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
-            }
-            if (Classes != null)
-            {
-                if (!eval(this.Classes.Overall)) return false;
-                if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
-            }
-            if (Factions != null)
-            {
-                if (!eval(this.Factions.Overall)) return false;
-                if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
-            }
-            if (Hairs != null)
-            {
-                if (!eval(this.Hairs.Overall)) return false;
-                if (this.Hairs.Specific != null && !this.Hairs.Specific.AllEqual(eval)) return false;
-            }
-            if (Eyes != null)
-            {
-                if (!eval(this.Eyes.Overall)) return false;
-                if (this.Eyes.Specific != null && !this.Eyes.Specific.AllEqual(eval)) return false;
-            }
-            if (Races != null)
-            {
-                if (!eval(this.Races.Overall)) return false;
-                if (this.Races.Specific != null && !this.Races.Specific.AllEqual(eval)) return false;
-            }
-            if (Sounds != null)
-            {
-                if (!eval(this.Sounds.Overall)) return false;
-                if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
-            }
-            if (Skills != null)
-            {
-                if (!eval(this.Skills.Overall)) return false;
-                if (this.Skills.Specific != null && !this.Skills.Specific.AllEqual(eval)) return false;
-            }
-            if (MagicEffects != null)
-            {
-                if (!eval(this.MagicEffects.Overall)) return false;
-                if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.AllEqual(eval)) return false;
-            }
-            if (Scripts != null)
-            {
-                if (!eval(this.Scripts.Overall)) return false;
-                if (this.Scripts.Specific != null && !this.Scripts.Specific.AllEqual(eval)) return false;
-            }
-            if (LandTextures != null)
-            {
-                if (!eval(this.LandTextures.Overall)) return false;
-                if (this.LandTextures.Specific != null && !this.LandTextures.Specific.AllEqual(eval)) return false;
-            }
-            if (Enchantments != null)
-            {
-                if (!eval(this.Enchantments.Overall)) return false;
-                if (this.Enchantments.Specific != null && !this.Enchantments.Specific.AllEqual(eval)) return false;
-            }
-            if (Spells != null)
-            {
-                if (!eval(this.Spells.Overall)) return false;
-                if (this.Spells.Specific != null && !this.Spells.Specific.AllEqual(eval)) return false;
-            }
-            if (Birthsigns != null)
-            {
-                if (!eval(this.Birthsigns.Overall)) return false;
-                if (this.Birthsigns.Specific != null && !this.Birthsigns.Specific.AllEqual(eval)) return false;
-            }
-            if (Activators != null)
-            {
-                if (!eval(this.Activators.Overall)) return false;
-                if (this.Activators.Specific != null && !this.Activators.Specific.AllEqual(eval)) return false;
-            }
-            if (AlchemicalApparatus != null)
-            {
-                if (!eval(this.AlchemicalApparatus.Overall)) return false;
-                if (this.AlchemicalApparatus.Specific != null && !this.AlchemicalApparatus.Specific.AllEqual(eval)) return false;
-            }
-            if (Armors != null)
-            {
-                if (!eval(this.Armors.Overall)) return false;
-                if (this.Armors.Specific != null && !this.Armors.Specific.AllEqual(eval)) return false;
-            }
-            if (Books != null)
-            {
-                if (!eval(this.Books.Overall)) return false;
-                if (this.Books.Specific != null && !this.Books.Specific.AllEqual(eval)) return false;
-            }
-            if (Clothes != null)
-            {
-                if (!eval(this.Clothes.Overall)) return false;
-                if (this.Clothes.Specific != null && !this.Clothes.Specific.AllEqual(eval)) return false;
-            }
-            if (Containers != null)
-            {
-                if (!eval(this.Containers.Overall)) return false;
-                if (this.Containers.Specific != null && !this.Containers.Specific.AllEqual(eval)) return false;
-            }
-            if (Doors != null)
-            {
-                if (!eval(this.Doors.Overall)) return false;
-                if (this.Doors.Specific != null && !this.Doors.Specific.AllEqual(eval)) return false;
-            }
-            if (Ingredients != null)
-            {
-                if (!eval(this.Ingredients.Overall)) return false;
-                if (this.Ingredients.Specific != null && !this.Ingredients.Specific.AllEqual(eval)) return false;
-            }
-            if (Lights != null)
-            {
-                if (!eval(this.Lights.Overall)) return false;
-                if (this.Lights.Specific != null && !this.Lights.Specific.AllEqual(eval)) return false;
-            }
-            if (Miscellaneous != null)
-            {
-                if (!eval(this.Miscellaneous.Overall)) return false;
-                if (this.Miscellaneous.Specific != null && !this.Miscellaneous.Specific.AllEqual(eval)) return false;
-            }
-            if (Statics != null)
-            {
-                if (!eval(this.Statics.Overall)) return false;
-                if (this.Statics.Specific != null && !this.Statics.Specific.AllEqual(eval)) return false;
-            }
-            if (Grasses != null)
-            {
-                if (!eval(this.Grasses.Overall)) return false;
-                if (this.Grasses.Specific != null && !this.Grasses.Specific.AllEqual(eval)) return false;
-            }
-            if (Trees != null)
-            {
-                if (!eval(this.Trees.Overall)) return false;
-                if (this.Trees.Specific != null && !this.Trees.Specific.AllEqual(eval)) return false;
-            }
-            if (Flora != null)
-            {
-                if (!eval(this.Flora.Overall)) return false;
-                if (this.Flora.Specific != null && !this.Flora.Specific.AllEqual(eval)) return false;
-            }
-            if (Furnature != null)
-            {
-                if (!eval(this.Furnature.Overall)) return false;
-                if (this.Furnature.Specific != null && !this.Furnature.Specific.AllEqual(eval)) return false;
-            }
-            if (Weapons != null)
-            {
-                if (!eval(this.Weapons.Overall)) return false;
-                if (this.Weapons.Specific != null && !this.Weapons.Specific.AllEqual(eval)) return false;
-            }
-            if (Ammo != null)
-            {
-                if (!eval(this.Ammo.Overall)) return false;
-                if (this.Ammo.Specific != null && !this.Ammo.Specific.AllEqual(eval)) return false;
-            }
-            if (NPCs != null)
-            {
-                if (!eval(this.NPCs.Overall)) return false;
-                if (this.NPCs.Specific != null && !this.NPCs.Specific.AllEqual(eval)) return false;
-            }
-            if (Creatures != null)
-            {
-                if (!eval(this.Creatures.Overall)) return false;
-                if (this.Creatures.Specific != null && !this.Creatures.Specific.AllEqual(eval)) return false;
-            }
-            if (LeveledCreatures != null)
-            {
-                if (!eval(this.LeveledCreatures.Overall)) return false;
-                if (this.LeveledCreatures.Specific != null && !this.LeveledCreatures.Specific.AllEqual(eval)) return false;
-            }
-            if (SoulGems != null)
-            {
-                if (!eval(this.SoulGems.Overall)) return false;
-                if (this.SoulGems.Specific != null && !this.SoulGems.Specific.AllEqual(eval)) return false;
-            }
-            if (Keys != null)
-            {
-                if (!eval(this.Keys.Overall)) return false;
-                if (this.Keys.Specific != null && !this.Keys.Specific.AllEqual(eval)) return false;
-            }
-            if (Potions != null)
-            {
-                if (!eval(this.Potions.Overall)) return false;
-                if (this.Potions.Specific != null && !this.Potions.Specific.AllEqual(eval)) return false;
-            }
-            if (Subspaces != null)
-            {
-                if (!eval(this.Subspaces.Overall)) return false;
-                if (this.Subspaces.Specific != null && !this.Subspaces.Specific.AllEqual(eval)) return false;
-            }
-            if (SigilStones != null)
-            {
-                if (!eval(this.SigilStones.Overall)) return false;
-                if (this.SigilStones.Specific != null && !this.SigilStones.Specific.AllEqual(eval)) return false;
-            }
-            if (LeveledItems != null)
-            {
-                if (!eval(this.LeveledItems.Overall)) return false;
-                if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.AllEqual(eval)) return false;
-            }
-            if (Weathers != null)
-            {
-                if (!eval(this.Weathers.Overall)) return false;
-                if (this.Weathers.Specific != null && !this.Weathers.Specific.AllEqual(eval)) return false;
-            }
-            if (Climates != null)
-            {
-                if (!eval(this.Climates.Overall)) return false;
-                if (this.Climates.Specific != null && !this.Climates.Specific.AllEqual(eval)) return false;
-            }
-            if (Regions != null)
-            {
-                if (!eval(this.Regions.Overall)) return false;
-                if (this.Regions.Specific != null && !this.Regions.Specific.AllEqual(eval)) return false;
-            }
-            if (Cells != null)
-            {
-                if (!eval(this.Cells.Overall)) return false;
-                if (this.Cells.Specific != null && !this.Cells.Specific.AllEqual(eval)) return false;
-            }
-            if (Worldspaces != null)
-            {
-                if (!eval(this.Worldspaces.Overall)) return false;
-                if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.AllEqual(eval)) return false;
-            }
-            if (DialogTopics != null)
-            {
-                if (!eval(this.DialogTopics.Overall)) return false;
-                if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.AllEqual(eval)) return false;
-            }
-            if (Quests != null)
-            {
-                if (!eval(this.Quests.Overall)) return false;
-                if (this.Quests.Specific != null && !this.Quests.Specific.AllEqual(eval)) return false;
-            }
-            if (IdleAnimations != null)
-            {
-                if (!eval(this.IdleAnimations.Overall)) return false;
-                if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.AllEqual(eval)) return false;
-            }
-            if (AIPackages != null)
-            {
-                if (!eval(this.AIPackages.Overall)) return false;
-                if (this.AIPackages.Specific != null && !this.AIPackages.Specific.AllEqual(eval)) return false;
-            }
-            if (CombatStyles != null)
-            {
-                if (!eval(this.CombatStyles.Overall)) return false;
-                if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.AllEqual(eval)) return false;
-            }
-            if (LoadScreens != null)
-            {
-                if (!eval(this.LoadScreens.Overall)) return false;
-                if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.AllEqual(eval)) return false;
-            }
-            if (LeveledSpells != null)
-            {
-                if (!eval(this.LeveledSpells.Overall)) return false;
-                if (this.LeveledSpells.Specific != null && !this.LeveledSpells.Specific.AllEqual(eval)) return false;
-            }
-            if (AnimatedObjects != null)
-            {
-                if (!eval(this.AnimatedObjects.Overall)) return false;
-                if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.AllEqual(eval)) return false;
-            }
-            if (Waters != null)
-            {
-                if (!eval(this.Waters.Overall)) return false;
-                if (this.Waters.Specific != null && !this.Waters.Specific.AllEqual(eval)) return false;
-            }
-            if (EffectShaders != null)
-            {
-                if (!eval(this.EffectShaders.Overall)) return false;
-                if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public OblivionMod_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new OblivionMod_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(OblivionMod_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader_Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
-            obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
-            obj.Globals = this.Globals == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
-            obj.Classes = this.Classes == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
-            obj.Factions = this.Factions == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
-            obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
-            obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
-            obj.Races = this.Races == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
-            obj.Sounds = this.Sounds == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
-            obj.Skills = this.Skills == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Skills.Overall), this.Skills.Specific?.Translate(eval));
-            obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
-            obj.Scripts = this.Scripts == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Scripts.Overall), this.Scripts.Specific?.Translate(eval));
-            obj.LandTextures = this.LandTextures == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.LandTextures.Overall), this.LandTextures.Specific?.Translate(eval));
-            obj.Enchantments = this.Enchantments == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Enchantments.Overall), this.Enchantments.Specific?.Translate(eval));
-            obj.Spells = this.Spells == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
-            obj.Birthsigns = this.Birthsigns == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Birthsigns.Overall), this.Birthsigns.Specific?.Translate(eval));
-            obj.Activators = this.Activators == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
-            obj.AlchemicalApparatus = this.AlchemicalApparatus == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.AlchemicalApparatus.Overall), this.AlchemicalApparatus.Specific?.Translate(eval));
-            obj.Armors = this.Armors == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
-            obj.Books = this.Books == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
-            obj.Clothes = this.Clothes == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Clothes.Overall), this.Clothes.Specific?.Translate(eval));
-            obj.Containers = this.Containers == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
-            obj.Doors = this.Doors == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
-            obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
-            obj.Lights = this.Lights == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
-            obj.Miscellaneous = this.Miscellaneous == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Miscellaneous.Overall), this.Miscellaneous.Specific?.Translate(eval));
-            obj.Statics = this.Statics == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
-            obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
-            obj.Trees = this.Trees == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
-            obj.Flora = this.Flora == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Flora.Overall), this.Flora.Specific?.Translate(eval));
-            obj.Furnature = this.Furnature == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Furnature.Overall), this.Furnature.Specific?.Translate(eval));
-            obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
-            obj.Ammo = this.Ammo == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Ammo.Overall), this.Ammo.Specific?.Translate(eval));
-            obj.NPCs = this.NPCs == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.NPCs.Overall), this.NPCs.Specific?.Translate(eval));
-            obj.Creatures = this.Creatures == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
-            obj.LeveledCreatures = this.LeveledCreatures == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.LeveledCreatures.Overall), this.LeveledCreatures.Specific?.Translate(eval));
-            obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
-            obj.Keys = this.Keys == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
-            obj.Potions = this.Potions == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Potions.Overall), this.Potions.Specific?.Translate(eval));
-            obj.Subspaces = this.Subspaces == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Subspaces.Overall), this.Subspaces.Specific?.Translate(eval));
-            obj.SigilStones = this.SigilStones == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.SigilStones.Overall), this.SigilStones.Specific?.Translate(eval));
-            obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
-            obj.Weathers = this.Weathers == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
-            obj.Climates = this.Climates == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
-            obj.Regions = this.Regions == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
-            obj.Cells = this.Cells == null ? null : new MaskItem<R, ListGroup_Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
-            obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
-            obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
-            obj.Quests = this.Quests == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
-            obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
-            obj.AIPackages = this.AIPackages == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.AIPackages.Overall), this.AIPackages.Specific?.Translate(eval));
-            obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
-            obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
-            obj.LeveledSpells = this.LeveledSpells == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
-            obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
-            obj.Waters = this.Waters == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
-            obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(OblivionMod_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, OblivionMod_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(OblivionMod_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ModHeader?.Overall ?? true)
-                {
-                    ModHeader?.ToString(fg);
-                }
-                if (printMask?.GameSettings?.Overall ?? true)
-                {
-                    GameSettings?.ToString(fg);
-                }
-                if (printMask?.Globals?.Overall ?? true)
-                {
-                    Globals?.ToString(fg);
-                }
-                if (printMask?.Classes?.Overall ?? true)
-                {
-                    Classes?.ToString(fg);
-                }
-                if (printMask?.Factions?.Overall ?? true)
-                {
-                    Factions?.ToString(fg);
-                }
-                if (printMask?.Hairs?.Overall ?? true)
-                {
-                    Hairs?.ToString(fg);
-                }
-                if (printMask?.Eyes?.Overall ?? true)
-                {
-                    Eyes?.ToString(fg);
-                }
-                if (printMask?.Races?.Overall ?? true)
-                {
-                    Races?.ToString(fg);
-                }
-                if (printMask?.Sounds?.Overall ?? true)
-                {
-                    Sounds?.ToString(fg);
-                }
-                if (printMask?.Skills?.Overall ?? true)
-                {
-                    Skills?.ToString(fg);
-                }
-                if (printMask?.MagicEffects?.Overall ?? true)
-                {
-                    MagicEffects?.ToString(fg);
-                }
-                if (printMask?.Scripts?.Overall ?? true)
-                {
-                    Scripts?.ToString(fg);
-                }
-                if (printMask?.LandTextures?.Overall ?? true)
-                {
-                    LandTextures?.ToString(fg);
-                }
-                if (printMask?.Enchantments?.Overall ?? true)
-                {
-                    Enchantments?.ToString(fg);
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    Spells?.ToString(fg);
-                }
-                if (printMask?.Birthsigns?.Overall ?? true)
-                {
-                    Birthsigns?.ToString(fg);
-                }
-                if (printMask?.Activators?.Overall ?? true)
-                {
-                    Activators?.ToString(fg);
-                }
-                if (printMask?.AlchemicalApparatus?.Overall ?? true)
-                {
-                    AlchemicalApparatus?.ToString(fg);
-                }
-                if (printMask?.Armors?.Overall ?? true)
-                {
-                    Armors?.ToString(fg);
-                }
-                if (printMask?.Books?.Overall ?? true)
-                {
-                    Books?.ToString(fg);
-                }
-                if (printMask?.Clothes?.Overall ?? true)
-                {
-                    Clothes?.ToString(fg);
-                }
-                if (printMask?.Containers?.Overall ?? true)
-                {
-                    Containers?.ToString(fg);
-                }
-                if (printMask?.Doors?.Overall ?? true)
-                {
-                    Doors?.ToString(fg);
-                }
-                if (printMask?.Ingredients?.Overall ?? true)
-                {
-                    Ingredients?.ToString(fg);
-                }
-                if (printMask?.Lights?.Overall ?? true)
-                {
-                    Lights?.ToString(fg);
-                }
-                if (printMask?.Miscellaneous?.Overall ?? true)
-                {
-                    Miscellaneous?.ToString(fg);
-                }
-                if (printMask?.Statics?.Overall ?? true)
-                {
-                    Statics?.ToString(fg);
-                }
-                if (printMask?.Grasses?.Overall ?? true)
-                {
-                    Grasses?.ToString(fg);
-                }
-                if (printMask?.Trees?.Overall ?? true)
-                {
-                    Trees?.ToString(fg);
-                }
-                if (printMask?.Flora?.Overall ?? true)
-                {
-                    Flora?.ToString(fg);
-                }
-                if (printMask?.Furnature?.Overall ?? true)
-                {
-                    Furnature?.ToString(fg);
-                }
-                if (printMask?.Weapons?.Overall ?? true)
-                {
-                    Weapons?.ToString(fg);
-                }
-                if (printMask?.Ammo?.Overall ?? true)
-                {
-                    Ammo?.ToString(fg);
-                }
-                if (printMask?.NPCs?.Overall ?? true)
-                {
-                    NPCs?.ToString(fg);
-                }
-                if (printMask?.Creatures?.Overall ?? true)
-                {
-                    Creatures?.ToString(fg);
-                }
-                if (printMask?.LeveledCreatures?.Overall ?? true)
-                {
-                    LeveledCreatures?.ToString(fg);
-                }
-                if (printMask?.SoulGems?.Overall ?? true)
-                {
-                    SoulGems?.ToString(fg);
-                }
-                if (printMask?.Keys?.Overall ?? true)
-                {
-                    Keys?.ToString(fg);
-                }
-                if (printMask?.Potions?.Overall ?? true)
-                {
-                    Potions?.ToString(fg);
-                }
-                if (printMask?.Subspaces?.Overall ?? true)
-                {
-                    Subspaces?.ToString(fg);
-                }
-                if (printMask?.SigilStones?.Overall ?? true)
-                {
-                    SigilStones?.ToString(fg);
-                }
-                if (printMask?.LeveledItems?.Overall ?? true)
-                {
-                    LeveledItems?.ToString(fg);
-                }
-                if (printMask?.Weathers?.Overall ?? true)
-                {
-                    Weathers?.ToString(fg);
-                }
-                if (printMask?.Climates?.Overall ?? true)
-                {
-                    Climates?.ToString(fg);
-                }
-                if (printMask?.Regions?.Overall ?? true)
-                {
-                    Regions?.ToString(fg);
-                }
-                if (printMask?.Cells?.Overall ?? true)
-                {
-                    Cells?.ToString(fg);
-                }
-                if (printMask?.Worldspaces?.Overall ?? true)
-                {
-                    Worldspaces?.ToString(fg);
-                }
-                if (printMask?.DialogTopics?.Overall ?? true)
-                {
-                    DialogTopics?.ToString(fg);
-                }
-                if (printMask?.Quests?.Overall ?? true)
-                {
-                    Quests?.ToString(fg);
-                }
-                if (printMask?.IdleAnimations?.Overall ?? true)
-                {
-                    IdleAnimations?.ToString(fg);
-                }
-                if (printMask?.AIPackages?.Overall ?? true)
-                {
-                    AIPackages?.ToString(fg);
-                }
-                if (printMask?.CombatStyles?.Overall ?? true)
-                {
-                    CombatStyles?.ToString(fg);
-                }
-                if (printMask?.LoadScreens?.Overall ?? true)
-                {
-                    LoadScreens?.ToString(fg);
-                }
-                if (printMask?.LeveledSpells?.Overall ?? true)
-                {
-                    LeveledSpells?.ToString(fg);
-                }
-                if (printMask?.AnimatedObjects?.Overall ?? true)
-                {
-                    AnimatedObjects?.ToString(fg);
-                }
-                if (printMask?.Waters?.Overall ?? true)
-                {
-                    Waters?.ToString(fg);
-                }
-                if (printMask?.EffectShaders?.Overall ?? true)
-                {
-                    EffectShaders?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class OblivionMod_ErrorMask : IErrorMask, IErrorMask<OblivionMod_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public MaskItem<Exception?, ModHeader_ErrorMask?>? ModHeader;
-        public MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>? GameSettings;
-        public MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>? Globals;
-        public MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>? Classes;
-        public MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>? Factions;
-        public MaskItem<Exception?, Group_ErrorMask<Hair_ErrorMask>?>? Hairs;
-        public MaskItem<Exception?, Group_ErrorMask<Eye_ErrorMask>?>? Eyes;
-        public MaskItem<Exception?, Group_ErrorMask<Race_ErrorMask>?>? Races;
-        public MaskItem<Exception?, Group_ErrorMask<Sound_ErrorMask>?>? Sounds;
-        public MaskItem<Exception?, Group_ErrorMask<SkillRecord_ErrorMask>?>? Skills;
-        public MaskItem<Exception?, Group_ErrorMask<MagicEffect_ErrorMask>?>? MagicEffects;
-        public MaskItem<Exception?, Group_ErrorMask<Script_ErrorMask>?>? Scripts;
-        public MaskItem<Exception?, Group_ErrorMask<LandTexture_ErrorMask>?>? LandTextures;
-        public MaskItem<Exception?, Group_ErrorMask<Enchantment_ErrorMask>?>? Enchantments;
-        public MaskItem<Exception?, Group_ErrorMask<SpellUnleveled_ErrorMask>?>? Spells;
-        public MaskItem<Exception?, Group_ErrorMask<Birthsign_ErrorMask>?>? Birthsigns;
-        public MaskItem<Exception?, Group_ErrorMask<Activator_ErrorMask>?>? Activators;
-        public MaskItem<Exception?, Group_ErrorMask<AlchemicalApparatus_ErrorMask>?>? AlchemicalApparatus;
-        public MaskItem<Exception?, Group_ErrorMask<Armor_ErrorMask>?>? Armors;
-        public MaskItem<Exception?, Group_ErrorMask<Book_ErrorMask>?>? Books;
-        public MaskItem<Exception?, Group_ErrorMask<Clothing_ErrorMask>?>? Clothes;
-        public MaskItem<Exception?, Group_ErrorMask<Container_ErrorMask>?>? Containers;
-        public MaskItem<Exception?, Group_ErrorMask<Door_ErrorMask>?>? Doors;
-        public MaskItem<Exception?, Group_ErrorMask<Ingredient_ErrorMask>?>? Ingredients;
-        public MaskItem<Exception?, Group_ErrorMask<Light_ErrorMask>?>? Lights;
-        public MaskItem<Exception?, Group_ErrorMask<Miscellaneous_ErrorMask>?>? Miscellaneous;
-        public MaskItem<Exception?, Group_ErrorMask<Static_ErrorMask>?>? Statics;
-        public MaskItem<Exception?, Group_ErrorMask<Grass_ErrorMask>?>? Grasses;
-        public MaskItem<Exception?, Group_ErrorMask<Tree_ErrorMask>?>? Trees;
-        public MaskItem<Exception?, Group_ErrorMask<Flora_ErrorMask>?>? Flora;
-        public MaskItem<Exception?, Group_ErrorMask<Furnature_ErrorMask>?>? Furnature;
-        public MaskItem<Exception?, Group_ErrorMask<Weapon_ErrorMask>?>? Weapons;
-        public MaskItem<Exception?, Group_ErrorMask<Ammo_ErrorMask>?>? Ammo;
-        public MaskItem<Exception?, Group_ErrorMask<NPC_ErrorMask>?>? NPCs;
-        public MaskItem<Exception?, Group_ErrorMask<Creature_ErrorMask>?>? Creatures;
-        public MaskItem<Exception?, Group_ErrorMask<LeveledCreature_ErrorMask>?>? LeveledCreatures;
-        public MaskItem<Exception?, Group_ErrorMask<SoulGem_ErrorMask>?>? SoulGems;
-        public MaskItem<Exception?, Group_ErrorMask<Key_ErrorMask>?>? Keys;
-        public MaskItem<Exception?, Group_ErrorMask<Potion_ErrorMask>?>? Potions;
-        public MaskItem<Exception?, Group_ErrorMask<Subspace_ErrorMask>?>? Subspaces;
-        public MaskItem<Exception?, Group_ErrorMask<SigilStone_ErrorMask>?>? SigilStones;
-        public MaskItem<Exception?, Group_ErrorMask<LeveledItem_ErrorMask>?>? LeveledItems;
-        public MaskItem<Exception?, Group_ErrorMask<Weather_ErrorMask>?>? Weathers;
-        public MaskItem<Exception?, Group_ErrorMask<Climate_ErrorMask>?>? Climates;
-        public MaskItem<Exception?, Group_ErrorMask<Region_ErrorMask>?>? Regions;
-        public MaskItem<Exception?, ListGroup_ErrorMask<CellBlock_ErrorMask>?>? Cells;
-        public MaskItem<Exception?, Group_ErrorMask<Worldspace_ErrorMask>?>? Worldspaces;
-        public MaskItem<Exception?, Group_ErrorMask<DialogTopic_ErrorMask>?>? DialogTopics;
-        public MaskItem<Exception?, Group_ErrorMask<Quest_ErrorMask>?>? Quests;
-        public MaskItem<Exception?, Group_ErrorMask<IdleAnimation_ErrorMask>?>? IdleAnimations;
-        public MaskItem<Exception?, Group_ErrorMask<AIPackage_ErrorMask>?>? AIPackages;
-        public MaskItem<Exception?, Group_ErrorMask<CombatStyle_ErrorMask>?>? CombatStyles;
-        public MaskItem<Exception?, Group_ErrorMask<LoadScreen_ErrorMask>?>? LoadScreens;
-        public MaskItem<Exception?, Group_ErrorMask<LeveledSpell_ErrorMask>?>? LeveledSpells;
-        public MaskItem<Exception?, Group_ErrorMask<AnimatedObject_ErrorMask>?>? AnimatedObjects;
-        public MaskItem<Exception?, Group_ErrorMask<Water_ErrorMask>?>? Waters;
-        public MaskItem<Exception?, Group_ErrorMask<EffectShader_ErrorMask>?>? EffectShaders;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMod_FieldIndex.ModHeader:
-                    return ModHeader;
-                case OblivionMod_FieldIndex.GameSettings:
-                    return GameSettings;
-                case OblivionMod_FieldIndex.Globals:
-                    return Globals;
-                case OblivionMod_FieldIndex.Classes:
-                    return Classes;
-                case OblivionMod_FieldIndex.Factions:
-                    return Factions;
-                case OblivionMod_FieldIndex.Hairs:
-                    return Hairs;
-                case OblivionMod_FieldIndex.Eyes:
-                    return Eyes;
-                case OblivionMod_FieldIndex.Races:
-                    return Races;
-                case OblivionMod_FieldIndex.Sounds:
-                    return Sounds;
-                case OblivionMod_FieldIndex.Skills:
-                    return Skills;
-                case OblivionMod_FieldIndex.MagicEffects:
-                    return MagicEffects;
-                case OblivionMod_FieldIndex.Scripts:
-                    return Scripts;
-                case OblivionMod_FieldIndex.LandTextures:
-                    return LandTextures;
-                case OblivionMod_FieldIndex.Enchantments:
-                    return Enchantments;
-                case OblivionMod_FieldIndex.Spells:
-                    return Spells;
-                case OblivionMod_FieldIndex.Birthsigns:
-                    return Birthsigns;
-                case OblivionMod_FieldIndex.Activators:
-                    return Activators;
-                case OblivionMod_FieldIndex.AlchemicalApparatus:
-                    return AlchemicalApparatus;
-                case OblivionMod_FieldIndex.Armors:
-                    return Armors;
-                case OblivionMod_FieldIndex.Books:
-                    return Books;
-                case OblivionMod_FieldIndex.Clothes:
-                    return Clothes;
-                case OblivionMod_FieldIndex.Containers:
-                    return Containers;
-                case OblivionMod_FieldIndex.Doors:
-                    return Doors;
-                case OblivionMod_FieldIndex.Ingredients:
-                    return Ingredients;
-                case OblivionMod_FieldIndex.Lights:
-                    return Lights;
-                case OblivionMod_FieldIndex.Miscellaneous:
-                    return Miscellaneous;
-                case OblivionMod_FieldIndex.Statics:
-                    return Statics;
-                case OblivionMod_FieldIndex.Grasses:
-                    return Grasses;
-                case OblivionMod_FieldIndex.Trees:
-                    return Trees;
-                case OblivionMod_FieldIndex.Flora:
-                    return Flora;
-                case OblivionMod_FieldIndex.Furnature:
-                    return Furnature;
-                case OblivionMod_FieldIndex.Weapons:
-                    return Weapons;
-                case OblivionMod_FieldIndex.Ammo:
-                    return Ammo;
-                case OblivionMod_FieldIndex.NPCs:
-                    return NPCs;
-                case OblivionMod_FieldIndex.Creatures:
-                    return Creatures;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    return LeveledCreatures;
-                case OblivionMod_FieldIndex.SoulGems:
-                    return SoulGems;
-                case OblivionMod_FieldIndex.Keys:
-                    return Keys;
-                case OblivionMod_FieldIndex.Potions:
-                    return Potions;
-                case OblivionMod_FieldIndex.Subspaces:
-                    return Subspaces;
-                case OblivionMod_FieldIndex.SigilStones:
-                    return SigilStones;
-                case OblivionMod_FieldIndex.LeveledItems:
-                    return LeveledItems;
-                case OblivionMod_FieldIndex.Weathers:
-                    return Weathers;
-                case OblivionMod_FieldIndex.Climates:
-                    return Climates;
-                case OblivionMod_FieldIndex.Regions:
-                    return Regions;
-                case OblivionMod_FieldIndex.Cells:
-                    return Cells;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    return Worldspaces;
-                case OblivionMod_FieldIndex.DialogTopics:
-                    return DialogTopics;
-                case OblivionMod_FieldIndex.Quests:
-                    return Quests;
-                case OblivionMod_FieldIndex.IdleAnimations:
-                    return IdleAnimations;
-                case OblivionMod_FieldIndex.AIPackages:
-                    return AIPackages;
-                case OblivionMod_FieldIndex.CombatStyles:
-                    return CombatStyles;
-                case OblivionMod_FieldIndex.LoadScreens:
-                    return LoadScreens;
-                case OblivionMod_FieldIndex.LeveledSpells:
-                    return LeveledSpells;
-                case OblivionMod_FieldIndex.AnimatedObjects:
-                    return AnimatedObjects;
-                case OblivionMod_FieldIndex.Waters:
-                    return Waters;
-                case OblivionMod_FieldIndex.EffectShaders:
-                    return EffectShaders;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMod_FieldIndex.ModHeader:
-                    this.ModHeader = new MaskItem<Exception?, ModHeader_ErrorMask?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.GameSettings:
-                    this.GameSettings = new MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Globals:
-                    this.Globals = new MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Classes:
-                    this.Classes = new MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Factions:
-                    this.Factions = new MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Hairs:
-                    this.Hairs = new MaskItem<Exception?, Group_ErrorMask<Hair_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Eyes:
-                    this.Eyes = new MaskItem<Exception?, Group_ErrorMask<Eye_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Races:
-                    this.Races = new MaskItem<Exception?, Group_ErrorMask<Race_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Sounds:
-                    this.Sounds = new MaskItem<Exception?, Group_ErrorMask<Sound_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Skills:
-                    this.Skills = new MaskItem<Exception?, Group_ErrorMask<SkillRecord_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.MagicEffects:
-                    this.MagicEffects = new MaskItem<Exception?, Group_ErrorMask<MagicEffect_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Scripts:
-                    this.Scripts = new MaskItem<Exception?, Group_ErrorMask<Script_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.LandTextures:
-                    this.LandTextures = new MaskItem<Exception?, Group_ErrorMask<LandTexture_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Enchantments:
-                    this.Enchantments = new MaskItem<Exception?, Group_ErrorMask<Enchantment_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception?, Group_ErrorMask<SpellUnleveled_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Birthsigns:
-                    this.Birthsigns = new MaskItem<Exception?, Group_ErrorMask<Birthsign_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Activators:
-                    this.Activators = new MaskItem<Exception?, Group_ErrorMask<Activator_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.AlchemicalApparatus:
-                    this.AlchemicalApparatus = new MaskItem<Exception?, Group_ErrorMask<AlchemicalApparatus_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Armors:
-                    this.Armors = new MaskItem<Exception?, Group_ErrorMask<Armor_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Books:
-                    this.Books = new MaskItem<Exception?, Group_ErrorMask<Book_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Clothes:
-                    this.Clothes = new MaskItem<Exception?, Group_ErrorMask<Clothing_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Containers:
-                    this.Containers = new MaskItem<Exception?, Group_ErrorMask<Container_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Doors:
-                    this.Doors = new MaskItem<Exception?, Group_ErrorMask<Door_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Ingredients:
-                    this.Ingredients = new MaskItem<Exception?, Group_ErrorMask<Ingredient_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Lights:
-                    this.Lights = new MaskItem<Exception?, Group_ErrorMask<Light_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Miscellaneous:
-                    this.Miscellaneous = new MaskItem<Exception?, Group_ErrorMask<Miscellaneous_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Statics:
-                    this.Statics = new MaskItem<Exception?, Group_ErrorMask<Static_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Grasses:
-                    this.Grasses = new MaskItem<Exception?, Group_ErrorMask<Grass_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Trees:
-                    this.Trees = new MaskItem<Exception?, Group_ErrorMask<Tree_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Flora:
-                    this.Flora = new MaskItem<Exception?, Group_ErrorMask<Flora_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Furnature:
-                    this.Furnature = new MaskItem<Exception?, Group_ErrorMask<Furnature_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Weapons:
-                    this.Weapons = new MaskItem<Exception?, Group_ErrorMask<Weapon_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Ammo:
-                    this.Ammo = new MaskItem<Exception?, Group_ErrorMask<Ammo_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.NPCs:
-                    this.NPCs = new MaskItem<Exception?, Group_ErrorMask<NPC_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Creatures:
-                    this.Creatures = new MaskItem<Exception?, Group_ErrorMask<Creature_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    this.LeveledCreatures = new MaskItem<Exception?, Group_ErrorMask<LeveledCreature_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.SoulGems:
-                    this.SoulGems = new MaskItem<Exception?, Group_ErrorMask<SoulGem_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Keys:
-                    this.Keys = new MaskItem<Exception?, Group_ErrorMask<Key_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Potions:
-                    this.Potions = new MaskItem<Exception?, Group_ErrorMask<Potion_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Subspaces:
-                    this.Subspaces = new MaskItem<Exception?, Group_ErrorMask<Subspace_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.SigilStones:
-                    this.SigilStones = new MaskItem<Exception?, Group_ErrorMask<SigilStone_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.LeveledItems:
-                    this.LeveledItems = new MaskItem<Exception?, Group_ErrorMask<LeveledItem_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Weathers:
-                    this.Weathers = new MaskItem<Exception?, Group_ErrorMask<Weather_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Climates:
-                    this.Climates = new MaskItem<Exception?, Group_ErrorMask<Climate_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Regions:
-                    this.Regions = new MaskItem<Exception?, Group_ErrorMask<Region_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Cells:
-                    this.Cells = new MaskItem<Exception?, ListGroup_ErrorMask<CellBlock_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    this.Worldspaces = new MaskItem<Exception?, Group_ErrorMask<Worldspace_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.DialogTopics:
-                    this.DialogTopics = new MaskItem<Exception?, Group_ErrorMask<DialogTopic_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Quests:
-                    this.Quests = new MaskItem<Exception?, Group_ErrorMask<Quest_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.IdleAnimations:
-                    this.IdleAnimations = new MaskItem<Exception?, Group_ErrorMask<IdleAnimation_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.AIPackages:
-                    this.AIPackages = new MaskItem<Exception?, Group_ErrorMask<AIPackage_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.CombatStyles:
-                    this.CombatStyles = new MaskItem<Exception?, Group_ErrorMask<CombatStyle_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.LoadScreens:
-                    this.LoadScreens = new MaskItem<Exception?, Group_ErrorMask<LoadScreen_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.LeveledSpells:
-                    this.LeveledSpells = new MaskItem<Exception?, Group_ErrorMask<LeveledSpell_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.AnimatedObjects:
-                    this.AnimatedObjects = new MaskItem<Exception?, Group_ErrorMask<AnimatedObject_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.Waters:
-                    this.Waters = new MaskItem<Exception?, Group_ErrorMask<Water_ErrorMask>?>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.EffectShaders:
-                    this.EffectShaders = new MaskItem<Exception?, Group_ErrorMask<EffectShader_ErrorMask>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionMod_FieldIndex.ModHeader:
-                    this.ModHeader = (MaskItem<Exception?, ModHeader_ErrorMask?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.GameSettings:
-                    this.GameSettings = (MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Globals:
-                    this.Globals = (MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Classes:
-                    this.Classes = (MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Factions:
-                    this.Factions = (MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Hairs:
-                    this.Hairs = (MaskItem<Exception?, Group_ErrorMask<Hair_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Eyes:
-                    this.Eyes = (MaskItem<Exception?, Group_ErrorMask<Eye_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Races:
-                    this.Races = (MaskItem<Exception?, Group_ErrorMask<Race_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Sounds:
-                    this.Sounds = (MaskItem<Exception?, Group_ErrorMask<Sound_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Skills:
-                    this.Skills = (MaskItem<Exception?, Group_ErrorMask<SkillRecord_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.MagicEffects:
-                    this.MagicEffects = (MaskItem<Exception?, Group_ErrorMask<MagicEffect_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Scripts:
-                    this.Scripts = (MaskItem<Exception?, Group_ErrorMask<Script_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.LandTextures:
-                    this.LandTextures = (MaskItem<Exception?, Group_ErrorMask<LandTexture_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Enchantments:
-                    this.Enchantments = (MaskItem<Exception?, Group_ErrorMask<Enchantment_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception?, Group_ErrorMask<SpellUnleveled_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Birthsigns:
-                    this.Birthsigns = (MaskItem<Exception?, Group_ErrorMask<Birthsign_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Activators:
-                    this.Activators = (MaskItem<Exception?, Group_ErrorMask<Activator_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.AlchemicalApparatus:
-                    this.AlchemicalApparatus = (MaskItem<Exception?, Group_ErrorMask<AlchemicalApparatus_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Armors:
-                    this.Armors = (MaskItem<Exception?, Group_ErrorMask<Armor_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Books:
-                    this.Books = (MaskItem<Exception?, Group_ErrorMask<Book_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Clothes:
-                    this.Clothes = (MaskItem<Exception?, Group_ErrorMask<Clothing_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Containers:
-                    this.Containers = (MaskItem<Exception?, Group_ErrorMask<Container_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Doors:
-                    this.Doors = (MaskItem<Exception?, Group_ErrorMask<Door_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Ingredients:
-                    this.Ingredients = (MaskItem<Exception?, Group_ErrorMask<Ingredient_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Lights:
-                    this.Lights = (MaskItem<Exception?, Group_ErrorMask<Light_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Miscellaneous:
-                    this.Miscellaneous = (MaskItem<Exception?, Group_ErrorMask<Miscellaneous_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Statics:
-                    this.Statics = (MaskItem<Exception?, Group_ErrorMask<Static_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Grasses:
-                    this.Grasses = (MaskItem<Exception?, Group_ErrorMask<Grass_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Trees:
-                    this.Trees = (MaskItem<Exception?, Group_ErrorMask<Tree_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Flora:
-                    this.Flora = (MaskItem<Exception?, Group_ErrorMask<Flora_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Furnature:
-                    this.Furnature = (MaskItem<Exception?, Group_ErrorMask<Furnature_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Weapons:
-                    this.Weapons = (MaskItem<Exception?, Group_ErrorMask<Weapon_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Ammo:
-                    this.Ammo = (MaskItem<Exception?, Group_ErrorMask<Ammo_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.NPCs:
-                    this.NPCs = (MaskItem<Exception?, Group_ErrorMask<NPC_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Creatures:
-                    this.Creatures = (MaskItem<Exception?, Group_ErrorMask<Creature_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    this.LeveledCreatures = (MaskItem<Exception?, Group_ErrorMask<LeveledCreature_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.SoulGems:
-                    this.SoulGems = (MaskItem<Exception?, Group_ErrorMask<SoulGem_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Keys:
-                    this.Keys = (MaskItem<Exception?, Group_ErrorMask<Key_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Potions:
-                    this.Potions = (MaskItem<Exception?, Group_ErrorMask<Potion_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Subspaces:
-                    this.Subspaces = (MaskItem<Exception?, Group_ErrorMask<Subspace_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.SigilStones:
-                    this.SigilStones = (MaskItem<Exception?, Group_ErrorMask<SigilStone_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.LeveledItems:
-                    this.LeveledItems = (MaskItem<Exception?, Group_ErrorMask<LeveledItem_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Weathers:
-                    this.Weathers = (MaskItem<Exception?, Group_ErrorMask<Weather_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Climates:
-                    this.Climates = (MaskItem<Exception?, Group_ErrorMask<Climate_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Regions:
-                    this.Regions = (MaskItem<Exception?, Group_ErrorMask<Region_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Cells:
-                    this.Cells = (MaskItem<Exception?, ListGroup_ErrorMask<CellBlock_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Worldspaces:
-                    this.Worldspaces = (MaskItem<Exception?, Group_ErrorMask<Worldspace_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.DialogTopics:
-                    this.DialogTopics = (MaskItem<Exception?, Group_ErrorMask<DialogTopic_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Quests:
-                    this.Quests = (MaskItem<Exception?, Group_ErrorMask<Quest_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.IdleAnimations:
-                    this.IdleAnimations = (MaskItem<Exception?, Group_ErrorMask<IdleAnimation_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.AIPackages:
-                    this.AIPackages = (MaskItem<Exception?, Group_ErrorMask<AIPackage_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.CombatStyles:
-                    this.CombatStyles = (MaskItem<Exception?, Group_ErrorMask<CombatStyle_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.LoadScreens:
-                    this.LoadScreens = (MaskItem<Exception?, Group_ErrorMask<LoadScreen_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.LeveledSpells:
-                    this.LeveledSpells = (MaskItem<Exception?, Group_ErrorMask<LeveledSpell_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.AnimatedObjects:
-                    this.AnimatedObjects = (MaskItem<Exception?, Group_ErrorMask<AnimatedObject_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.Waters:
-                    this.Waters = (MaskItem<Exception?, Group_ErrorMask<Water_ErrorMask>?>?)obj;
-                    break;
-                case OblivionMod_FieldIndex.EffectShaders:
-                    this.EffectShaders = (MaskItem<Exception?, Group_ErrorMask<EffectShader_ErrorMask>?>?)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ModHeader != null) return true;
-            if (GameSettings != null) return true;
-            if (Globals != null) return true;
-            if (Classes != null) return true;
-            if (Factions != null) return true;
-            if (Hairs != null) return true;
-            if (Eyes != null) return true;
-            if (Races != null) return true;
-            if (Sounds != null) return true;
-            if (Skills != null) return true;
-            if (MagicEffects != null) return true;
-            if (Scripts != null) return true;
-            if (LandTextures != null) return true;
-            if (Enchantments != null) return true;
-            if (Spells != null) return true;
-            if (Birthsigns != null) return true;
-            if (Activators != null) return true;
-            if (AlchemicalApparatus != null) return true;
-            if (Armors != null) return true;
-            if (Books != null) return true;
-            if (Clothes != null) return true;
-            if (Containers != null) return true;
-            if (Doors != null) return true;
-            if (Ingredients != null) return true;
-            if (Lights != null) return true;
-            if (Miscellaneous != null) return true;
-            if (Statics != null) return true;
-            if (Grasses != null) return true;
-            if (Trees != null) return true;
-            if (Flora != null) return true;
-            if (Furnature != null) return true;
-            if (Weapons != null) return true;
-            if (Ammo != null) return true;
-            if (NPCs != null) return true;
-            if (Creatures != null) return true;
-            if (LeveledCreatures != null) return true;
-            if (SoulGems != null) return true;
-            if (Keys != null) return true;
-            if (Potions != null) return true;
-            if (Subspaces != null) return true;
-            if (SigilStones != null) return true;
-            if (LeveledItems != null) return true;
-            if (Weathers != null) return true;
-            if (Climates != null) return true;
-            if (Regions != null) return true;
-            if (Cells != null) return true;
-            if (Worldspaces != null) return true;
-            if (DialogTopics != null) return true;
-            if (Quests != null) return true;
-            if (IdleAnimations != null) return true;
-            if (AIPackages != null) return true;
-            if (CombatStyles != null) return true;
-            if (LoadScreens != null) return true;
-            if (LeveledSpells != null) return true;
-            if (AnimatedObjects != null) return true;
-            if (Waters != null) return true;
-            if (EffectShaders != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("OblivionMod_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            ModHeader?.ToString(fg);
-            GameSettings?.ToString(fg);
-            Globals?.ToString(fg);
-            Classes?.ToString(fg);
-            Factions?.ToString(fg);
-            Hairs?.ToString(fg);
-            Eyes?.ToString(fg);
-            Races?.ToString(fg);
-            Sounds?.ToString(fg);
-            Skills?.ToString(fg);
-            MagicEffects?.ToString(fg);
-            Scripts?.ToString(fg);
-            LandTextures?.ToString(fg);
-            Enchantments?.ToString(fg);
-            Spells?.ToString(fg);
-            Birthsigns?.ToString(fg);
-            Activators?.ToString(fg);
-            AlchemicalApparatus?.ToString(fg);
-            Armors?.ToString(fg);
-            Books?.ToString(fg);
-            Clothes?.ToString(fg);
-            Containers?.ToString(fg);
-            Doors?.ToString(fg);
-            Ingredients?.ToString(fg);
-            Lights?.ToString(fg);
-            Miscellaneous?.ToString(fg);
-            Statics?.ToString(fg);
-            Grasses?.ToString(fg);
-            Trees?.ToString(fg);
-            Flora?.ToString(fg);
-            Furnature?.ToString(fg);
-            Weapons?.ToString(fg);
-            Ammo?.ToString(fg);
-            NPCs?.ToString(fg);
-            Creatures?.ToString(fg);
-            LeveledCreatures?.ToString(fg);
-            SoulGems?.ToString(fg);
-            Keys?.ToString(fg);
-            Potions?.ToString(fg);
-            Subspaces?.ToString(fg);
-            SigilStones?.ToString(fg);
-            LeveledItems?.ToString(fg);
-            Weathers?.ToString(fg);
-            Climates?.ToString(fg);
-            Regions?.ToString(fg);
-            Cells?.ToString(fg);
-            Worldspaces?.ToString(fg);
-            DialogTopics?.ToString(fg);
-            Quests?.ToString(fg);
-            IdleAnimations?.ToString(fg);
-            AIPackages?.ToString(fg);
-            CombatStyles?.ToString(fg);
-            LoadScreens?.ToString(fg);
-            LeveledSpells?.ToString(fg);
-            AnimatedObjects?.ToString(fg);
-            Waters?.ToString(fg);
-            EffectShaders?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new OblivionMod_ErrorMask();
-            ret.ModHeader = new MaskItem<Exception?, ModHeader_ErrorMask?>(ExceptionExt.Combine(this.ModHeader?.Overall, rhs.ModHeader?.Overall), (this.ModHeader?.Specific as IErrorMask<ModHeader_ErrorMask>)?.Combine(rhs.ModHeader?.Specific));
-            ret.GameSettings = new MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>(ExceptionExt.Combine(this.GameSettings?.Overall, rhs.GameSettings?.Overall), (this.GameSettings?.Specific as IErrorMask<Group_ErrorMask<GameSetting_ErrorMask>>)?.Combine(rhs.GameSettings?.Specific));
-            ret.Globals = new MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>(ExceptionExt.Combine(this.Globals?.Overall, rhs.Globals?.Overall), (this.Globals?.Specific as IErrorMask<Group_ErrorMask<Global_ErrorMask>>)?.Combine(rhs.Globals?.Specific));
-            ret.Classes = new MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>(ExceptionExt.Combine(this.Classes?.Overall, rhs.Classes?.Overall), (this.Classes?.Specific as IErrorMask<Group_ErrorMask<Class_ErrorMask>>)?.Combine(rhs.Classes?.Specific));
-            ret.Factions = new MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), (this.Factions?.Specific as IErrorMask<Group_ErrorMask<Faction_ErrorMask>>)?.Combine(rhs.Factions?.Specific));
-            ret.Hairs = new MaskItem<Exception?, Group_ErrorMask<Hair_ErrorMask>?>(ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), (this.Hairs?.Specific as IErrorMask<Group_ErrorMask<Hair_ErrorMask>>)?.Combine(rhs.Hairs?.Specific));
-            ret.Eyes = new MaskItem<Exception?, Group_ErrorMask<Eye_ErrorMask>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), (this.Eyes?.Specific as IErrorMask<Group_ErrorMask<Eye_ErrorMask>>)?.Combine(rhs.Eyes?.Specific));
-            ret.Races = new MaskItem<Exception?, Group_ErrorMask<Race_ErrorMask>?>(ExceptionExt.Combine(this.Races?.Overall, rhs.Races?.Overall), (this.Races?.Specific as IErrorMask<Group_ErrorMask<Race_ErrorMask>>)?.Combine(rhs.Races?.Specific));
-            ret.Sounds = new MaskItem<Exception?, Group_ErrorMask<Sound_ErrorMask>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), (this.Sounds?.Specific as IErrorMask<Group_ErrorMask<Sound_ErrorMask>>)?.Combine(rhs.Sounds?.Specific));
-            ret.Skills = new MaskItem<Exception?, Group_ErrorMask<SkillRecord_ErrorMask>?>(ExceptionExt.Combine(this.Skills?.Overall, rhs.Skills?.Overall), (this.Skills?.Specific as IErrorMask<Group_ErrorMask<SkillRecord_ErrorMask>>)?.Combine(rhs.Skills?.Specific));
-            ret.MagicEffects = new MaskItem<Exception?, Group_ErrorMask<MagicEffect_ErrorMask>?>(ExceptionExt.Combine(this.MagicEffects?.Overall, rhs.MagicEffects?.Overall), (this.MagicEffects?.Specific as IErrorMask<Group_ErrorMask<MagicEffect_ErrorMask>>)?.Combine(rhs.MagicEffects?.Specific));
-            ret.Scripts = new MaskItem<Exception?, Group_ErrorMask<Script_ErrorMask>?>(ExceptionExt.Combine(this.Scripts?.Overall, rhs.Scripts?.Overall), (this.Scripts?.Specific as IErrorMask<Group_ErrorMask<Script_ErrorMask>>)?.Combine(rhs.Scripts?.Specific));
-            ret.LandTextures = new MaskItem<Exception?, Group_ErrorMask<LandTexture_ErrorMask>?>(ExceptionExt.Combine(this.LandTextures?.Overall, rhs.LandTextures?.Overall), (this.LandTextures?.Specific as IErrorMask<Group_ErrorMask<LandTexture_ErrorMask>>)?.Combine(rhs.LandTextures?.Specific));
-            ret.Enchantments = new MaskItem<Exception?, Group_ErrorMask<Enchantment_ErrorMask>?>(ExceptionExt.Combine(this.Enchantments?.Overall, rhs.Enchantments?.Overall), (this.Enchantments?.Specific as IErrorMask<Group_ErrorMask<Enchantment_ErrorMask>>)?.Combine(rhs.Enchantments?.Specific));
-            ret.Spells = new MaskItem<Exception?, Group_ErrorMask<SpellUnleveled_ErrorMask>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), (this.Spells?.Specific as IErrorMask<Group_ErrorMask<SpellUnleveled_ErrorMask>>)?.Combine(rhs.Spells?.Specific));
-            ret.Birthsigns = new MaskItem<Exception?, Group_ErrorMask<Birthsign_ErrorMask>?>(ExceptionExt.Combine(this.Birthsigns?.Overall, rhs.Birthsigns?.Overall), (this.Birthsigns?.Specific as IErrorMask<Group_ErrorMask<Birthsign_ErrorMask>>)?.Combine(rhs.Birthsigns?.Specific));
-            ret.Activators = new MaskItem<Exception?, Group_ErrorMask<Activator_ErrorMask>?>(ExceptionExt.Combine(this.Activators?.Overall, rhs.Activators?.Overall), (this.Activators?.Specific as IErrorMask<Group_ErrorMask<Activator_ErrorMask>>)?.Combine(rhs.Activators?.Specific));
-            ret.AlchemicalApparatus = new MaskItem<Exception?, Group_ErrorMask<AlchemicalApparatus_ErrorMask>?>(ExceptionExt.Combine(this.AlchemicalApparatus?.Overall, rhs.AlchemicalApparatus?.Overall), (this.AlchemicalApparatus?.Specific as IErrorMask<Group_ErrorMask<AlchemicalApparatus_ErrorMask>>)?.Combine(rhs.AlchemicalApparatus?.Specific));
-            ret.Armors = new MaskItem<Exception?, Group_ErrorMask<Armor_ErrorMask>?>(ExceptionExt.Combine(this.Armors?.Overall, rhs.Armors?.Overall), (this.Armors?.Specific as IErrorMask<Group_ErrorMask<Armor_ErrorMask>>)?.Combine(rhs.Armors?.Specific));
-            ret.Books = new MaskItem<Exception?, Group_ErrorMask<Book_ErrorMask>?>(ExceptionExt.Combine(this.Books?.Overall, rhs.Books?.Overall), (this.Books?.Specific as IErrorMask<Group_ErrorMask<Book_ErrorMask>>)?.Combine(rhs.Books?.Specific));
-            ret.Clothes = new MaskItem<Exception?, Group_ErrorMask<Clothing_ErrorMask>?>(ExceptionExt.Combine(this.Clothes?.Overall, rhs.Clothes?.Overall), (this.Clothes?.Specific as IErrorMask<Group_ErrorMask<Clothing_ErrorMask>>)?.Combine(rhs.Clothes?.Specific));
-            ret.Containers = new MaskItem<Exception?, Group_ErrorMask<Container_ErrorMask>?>(ExceptionExt.Combine(this.Containers?.Overall, rhs.Containers?.Overall), (this.Containers?.Specific as IErrorMask<Group_ErrorMask<Container_ErrorMask>>)?.Combine(rhs.Containers?.Specific));
-            ret.Doors = new MaskItem<Exception?, Group_ErrorMask<Door_ErrorMask>?>(ExceptionExt.Combine(this.Doors?.Overall, rhs.Doors?.Overall), (this.Doors?.Specific as IErrorMask<Group_ErrorMask<Door_ErrorMask>>)?.Combine(rhs.Doors?.Specific));
-            ret.Ingredients = new MaskItem<Exception?, Group_ErrorMask<Ingredient_ErrorMask>?>(ExceptionExt.Combine(this.Ingredients?.Overall, rhs.Ingredients?.Overall), (this.Ingredients?.Specific as IErrorMask<Group_ErrorMask<Ingredient_ErrorMask>>)?.Combine(rhs.Ingredients?.Specific));
-            ret.Lights = new MaskItem<Exception?, Group_ErrorMask<Light_ErrorMask>?>(ExceptionExt.Combine(this.Lights?.Overall, rhs.Lights?.Overall), (this.Lights?.Specific as IErrorMask<Group_ErrorMask<Light_ErrorMask>>)?.Combine(rhs.Lights?.Specific));
-            ret.Miscellaneous = new MaskItem<Exception?, Group_ErrorMask<Miscellaneous_ErrorMask>?>(ExceptionExt.Combine(this.Miscellaneous?.Overall, rhs.Miscellaneous?.Overall), (this.Miscellaneous?.Specific as IErrorMask<Group_ErrorMask<Miscellaneous_ErrorMask>>)?.Combine(rhs.Miscellaneous?.Specific));
-            ret.Statics = new MaskItem<Exception?, Group_ErrorMask<Static_ErrorMask>?>(ExceptionExt.Combine(this.Statics?.Overall, rhs.Statics?.Overall), (this.Statics?.Specific as IErrorMask<Group_ErrorMask<Static_ErrorMask>>)?.Combine(rhs.Statics?.Specific));
-            ret.Grasses = new MaskItem<Exception?, Group_ErrorMask<Grass_ErrorMask>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), (this.Grasses?.Specific as IErrorMask<Group_ErrorMask<Grass_ErrorMask>>)?.Combine(rhs.Grasses?.Specific));
-            ret.Trees = new MaskItem<Exception?, Group_ErrorMask<Tree_ErrorMask>?>(ExceptionExt.Combine(this.Trees?.Overall, rhs.Trees?.Overall), (this.Trees?.Specific as IErrorMask<Group_ErrorMask<Tree_ErrorMask>>)?.Combine(rhs.Trees?.Specific));
-            ret.Flora = new MaskItem<Exception?, Group_ErrorMask<Flora_ErrorMask>?>(ExceptionExt.Combine(this.Flora?.Overall, rhs.Flora?.Overall), (this.Flora?.Specific as IErrorMask<Group_ErrorMask<Flora_ErrorMask>>)?.Combine(rhs.Flora?.Specific));
-            ret.Furnature = new MaskItem<Exception?, Group_ErrorMask<Furnature_ErrorMask>?>(ExceptionExt.Combine(this.Furnature?.Overall, rhs.Furnature?.Overall), (this.Furnature?.Specific as IErrorMask<Group_ErrorMask<Furnature_ErrorMask>>)?.Combine(rhs.Furnature?.Specific));
-            ret.Weapons = new MaskItem<Exception?, Group_ErrorMask<Weapon_ErrorMask>?>(ExceptionExt.Combine(this.Weapons?.Overall, rhs.Weapons?.Overall), (this.Weapons?.Specific as IErrorMask<Group_ErrorMask<Weapon_ErrorMask>>)?.Combine(rhs.Weapons?.Specific));
-            ret.Ammo = new MaskItem<Exception?, Group_ErrorMask<Ammo_ErrorMask>?>(ExceptionExt.Combine(this.Ammo?.Overall, rhs.Ammo?.Overall), (this.Ammo?.Specific as IErrorMask<Group_ErrorMask<Ammo_ErrorMask>>)?.Combine(rhs.Ammo?.Specific));
-            ret.NPCs = new MaskItem<Exception?, Group_ErrorMask<NPC_ErrorMask>?>(ExceptionExt.Combine(this.NPCs?.Overall, rhs.NPCs?.Overall), (this.NPCs?.Specific as IErrorMask<Group_ErrorMask<NPC_ErrorMask>>)?.Combine(rhs.NPCs?.Specific));
-            ret.Creatures = new MaskItem<Exception?, Group_ErrorMask<Creature_ErrorMask>?>(ExceptionExt.Combine(this.Creatures?.Overall, rhs.Creatures?.Overall), (this.Creatures?.Specific as IErrorMask<Group_ErrorMask<Creature_ErrorMask>>)?.Combine(rhs.Creatures?.Specific));
-            ret.LeveledCreatures = new MaskItem<Exception?, Group_ErrorMask<LeveledCreature_ErrorMask>?>(ExceptionExt.Combine(this.LeveledCreatures?.Overall, rhs.LeveledCreatures?.Overall), (this.LeveledCreatures?.Specific as IErrorMask<Group_ErrorMask<LeveledCreature_ErrorMask>>)?.Combine(rhs.LeveledCreatures?.Specific));
-            ret.SoulGems = new MaskItem<Exception?, Group_ErrorMask<SoulGem_ErrorMask>?>(ExceptionExt.Combine(this.SoulGems?.Overall, rhs.SoulGems?.Overall), (this.SoulGems?.Specific as IErrorMask<Group_ErrorMask<SoulGem_ErrorMask>>)?.Combine(rhs.SoulGems?.Specific));
-            ret.Keys = new MaskItem<Exception?, Group_ErrorMask<Key_ErrorMask>?>(ExceptionExt.Combine(this.Keys?.Overall, rhs.Keys?.Overall), (this.Keys?.Specific as IErrorMask<Group_ErrorMask<Key_ErrorMask>>)?.Combine(rhs.Keys?.Specific));
-            ret.Potions = new MaskItem<Exception?, Group_ErrorMask<Potion_ErrorMask>?>(ExceptionExt.Combine(this.Potions?.Overall, rhs.Potions?.Overall), (this.Potions?.Specific as IErrorMask<Group_ErrorMask<Potion_ErrorMask>>)?.Combine(rhs.Potions?.Specific));
-            ret.Subspaces = new MaskItem<Exception?, Group_ErrorMask<Subspace_ErrorMask>?>(ExceptionExt.Combine(this.Subspaces?.Overall, rhs.Subspaces?.Overall), (this.Subspaces?.Specific as IErrorMask<Group_ErrorMask<Subspace_ErrorMask>>)?.Combine(rhs.Subspaces?.Specific));
-            ret.SigilStones = new MaskItem<Exception?, Group_ErrorMask<SigilStone_ErrorMask>?>(ExceptionExt.Combine(this.SigilStones?.Overall, rhs.SigilStones?.Overall), (this.SigilStones?.Specific as IErrorMask<Group_ErrorMask<SigilStone_ErrorMask>>)?.Combine(rhs.SigilStones?.Specific));
-            ret.LeveledItems = new MaskItem<Exception?, Group_ErrorMask<LeveledItem_ErrorMask>?>(ExceptionExt.Combine(this.LeveledItems?.Overall, rhs.LeveledItems?.Overall), (this.LeveledItems?.Specific as IErrorMask<Group_ErrorMask<LeveledItem_ErrorMask>>)?.Combine(rhs.LeveledItems?.Specific));
-            ret.Weathers = new MaskItem<Exception?, Group_ErrorMask<Weather_ErrorMask>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), (this.Weathers?.Specific as IErrorMask<Group_ErrorMask<Weather_ErrorMask>>)?.Combine(rhs.Weathers?.Specific));
-            ret.Climates = new MaskItem<Exception?, Group_ErrorMask<Climate_ErrorMask>?>(ExceptionExt.Combine(this.Climates?.Overall, rhs.Climates?.Overall), (this.Climates?.Specific as IErrorMask<Group_ErrorMask<Climate_ErrorMask>>)?.Combine(rhs.Climates?.Specific));
-            ret.Regions = new MaskItem<Exception?, Group_ErrorMask<Region_ErrorMask>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), (this.Regions?.Specific as IErrorMask<Group_ErrorMask<Region_ErrorMask>>)?.Combine(rhs.Regions?.Specific));
-            ret.Cells = new MaskItem<Exception?, ListGroup_ErrorMask<CellBlock_ErrorMask>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), (this.Cells?.Specific as IErrorMask<ListGroup_ErrorMask<CellBlock_ErrorMask>>)?.Combine(rhs.Cells?.Specific));
-            ret.Worldspaces = new MaskItem<Exception?, Group_ErrorMask<Worldspace_ErrorMask>?>(ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), (this.Worldspaces?.Specific as IErrorMask<Group_ErrorMask<Worldspace_ErrorMask>>)?.Combine(rhs.Worldspaces?.Specific));
-            ret.DialogTopics = new MaskItem<Exception?, Group_ErrorMask<DialogTopic_ErrorMask>?>(ExceptionExt.Combine(this.DialogTopics?.Overall, rhs.DialogTopics?.Overall), (this.DialogTopics?.Specific as IErrorMask<Group_ErrorMask<DialogTopic_ErrorMask>>)?.Combine(rhs.DialogTopics?.Specific));
-            ret.Quests = new MaskItem<Exception?, Group_ErrorMask<Quest_ErrorMask>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), (this.Quests?.Specific as IErrorMask<Group_ErrorMask<Quest_ErrorMask>>)?.Combine(rhs.Quests?.Specific));
-            ret.IdleAnimations = new MaskItem<Exception?, Group_ErrorMask<IdleAnimation_ErrorMask>?>(ExceptionExt.Combine(this.IdleAnimations?.Overall, rhs.IdleAnimations?.Overall), (this.IdleAnimations?.Specific as IErrorMask<Group_ErrorMask<IdleAnimation_ErrorMask>>)?.Combine(rhs.IdleAnimations?.Specific));
-            ret.AIPackages = new MaskItem<Exception?, Group_ErrorMask<AIPackage_ErrorMask>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), (this.AIPackages?.Specific as IErrorMask<Group_ErrorMask<AIPackage_ErrorMask>>)?.Combine(rhs.AIPackages?.Specific));
-            ret.CombatStyles = new MaskItem<Exception?, Group_ErrorMask<CombatStyle_ErrorMask>?>(ExceptionExt.Combine(this.CombatStyles?.Overall, rhs.CombatStyles?.Overall), (this.CombatStyles?.Specific as IErrorMask<Group_ErrorMask<CombatStyle_ErrorMask>>)?.Combine(rhs.CombatStyles?.Specific));
-            ret.LoadScreens = new MaskItem<Exception?, Group_ErrorMask<LoadScreen_ErrorMask>?>(ExceptionExt.Combine(this.LoadScreens?.Overall, rhs.LoadScreens?.Overall), (this.LoadScreens?.Specific as IErrorMask<Group_ErrorMask<LoadScreen_ErrorMask>>)?.Combine(rhs.LoadScreens?.Specific));
-            ret.LeveledSpells = new MaskItem<Exception?, Group_ErrorMask<LeveledSpell_ErrorMask>?>(ExceptionExt.Combine(this.LeveledSpells?.Overall, rhs.LeveledSpells?.Overall), (this.LeveledSpells?.Specific as IErrorMask<Group_ErrorMask<LeveledSpell_ErrorMask>>)?.Combine(rhs.LeveledSpells?.Specific));
-            ret.AnimatedObjects = new MaskItem<Exception?, Group_ErrorMask<AnimatedObject_ErrorMask>?>(ExceptionExt.Combine(this.AnimatedObjects?.Overall, rhs.AnimatedObjects?.Overall), (this.AnimatedObjects?.Specific as IErrorMask<Group_ErrorMask<AnimatedObject_ErrorMask>>)?.Combine(rhs.AnimatedObjects?.Specific));
-            ret.Waters = new MaskItem<Exception?, Group_ErrorMask<Water_ErrorMask>?>(ExceptionExt.Combine(this.Waters?.Overall, rhs.Waters?.Overall), (this.Waters?.Specific as IErrorMask<Group_ErrorMask<Water_ErrorMask>>)?.Combine(rhs.Waters?.Specific));
-            ret.EffectShaders = new MaskItem<Exception?, Group_ErrorMask<EffectShader_ErrorMask>?>(ExceptionExt.Combine(this.EffectShaders?.Overall, rhs.EffectShaders?.Overall), (this.EffectShaders?.Specific as IErrorMask<Group_ErrorMask<EffectShader_ErrorMask>>)?.Combine(rhs.EffectShaders?.Specific));
-            return ret;
-        }
-        public static OblivionMod_ErrorMask? Combine(OblivionMod_ErrorMask? lhs, OblivionMod_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static OblivionMod_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new OblivionMod_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class OblivionMod_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public MaskItem<bool, ModHeader_TranslationMask?> ModHeader;
-        public MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>?> GameSettings;
-        public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>?> Globals;
-        public MaskItem<bool, Group_TranslationMask<Class_TranslationMask>?> Classes;
-        public MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>?> Factions;
-        public MaskItem<bool, Group_TranslationMask<Hair_TranslationMask>?> Hairs;
-        public MaskItem<bool, Group_TranslationMask<Eye_TranslationMask>?> Eyes;
-        public MaskItem<bool, Group_TranslationMask<Race_TranslationMask>?> Races;
-        public MaskItem<bool, Group_TranslationMask<Sound_TranslationMask>?> Sounds;
-        public MaskItem<bool, Group_TranslationMask<SkillRecord_TranslationMask>?> Skills;
-        public MaskItem<bool, Group_TranslationMask<MagicEffect_TranslationMask>?> MagicEffects;
-        public MaskItem<bool, Group_TranslationMask<Script_TranslationMask>?> Scripts;
-        public MaskItem<bool, Group_TranslationMask<LandTexture_TranslationMask>?> LandTextures;
-        public MaskItem<bool, Group_TranslationMask<Enchantment_TranslationMask>?> Enchantments;
-        public MaskItem<bool, Group_TranslationMask<SpellUnleveled_TranslationMask>?> Spells;
-        public MaskItem<bool, Group_TranslationMask<Birthsign_TranslationMask>?> Birthsigns;
-        public MaskItem<bool, Group_TranslationMask<Activator_TranslationMask>?> Activators;
-        public MaskItem<bool, Group_TranslationMask<AlchemicalApparatus_TranslationMask>?> AlchemicalApparatus;
-        public MaskItem<bool, Group_TranslationMask<Armor_TranslationMask>?> Armors;
-        public MaskItem<bool, Group_TranslationMask<Book_TranslationMask>?> Books;
-        public MaskItem<bool, Group_TranslationMask<Clothing_TranslationMask>?> Clothes;
-        public MaskItem<bool, Group_TranslationMask<Container_TranslationMask>?> Containers;
-        public MaskItem<bool, Group_TranslationMask<Door_TranslationMask>?> Doors;
-        public MaskItem<bool, Group_TranslationMask<Ingredient_TranslationMask>?> Ingredients;
-        public MaskItem<bool, Group_TranslationMask<Light_TranslationMask>?> Lights;
-        public MaskItem<bool, Group_TranslationMask<Miscellaneous_TranslationMask>?> Miscellaneous;
-        public MaskItem<bool, Group_TranslationMask<Static_TranslationMask>?> Statics;
-        public MaskItem<bool, Group_TranslationMask<Grass_TranslationMask>?> Grasses;
-        public MaskItem<bool, Group_TranslationMask<Tree_TranslationMask>?> Trees;
-        public MaskItem<bool, Group_TranslationMask<Flora_TranslationMask>?> Flora;
-        public MaskItem<bool, Group_TranslationMask<Furnature_TranslationMask>?> Furnature;
-        public MaskItem<bool, Group_TranslationMask<Weapon_TranslationMask>?> Weapons;
-        public MaskItem<bool, Group_TranslationMask<Ammo_TranslationMask>?> Ammo;
-        public MaskItem<bool, Group_TranslationMask<NPC_TranslationMask>?> NPCs;
-        public MaskItem<bool, Group_TranslationMask<Creature_TranslationMask>?> Creatures;
-        public MaskItem<bool, Group_TranslationMask<LeveledCreature_TranslationMask>?> LeveledCreatures;
-        public MaskItem<bool, Group_TranslationMask<SoulGem_TranslationMask>?> SoulGems;
-        public MaskItem<bool, Group_TranslationMask<Key_TranslationMask>?> Keys;
-        public MaskItem<bool, Group_TranslationMask<Potion_TranslationMask>?> Potions;
-        public MaskItem<bool, Group_TranslationMask<Subspace_TranslationMask>?> Subspaces;
-        public MaskItem<bool, Group_TranslationMask<SigilStone_TranslationMask>?> SigilStones;
-        public MaskItem<bool, Group_TranslationMask<LeveledItem_TranslationMask>?> LeveledItems;
-        public MaskItem<bool, Group_TranslationMask<Weather_TranslationMask>?> Weathers;
-        public MaskItem<bool, Group_TranslationMask<Climate_TranslationMask>?> Climates;
-        public MaskItem<bool, Group_TranslationMask<Region_TranslationMask>?> Regions;
-        public MaskItem<bool, ListGroup_TranslationMask<CellBlock_TranslationMask>?> Cells;
-        public MaskItem<bool, Group_TranslationMask<Worldspace_TranslationMask>?> Worldspaces;
-        public MaskItem<bool, Group_TranslationMask<DialogTopic_TranslationMask>?> DialogTopics;
-        public MaskItem<bool, Group_TranslationMask<Quest_TranslationMask>?> Quests;
-        public MaskItem<bool, Group_TranslationMask<IdleAnimation_TranslationMask>?> IdleAnimations;
-        public MaskItem<bool, Group_TranslationMask<AIPackage_TranslationMask>?> AIPackages;
-        public MaskItem<bool, Group_TranslationMask<CombatStyle_TranslationMask>?> CombatStyles;
-        public MaskItem<bool, Group_TranslationMask<LoadScreen_TranslationMask>?> LoadScreens;
-        public MaskItem<bool, Group_TranslationMask<LeveledSpell_TranslationMask>?> LeveledSpells;
-        public MaskItem<bool, Group_TranslationMask<AnimatedObject_TranslationMask>?> AnimatedObjects;
-        public MaskItem<bool, Group_TranslationMask<Water_TranslationMask>?> Waters;
-        public MaskItem<bool, Group_TranslationMask<EffectShader_TranslationMask>?> EffectShaders;
-        #endregion
-
-        #region Ctors
-        public OblivionMod_TranslationMask(bool defaultOn)
-        {
-            this.ModHeader = new MaskItem<bool, ModHeader_TranslationMask?>(defaultOn, null);
-            this.GameSettings = new MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>?>(defaultOn, null);
-            this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>?>(defaultOn, null);
-            this.Classes = new MaskItem<bool, Group_TranslationMask<Class_TranslationMask>?>(defaultOn, null);
-            this.Factions = new MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>?>(defaultOn, null);
-            this.Hairs = new MaskItem<bool, Group_TranslationMask<Hair_TranslationMask>?>(defaultOn, null);
-            this.Eyes = new MaskItem<bool, Group_TranslationMask<Eye_TranslationMask>?>(defaultOn, null);
-            this.Races = new MaskItem<bool, Group_TranslationMask<Race_TranslationMask>?>(defaultOn, null);
-            this.Sounds = new MaskItem<bool, Group_TranslationMask<Sound_TranslationMask>?>(defaultOn, null);
-            this.Skills = new MaskItem<bool, Group_TranslationMask<SkillRecord_TranslationMask>?>(defaultOn, null);
-            this.MagicEffects = new MaskItem<bool, Group_TranslationMask<MagicEffect_TranslationMask>?>(defaultOn, null);
-            this.Scripts = new MaskItem<bool, Group_TranslationMask<Script_TranslationMask>?>(defaultOn, null);
-            this.LandTextures = new MaskItem<bool, Group_TranslationMask<LandTexture_TranslationMask>?>(defaultOn, null);
-            this.Enchantments = new MaskItem<bool, Group_TranslationMask<Enchantment_TranslationMask>?>(defaultOn, null);
-            this.Spells = new MaskItem<bool, Group_TranslationMask<SpellUnleveled_TranslationMask>?>(defaultOn, null);
-            this.Birthsigns = new MaskItem<bool, Group_TranslationMask<Birthsign_TranslationMask>?>(defaultOn, null);
-            this.Activators = new MaskItem<bool, Group_TranslationMask<Activator_TranslationMask>?>(defaultOn, null);
-            this.AlchemicalApparatus = new MaskItem<bool, Group_TranslationMask<AlchemicalApparatus_TranslationMask>?>(defaultOn, null);
-            this.Armors = new MaskItem<bool, Group_TranslationMask<Armor_TranslationMask>?>(defaultOn, null);
-            this.Books = new MaskItem<bool, Group_TranslationMask<Book_TranslationMask>?>(defaultOn, null);
-            this.Clothes = new MaskItem<bool, Group_TranslationMask<Clothing_TranslationMask>?>(defaultOn, null);
-            this.Containers = new MaskItem<bool, Group_TranslationMask<Container_TranslationMask>?>(defaultOn, null);
-            this.Doors = new MaskItem<bool, Group_TranslationMask<Door_TranslationMask>?>(defaultOn, null);
-            this.Ingredients = new MaskItem<bool, Group_TranslationMask<Ingredient_TranslationMask>?>(defaultOn, null);
-            this.Lights = new MaskItem<bool, Group_TranslationMask<Light_TranslationMask>?>(defaultOn, null);
-            this.Miscellaneous = new MaskItem<bool, Group_TranslationMask<Miscellaneous_TranslationMask>?>(defaultOn, null);
-            this.Statics = new MaskItem<bool, Group_TranslationMask<Static_TranslationMask>?>(defaultOn, null);
-            this.Grasses = new MaskItem<bool, Group_TranslationMask<Grass_TranslationMask>?>(defaultOn, null);
-            this.Trees = new MaskItem<bool, Group_TranslationMask<Tree_TranslationMask>?>(defaultOn, null);
-            this.Flora = new MaskItem<bool, Group_TranslationMask<Flora_TranslationMask>?>(defaultOn, null);
-            this.Furnature = new MaskItem<bool, Group_TranslationMask<Furnature_TranslationMask>?>(defaultOn, null);
-            this.Weapons = new MaskItem<bool, Group_TranslationMask<Weapon_TranslationMask>?>(defaultOn, null);
-            this.Ammo = new MaskItem<bool, Group_TranslationMask<Ammo_TranslationMask>?>(defaultOn, null);
-            this.NPCs = new MaskItem<bool, Group_TranslationMask<NPC_TranslationMask>?>(defaultOn, null);
-            this.Creatures = new MaskItem<bool, Group_TranslationMask<Creature_TranslationMask>?>(defaultOn, null);
-            this.LeveledCreatures = new MaskItem<bool, Group_TranslationMask<LeveledCreature_TranslationMask>?>(defaultOn, null);
-            this.SoulGems = new MaskItem<bool, Group_TranslationMask<SoulGem_TranslationMask>?>(defaultOn, null);
-            this.Keys = new MaskItem<bool, Group_TranslationMask<Key_TranslationMask>?>(defaultOn, null);
-            this.Potions = new MaskItem<bool, Group_TranslationMask<Potion_TranslationMask>?>(defaultOn, null);
-            this.Subspaces = new MaskItem<bool, Group_TranslationMask<Subspace_TranslationMask>?>(defaultOn, null);
-            this.SigilStones = new MaskItem<bool, Group_TranslationMask<SigilStone_TranslationMask>?>(defaultOn, null);
-            this.LeveledItems = new MaskItem<bool, Group_TranslationMask<LeveledItem_TranslationMask>?>(defaultOn, null);
-            this.Weathers = new MaskItem<bool, Group_TranslationMask<Weather_TranslationMask>?>(defaultOn, null);
-            this.Climates = new MaskItem<bool, Group_TranslationMask<Climate_TranslationMask>?>(defaultOn, null);
-            this.Regions = new MaskItem<bool, Group_TranslationMask<Region_TranslationMask>?>(defaultOn, null);
-            this.Cells = new MaskItem<bool, ListGroup_TranslationMask<CellBlock_TranslationMask>?>(defaultOn, null);
-            this.Worldspaces = new MaskItem<bool, Group_TranslationMask<Worldspace_TranslationMask>?>(defaultOn, null);
-            this.DialogTopics = new MaskItem<bool, Group_TranslationMask<DialogTopic_TranslationMask>?>(defaultOn, null);
-            this.Quests = new MaskItem<bool, Group_TranslationMask<Quest_TranslationMask>?>(defaultOn, null);
-            this.IdleAnimations = new MaskItem<bool, Group_TranslationMask<IdleAnimation_TranslationMask>?>(defaultOn, null);
-            this.AIPackages = new MaskItem<bool, Group_TranslationMask<AIPackage_TranslationMask>?>(defaultOn, null);
-            this.CombatStyles = new MaskItem<bool, Group_TranslationMask<CombatStyle_TranslationMask>?>(defaultOn, null);
-            this.LoadScreens = new MaskItem<bool, Group_TranslationMask<LoadScreen_TranslationMask>?>(defaultOn, null);
-            this.LeveledSpells = new MaskItem<bool, Group_TranslationMask<LeveledSpell_TranslationMask>?>(defaultOn, null);
-            this.AnimatedObjects = new MaskItem<bool, Group_TranslationMask<AnimatedObject_TranslationMask>?>(defaultOn, null);
-            this.Waters = new MaskItem<bool, Group_TranslationMask<Water_TranslationMask>?>(defaultOn, null);
-            this.EffectShaders = new MaskItem<bool, Group_TranslationMask<EffectShader_TranslationMask>?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((ModHeader?.Overall ?? true, ModHeader?.Specific?.GetCrystal()));
-            ret.Add((GameSettings?.Overall ?? true, GameSettings?.Specific?.GetCrystal()));
-            ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
-            ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
-            ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
-            ret.Add((Hairs?.Overall ?? true, Hairs?.Specific?.GetCrystal()));
-            ret.Add((Eyes?.Overall ?? true, Eyes?.Specific?.GetCrystal()));
-            ret.Add((Races?.Overall ?? true, Races?.Specific?.GetCrystal()));
-            ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
-            ret.Add((Skills?.Overall ?? true, Skills?.Specific?.GetCrystal()));
-            ret.Add((MagicEffects?.Overall ?? true, MagicEffects?.Specific?.GetCrystal()));
-            ret.Add((Scripts?.Overall ?? true, Scripts?.Specific?.GetCrystal()));
-            ret.Add((LandTextures?.Overall ?? true, LandTextures?.Specific?.GetCrystal()));
-            ret.Add((Enchantments?.Overall ?? true, Enchantments?.Specific?.GetCrystal()));
-            ret.Add((Spells?.Overall ?? true, Spells?.Specific?.GetCrystal()));
-            ret.Add((Birthsigns?.Overall ?? true, Birthsigns?.Specific?.GetCrystal()));
-            ret.Add((Activators?.Overall ?? true, Activators?.Specific?.GetCrystal()));
-            ret.Add((AlchemicalApparatus?.Overall ?? true, AlchemicalApparatus?.Specific?.GetCrystal()));
-            ret.Add((Armors?.Overall ?? true, Armors?.Specific?.GetCrystal()));
-            ret.Add((Books?.Overall ?? true, Books?.Specific?.GetCrystal()));
-            ret.Add((Clothes?.Overall ?? true, Clothes?.Specific?.GetCrystal()));
-            ret.Add((Containers?.Overall ?? true, Containers?.Specific?.GetCrystal()));
-            ret.Add((Doors?.Overall ?? true, Doors?.Specific?.GetCrystal()));
-            ret.Add((Ingredients?.Overall ?? true, Ingredients?.Specific?.GetCrystal()));
-            ret.Add((Lights?.Overall ?? true, Lights?.Specific?.GetCrystal()));
-            ret.Add((Miscellaneous?.Overall ?? true, Miscellaneous?.Specific?.GetCrystal()));
-            ret.Add((Statics?.Overall ?? true, Statics?.Specific?.GetCrystal()));
-            ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
-            ret.Add((Trees?.Overall ?? true, Trees?.Specific?.GetCrystal()));
-            ret.Add((Flora?.Overall ?? true, Flora?.Specific?.GetCrystal()));
-            ret.Add((Furnature?.Overall ?? true, Furnature?.Specific?.GetCrystal()));
-            ret.Add((Weapons?.Overall ?? true, Weapons?.Specific?.GetCrystal()));
-            ret.Add((Ammo?.Overall ?? true, Ammo?.Specific?.GetCrystal()));
-            ret.Add((NPCs?.Overall ?? true, NPCs?.Specific?.GetCrystal()));
-            ret.Add((Creatures?.Overall ?? true, Creatures?.Specific?.GetCrystal()));
-            ret.Add((LeveledCreatures?.Overall ?? true, LeveledCreatures?.Specific?.GetCrystal()));
-            ret.Add((SoulGems?.Overall ?? true, SoulGems?.Specific?.GetCrystal()));
-            ret.Add((Keys?.Overall ?? true, Keys?.Specific?.GetCrystal()));
-            ret.Add((Potions?.Overall ?? true, Potions?.Specific?.GetCrystal()));
-            ret.Add((Subspaces?.Overall ?? true, Subspaces?.Specific?.GetCrystal()));
-            ret.Add((SigilStones?.Overall ?? true, SigilStones?.Specific?.GetCrystal()));
-            ret.Add((LeveledItems?.Overall ?? true, LeveledItems?.Specific?.GetCrystal()));
-            ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
-            ret.Add((Climates?.Overall ?? true, Climates?.Specific?.GetCrystal()));
-            ret.Add((Regions?.Overall ?? true, Regions?.Specific?.GetCrystal()));
-            ret.Add((Cells?.Overall ?? true, Cells?.Specific?.GetCrystal()));
-            ret.Add((Worldspaces?.Overall ?? true, Worldspaces?.Specific?.GetCrystal()));
-            ret.Add((DialogTopics?.Overall ?? true, DialogTopics?.Specific?.GetCrystal()));
-            ret.Add((Quests?.Overall ?? true, Quests?.Specific?.GetCrystal()));
-            ret.Add((IdleAnimations?.Overall ?? true, IdleAnimations?.Specific?.GetCrystal()));
-            ret.Add((AIPackages?.Overall ?? true, AIPackages?.Specific?.GetCrystal()));
-            ret.Add((CombatStyles?.Overall ?? true, CombatStyles?.Specific?.GetCrystal()));
-            ret.Add((LoadScreens?.Overall ?? true, LoadScreens?.Specific?.GetCrystal()));
-            ret.Add((LeveledSpells?.Overall ?? true, LeveledSpells?.Specific?.GetCrystal()));
-            ret.Add((AnimatedObjects?.Overall ?? true, AnimatedObjects?.Specific?.GetCrystal()));
-            ret.Add((Waters?.Overall ?? true, Waters?.Specific?.GetCrystal()));
-            ret.Add((EffectShaders?.Overall ?? true, EffectShaders?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

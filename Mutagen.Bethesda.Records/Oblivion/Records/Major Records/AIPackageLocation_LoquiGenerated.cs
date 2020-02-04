@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageLocation CreateFromXml(
             XElement node,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -123,15 +123,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageLocation CreateFromXml(
             XElement node,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             string path,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             string path,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             Stream stream,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation CreateFromXml(
             Stream stream,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageLocation CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,6 +219,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Type = initialValue;
+                this.LocationReference = initialValue;
+                this.Radius = initialValue;
+            }
+
+            public Mask(
+                T Type,
+                T LocationReference,
+                T Radius)
+            {
+                this.Type = Type;
+                this.LocationReference = LocationReference;
+                this.Radius = Radius;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Type;
+            public T LocationReference;
+            public T Radius;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.LocationReference, rhs.LocationReference)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.LocationReference?.GetHashCode());
+                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Type)) return false;
+                if (!eval(this.LocationReference)) return false;
+                if (!eval(this.Radius)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AIPackageLocation.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Type = eval(this.Type);
+                obj.LocationReference = eval(this.LocationReference);
+                obj.Radius = eval(this.Radius);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AIPackageLocation.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AIPackageLocation.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AIPackageLocation.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.LocationReference ?? true)
+                    {
+                        fg.AppendLine($"LocationReference => {LocationReference}");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendLine($"Radius => {Radius}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Type;
+            public Exception? LocationReference;
+            public Exception? Radius;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageLocation_FieldIndex.Type:
+                        return Type;
+                    case AIPackageLocation_FieldIndex.LocationReference:
+                        return LocationReference;
+                    case AIPackageLocation_FieldIndex.Radius:
+                        return Radius;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageLocation_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case AIPackageLocation_FieldIndex.LocationReference:
+                        this.LocationReference = ex;
+                        break;
+                    case AIPackageLocation_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageLocation_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case AIPackageLocation_FieldIndex.LocationReference:
+                        this.LocationReference = (Exception)obj;
+                        break;
+                    case AIPackageLocation_FieldIndex.Radius:
+                        this.Radius = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Type != null) return true;
+                if (LocationReference != null) return true;
+                if (Radius != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"LocationReference => {LocationReference}");
+                fg.AppendLine($"Radius => {Radius}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Type;
+            public bool LocationReference;
+            public bool Radius;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Type = defaultOn;
+                this.LocationReference = defaultOn;
+                this.Radius = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Type, null));
+                ret.Add((LocationReference, null));
+                ret.Add((Radius, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -329,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AIPackageLocation_Mask<bool> GetEqualsMask(
+        public static AIPackageLocation.Mask<bool> GetEqualsMask(
             this IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -343,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAIPackageLocationGetter item,
             string? name = null,
-            AIPackageLocation_Mask<bool>? printMask = null)
+            AIPackageLocation.Mask<bool>? printMask = null)
         {
             return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -355,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackageLocation_Mask<bool>? printMask = null)
+            AIPackageLocation.Mask<bool>? printMask = null)
         {
             ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -366,16 +680,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAIPackageLocationGetter item,
-            AIPackageLocation_Mask<bool?> checkMask)
+            AIPackageLocation.Mask<bool?> checkMask)
         {
             return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AIPackageLocation_Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
+        public static AIPackageLocation.Mask<bool> GetHasBeenSetMask(this IAIPackageLocationGetter item)
         {
-            var ret = new AIPackageLocation_Mask<bool>(false);
+            var ret = new AIPackageLocation.Mask<bool>(false);
             ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -394,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageLocation lhs,
             IAIPackageLocationGetter rhs,
-            AIPackageLocation_TranslationMask? copyMask = null)
+            AIPackageLocation.TranslationMask? copyMask = null)
         {
             ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -406,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageLocation lhs,
             IAIPackageLocationGetter rhs,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? copyMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -415,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -433,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation DeepCopy(
             this IAIPackageLocationGetter item,
-            AIPackageLocation_TranslationMask? copyMask = null)
+            AIPackageLocation.TranslationMask? copyMask = null)
         {
             return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -442,8 +756,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageLocation DeepCopy(
             this IAIPackageLocationGetter item,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? copyMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? copyMask = null)
         {
             return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             XElement node,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -480,8 +794,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             XElement node,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -489,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -508,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             string path,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -520,8 +834,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             string path,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -535,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -548,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             Stream stream,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -560,8 +874,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageLocation item,
             Stream stream,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -575,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(AIPackageLocation_Mask<>);
+        public static readonly Type MaskType = typeof(AIPackageLocation.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AIPackageLocation_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AIPackageLocation.ErrorMask);
 
         public static readonly Type ClassType = typeof(AIPackageLocation);
 
@@ -910,12 +1224,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly AIPackageLocationCommon Instance = new AIPackageLocationCommon();
 
-        public AIPackageLocation_Mask<bool> GetEqualsMask(
+        public AIPackageLocation.Mask<bool> GetEqualsMask(
             IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackageLocation_Mask<bool>(false);
+            var ret = new AIPackageLocation.Mask<bool>(false);
             ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -927,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAIPackageLocationGetter item,
             IAIPackageLocationGetter rhs,
-            AIPackageLocation_Mask<bool> ret,
+            AIPackageLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -939,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAIPackageLocationGetter item,
             string? name = null,
-            AIPackageLocation_Mask<bool>? printMask = null)
+            AIPackageLocation.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -954,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocationGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackageLocation_Mask<bool>? printMask = null)
+            AIPackageLocation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -978,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAIPackageLocationGetter item,
             FileGeneration fg,
-            AIPackageLocation_Mask<bool>? printMask = null)
+            AIPackageLocation.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
@@ -996,14 +1310,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAIPackageLocationGetter item,
-            AIPackageLocation_Mask<bool?> checkMask)
+            AIPackageLocation.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IAIPackageLocationGetter item,
-            AIPackageLocation_Mask<bool> mask)
+            AIPackageLocation.Mask<bool> mask)
         {
             mask.Type = true;
             mask.LocationReference = true;
@@ -1079,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageLocation DeepCopy(
             IAIPackageLocationGetter item,
-            AIPackageLocation_TranslationMask? copyMask = null)
+            AIPackageLocation.TranslationMask? copyMask = null)
         {
             AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1090,8 +1404,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageLocation DeepCopy(
             IAIPackageLocationGetter item,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? copyMask = null)
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? copyMask = null)
         {
             AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1366,8 +1680,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             XElement node,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null,
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1377,14 +1691,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             string path,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null,
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1417,8 +1731,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageLocationGetter item,
             Stream stream,
-            out AIPackageLocation_ErrorMask errorMask,
-            AIPackageLocation_TranslationMask? translationMask = null,
+            out AIPackageLocation.ErrorMask errorMask,
+            AIPackageLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1467,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocationGetter item,
             XElement node,
             string? name = null,
-            AIPackageLocation_TranslationMask? translationMask = null)
+            AIPackageLocation.TranslationMask? translationMask = null)
         {
             ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1511,321 +1825,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AIPackageLocation_Mask<T> :
-        IMask<T>,
-        IEquatable<AIPackageLocation_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AIPackageLocation_Mask(T initialValue)
-        {
-            this.Type = initialValue;
-            this.LocationReference = initialValue;
-            this.Radius = initialValue;
-        }
-
-        public AIPackageLocation_Mask(
-            T Type,
-            T LocationReference,
-            T Radius)
-        {
-            this.Type = Type;
-            this.LocationReference = LocationReference;
-            this.Radius = Radius;
-        }
-
-        #pragma warning disable CS8618
-        protected AIPackageLocation_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Type;
-        public T LocationReference;
-        public T Radius;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AIPackageLocation_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AIPackageLocation_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.LocationReference, rhs.LocationReference)) return false;
-            if (!object.Equals(this.Radius, rhs.Radius)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.LocationReference?.GetHashCode());
-            ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Type)) return false;
-            if (!eval(this.LocationReference)) return false;
-            if (!eval(this.Radius)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public AIPackageLocation_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AIPackageLocation_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AIPackageLocation_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Type = eval(this.Type);
-            obj.LocationReference = eval(this.LocationReference);
-            obj.Radius = eval(this.Radius);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AIPackageLocation_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AIPackageLocation_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AIPackageLocation_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.LocationReference ?? true)
-                {
-                    fg.AppendLine($"LocationReference => {LocationReference}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {Radius}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AIPackageLocation_ErrorMask : IErrorMask, IErrorMask<AIPackageLocation_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Type;
-        public Exception? LocationReference;
-        public Exception? Radius;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    return Type;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    return LocationReference;
-                case AIPackageLocation_FieldIndex.Radius:
-                    return Radius;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    this.LocationReference = ex;
-                    break;
-                case AIPackageLocation_FieldIndex.Radius:
-                    this.Radius = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            AIPackageLocation_FieldIndex enu = (AIPackageLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageLocation_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case AIPackageLocation_FieldIndex.LocationReference:
-                    this.LocationReference = (Exception)obj;
-                    break;
-                case AIPackageLocation_FieldIndex.Radius:
-                    this.Radius = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Type != null) return true;
-            if (LocationReference != null) return true;
-            if (Radius != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AIPackageLocation_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"LocationReference => {LocationReference}");
-            fg.AppendLine($"Radius => {Radius}");
-        }
-        #endregion
-
-        #region Combine
-        public AIPackageLocation_ErrorMask Combine(AIPackageLocation_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AIPackageLocation_ErrorMask();
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
-            ret.Radius = this.Radius.Combine(rhs.Radius);
-            return ret;
-        }
-        public static AIPackageLocation_ErrorMask? Combine(AIPackageLocation_ErrorMask? lhs, AIPackageLocation_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static AIPackageLocation_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AIPackageLocation_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AIPackageLocation_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Type;
-        public bool LocationReference;
-        public bool Radius;
-        #endregion
-
-        #region Ctors
-        public AIPackageLocation_TranslationMask(bool defaultOn)
-        {
-            this.Type = defaultOn;
-            this.LocationReference = defaultOn;
-            this.Radius = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Type, null));
-            ret.Add((LocationReference, null));
-            ret.Add((Radius, null));
-        }
-    }
 }
 #endregion
 

@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static EnableParent CreateFromXml(
             XElement node,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -120,15 +120,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static EnableParent CreateFromXml(
             XElement node,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EnableParent CreateFromXml(
             string path,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -158,8 +158,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EnableParent CreateFromXml(
             string path,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static EnableParent CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EnableParent CreateFromXml(
             Stream stream,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EnableParent CreateFromXml(
             Stream stream,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static EnableParent CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,6 +216,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Reference = initialValue;
+                this.Flags = initialValue;
+            }
+
+            public Mask(
+                T Reference,
+                T Flags)
+            {
+                this.Reference = Reference;
+                this.Flags = Flags;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Reference;
+            public T Flags;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Reference, rhs.Reference)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Reference?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Reference)) return false;
+                if (!eval(this.Flags)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new EnableParent.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Reference = eval(this.Reference);
+                obj.Flags = eval(this.Flags);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(EnableParent.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, EnableParent.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(EnableParent.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Reference ?? true)
+                    {
+                        fg.AppendLine($"Reference => {Reference}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Reference;
+            public Exception? Flags;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
+                switch (enu)
+                {
+                    case EnableParent_FieldIndex.Reference:
+                        return Reference;
+                    case EnableParent_FieldIndex.Flags:
+                        return Flags;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
+                switch (enu)
+                {
+                    case EnableParent_FieldIndex.Reference:
+                        this.Reference = ex;
+                        break;
+                    case EnableParent_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
+                switch (enu)
+                {
+                    case EnableParent_FieldIndex.Reference:
+                        this.Reference = (Exception)obj;
+                        break;
+                    case EnableParent_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Reference != null) return true;
+                if (Flags != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Reference => {Reference}");
+                fg.AppendLine($"Flags => {Flags}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Reference = this.Reference.Combine(rhs.Reference);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Reference;
+            public bool Flags;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Reference = defaultOn;
+                this.Flags = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Reference, null));
+                ret.Add((Flags, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -324,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static EnableParent_Mask<bool> GetEqualsMask(
+        public static EnableParent.Mask<bool> GetEqualsMask(
             this IEnableParentGetter item,
             IEnableParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -338,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IEnableParentGetter item,
             string? name = null,
-            EnableParent_Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnableParentGetter item,
             FileGeneration fg,
             string? name = null,
-            EnableParent_Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -361,16 +648,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IEnableParentGetter item,
-            EnableParent_Mask<bool?> checkMask)
+            EnableParent.Mask<bool?> checkMask)
         {
             return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static EnableParent_Mask<bool> GetHasBeenSetMask(this IEnableParentGetter item)
+        public static EnableParent.Mask<bool> GetHasBeenSetMask(this IEnableParentGetter item)
         {
-            var ret = new EnableParent_Mask<bool>(false);
+            var ret = new EnableParent.Mask<bool>(false);
             ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -389,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IEnableParent lhs,
             IEnableParentGetter rhs,
-            EnableParent_TranslationMask? copyMask = null)
+            EnableParent.TranslationMask? copyMask = null)
         {
             ((EnableParentSetterTranslationCommon)((IEnableParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -401,8 +688,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IEnableParent lhs,
             IEnableParentGetter rhs,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? copyMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((EnableParentSetterTranslationCommon)((IEnableParentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -410,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -428,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EnableParent DeepCopy(
             this IEnableParentGetter item,
-            EnableParent_TranslationMask? copyMask = null)
+            EnableParent.TranslationMask? copyMask = null)
         {
             return ((EnableParentSetterTranslationCommon)((IEnableParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -437,8 +724,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EnableParent DeepCopy(
             this IEnableParentGetter item,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? copyMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? copyMask = null)
         {
             return ((EnableParentSetterTranslationCommon)((IEnableParentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -462,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnableParent item,
             XElement node,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -475,8 +762,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnableParent item,
             XElement node,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -484,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -503,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnableParent item,
             string path,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -515,8 +802,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnableParent item,
             string path,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -530,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnableParent item,
             string path,
             ErrorMaskBuilder? errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -543,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnableParent item,
             Stream stream,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -555,8 +842,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnableParent item,
             Stream stream,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -570,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnableParent item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -644,9 +931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(EnableParent_Mask<>);
+        public static readonly Type MaskType = typeof(EnableParent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(EnableParent_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(EnableParent.ErrorMask);
 
         public static readonly Type ClassType = typeof(EnableParent);
 
@@ -891,12 +1178,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly EnableParentCommon Instance = new EnableParentCommon();
 
-        public EnableParent_Mask<bool> GetEqualsMask(
+        public EnableParent.Mask<bool> GetEqualsMask(
             IEnableParentGetter item,
             IEnableParentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EnableParent_Mask<bool>(false);
+            var ret = new EnableParent.Mask<bool>(false);
             ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -908,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IEnableParentGetter item,
             IEnableParentGetter rhs,
-            EnableParent_Mask<bool> ret,
+            EnableParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -919,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IEnableParentGetter item,
             string? name = null,
-            EnableParent_Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -934,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParentGetter item,
             FileGeneration fg,
             string? name = null,
-            EnableParent_Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -958,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IEnableParentGetter item,
             FileGeneration fg,
-            EnableParent_Mask<bool>? printMask = null)
+            EnableParent.Mask<bool>? printMask = null)
         {
             if (printMask?.Reference ?? true)
             {
@@ -972,14 +1259,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IEnableParentGetter item,
-            EnableParent_Mask<bool?> checkMask)
+            EnableParent.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IEnableParentGetter item,
-            EnableParent_Mask<bool> mask)
+            EnableParent.Mask<bool> mask)
         {
             mask.Reference = true;
             mask.Flags = true;
@@ -1048,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public EnableParent DeepCopy(
             IEnableParentGetter item,
-            EnableParent_TranslationMask? copyMask = null)
+            EnableParent.TranslationMask? copyMask = null)
         {
             EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1059,8 +1346,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public EnableParent DeepCopy(
             IEnableParentGetter item,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? copyMask = null)
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? copyMask = null)
         {
             EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1308,8 +1595,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEnableParentGetter item,
             XElement node,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null,
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1319,14 +1606,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IEnableParentGetter item,
             string path,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null,
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1359,8 +1646,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEnableParentGetter item,
             Stream stream,
-            out EnableParent_ErrorMask errorMask,
-            EnableParent_TranslationMask? translationMask = null,
+            out EnableParent.ErrorMask errorMask,
+            EnableParent.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1409,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnableParentGetter item,
             XElement node,
             string? name = null,
-            EnableParent_TranslationMask? translationMask = null)
+            EnableParent.TranslationMask? translationMask = null)
         {
             ((EnableParentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1453,294 +1740,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class EnableParent_Mask<T> :
-        IMask<T>,
-        IEquatable<EnableParent_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public EnableParent_Mask(T initialValue)
-        {
-            this.Reference = initialValue;
-            this.Flags = initialValue;
-        }
-
-        public EnableParent_Mask(
-            T Reference,
-            T Flags)
-        {
-            this.Reference = Reference;
-            this.Flags = Flags;
-        }
-
-        #pragma warning disable CS8618
-        protected EnableParent_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Reference;
-        public T Flags;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is EnableParent_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(EnableParent_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Reference, rhs.Reference)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Reference?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Reference)) return false;
-            if (!eval(this.Flags)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public EnableParent_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new EnableParent_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(EnableParent_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Reference = eval(this.Reference);
-            obj.Flags = eval(this.Flags);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(EnableParent_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, EnableParent_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(EnableParent_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {Reference}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class EnableParent_ErrorMask : IErrorMask, IErrorMask<EnableParent_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Reference;
-        public Exception? Flags;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    return Reference;
-                case EnableParent_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    this.Reference = ex;
-                    break;
-                case EnableParent_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            EnableParent_FieldIndex enu = (EnableParent_FieldIndex)index;
-            switch (enu)
-            {
-                case EnableParent_FieldIndex.Reference:
-                    this.Reference = (Exception)obj;
-                    break;
-                case EnableParent_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Reference != null) return true;
-            if (Flags != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("EnableParent_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Reference => {Reference}");
-            fg.AppendLine($"Flags => {Flags}");
-        }
-        #endregion
-
-        #region Combine
-        public EnableParent_ErrorMask Combine(EnableParent_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new EnableParent_ErrorMask();
-            ret.Reference = this.Reference.Combine(rhs.Reference);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            return ret;
-        }
-        public static EnableParent_ErrorMask? Combine(EnableParent_ErrorMask? lhs, EnableParent_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static EnableParent_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new EnableParent_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class EnableParent_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Reference;
-        public bool Flags;
-        #endregion
-
-        #region Ctors
-        public EnableParent_TranslationMask(bool defaultOn)
-        {
-            this.Reference = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Reference, null));
-            ret.Add((Flags, null));
-        }
-    }
 }
 #endregion
 

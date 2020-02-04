@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionArea CreateFromXml(
             XElement node,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -133,15 +133,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionArea CreateFromXml(
             XElement node,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionArea.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionArea CreateFromXml(
             string path,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionArea CreateFromXml(
             string path,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionArea CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionArea CreateFromXml(
             Stream stream,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,8 +205,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionArea CreateFromXml(
             Stream stream,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionArea CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -229,6 +229,364 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.EdgeFallOff = initialValue;
+                this.RegionPoints = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T EdgeFallOff,
+                T RegionPoints)
+            {
+                this.EdgeFallOff = EdgeFallOff;
+                this.RegionPoints = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RegionPoints, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T EdgeFallOff;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? RegionPoints;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.EdgeFallOff, rhs.EdgeFallOff)) return false;
+                if (!object.Equals(this.RegionPoints, rhs.RegionPoints)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.EdgeFallOff?.GetHashCode());
+                ret = ret.CombineHashCode(this.RegionPoints?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.EdgeFallOff)) return false;
+                if (this.RegionPoints != null)
+                {
+                    if (!eval(this.RegionPoints.Overall)) return false;
+                    if (this.RegionPoints.Specific != null)
+                    {
+                        foreach (var item in this.RegionPoints.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RegionArea.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.EdgeFallOff = eval(this.EdgeFallOff);
+                if (RegionPoints != null)
+                {
+                    obj.RegionPoints = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RegionPoints.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RegionPoints.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RegionPoints.Specific = l;
+                        foreach (var item in RegionPoints.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RegionArea.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RegionArea.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RegionArea.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.EdgeFallOff ?? true)
+                    {
+                        fg.AppendLine($"EdgeFallOff => {EdgeFallOff}");
+                    }
+                    if (printMask?.RegionPoints?.Overall ?? true)
+                    {
+                        fg.AppendLine("RegionPoints =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (RegionPoints != null)
+                            {
+                                if (RegionPoints.Overall != null)
+                                {
+                                    fg.AppendLine(RegionPoints.Overall.ToString());
+                                }
+                                if (RegionPoints.Specific != null)
+                                {
+                                    foreach (var subItem in RegionPoints.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? EdgeFallOff;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RegionPoints;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionArea_FieldIndex.EdgeFallOff:
+                        return EdgeFallOff;
+                    case RegionArea_FieldIndex.RegionPoints:
+                        return RegionPoints;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionArea_FieldIndex.EdgeFallOff:
+                        this.EdgeFallOff = ex;
+                        break;
+                    case RegionArea_FieldIndex.RegionPoints:
+                        this.RegionPoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionArea_FieldIndex.EdgeFallOff:
+                        this.EdgeFallOff = (Exception)obj;
+                        break;
+                    case RegionArea_FieldIndex.RegionPoints:
+                        this.RegionPoints = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (EdgeFallOff != null) return true;
+                if (RegionPoints != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"EdgeFallOff => {EdgeFallOff}");
+                fg.AppendLine("RegionPoints =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (RegionPoints != null)
+                    {
+                        if (RegionPoints.Overall != null)
+                        {
+                            fg.AppendLine(RegionPoints.Overall.ToString());
+                        }
+                        if (RegionPoints.Specific != null)
+                        {
+                            foreach (var subItem in RegionPoints.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.EdgeFallOff = this.EdgeFallOff.Combine(rhs.EdgeFallOff);
+                ret.RegionPoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RegionPoints?.Overall, rhs.RegionPoints?.Overall), ExceptionExt.Combine(this.RegionPoints?.Specific, rhs.RegionPoints?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool EdgeFallOff;
+            public bool RegionPoints;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.EdgeFallOff = defaultOn;
+                this.RegionPoints = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((EdgeFallOff, null));
+                ret.Add((RegionPoints, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -330,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionAreaSetterCommon)((IRegionAreaGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionArea_Mask<bool> GetEqualsMask(
+        public static RegionArea.Mask<bool> GetEqualsMask(
             this IRegionAreaGetter item,
             IRegionAreaGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -344,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionAreaGetter item,
             string? name = null,
-            RegionArea_Mask<bool>? printMask = null)
+            RegionArea.Mask<bool>? printMask = null)
         {
             return ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -356,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionAreaGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionArea_Mask<bool>? printMask = null)
+            RegionArea.Mask<bool>? printMask = null)
         {
             ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -367,16 +725,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionAreaGetter item,
-            RegionArea_Mask<bool?> checkMask)
+            RegionArea.Mask<bool?> checkMask)
         {
             return ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionArea_Mask<bool> GetHasBeenSetMask(this IRegionAreaGetter item)
+        public static RegionArea.Mask<bool> GetHasBeenSetMask(this IRegionAreaGetter item)
         {
-            var ret = new RegionArea_Mask<bool>(false);
+            var ret = new RegionArea.Mask<bool>(false);
             ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -395,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionArea lhs,
             IRegionAreaGetter rhs,
-            RegionArea_TranslationMask? copyMask = null)
+            RegionArea.TranslationMask? copyMask = null)
         {
             ((RegionAreaSetterTranslationCommon)((IRegionAreaGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -407,8 +765,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionArea lhs,
             IRegionAreaGetter rhs,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? copyMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionAreaSetterTranslationCommon)((IRegionAreaGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -416,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionArea.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -434,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionArea DeepCopy(
             this IRegionAreaGetter item,
-            RegionArea_TranslationMask? copyMask = null)
+            RegionArea.TranslationMask? copyMask = null)
         {
             return ((RegionAreaSetterTranslationCommon)((IRegionAreaGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -443,8 +801,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionArea DeepCopy(
             this IRegionAreaGetter item,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? copyMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? copyMask = null)
         {
             return ((RegionAreaSetterTranslationCommon)((IRegionAreaGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -468,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionArea item,
             XElement node,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -481,8 +839,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionArea item,
             XElement node,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -490,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionArea.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -509,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionArea item,
             string path,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -521,8 +879,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionArea item,
             string path,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -536,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionArea item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -549,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionArea item,
             Stream stream,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -561,8 +919,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionArea item,
             Stream stream,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -576,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionArea item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +1008,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(RegionArea_Mask<>);
+        public static readonly Type MaskType = typeof(RegionArea.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionArea_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionArea.ErrorMask);
 
         public static readonly Type ClassType = typeof(RegionArea);
 
@@ -937,12 +1295,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RegionAreaCommon Instance = new RegionAreaCommon();
 
-        public RegionArea_Mask<bool> GetEqualsMask(
+        public RegionArea.Mask<bool> GetEqualsMask(
             IRegionAreaGetter item,
             IRegionAreaGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionArea_Mask<bool>(false);
+            var ret = new RegionArea.Mask<bool>(false);
             ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -954,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionAreaGetter item,
             IRegionAreaGetter rhs,
-            RegionArea_Mask<bool> ret,
+            RegionArea.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -968,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionAreaGetter item,
             string? name = null,
-            RegionArea_Mask<bool>? printMask = null)
+            RegionArea.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -983,7 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionAreaGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionArea_Mask<bool>? printMask = null)
+            RegionArea.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1007,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionAreaGetter item,
             FileGeneration fg,
-            RegionArea_Mask<bool>? printMask = null)
+            RegionArea.Mask<bool>? printMask = null)
         {
             if (printMask?.EdgeFallOff ?? true)
             {
@@ -1035,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionAreaGetter item,
-            RegionArea_Mask<bool?> checkMask)
+            RegionArea.Mask<bool?> checkMask)
         {
             if (checkMask.EdgeFallOff.HasValue && checkMask.EdgeFallOff.Value != (item.EdgeFallOff != null)) return false;
             if (checkMask.RegionPoints?.Overall.HasValue ?? false && checkMask.RegionPoints!.Overall.Value != item.RegionPoints.HasBeenSet) return false;
@@ -1044,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IRegionAreaGetter item,
-            RegionArea_Mask<bool> mask)
+            RegionArea.Mask<bool> mask)
         {
             mask.EdgeFallOff = (item.EdgeFallOff != null);
             mask.RegionPoints = new MaskItem<bool, IEnumerable<(int, bool)>>(item.RegionPoints.HasBeenSet, Enumerable.Empty<(int, bool)>());
@@ -1135,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionArea DeepCopy(
             IRegionAreaGetter item,
-            RegionArea_TranslationMask? copyMask = null)
+            RegionArea.TranslationMask? copyMask = null)
         {
             RegionArea ret = (RegionArea)((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1146,8 +1504,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionArea DeepCopy(
             IRegionAreaGetter item,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? copyMask = null)
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? copyMask = null)
         {
             RegionArea ret = (RegionArea)((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1415,8 +1773,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionAreaGetter item,
             XElement node,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null,
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1426,14 +1784,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionArea_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionArea.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionAreaGetter item,
             string path,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null,
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1466,8 +1824,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionAreaGetter item,
             Stream stream,
-            out RegionArea_ErrorMask errorMask,
-            RegionArea_TranslationMask? translationMask = null,
+            out RegionArea.ErrorMask errorMask,
+            RegionArea.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1516,7 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionAreaGetter item,
             XElement node,
             string? name = null,
-            RegionArea_TranslationMask? translationMask = null)
+            RegionArea.TranslationMask? translationMask = null)
         {
             ((RegionAreaXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1560,365 +1918,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RegionArea_Mask<T> :
-        IMask<T>,
-        IEquatable<RegionArea_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RegionArea_Mask(T initialValue)
-        {
-            this.EdgeFallOff = initialValue;
-            this.RegionPoints = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public RegionArea_Mask(
-            T EdgeFallOff,
-            T RegionPoints)
-        {
-            this.EdgeFallOff = EdgeFallOff;
-            this.RegionPoints = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RegionPoints, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected RegionArea_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T EdgeFallOff;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? RegionPoints;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RegionArea_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RegionArea_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.EdgeFallOff, rhs.EdgeFallOff)) return false;
-            if (!object.Equals(this.RegionPoints, rhs.RegionPoints)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.EdgeFallOff?.GetHashCode());
-            ret = ret.CombineHashCode(this.RegionPoints?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.EdgeFallOff)) return false;
-            if (this.RegionPoints != null)
-            {
-                if (!eval(this.RegionPoints.Overall)) return false;
-                if (this.RegionPoints.Specific != null)
-                {
-                    foreach (var item in this.RegionPoints.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RegionArea_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RegionArea_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RegionArea_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.EdgeFallOff = eval(this.EdgeFallOff);
-            if (RegionPoints != null)
-            {
-                obj.RegionPoints = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RegionPoints.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (RegionPoints.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.RegionPoints.Specific = l;
-                    foreach (var item in RegionPoints.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RegionArea_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RegionArea_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RegionArea_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.EdgeFallOff ?? true)
-                {
-                    fg.AppendLine($"EdgeFallOff => {EdgeFallOff}");
-                }
-                if (printMask?.RegionPoints?.Overall ?? true)
-                {
-                    fg.AppendLine("RegionPoints =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (RegionPoints != null)
-                        {
-                            if (RegionPoints.Overall != null)
-                            {
-                                fg.AppendLine(RegionPoints.Overall.ToString());
-                            }
-                            if (RegionPoints.Specific != null)
-                            {
-                                foreach (var subItem in RegionPoints.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RegionArea_ErrorMask : IErrorMask, IErrorMask<RegionArea_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? EdgeFallOff;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RegionPoints;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionArea_FieldIndex.EdgeFallOff:
-                    return EdgeFallOff;
-                case RegionArea_FieldIndex.RegionPoints:
-                    return RegionPoints;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionArea_FieldIndex.EdgeFallOff:
-                    this.EdgeFallOff = ex;
-                    break;
-                case RegionArea_FieldIndex.RegionPoints:
-                    this.RegionPoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RegionArea_FieldIndex enu = (RegionArea_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionArea_FieldIndex.EdgeFallOff:
-                    this.EdgeFallOff = (Exception)obj;
-                    break;
-                case RegionArea_FieldIndex.RegionPoints:
-                    this.RegionPoints = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (EdgeFallOff != null) return true;
-            if (RegionPoints != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RegionArea_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"EdgeFallOff => {EdgeFallOff}");
-            fg.AppendLine("RegionPoints =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (RegionPoints != null)
-                {
-                    if (RegionPoints.Overall != null)
-                    {
-                        fg.AppendLine(RegionPoints.Overall.ToString());
-                    }
-                    if (RegionPoints.Specific != null)
-                    {
-                        foreach (var subItem in RegionPoints.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public RegionArea_ErrorMask Combine(RegionArea_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RegionArea_ErrorMask();
-            ret.EdgeFallOff = this.EdgeFallOff.Combine(rhs.EdgeFallOff);
-            ret.RegionPoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RegionPoints?.Overall, rhs.RegionPoints?.Overall), ExceptionExt.Combine(this.RegionPoints?.Specific, rhs.RegionPoints?.Specific));
-            return ret;
-        }
-        public static RegionArea_ErrorMask? Combine(RegionArea_ErrorMask? lhs, RegionArea_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RegionArea_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RegionArea_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RegionArea_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool EdgeFallOff;
-        public bool RegionPoints;
-        #endregion
-
-        #region Ctors
-        public RegionArea_TranslationMask(bool defaultOn)
-        {
-            this.EdgeFallOff = defaultOn;
-            this.RegionPoints = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((EdgeFallOff, null));
-            ret.Add((RegionPoints, null));
-        }
-    }
 }
 #endregion
 

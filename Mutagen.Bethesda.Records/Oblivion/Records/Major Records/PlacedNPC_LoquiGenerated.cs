@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new PlacedNPC CreateFromXml(
             XElement node,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -230,15 +230,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PlacedNPC CreateFromXml(
             XElement node,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedNPC.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedNPC CreateFromXml(
             string path,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedNPC CreateFromXml(
             string path,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedNPC CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedNPC CreateFromXml(
             Stream stream,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -302,8 +302,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedNPC CreateFromXml(
             Stream stream,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedNPC CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -326,6 +326,572 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Base = initialValue;
+                this.XPCIFluff = initialValue;
+                this.FULLFluff = initialValue;
+                this.DistantLODData = new MaskItem<T, DistantLODData.Mask<T>?>(initialValue, new DistantLODData.Mask<T>(initialValue));
+                this.EnableParent = new MaskItem<T, EnableParent.Mask<T>?>(initialValue, new EnableParent.Mask<T>(initialValue));
+                this.MerchantContainer = initialValue;
+                this.Horse = initialValue;
+                this.RagdollData = initialValue;
+                this.Scale = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Base,
+                T XPCIFluff,
+                T FULLFluff,
+                T DistantLODData,
+                T EnableParent,
+                T MerchantContainer,
+                T Horse,
+                T RagdollData,
+                T Scale,
+                T Position,
+                T Rotation,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Base = Base;
+                this.XPCIFluff = XPCIFluff;
+                this.FULLFluff = FULLFluff;
+                this.DistantLODData = new MaskItem<T, DistantLODData.Mask<T>?>(DistantLODData, new DistantLODData.Mask<T>(DistantLODData));
+                this.EnableParent = new MaskItem<T, EnableParent.Mask<T>?>(EnableParent, new EnableParent.Mask<T>(EnableParent));
+                this.MerchantContainer = MerchantContainer;
+                this.Horse = Horse;
+                this.RagdollData = RagdollData;
+                this.Scale = Scale;
+                this.Position = Position;
+                this.Rotation = Rotation;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Base;
+            public T XPCIFluff;
+            public T FULLFluff;
+            public MaskItem<T, DistantLODData.Mask<T>?>? DistantLODData { get; set; }
+            public MaskItem<T, EnableParent.Mask<T>?>? EnableParent { get; set; }
+            public T MerchantContainer;
+            public T Horse;
+            public T RagdollData;
+            public T Scale;
+            public T Position;
+            public T Rotation;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Base, rhs.Base)) return false;
+                if (!object.Equals(this.XPCIFluff, rhs.XPCIFluff)) return false;
+                if (!object.Equals(this.FULLFluff, rhs.FULLFluff)) return false;
+                if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
+                if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
+                if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
+                if (!object.Equals(this.Horse, rhs.Horse)) return false;
+                if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Base?.GetHashCode());
+                ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
+                ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
+                ret = ret.CombineHashCode(this.MerchantContainer?.GetHashCode());
+                ret = ret.CombineHashCode(this.Horse?.GetHashCode());
+                ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
+                ret = ret.CombineHashCode(this.Scale?.GetHashCode());
+                ret = ret.CombineHashCode(this.Position?.GetHashCode());
+                ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Base)) return false;
+                if (!eval(this.XPCIFluff)) return false;
+                if (!eval(this.FULLFluff)) return false;
+                if (DistantLODData != null)
+                {
+                    if (!eval(this.DistantLODData.Overall)) return false;
+                    if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
+                }
+                if (EnableParent != null)
+                {
+                    if (!eval(this.EnableParent.Overall)) return false;
+                    if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.MerchantContainer)) return false;
+                if (!eval(this.Horse)) return false;
+                if (!eval(this.RagdollData)) return false;
+                if (!eval(this.Scale)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new PlacedNPC.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Base = eval(this.Base);
+                obj.XPCIFluff = eval(this.XPCIFluff);
+                obj.FULLFluff = eval(this.FULLFluff);
+                obj.DistantLODData = this.DistantLODData == null ? null : new MaskItem<R, DistantLODData.Mask<R>?>(eval(this.DistantLODData.Overall), this.DistantLODData.Specific?.Translate(eval));
+                obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
+                obj.MerchantContainer = eval(this.MerchantContainer);
+                obj.Horse = eval(this.Horse);
+                obj.RagdollData = eval(this.RagdollData);
+                obj.Scale = eval(this.Scale);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(PlacedNPC.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, PlacedNPC.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(PlacedNPC.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Base ?? true)
+                    {
+                        fg.AppendLine($"Base => {Base}");
+                    }
+                    if (printMask?.XPCIFluff ?? true)
+                    {
+                        fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+                    }
+                    if (printMask?.FULLFluff ?? true)
+                    {
+                        fg.AppendLine($"FULLFluff => {FULLFluff}");
+                    }
+                    if (printMask?.DistantLODData?.Overall ?? true)
+                    {
+                        DistantLODData?.ToString(fg);
+                    }
+                    if (printMask?.EnableParent?.Overall ?? true)
+                    {
+                        EnableParent?.ToString(fg);
+                    }
+                    if (printMask?.MerchantContainer ?? true)
+                    {
+                        fg.AppendLine($"MerchantContainer => {MerchantContainer}");
+                    }
+                    if (printMask?.Horse ?? true)
+                    {
+                        fg.AppendLine($"Horse => {Horse}");
+                    }
+                    if (printMask?.RagdollData ?? true)
+                    {
+                        fg.AppendLine($"RagdollData => {RagdollData}");
+                    }
+                    if (printMask?.Scale ?? true)
+                    {
+                        fg.AppendLine($"Scale => {Scale}");
+                    }
+                    if (printMask?.Position ?? true)
+                    {
+                        fg.AppendLine($"Position => {Position}");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        fg.AppendLine($"Rotation => {Rotation}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Base;
+            public Exception? XPCIFluff;
+            public Exception? FULLFluff;
+            public MaskItem<Exception?, DistantLODData.ErrorMask?>? DistantLODData;
+            public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
+            public Exception? MerchantContainer;
+            public Exception? Horse;
+            public Exception? RagdollData;
+            public Exception? Scale;
+            public Exception? Position;
+            public Exception? Rotation;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
+                switch (enu)
+                {
+                    case PlacedNPC_FieldIndex.Base:
+                        return Base;
+                    case PlacedNPC_FieldIndex.XPCIFluff:
+                        return XPCIFluff;
+                    case PlacedNPC_FieldIndex.FULLFluff:
+                        return FULLFluff;
+                    case PlacedNPC_FieldIndex.DistantLODData:
+                        return DistantLODData;
+                    case PlacedNPC_FieldIndex.EnableParent:
+                        return EnableParent;
+                    case PlacedNPC_FieldIndex.MerchantContainer:
+                        return MerchantContainer;
+                    case PlacedNPC_FieldIndex.Horse:
+                        return Horse;
+                    case PlacedNPC_FieldIndex.RagdollData:
+                        return RagdollData;
+                    case PlacedNPC_FieldIndex.Scale:
+                        return Scale;
+                    case PlacedNPC_FieldIndex.Position:
+                        return Position;
+                    case PlacedNPC_FieldIndex.Rotation:
+                        return Rotation;
+                    case PlacedNPC_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
+                switch (enu)
+                {
+                    case PlacedNPC_FieldIndex.Base:
+                        this.Base = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.XPCIFluff:
+                        this.XPCIFluff = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.FULLFluff:
+                        this.FULLFluff = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.DistantLODData:
+                        this.DistantLODData = new MaskItem<Exception?, DistantLODData.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedNPC_FieldIndex.EnableParent:
+                        this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedNPC_FieldIndex.MerchantContainer:
+                        this.MerchantContainer = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.Horse:
+                        this.Horse = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.RagdollData:
+                        this.RagdollData = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.Scale:
+                        this.Scale = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.Rotation:
+                        this.Rotation = ex;
+                        break;
+                    case PlacedNPC_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
+                switch (enu)
+                {
+                    case PlacedNPC_FieldIndex.Base:
+                        this.Base = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.XPCIFluff:
+                        this.XPCIFluff = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.FULLFluff:
+                        this.FULLFluff = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.DistantLODData:
+                        this.DistantLODData = (MaskItem<Exception?, DistantLODData.ErrorMask?>?)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.EnableParent:
+                        this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.MerchantContainer:
+                        this.MerchantContainer = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.Horse:
+                        this.Horse = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.RagdollData:
+                        this.RagdollData = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.Scale:
+                        this.Scale = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.Position:
+                        this.Position = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.Rotation:
+                        this.Rotation = (Exception)obj;
+                        break;
+                    case PlacedNPC_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Base != null) return true;
+                if (XPCIFluff != null) return true;
+                if (FULLFluff != null) return true;
+                if (DistantLODData != null) return true;
+                if (EnableParent != null) return true;
+                if (MerchantContainer != null) return true;
+                if (Horse != null) return true;
+                if (RagdollData != null) return true;
+                if (Scale != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Base => {Base}");
+                fg.AppendLine($"XPCIFluff => {XPCIFluff}");
+                fg.AppendLine($"FULLFluff => {FULLFluff}");
+                DistantLODData?.ToString(fg);
+                EnableParent?.ToString(fg);
+                fg.AppendLine($"MerchantContainer => {MerchantContainer}");
+                fg.AppendLine($"Horse => {Horse}");
+                fg.AppendLine($"RagdollData => {RagdollData}");
+                fg.AppendLine($"Scale => {Scale}");
+                fg.AppendLine($"Position => {Position}");
+                fg.AppendLine($"Rotation => {Rotation}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Base = this.Base.Combine(rhs.Base);
+                ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
+                ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
+                ret.DistantLODData = new MaskItem<Exception?, DistantLODData.ErrorMask?>(ExceptionExt.Combine(this.DistantLODData?.Overall, rhs.DistantLODData?.Overall), (this.DistantLODData?.Specific as IErrorMask<DistantLODData.ErrorMask>)?.Combine(rhs.DistantLODData?.Specific));
+                ret.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ExceptionExt.Combine(this.EnableParent?.Overall, rhs.EnableParent?.Overall), (this.EnableParent?.Specific as IErrorMask<EnableParent.ErrorMask>)?.Combine(rhs.EnableParent?.Specific));
+                ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
+                ret.Horse = this.Horse.Combine(rhs.Horse);
+                ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Base;
+            public bool XPCIFluff;
+            public bool FULLFluff;
+            public MaskItem<bool, DistantLODData.TranslationMask?> DistantLODData;
+            public MaskItem<bool, EnableParent.TranslationMask?> EnableParent;
+            public bool MerchantContainer;
+            public bool Horse;
+            public bool RagdollData;
+            public bool Scale;
+            public bool Position;
+            public bool Rotation;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Base = defaultOn;
+                this.XPCIFluff = defaultOn;
+                this.FULLFluff = defaultOn;
+                this.DistantLODData = new MaskItem<bool, DistantLODData.TranslationMask?>(defaultOn, null);
+                this.EnableParent = new MaskItem<bool, EnableParent.TranslationMask?>(defaultOn, null);
+                this.MerchantContainer = defaultOn;
+                this.Horse = defaultOn;
+                this.RagdollData = defaultOn;
+                this.Scale = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Base, null));
+                ret.Add((XPCIFluff, null));
+                ret.Add((FULLFluff, null));
+                ret.Add((DistantLODData?.Overall ?? true, DistantLODData?.Specific?.GetCrystal()));
+                ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
+                ret.Add((MerchantContainer, null));
+                ret.Add((Horse, null));
+                ret.Add((RagdollData, null));
+                ret.Add((Scale, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -481,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PlacedNPCSetterCommon)((IPlacedNPCGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PlacedNPC_Mask<bool> GetEqualsMask(
+        public static PlacedNPC.Mask<bool> GetEqualsMask(
             this IPlacedNPCGetter item,
             IPlacedNPCGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -495,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IPlacedNPCGetter item,
             string? name = null,
-            PlacedNPC_Mask<bool>? printMask = null)
+            PlacedNPC.Mask<bool>? printMask = null)
         {
             return ((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -507,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCGetter item,
             FileGeneration fg,
             string? name = null,
-            PlacedNPC_Mask<bool>? printMask = null)
+            PlacedNPC.Mask<bool>? printMask = null)
         {
             ((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -518,16 +1084,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IPlacedNPCGetter item,
-            PlacedNPC_Mask<bool?> checkMask)
+            PlacedNPC.Mask<bool?> checkMask)
         {
             return ((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static PlacedNPC_Mask<bool> GetHasBeenSetMask(this IPlacedNPCGetter item)
+        public static PlacedNPC.Mask<bool> GetHasBeenSetMask(this IPlacedNPCGetter item)
         {
-            var ret = new PlacedNPC_Mask<bool>(false);
+            var ret = new PlacedNPC.Mask<bool>(false);
             ((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -546,8 +1112,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IPlacedNPCInternal lhs,
             IPlacedNPCGetter rhs,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? copyMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -555,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedNPC.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -573,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedNPC DeepCopy(
             this IPlacedNPCGetter item,
-            PlacedNPC_TranslationMask? copyMask = null)
+            PlacedNPC.TranslationMask? copyMask = null)
         {
             return ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -582,8 +1148,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PlacedNPC DeepCopy(
             this IPlacedNPCGetter item,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? copyMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? copyMask = null)
         {
             return ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -607,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlacedNPCInternal item,
             XElement node,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -620,8 +1186,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlacedNPCInternal item,
             XElement node,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -629,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedNPC.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -648,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlacedNPCInternal item,
             string path,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -660,8 +1226,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlacedNPCInternal item,
             string path,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -675,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -688,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlacedNPCInternal item,
             Stream stream,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -700,8 +1266,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPlacedNPCInternal item,
             Stream stream,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -715,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            PlacedNPC_TranslationMask? translationMask = null)
+            PlacedNPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -804,9 +1370,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 17;
 
-        public static readonly Type MaskType = typeof(PlacedNPC_Mask<>);
+        public static readonly Type MaskType = typeof(PlacedNPC.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlacedNPC_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlacedNPC.ErrorMask);
 
         public static readonly Type ClassType = typeof(PlacedNPC);
 
@@ -1321,12 +1887,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly PlacedNPCCommon Instance = new PlacedNPCCommon();
 
-        public PlacedNPC_Mask<bool> GetEqualsMask(
+        public PlacedNPC.Mask<bool> GetEqualsMask(
             IPlacedNPCGetter item,
             IPlacedNPCGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PlacedNPC_Mask<bool>(false);
+            var ret = new PlacedNPC.Mask<bool>(false);
             ((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1338,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IPlacedNPCGetter item,
             IPlacedNPCGetter rhs,
-            PlacedNPC_Mask<bool> ret,
+            PlacedNPC.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1368,7 +1934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IPlacedNPCGetter item,
             string? name = null,
-            PlacedNPC_Mask<bool>? printMask = null)
+            PlacedNPC.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1383,7 +1949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPCGetter item,
             FileGeneration fg,
             string? name = null,
-            PlacedNPC_Mask<bool>? printMask = null)
+            PlacedNPC.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1407,7 +1973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IPlacedNPCGetter item,
             FileGeneration fg,
-            PlacedNPC_Mask<bool>? printMask = null)
+            PlacedNPC.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1465,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IPlacedNPCGetter item,
-            PlacedNPC_Mask<bool?> checkMask)
+            PlacedNPC.Mask<bool?> checkMask)
         {
             if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base.HasBeenSet) return false;
             if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
@@ -1485,15 +2051,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IPlacedNPCGetter item,
-            PlacedNPC_Mask<bool> mask)
+            PlacedNPC.Mask<bool> mask)
         {
             mask.Base = item.Base.HasBeenSet;
             mask.XPCIFluff = item.XPCIFluff_IsSet;
             mask.FULLFluff = item.FULLFluff_IsSet;
             var itemDistantLODData = item.DistantLODData;
-            mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>?>(itemDistantLODData != null, itemDistantLODData?.GetHasBeenSetMask());
+            mask.DistantLODData = new MaskItem<bool, DistantLODData.Mask<bool>?>(itemDistantLODData != null, itemDistantLODData?.GetHasBeenSetMask());
             var itemEnableParent = item.EnableParent;
-            mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
+            mask.EnableParent = new MaskItem<bool, EnableParent.Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
             mask.MerchantContainer = item.MerchantContainer.HasBeenSet;
             mask.Horse = item.Horse.HasBeenSet;
             mask.RagdollData = item.RagdollData_IsSet;
@@ -1881,7 +2447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public PlacedNPC DeepCopy(
             IPlacedNPCGetter item,
-            PlacedNPC_TranslationMask? copyMask = null)
+            PlacedNPC.TranslationMask? copyMask = null)
         {
             PlacedNPC ret = (PlacedNPC)((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1892,8 +2458,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public PlacedNPC DeepCopy(
             IPlacedNPCGetter item,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? copyMask = null)
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? copyMask = null)
         {
             PlacedNPC ret = (PlacedNPC)((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2440,8 +3006,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IPlacedNPCGetter item,
             XElement node,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null,
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2451,14 +3017,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedNPC.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IPlacedNPCGetter item,
             string path,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null,
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2474,8 +3040,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IPlacedNPCGetter item,
             Stream stream,
-            out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask? translationMask = null,
+            out PlacedNPC.ErrorMask errorMask,
+            PlacedNPC.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2492,571 +3058,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class PlacedNPC_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<PlacedNPC_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public PlacedNPC_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Base = initialValue;
-            this.XPCIFluff = initialValue;
-            this.FULLFluff = initialValue;
-            this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>?>(initialValue, new DistantLODData_Mask<T>(initialValue));
-            this.EnableParent = new MaskItem<T, EnableParent_Mask<T>?>(initialValue, new EnableParent_Mask<T>(initialValue));
-            this.MerchantContainer = initialValue;
-            this.Horse = initialValue;
-            this.RagdollData = initialValue;
-            this.Scale = initialValue;
-            this.Position = initialValue;
-            this.Rotation = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public PlacedNPC_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Base,
-            T XPCIFluff,
-            T FULLFluff,
-            T DistantLODData,
-            T EnableParent,
-            T MerchantContainer,
-            T Horse,
-            T RagdollData,
-            T Scale,
-            T Position,
-            T Rotation,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Base = Base;
-            this.XPCIFluff = XPCIFluff;
-            this.FULLFluff = FULLFluff;
-            this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>?>(DistantLODData, new DistantLODData_Mask<T>(DistantLODData));
-            this.EnableParent = new MaskItem<T, EnableParent_Mask<T>?>(EnableParent, new EnableParent_Mask<T>(EnableParent));
-            this.MerchantContainer = MerchantContainer;
-            this.Horse = Horse;
-            this.RagdollData = RagdollData;
-            this.Scale = Scale;
-            this.Position = Position;
-            this.Rotation = Rotation;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected PlacedNPC_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Base;
-        public T XPCIFluff;
-        public T FULLFluff;
-        public MaskItem<T, DistantLODData_Mask<T>?>? DistantLODData { get; set; }
-        public MaskItem<T, EnableParent_Mask<T>?>? EnableParent { get; set; }
-        public T MerchantContainer;
-        public T Horse;
-        public T RagdollData;
-        public T Scale;
-        public T Position;
-        public T Rotation;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PlacedNPC_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(PlacedNPC_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Base, rhs.Base)) return false;
-            if (!object.Equals(this.XPCIFluff, rhs.XPCIFluff)) return false;
-            if (!object.Equals(this.FULLFluff, rhs.FULLFluff)) return false;
-            if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
-            if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
-            if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
-            if (!object.Equals(this.Horse, rhs.Horse)) return false;
-            if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
-            if (!object.Equals(this.Scale, rhs.Scale)) return false;
-            if (!object.Equals(this.Position, rhs.Position)) return false;
-            if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Base?.GetHashCode());
-            ret = ret.CombineHashCode(this.XPCIFluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.FULLFluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.DistantLODData?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnableParent?.GetHashCode());
-            ret = ret.CombineHashCode(this.MerchantContainer?.GetHashCode());
-            ret = ret.CombineHashCode(this.Horse?.GetHashCode());
-            ret = ret.CombineHashCode(this.RagdollData?.GetHashCode());
-            ret = ret.CombineHashCode(this.Scale?.GetHashCode());
-            ret = ret.CombineHashCode(this.Position?.GetHashCode());
-            ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Base)) return false;
-            if (!eval(this.XPCIFluff)) return false;
-            if (!eval(this.FULLFluff)) return false;
-            if (DistantLODData != null)
-            {
-                if (!eval(this.DistantLODData.Overall)) return false;
-                if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.AllEqual(eval)) return false;
-            }
-            if (EnableParent != null)
-            {
-                if (!eval(this.EnableParent.Overall)) return false;
-                if (this.EnableParent.Specific != null && !this.EnableParent.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.MerchantContainer)) return false;
-            if (!eval(this.Horse)) return false;
-            if (!eval(this.RagdollData)) return false;
-            if (!eval(this.Scale)) return false;
-            if (!eval(this.Position)) return false;
-            if (!eval(this.Rotation)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new PlacedNPC_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new PlacedNPC_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(PlacedNPC_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Base = eval(this.Base);
-            obj.XPCIFluff = eval(this.XPCIFluff);
-            obj.FULLFluff = eval(this.FULLFluff);
-            obj.DistantLODData = this.DistantLODData == null ? null : new MaskItem<R, DistantLODData_Mask<R>?>(eval(this.DistantLODData.Overall), this.DistantLODData.Specific?.Translate(eval));
-            obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent_Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
-            obj.MerchantContainer = eval(this.MerchantContainer);
-            obj.Horse = eval(this.Horse);
-            obj.RagdollData = eval(this.RagdollData);
-            obj.Scale = eval(this.Scale);
-            obj.Position = eval(this.Position);
-            obj.Rotation = eval(this.Rotation);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(PlacedNPC_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, PlacedNPC_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(PlacedNPC_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Base ?? true)
-                {
-                    fg.AppendLine($"Base => {Base}");
-                }
-                if (printMask?.XPCIFluff ?? true)
-                {
-                    fg.AppendLine($"XPCIFluff => {XPCIFluff}");
-                }
-                if (printMask?.FULLFluff ?? true)
-                {
-                    fg.AppendLine($"FULLFluff => {FULLFluff}");
-                }
-                if (printMask?.DistantLODData?.Overall ?? true)
-                {
-                    DistantLODData?.ToString(fg);
-                }
-                if (printMask?.EnableParent?.Overall ?? true)
-                {
-                    EnableParent?.ToString(fg);
-                }
-                if (printMask?.MerchantContainer ?? true)
-                {
-                    fg.AppendLine($"MerchantContainer => {MerchantContainer}");
-                }
-                if (printMask?.Horse ?? true)
-                {
-                    fg.AppendLine($"Horse => {Horse}");
-                }
-                if (printMask?.RagdollData ?? true)
-                {
-                    fg.AppendLine($"RagdollData => {RagdollData}");
-                }
-                if (printMask?.Scale ?? true)
-                {
-                    fg.AppendLine($"Scale => {Scale}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {Rotation}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class PlacedNPC_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<PlacedNPC_ErrorMask>
-    {
-        #region Members
-        public Exception? Base;
-        public Exception? XPCIFluff;
-        public Exception? FULLFluff;
-        public MaskItem<Exception?, DistantLODData_ErrorMask?>? DistantLODData;
-        public MaskItem<Exception?, EnableParent_ErrorMask?>? EnableParent;
-        public Exception? MerchantContainer;
-        public Exception? Horse;
-        public Exception? RagdollData;
-        public Exception? Scale;
-        public Exception? Position;
-        public Exception? Rotation;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    return Base;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    return XPCIFluff;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    return FULLFluff;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    return DistantLODData;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    return EnableParent;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    return MerchantContainer;
-                case PlacedNPC_FieldIndex.Horse:
-                    return Horse;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    return RagdollData;
-                case PlacedNPC_FieldIndex.Scale:
-                    return Scale;
-                case PlacedNPC_FieldIndex.Position:
-                    return Position;
-                case PlacedNPC_FieldIndex.Rotation:
-                    return Rotation;
-                case PlacedNPC_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    this.Base = ex;
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    this.XPCIFluff = ex;
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    this.FULLFluff = ex;
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    this.DistantLODData = new MaskItem<Exception?, DistantLODData_ErrorMask?>(ex, null);
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    this.EnableParent = new MaskItem<Exception?, EnableParent_ErrorMask?>(ex, null);
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    this.MerchantContainer = ex;
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    this.Horse = ex;
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    this.RagdollData = ex;
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    this.Scale = ex;
-                    break;
-                case PlacedNPC_FieldIndex.Position:
-                    this.Position = ex;
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    this.Rotation = ex;
-                    break;
-                case PlacedNPC_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            PlacedNPC_FieldIndex enu = (PlacedNPC_FieldIndex)index;
-            switch (enu)
-            {
-                case PlacedNPC_FieldIndex.Base:
-                    this.Base = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.XPCIFluff:
-                    this.XPCIFluff = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.FULLFluff:
-                    this.FULLFluff = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.DistantLODData:
-                    this.DistantLODData = (MaskItem<Exception?, DistantLODData_ErrorMask?>?)obj;
-                    break;
-                case PlacedNPC_FieldIndex.EnableParent:
-                    this.EnableParent = (MaskItem<Exception?, EnableParent_ErrorMask?>?)obj;
-                    break;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    this.MerchantContainer = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.Horse:
-                    this.Horse = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.RagdollData:
-                    this.RagdollData = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.Scale:
-                    this.Scale = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.Position:
-                    this.Position = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.Rotation:
-                    this.Rotation = (Exception)obj;
-                    break;
-                case PlacedNPC_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Base != null) return true;
-            if (XPCIFluff != null) return true;
-            if (FULLFluff != null) return true;
-            if (DistantLODData != null) return true;
-            if (EnableParent != null) return true;
-            if (MerchantContainer != null) return true;
-            if (Horse != null) return true;
-            if (RagdollData != null) return true;
-            if (Scale != null) return true;
-            if (Position != null) return true;
-            if (Rotation != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("PlacedNPC_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Base => {Base}");
-            fg.AppendLine($"XPCIFluff => {XPCIFluff}");
-            fg.AppendLine($"FULLFluff => {FULLFluff}");
-            DistantLODData?.ToString(fg);
-            EnableParent?.ToString(fg);
-            fg.AppendLine($"MerchantContainer => {MerchantContainer}");
-            fg.AppendLine($"Horse => {Horse}");
-            fg.AppendLine($"RagdollData => {RagdollData}");
-            fg.AppendLine($"Scale => {Scale}");
-            fg.AppendLine($"Position => {Position}");
-            fg.AppendLine($"Rotation => {Rotation}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public PlacedNPC_ErrorMask Combine(PlacedNPC_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new PlacedNPC_ErrorMask();
-            ret.Base = this.Base.Combine(rhs.Base);
-            ret.XPCIFluff = this.XPCIFluff.Combine(rhs.XPCIFluff);
-            ret.FULLFluff = this.FULLFluff.Combine(rhs.FULLFluff);
-            ret.DistantLODData = new MaskItem<Exception?, DistantLODData_ErrorMask?>(ExceptionExt.Combine(this.DistantLODData?.Overall, rhs.DistantLODData?.Overall), (this.DistantLODData?.Specific as IErrorMask<DistantLODData_ErrorMask>)?.Combine(rhs.DistantLODData?.Specific));
-            ret.EnableParent = new MaskItem<Exception?, EnableParent_ErrorMask?>(ExceptionExt.Combine(this.EnableParent?.Overall, rhs.EnableParent?.Overall), (this.EnableParent?.Specific as IErrorMask<EnableParent_ErrorMask>)?.Combine(rhs.EnableParent?.Specific));
-            ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
-            ret.Horse = this.Horse.Combine(rhs.Horse);
-            ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
-            ret.Scale = this.Scale.Combine(rhs.Scale);
-            ret.Position = this.Position.Combine(rhs.Position);
-            ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static PlacedNPC_ErrorMask? Combine(PlacedNPC_ErrorMask? lhs, PlacedNPC_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new PlacedNPC_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new PlacedNPC_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class PlacedNPC_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Base;
-        public bool XPCIFluff;
-        public bool FULLFluff;
-        public MaskItem<bool, DistantLODData_TranslationMask?> DistantLODData;
-        public MaskItem<bool, EnableParent_TranslationMask?> EnableParent;
-        public bool MerchantContainer;
-        public bool Horse;
-        public bool RagdollData;
-        public bool Scale;
-        public bool Position;
-        public bool Rotation;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public PlacedNPC_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Base = defaultOn;
-            this.XPCIFluff = defaultOn;
-            this.FULLFluff = defaultOn;
-            this.DistantLODData = new MaskItem<bool, DistantLODData_TranslationMask?>(defaultOn, null);
-            this.EnableParent = new MaskItem<bool, EnableParent_TranslationMask?>(defaultOn, null);
-            this.MerchantContainer = defaultOn;
-            this.Horse = defaultOn;
-            this.RagdollData = defaultOn;
-            this.Scale = defaultOn;
-            this.Position = defaultOn;
-            this.Rotation = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Base, null));
-            ret.Add((XPCIFluff, null));
-            ret.Add((FULLFluff, null));
-            ret.Add((DistantLODData?.Overall ?? true, DistantLODData?.Specific?.GetCrystal()));
-            ret.Add((EnableParent?.Overall ?? true, EnableParent?.Specific?.GetCrystal()));
-            ret.Add((MerchantContainer, null));
-            ret.Add((Horse, null));
-            ret.Add((RagdollData, null));
-            ret.Add((Scale, null));
-            ret.Add((Position, null));
-            ret.Add((Rotation, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

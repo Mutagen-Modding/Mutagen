@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new AIPackage CreateFromXml(
             XElement node,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -185,15 +185,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackage CreateFromXml(
             XElement node,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackage.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackage CreateFromXml(
             string path,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -223,8 +223,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackage CreateFromXml(
             string path,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackage CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackage CreateFromXml(
             Stream stream,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -257,8 +257,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackage CreateFromXml(
             Stream stream,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackage CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -281,6 +281,514 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Flags = initialValue;
+                this.GeneralType = initialValue;
+                this.Location = new MaskItem<T, AIPackageLocation.Mask<T>?>(initialValue, new AIPackageLocation.Mask<T>(initialValue));
+                this.Schedule = new MaskItem<T, AIPackageSchedule.Mask<T>?>(initialValue, new AIPackageSchedule.Mask<T>(initialValue));
+                this.Target = new MaskItem<T, AIPackageTarget.Mask<T>?>(initialValue, new AIPackageTarget.Mask<T>(initialValue));
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.PKDTDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Flags,
+                T GeneralType,
+                T Location,
+                T Schedule,
+                T Target,
+                T Conditions,
+                T PKDTDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Flags = Flags;
+                this.GeneralType = GeneralType;
+                this.Location = new MaskItem<T, AIPackageLocation.Mask<T>?>(Location, new AIPackageLocation.Mask<T>(Location));
+                this.Schedule = new MaskItem<T, AIPackageSchedule.Mask<T>?>(Schedule, new AIPackageSchedule.Mask<T>(Schedule));
+                this.Target = new MaskItem<T, AIPackageTarget.Mask<T>?>(Target, new AIPackageTarget.Mask<T>(Target));
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.PKDTDataTypeState = PKDTDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Flags;
+            public T GeneralType;
+            public MaskItem<T, AIPackageLocation.Mask<T>?>? Location { get; set; }
+            public MaskItem<T, AIPackageSchedule.Mask<T>?>? Schedule { get; set; }
+            public MaskItem<T, AIPackageTarget.Mask<T>?>? Target { get; set; }
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
+            public T PKDTDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.GeneralType, rhs.GeneralType)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Schedule, rhs.Schedule)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.PKDTDataTypeState, rhs.PKDTDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.GeneralType?.GetHashCode());
+                ret = ret.CombineHashCode(this.Location?.GetHashCode());
+                ret = ret.CombineHashCode(this.Schedule?.GetHashCode());
+                ret = ret.CombineHashCode(this.Target?.GetHashCode());
+                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
+                ret = ret.CombineHashCode(this.PKDTDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.GeneralType)) return false;
+                if (Location != null)
+                {
+                    if (!eval(this.Location.Overall)) return false;
+                    if (this.Location.Specific != null && !this.Location.Specific.AllEqual(eval)) return false;
+                }
+                if (Schedule != null)
+                {
+                    if (!eval(this.Schedule.Overall)) return false;
+                    if (this.Schedule.Specific != null && !this.Schedule.Specific.AllEqual(eval)) return false;
+                }
+                if (Target != null)
+                {
+                    if (!eval(this.Target.Overall)) return false;
+                    if (this.Target.Specific != null && !this.Target.Specific.AllEqual(eval)) return false;
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.PKDTDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AIPackage.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
+                obj.GeneralType = eval(this.GeneralType);
+                obj.Location = this.Location == null ? null : new MaskItem<R, AIPackageLocation.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
+                obj.Schedule = this.Schedule == null ? null : new MaskItem<R, AIPackageSchedule.Mask<R>?>(eval(this.Schedule.Overall), this.Schedule.Specific?.Translate(eval));
+                obj.Target = this.Target == null ? null : new MaskItem<R, AIPackageTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.PKDTDataTypeState = eval(this.PKDTDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AIPackage.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AIPackage.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AIPackage.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.GeneralType ?? true)
+                    {
+                        fg.AppendLine($"GeneralType => {GeneralType}");
+                    }
+                    if (printMask?.Location?.Overall ?? true)
+                    {
+                        Location?.ToString(fg);
+                    }
+                    if (printMask?.Schedule?.Overall ?? true)
+                    {
+                        Schedule?.ToString(fg);
+                    }
+                    if (printMask?.Target?.Overall ?? true)
+                    {
+                        Target?.ToString(fg);
+                    }
+                    if (printMask?.Conditions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Conditions != null)
+                            {
+                                if (Conditions.Overall != null)
+                                {
+                                    fg.AppendLine(Conditions.Overall.ToString());
+                                }
+                                if (Conditions.Specific != null)
+                                {
+                                    foreach (var subItem in Conditions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.PKDTDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"PKDTDataTypeState => {PKDTDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Flags;
+            public Exception? GeneralType;
+            public MaskItem<Exception?, AIPackageLocation.ErrorMask?>? Location;
+            public MaskItem<Exception?, AIPackageSchedule.ErrorMask?>? Schedule;
+            public MaskItem<Exception?, AIPackageTarget.ErrorMask?>? Target;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? PKDTDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackage_FieldIndex.Flags:
+                        return Flags;
+                    case AIPackage_FieldIndex.GeneralType:
+                        return GeneralType;
+                    case AIPackage_FieldIndex.Location:
+                        return Location;
+                    case AIPackage_FieldIndex.Schedule:
+                        return Schedule;
+                    case AIPackage_FieldIndex.Target:
+                        return Target;
+                    case AIPackage_FieldIndex.Conditions:
+                        return Conditions;
+                    case AIPackage_FieldIndex.PKDTDataTypeState:
+                        return PKDTDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackage_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case AIPackage_FieldIndex.GeneralType:
+                        this.GeneralType = ex;
+                        break;
+                    case AIPackage_FieldIndex.Location:
+                        this.Location = new MaskItem<Exception?, AIPackageLocation.ErrorMask?>(ex, null);
+                        break;
+                    case AIPackage_FieldIndex.Schedule:
+                        this.Schedule = new MaskItem<Exception?, AIPackageSchedule.ErrorMask?>(ex, null);
+                        break;
+                    case AIPackage_FieldIndex.Target:
+                        this.Target = new MaskItem<Exception?, AIPackageTarget.ErrorMask?>(ex, null);
+                        break;
+                    case AIPackage_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case AIPackage_FieldIndex.PKDTDataTypeState:
+                        this.PKDTDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackage_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case AIPackage_FieldIndex.GeneralType:
+                        this.GeneralType = (Exception)obj;
+                        break;
+                    case AIPackage_FieldIndex.Location:
+                        this.Location = (MaskItem<Exception?, AIPackageLocation.ErrorMask?>?)obj;
+                        break;
+                    case AIPackage_FieldIndex.Schedule:
+                        this.Schedule = (MaskItem<Exception?, AIPackageSchedule.ErrorMask?>?)obj;
+                        break;
+                    case AIPackage_FieldIndex.Target:
+                        this.Target = (MaskItem<Exception?, AIPackageTarget.ErrorMask?>?)obj;
+                        break;
+                    case AIPackage_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case AIPackage_FieldIndex.PKDTDataTypeState:
+                        this.PKDTDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (GeneralType != null) return true;
+                if (Location != null) return true;
+                if (Schedule != null) return true;
+                if (Target != null) return true;
+                if (Conditions != null) return true;
+                if (PKDTDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"GeneralType => {GeneralType}");
+                Location?.ToString(fg);
+                Schedule?.ToString(fg);
+                Target?.ToString(fg);
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Conditions != null)
+                    {
+                        if (Conditions.Overall != null)
+                        {
+                            fg.AppendLine(Conditions.Overall.ToString());
+                        }
+                        if (Conditions.Specific != null)
+                        {
+                            foreach (var subItem in Conditions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"PKDTDataTypeState => {PKDTDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.GeneralType = this.GeneralType.Combine(rhs.GeneralType);
+                ret.Location = new MaskItem<Exception?, AIPackageLocation.ErrorMask?>(ExceptionExt.Combine(this.Location?.Overall, rhs.Location?.Overall), (this.Location?.Specific as IErrorMask<AIPackageLocation.ErrorMask>)?.Combine(rhs.Location?.Specific));
+                ret.Schedule = new MaskItem<Exception?, AIPackageSchedule.ErrorMask?>(ExceptionExt.Combine(this.Schedule?.Overall, rhs.Schedule?.Overall), (this.Schedule?.Specific as IErrorMask<AIPackageSchedule.ErrorMask>)?.Combine(rhs.Schedule?.Specific));
+                ret.Target = new MaskItem<Exception?, AIPackageTarget.ErrorMask?>(ExceptionExt.Combine(this.Target?.Overall, rhs.Target?.Overall), (this.Target?.Specific as IErrorMask<AIPackageTarget.ErrorMask>)?.Combine(rhs.Target?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.PKDTDataTypeState = this.PKDTDataTypeState.Combine(rhs.PKDTDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Flags;
+            public bool GeneralType;
+            public MaskItem<bool, AIPackageLocation.TranslationMask?> Location;
+            public MaskItem<bool, AIPackageSchedule.TranslationMask?> Schedule;
+            public MaskItem<bool, AIPackageTarget.TranslationMask?> Target;
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool PKDTDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Flags = defaultOn;
+                this.GeneralType = defaultOn;
+                this.Location = new MaskItem<bool, AIPackageLocation.TranslationMask?>(defaultOn, null);
+                this.Schedule = new MaskItem<bool, AIPackageSchedule.TranslationMask?>(defaultOn, null);
+                this.Target = new MaskItem<bool, AIPackageTarget.TranslationMask?>(defaultOn, null);
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.PKDTDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+                ret.Add((GeneralType, null));
+                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
+                ret.Add((Schedule?.Overall ?? true, Schedule?.Specific?.GetCrystal()));
+                ret.Add((Target?.Overall ?? true, Target?.Specific?.GetCrystal()));
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((PKDTDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -415,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageSetterCommon)((IAIPackageGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AIPackage_Mask<bool> GetEqualsMask(
+        public static AIPackage.Mask<bool> GetEqualsMask(
             this IAIPackageGetter item,
             IAIPackageGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -429,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAIPackageGetter item,
             string? name = null,
-            AIPackage_Mask<bool>? printMask = null)
+            AIPackage.Mask<bool>? printMask = null)
         {
             return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -441,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackage_Mask<bool>? printMask = null)
+            AIPackage.Mask<bool>? printMask = null)
         {
             ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -452,16 +960,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAIPackageGetter item,
-            AIPackage_Mask<bool?> checkMask)
+            AIPackage.Mask<bool?> checkMask)
         {
             return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AIPackage_Mask<bool> GetHasBeenSetMask(this IAIPackageGetter item)
+        public static AIPackage.Mask<bool> GetHasBeenSetMask(this IAIPackageGetter item)
         {
-            var ret = new AIPackage_Mask<bool>(false);
+            var ret = new AIPackage.Mask<bool>(false);
             ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -480,8 +988,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageInternal lhs,
             IAIPackageGetter rhs,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? copyMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageSetterTranslationCommon)((IAIPackageGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -489,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackage.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -507,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackage DeepCopy(
             this IAIPackageGetter item,
-            AIPackage_TranslationMask? copyMask = null)
+            AIPackage.TranslationMask? copyMask = null)
         {
             return ((AIPackageSetterTranslationCommon)((IAIPackageGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -516,8 +1024,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackage DeepCopy(
             this IAIPackageGetter item,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? copyMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? copyMask = null)
         {
             return ((AIPackageSetterTranslationCommon)((IAIPackageGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -541,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             XElement node,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -554,8 +1062,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             XElement node,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -563,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackage.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -582,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             string path,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -594,8 +1102,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             string path,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -609,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -622,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             Stream stream,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -634,8 +1142,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             Stream stream,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -649,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackage_TranslationMask? translationMask = null)
+            AIPackage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -733,9 +1241,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 12;
 
-        public static readonly Type MaskType = typeof(AIPackage_Mask<>);
+        public static readonly Type MaskType = typeof(AIPackage.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AIPackage_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AIPackage.ErrorMask);
 
         public static readonly Type ClassType = typeof(AIPackage);
 
@@ -1167,12 +1675,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly AIPackageCommon Instance = new AIPackageCommon();
 
-        public AIPackage_Mask<bool> GetEqualsMask(
+        public AIPackage.Mask<bool> GetEqualsMask(
             IAIPackageGetter item,
             IAIPackageGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackage_Mask<bool>(false);
+            var ret = new AIPackage.Mask<bool>(false);
             ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1184,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAIPackageGetter item,
             IAIPackageGetter rhs,
-            AIPackage_Mask<bool> ret,
+            AIPackage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1216,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAIPackageGetter item,
             string? name = null,
-            AIPackage_Mask<bool>? printMask = null)
+            AIPackage.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1231,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackage_Mask<bool>? printMask = null)
+            AIPackage.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1255,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAIPackageGetter item,
             FileGeneration fg,
-            AIPackage_Mask<bool>? printMask = null)
+            AIPackage.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1307,7 +1815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAIPackageGetter item,
-            AIPackage_Mask<bool?> checkMask)
+            AIPackage.Mask<bool?> checkMask)
         {
             if (checkMask.Location?.Overall.HasValue ?? false && checkMask.Location.Overall.Value != (item.Location != null)) return false;
             if (checkMask.Location?.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
@@ -1323,17 +1831,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IAIPackageGetter item,
-            AIPackage_Mask<bool> mask)
+            AIPackage.Mask<bool> mask)
         {
             mask.Flags = true;
             mask.GeneralType = true;
             var itemLocation = item.Location;
-            mask.Location = new MaskItem<bool, AIPackageLocation_Mask<bool>?>(itemLocation != null, itemLocation?.GetHasBeenSetMask());
+            mask.Location = new MaskItem<bool, AIPackageLocation.Mask<bool>?>(itemLocation != null, itemLocation?.GetHasBeenSetMask());
             var itemSchedule = item.Schedule;
-            mask.Schedule = new MaskItem<bool, AIPackageSchedule_Mask<bool>?>(itemSchedule != null, itemSchedule?.GetHasBeenSetMask());
+            mask.Schedule = new MaskItem<bool, AIPackageSchedule.Mask<bool>?>(itemSchedule != null, itemSchedule?.GetHasBeenSetMask());
             var itemTarget = item.Target;
-            mask.Target = new MaskItem<bool, AIPackageTarget_Mask<bool>?>(itemTarget != null, itemTarget?.GetHasBeenSetMask());
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Target = new MaskItem<bool, AIPackageTarget.Mask<bool>?>(itemTarget != null, itemTarget?.GetHasBeenSetMask());
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.PKDTDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1692,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackage DeepCopy(
             IAIPackageGetter item,
-            AIPackage_TranslationMask? copyMask = null)
+            AIPackage.TranslationMask? copyMask = null)
         {
             AIPackage ret = (AIPackage)((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1703,8 +2211,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackage DeepCopy(
             IAIPackageGetter item,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? copyMask = null)
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? copyMask = null)
         {
             AIPackage ret = (AIPackage)((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2132,8 +2640,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageGetter item,
             XElement node,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null,
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2143,14 +2651,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackage.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAIPackageGetter item,
             string path,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null,
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2166,8 +2674,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageGetter item,
             Stream stream,
-            out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask? translationMask = null,
+            out AIPackage.ErrorMask errorMask,
+            AIPackage.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2184,513 +2692,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AIPackage_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<AIPackage_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AIPackage_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Flags = initialValue;
-            this.GeneralType = initialValue;
-            this.Location = new MaskItem<T, AIPackageLocation_Mask<T>?>(initialValue, new AIPackageLocation_Mask<T>(initialValue));
-            this.Schedule = new MaskItem<T, AIPackageSchedule_Mask<T>?>(initialValue, new AIPackageSchedule_Mask<T>(initialValue));
-            this.Target = new MaskItem<T, AIPackageTarget_Mask<T>?>(initialValue, new AIPackageTarget_Mask<T>(initialValue));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.PKDTDataTypeState = initialValue;
-        }
-
-        public AIPackage_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Flags,
-            T GeneralType,
-            T Location,
-            T Schedule,
-            T Target,
-            T Conditions,
-            T PKDTDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Flags = Flags;
-            this.GeneralType = GeneralType;
-            this.Location = new MaskItem<T, AIPackageLocation_Mask<T>?>(Location, new AIPackageLocation_Mask<T>(Location));
-            this.Schedule = new MaskItem<T, AIPackageSchedule_Mask<T>?>(Schedule, new AIPackageSchedule_Mask<T>(Schedule));
-            this.Target = new MaskItem<T, AIPackageTarget_Mask<T>?>(Target, new AIPackageTarget_Mask<T>(Target));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.PKDTDataTypeState = PKDTDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected AIPackage_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Flags;
-        public T GeneralType;
-        public MaskItem<T, AIPackageLocation_Mask<T>?>? Location { get; set; }
-        public MaskItem<T, AIPackageSchedule_Mask<T>?>? Schedule { get; set; }
-        public MaskItem<T, AIPackageTarget_Mask<T>?>? Target { get; set; }
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>? Conditions;
-        public T PKDTDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AIPackage_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AIPackage_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.GeneralType, rhs.GeneralType)) return false;
-            if (!object.Equals(this.Location, rhs.Location)) return false;
-            if (!object.Equals(this.Schedule, rhs.Schedule)) return false;
-            if (!object.Equals(this.Target, rhs.Target)) return false;
-            if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-            if (!object.Equals(this.PKDTDataTypeState, rhs.PKDTDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.GeneralType?.GetHashCode());
-            ret = ret.CombineHashCode(this.Location?.GetHashCode());
-            ret = ret.CombineHashCode(this.Schedule?.GetHashCode());
-            ret = ret.CombineHashCode(this.Target?.GetHashCode());
-            ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-            ret = ret.CombineHashCode(this.PKDTDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.GeneralType)) return false;
-            if (Location != null)
-            {
-                if (!eval(this.Location.Overall)) return false;
-                if (this.Location.Specific != null && !this.Location.Specific.AllEqual(eval)) return false;
-            }
-            if (Schedule != null)
-            {
-                if (!eval(this.Schedule.Overall)) return false;
-                if (this.Schedule.Specific != null && !this.Schedule.Specific.AllEqual(eval)) return false;
-            }
-            if (Target != null)
-            {
-                if (!eval(this.Target.Overall)) return false;
-                if (this.Target.Specific != null && !this.Target.Specific.AllEqual(eval)) return false;
-            }
-            if (this.Conditions != null)
-            {
-                if (!eval(this.Conditions.Overall)) return false;
-                if (this.Conditions.Specific != null)
-                {
-                    foreach (var item in this.Conditions.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.PKDTDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new AIPackage_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AIPackage_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AIPackage_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Flags = eval(this.Flags);
-            obj.GeneralType = eval(this.GeneralType);
-            obj.Location = this.Location == null ? null : new MaskItem<R, AIPackageLocation_Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
-            obj.Schedule = this.Schedule == null ? null : new MaskItem<R, AIPackageSchedule_Mask<R>?>(eval(this.Schedule.Overall), this.Schedule.Specific?.Translate(eval));
-            obj.Target = this.Target == null ? null : new MaskItem<R, AIPackageTarget_Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
-            if (Conditions != null)
-            {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition_Mask<R>?>>());
-                if (Conditions.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Condition_Mask<R>?>>();
-                    obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Condition_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.PKDTDataTypeState = eval(this.PKDTDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AIPackage_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AIPackage_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AIPackage_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.GeneralType ?? true)
-                {
-                    fg.AppendLine($"GeneralType => {GeneralType}");
-                }
-                if (printMask?.Location?.Overall ?? true)
-                {
-                    Location?.ToString(fg);
-                }
-                if (printMask?.Schedule?.Overall ?? true)
-                {
-                    Schedule?.ToString(fg);
-                }
-                if (printMask?.Target?.Overall ?? true)
-                {
-                    Target?.ToString(fg);
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Conditions != null)
-                        {
-                            if (Conditions.Overall != null)
-                            {
-                                fg.AppendLine(Conditions.Overall.ToString());
-                            }
-                            if (Conditions.Specific != null)
-                            {
-                                foreach (var subItem in Conditions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.PKDTDataTypeState ?? true)
-                {
-                    fg.AppendLine($"PKDTDataTypeState => {PKDTDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AIPackage_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<AIPackage_ErrorMask>
-    {
-        #region Members
-        public Exception? Flags;
-        public Exception? GeneralType;
-        public MaskItem<Exception?, AIPackageLocation_ErrorMask?>? Location;
-        public MaskItem<Exception?, AIPackageSchedule_ErrorMask?>? Schedule;
-        public MaskItem<Exception?, AIPackageTarget_ErrorMask?>? Target;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>? Conditions;
-        public Exception? PKDTDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    return Flags;
-                case AIPackage_FieldIndex.GeneralType:
-                    return GeneralType;
-                case AIPackage_FieldIndex.Location:
-                    return Location;
-                case AIPackage_FieldIndex.Schedule:
-                    return Schedule;
-                case AIPackage_FieldIndex.Target:
-                    return Target;
-                case AIPackage_FieldIndex.Conditions:
-                    return Conditions;
-                case AIPackage_FieldIndex.PKDTDataTypeState:
-                    return PKDTDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case AIPackage_FieldIndex.GeneralType:
-                    this.GeneralType = ex;
-                    break;
-                case AIPackage_FieldIndex.Location:
-                    this.Location = new MaskItem<Exception?, AIPackageLocation_ErrorMask?>(ex, null);
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    this.Schedule = new MaskItem<Exception?, AIPackageSchedule_ErrorMask?>(ex, null);
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    this.Target = new MaskItem<Exception?, AIPackageTarget_ErrorMask?>(ex, null);
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ex, null);
-                    break;
-                case AIPackage_FieldIndex.PKDTDataTypeState:
-                    this.PKDTDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            AIPackage_FieldIndex enu = (AIPackage_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackage_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case AIPackage_FieldIndex.GeneralType:
-                    this.GeneralType = (Exception)obj;
-                    break;
-                case AIPackage_FieldIndex.Location:
-                    this.Location = (MaskItem<Exception?, AIPackageLocation_ErrorMask?>?)obj;
-                    break;
-                case AIPackage_FieldIndex.Schedule:
-                    this.Schedule = (MaskItem<Exception?, AIPackageSchedule_ErrorMask?>?)obj;
-                    break;
-                case AIPackage_FieldIndex.Target:
-                    this.Target = (MaskItem<Exception?, AIPackageTarget_ErrorMask?>?)obj;
-                    break;
-                case AIPackage_FieldIndex.Conditions:
-                    this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>)obj;
-                    break;
-                case AIPackage_FieldIndex.PKDTDataTypeState:
-                    this.PKDTDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Flags != null) return true;
-            if (GeneralType != null) return true;
-            if (Location != null) return true;
-            if (Schedule != null) return true;
-            if (Target != null) return true;
-            if (Conditions != null) return true;
-            if (PKDTDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AIPackage_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"GeneralType => {GeneralType}");
-            Location?.ToString(fg);
-            Schedule?.ToString(fg);
-            Target?.ToString(fg);
-            fg.AppendLine("Conditions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Conditions != null)
-                {
-                    if (Conditions.Overall != null)
-                    {
-                        fg.AppendLine(Conditions.Overall.ToString());
-                    }
-                    if (Conditions.Specific != null)
-                    {
-                        foreach (var subItem in Conditions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"PKDTDataTypeState => {PKDTDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public AIPackage_ErrorMask Combine(AIPackage_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AIPackage_ErrorMask();
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.GeneralType = this.GeneralType.Combine(rhs.GeneralType);
-            ret.Location = new MaskItem<Exception?, AIPackageLocation_ErrorMask?>(ExceptionExt.Combine(this.Location?.Overall, rhs.Location?.Overall), (this.Location?.Specific as IErrorMask<AIPackageLocation_ErrorMask>)?.Combine(rhs.Location?.Specific));
-            ret.Schedule = new MaskItem<Exception?, AIPackageSchedule_ErrorMask?>(ExceptionExt.Combine(this.Schedule?.Overall, rhs.Schedule?.Overall), (this.Schedule?.Specific as IErrorMask<AIPackageSchedule_ErrorMask>)?.Combine(rhs.Schedule?.Specific));
-            ret.Target = new MaskItem<Exception?, AIPackageTarget_ErrorMask?>(ExceptionExt.Combine(this.Target?.Overall, rhs.Target?.Overall), (this.Target?.Specific as IErrorMask<AIPackageTarget_ErrorMask>)?.Combine(rhs.Target?.Specific));
-            ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-            ret.PKDTDataTypeState = this.PKDTDataTypeState.Combine(rhs.PKDTDataTypeState);
-            return ret;
-        }
-        public static AIPackage_ErrorMask? Combine(AIPackage_ErrorMask? lhs, AIPackage_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new AIPackage_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AIPackage_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AIPackage_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Flags;
-        public bool GeneralType;
-        public MaskItem<bool, AIPackageLocation_TranslationMask?> Location;
-        public MaskItem<bool, AIPackageSchedule_TranslationMask?> Schedule;
-        public MaskItem<bool, AIPackageTarget_TranslationMask?> Target;
-        public MaskItem<bool, Condition_TranslationMask?> Conditions;
-        public bool PKDTDataTypeState;
-        #endregion
-
-        #region Ctors
-        public AIPackage_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Flags = defaultOn;
-            this.GeneralType = defaultOn;
-            this.Location = new MaskItem<bool, AIPackageLocation_TranslationMask?>(defaultOn, null);
-            this.Schedule = new MaskItem<bool, AIPackageSchedule_TranslationMask?>(defaultOn, null);
-            this.Target = new MaskItem<bool, AIPackageTarget_TranslationMask?>(defaultOn, null);
-            this.Conditions = new MaskItem<bool, Condition_TranslationMask?>(defaultOn, null);
-            this.PKDTDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Flags, null));
-            ret.Add((GeneralType, null));
-            ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
-            ret.Add((Schedule?.Overall ?? true, Schedule?.Specific?.GetCrystal()));
-            ret.Add((Target?.Overall ?? true, Target?.Specific?.GetCrystal()));
-            ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-            ret.Add((PKDTDataTypeState, null));
-        }
-    }
 }
 #endregion
 

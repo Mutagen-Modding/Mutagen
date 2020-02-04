@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Ingredient CreateFromXml(
             XElement node,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -204,15 +204,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Ingredient CreateFromXml(
             XElement node,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ingredient.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ingredient CreateFromXml(
             string path,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -242,8 +242,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ingredient CreateFromXml(
             string path,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Ingredient CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ingredient CreateFromXml(
             Stream stream,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -276,8 +276,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ingredient CreateFromXml(
             Stream stream,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Ingredient CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -300,6 +300,560 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ItemAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+                this.Script = initialValue;
+                this.Weight = initialValue;
+                this.Value = initialValue;
+                this.Flags = initialValue;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.ENITDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Icon,
+                T Script,
+                T Weight,
+                T Value,
+                T Flags,
+                T Effects,
+                T ENITDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+                this.Script = Script;
+                this.Weight = Weight;
+                this.Value = Value;
+                this.Flags = Flags;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.ENITDataTypeState = ENITDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            public T Script;
+            public T Weight;
+            public T Value;
+            public T Flags;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
+            public T ENITDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Effects?.GetHashCode());
+                ret = ret.CombineHashCode(this.ENITDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ENITDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Ingredient.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+                obj.Script = eval(this.Script);
+                obj.Weight = eval(this.Weight);
+                obj.Value = eval(this.Value);
+                obj.Flags = eval(this.Flags);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Effect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Ingredient.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Ingredient.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Ingredient.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Effects?.Overall ?? true)
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Effects != null)
+                            {
+                                if (Effects.Overall != null)
+                                {
+                                    fg.AppendLine(Effects.Overall.ToString());
+                                }
+                                if (Effects.Specific != null)
+                                {
+                                    foreach (var subItem in Effects.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.ENITDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ItemAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            public Exception? Script;
+            public Exception? Weight;
+            public Exception? Value;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            public Exception? ENITDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+                switch (enu)
+                {
+                    case Ingredient_FieldIndex.Name:
+                        return Name;
+                    case Ingredient_FieldIndex.Model:
+                        return Model;
+                    case Ingredient_FieldIndex.Icon:
+                        return Icon;
+                    case Ingredient_FieldIndex.Script:
+                        return Script;
+                    case Ingredient_FieldIndex.Weight:
+                        return Weight;
+                    case Ingredient_FieldIndex.Value:
+                        return Value;
+                    case Ingredient_FieldIndex.Flags:
+                        return Flags;
+                    case Ingredient_FieldIndex.Effects:
+                        return Effects;
+                    case Ingredient_FieldIndex.ENITDataTypeState:
+                        return ENITDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+                switch (enu)
+                {
+                    case Ingredient_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Ingredient_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Ingredient_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Ingredient_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Ingredient_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Ingredient_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Ingredient_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.ENITDataTypeState:
+                        this.ENITDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+                switch (enu)
+                {
+                    case Ingredient_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Ingredient_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Ingredient_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Ingredient_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case Ingredient_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case Ingredient_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Ingredient_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
+                    case Ingredient_FieldIndex.ENITDataTypeState:
+                        this.ENITDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                if (Script != null) return true;
+                if (Weight != null) return true;
+                if (Value != null) return true;
+                if (Flags != null) return true;
+                if (Effects != null) return true;
+                if (ENITDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Effects != null)
+                    {
+                        if (Effects.Overall != null)
+                        {
+                            fg.AppendLine(Effects.Overall.ToString());
+                        }
+                        if (Effects.Specific != null)
+                        {
+                            foreach (var subItem in Effects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ItemAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            public bool Script;
+            public bool Weight;
+            public bool Value;
+            public bool Flags;
+            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public bool ENITDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+                this.Script = defaultOn;
+                this.Weight = defaultOn;
+                this.Value = defaultOn;
+                this.Flags = defaultOn;
+                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
+                this.ENITDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+                ret.Add((Script, null));
+                ret.Add((Weight, null));
+                ret.Add((Value, null));
+                ret.Add((Flags, null));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((ENITDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -438,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((IngredientSetterCommon)((IIngredientGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Ingredient_Mask<bool> GetEqualsMask(
+        public static Ingredient.Mask<bool> GetEqualsMask(
             this IIngredientGetter item,
             IIngredientGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -452,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IIngredientGetter item,
             string? name = null,
-            Ingredient_Mask<bool>? printMask = null)
+            Ingredient.Mask<bool>? printMask = null)
         {
             return ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -464,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientGetter item,
             FileGeneration fg,
             string? name = null,
-            Ingredient_Mask<bool>? printMask = null)
+            Ingredient.Mask<bool>? printMask = null)
         {
             ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -475,16 +1029,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IIngredientGetter item,
-            Ingredient_Mask<bool?> checkMask)
+            Ingredient.Mask<bool?> checkMask)
         {
             return ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Ingredient_Mask<bool> GetHasBeenSetMask(this IIngredientGetter item)
+        public static Ingredient.Mask<bool> GetHasBeenSetMask(this IIngredientGetter item)
         {
-            var ret = new Ingredient_Mask<bool>(false);
+            var ret = new Ingredient.Mask<bool>(false);
             ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -503,8 +1057,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IIngredientInternal lhs,
             IIngredientGetter rhs,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? copyMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((IngredientSetterTranslationCommon)((IIngredientGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -512,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ingredient.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -530,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ingredient DeepCopy(
             this IIngredientGetter item,
-            Ingredient_TranslationMask? copyMask = null)
+            Ingredient.TranslationMask? copyMask = null)
         {
             return ((IngredientSetterTranslationCommon)((IIngredientGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -539,8 +1093,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Ingredient DeepCopy(
             this IIngredientGetter item,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? copyMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? copyMask = null)
         {
             return ((IngredientSetterTranslationCommon)((IIngredientGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -564,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IIngredientInternal item,
             XElement node,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -577,8 +1131,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IIngredientInternal item,
             XElement node,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -586,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ingredient.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -605,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IIngredientInternal item,
             string path,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -617,8 +1171,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IIngredientInternal item,
             string path,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -632,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -645,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IIngredientInternal item,
             Stream stream,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -657,8 +1211,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IIngredientInternal item,
             Stream stream,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -672,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Ingredient_TranslationMask? translationMask = null)
+            Ingredient.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -758,9 +1312,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(Ingredient_Mask<>);
+        public static readonly Type MaskType = typeof(Ingredient.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Ingredient_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Ingredient.ErrorMask);
 
         public static readonly Type ClassType = typeof(Ingredient);
 
@@ -1230,12 +1784,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly IngredientCommon Instance = new IngredientCommon();
 
-        public Ingredient_Mask<bool> GetEqualsMask(
+        public Ingredient.Mask<bool> GetEqualsMask(
             IIngredientGetter item,
             IIngredientGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Ingredient_Mask<bool>(false);
+            var ret = new Ingredient.Mask<bool>(false);
             ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1247,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IIngredientGetter item,
             IIngredientGetter rhs,
-            Ingredient_Mask<bool> ret,
+            Ingredient.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1273,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IIngredientGetter item,
             string? name = null,
-            Ingredient_Mask<bool>? printMask = null)
+            Ingredient.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1288,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIngredientGetter item,
             FileGeneration fg,
             string? name = null,
-            Ingredient_Mask<bool>? printMask = null)
+            Ingredient.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1312,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IIngredientGetter item,
             FileGeneration fg,
-            Ingredient_Mask<bool>? printMask = null)
+            Ingredient.Mask<bool>? printMask = null)
         {
             ItemAbstractCommon.ToStringFields(
                 item: item,
@@ -1372,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IIngredientGetter item,
-            Ingredient_Mask<bool?> checkMask)
+            Ingredient.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1388,17 +1942,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IIngredientGetter item,
-            Ingredient_Mask<bool> mask)
+            Ingredient.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.Script = item.Script.HasBeenSet;
             mask.Weight = (item.Weight != null);
             mask.Value = true;
             mask.Flags = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ENITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1788,7 +2342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Ingredient DeepCopy(
             IIngredientGetter item,
-            Ingredient_TranslationMask? copyMask = null)
+            Ingredient.TranslationMask? copyMask = null)
         {
             Ingredient ret = (Ingredient)((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1799,8 +2353,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Ingredient DeepCopy(
             IIngredientGetter item,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? copyMask = null)
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? copyMask = null)
         {
             Ingredient ret = (Ingredient)((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2294,8 +2848,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IIngredientGetter item,
             XElement node,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null,
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2305,14 +2859,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ingredient.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IIngredientGetter item,
             string path,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null,
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2328,8 +2882,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IIngredientGetter item,
             Stream stream,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_TranslationMask? translationMask = null,
+            out Ingredient.ErrorMask errorMask,
+            Ingredient.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2346,559 +2900,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Ingredient_Mask<T> :
-        ItemAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<Ingredient_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Ingredient_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Script = initialValue;
-            this.Weight = initialValue;
-            this.Value = initialValue;
-            this.Flags = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.ENITDataTypeState = initialValue;
-        }
-
-        public Ingredient_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Icon,
-            T Script,
-            T Weight,
-            T Value,
-            T Flags,
-            T Effects,
-            T ENITDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-            this.Script = Script;
-            this.Weight = Weight;
-            this.Value = Value;
-            this.Flags = Flags;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.ENITDataTypeState = ENITDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Ingredient_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        public T Script;
-        public T Weight;
-        public T Value;
-        public T Flags;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>? Effects;
-        public T ENITDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Ingredient_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Ingredient_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Effects, rhs.Effects)) return false;
-            if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Effects?.GetHashCode());
-            ret = ret.CombineHashCode(this.ENITDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Flags)) return false;
-            if (this.Effects != null)
-            {
-                if (!eval(this.Effects.Overall)) return false;
-                if (this.Effects.Specific != null)
-                {
-                    foreach (var item in this.Effects.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.ENITDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Ingredient_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Ingredient_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Ingredient_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-            obj.Script = eval(this.Script);
-            obj.Weight = eval(this.Weight);
-            obj.Value = eval(this.Value);
-            obj.Flags = eval(this.Flags);
-            if (Effects != null)
-            {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect_Mask<R>?>>());
-                if (Effects.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Effect_Mask<R>?>>();
-                    obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Effect_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.ENITDataTypeState = eval(this.ENITDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Ingredient_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Ingredient_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Ingredient_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Effects != null)
-                        {
-                            if (Effects.Overall != null)
-                            {
-                                fg.AppendLine(Effects.Overall.ToString());
-                            }
-                            if (Effects.Specific != null)
-                            {
-                                foreach (var subItem in Effects.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.ENITDataTypeState ?? true)
-                {
-                    fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Ingredient_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Ingredient_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        public Exception? Script;
-        public Exception? Weight;
-        public Exception? Value;
-        public Exception? Flags;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>? Effects;
-        public Exception? ENITDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Name:
-                    return Name;
-                case Ingredient_FieldIndex.Model:
-                    return Model;
-                case Ingredient_FieldIndex.Icon:
-                    return Icon;
-                case Ingredient_FieldIndex.Script:
-                    return Script;
-                case Ingredient_FieldIndex.Weight:
-                    return Weight;
-                case Ingredient_FieldIndex.Value:
-                    return Value;
-                case Ingredient_FieldIndex.Flags:
-                    return Flags;
-                case Ingredient_FieldIndex.Effects:
-                    return Effects;
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    return ENITDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Ingredient_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Ingredient_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Ingredient_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Ingredient_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Ingredient_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case Ingredient_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ex, null);
-                    break;
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    this.ENITDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
-            switch (enu)
-            {
-                case Ingredient_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Ingredient_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>)obj;
-                    break;
-                case Ingredient_FieldIndex.ENITDataTypeState:
-                    this.ENITDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (Script != null) return true;
-            if (Weight != null) return true;
-            if (Value != null) return true;
-            if (Flags != null) return true;
-            if (Effects != null) return true;
-            if (ENITDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Ingredient_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("Effects =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Effects != null)
-                {
-                    if (Effects.Overall != null)
-                    {
-                        fg.AppendLine(Effects.Overall.ToString());
-                    }
-                    if (Effects.Specific != null)
-                    {
-                        foreach (var subItem in Effects.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Ingredient_ErrorMask Combine(Ingredient_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Ingredient_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-            ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
-            return ret;
-        }
-        public static Ingredient_ErrorMask? Combine(Ingredient_ErrorMask? lhs, Ingredient_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Ingredient_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Ingredient_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Ingredient_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Weight;
-        public bool Value;
-        public bool Flags;
-        public MaskItem<bool, Effect_TranslationMask?> Effects;
-        public bool ENITDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Ingredient_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Weight = defaultOn;
-            this.Value = defaultOn;
-            this.Flags = defaultOn;
-            this.Effects = new MaskItem<bool, Effect_TranslationMask?>(defaultOn, null);
-            this.ENITDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((Script, null));
-            ret.Add((Weight, null));
-            ret.Add((Value, null));
-            ret.Add((Flags, null));
-            ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
-            ret.Add((ENITDataTypeState, null));
-        }
-    }
 }
 #endregion
 

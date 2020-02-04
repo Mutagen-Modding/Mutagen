@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static TeleportDestination CreateFromXml(
             XElement node,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -123,15 +123,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static TeleportDestination CreateFromXml(
             XElement node,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TeleportDestination.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination CreateFromXml(
             string path,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination CreateFromXml(
             string path,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static TeleportDestination CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination CreateFromXml(
             Stream stream,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination CreateFromXml(
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static TeleportDestination CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,6 +219,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Destination = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
+            }
+
+            public Mask(
+                T Destination,
+                T Position,
+                T Rotation)
+            {
+                this.Destination = Destination;
+                this.Position = Position;
+                this.Rotation = Rotation;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Destination;
+            public T Position;
+            public T Rotation;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Destination, rhs.Destination)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Destination?.GetHashCode());
+                ret = ret.CombineHashCode(this.Position?.GetHashCode());
+                ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Destination)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new TeleportDestination.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Destination = eval(this.Destination);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(TeleportDestination.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, TeleportDestination.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(TeleportDestination.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Destination ?? true)
+                    {
+                        fg.AppendLine($"Destination => {Destination}");
+                    }
+                    if (printMask?.Position ?? true)
+                    {
+                        fg.AppendLine($"Position => {Position}");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        fg.AppendLine($"Rotation => {Rotation}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Destination;
+            public Exception? Position;
+            public Exception? Rotation;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+                switch (enu)
+                {
+                    case TeleportDestination_FieldIndex.Destination:
+                        return Destination;
+                    case TeleportDestination_FieldIndex.Position:
+                        return Position;
+                    case TeleportDestination_FieldIndex.Rotation:
+                        return Rotation;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+                switch (enu)
+                {
+                    case TeleportDestination_FieldIndex.Destination:
+                        this.Destination = ex;
+                        break;
+                    case TeleportDestination_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case TeleportDestination_FieldIndex.Rotation:
+                        this.Rotation = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
+                switch (enu)
+                {
+                    case TeleportDestination_FieldIndex.Destination:
+                        this.Destination = (Exception)obj;
+                        break;
+                    case TeleportDestination_FieldIndex.Position:
+                        this.Position = (Exception)obj;
+                        break;
+                    case TeleportDestination_FieldIndex.Rotation:
+                        this.Rotation = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Destination != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Destination => {Destination}");
+                fg.AppendLine($"Position => {Position}");
+                fg.AppendLine($"Rotation => {Rotation}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Destination = this.Destination.Combine(rhs.Destination);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Destination;
+            public bool Position;
+            public bool Rotation;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Destination = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Destination, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -329,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static TeleportDestination_Mask<bool> GetEqualsMask(
+        public static TeleportDestination.Mask<bool> GetEqualsMask(
             this ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -343,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ITeleportDestinationGetter item,
             string? name = null,
-            TeleportDestination_Mask<bool>? printMask = null)
+            TeleportDestination.Mask<bool>? printMask = null)
         {
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -355,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestinationGetter item,
             FileGeneration fg,
             string? name = null,
-            TeleportDestination_Mask<bool>? printMask = null)
+            TeleportDestination.Mask<bool>? printMask = null)
         {
             ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -366,16 +680,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ITeleportDestinationGetter item,
-            TeleportDestination_Mask<bool?> checkMask)
+            TeleportDestination.Mask<bool?> checkMask)
         {
             return ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static TeleportDestination_Mask<bool> GetHasBeenSetMask(this ITeleportDestinationGetter item)
+        public static TeleportDestination.Mask<bool> GetHasBeenSetMask(this ITeleportDestinationGetter item)
         {
-            var ret = new TeleportDestination_Mask<bool>(false);
+            var ret = new TeleportDestination.Mask<bool>(false);
             ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -394,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
-            TeleportDestination_TranslationMask? copyMask = null)
+            TeleportDestination.TranslationMask? copyMask = null)
         {
             ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -406,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? copyMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -415,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TeleportDestination.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -433,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination DeepCopy(
             this ITeleportDestinationGetter item,
-            TeleportDestination_TranslationMask? copyMask = null)
+            TeleportDestination.TranslationMask? copyMask = null)
         {
             return ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -442,8 +756,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static TeleportDestination DeepCopy(
             this ITeleportDestinationGetter item,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? copyMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? copyMask = null)
         {
             return ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITeleportDestination item,
             XElement node,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -480,8 +794,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITeleportDestination item,
             XElement node,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -489,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TeleportDestination.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -508,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITeleportDestination item,
             string path,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -520,8 +834,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITeleportDestination item,
             string path,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -535,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestination item,
             string path,
             ErrorMaskBuilder? errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -548,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITeleportDestination item,
             Stream stream,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -560,8 +874,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITeleportDestination item,
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -575,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestination item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(TeleportDestination_Mask<>);
+        public static readonly Type MaskType = typeof(TeleportDestination.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(TeleportDestination_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(TeleportDestination.ErrorMask);
 
         public static readonly Type ClassType = typeof(TeleportDestination);
 
@@ -910,12 +1224,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly TeleportDestinationCommon Instance = new TeleportDestinationCommon();
 
-        public TeleportDestination_Mask<bool> GetEqualsMask(
+        public TeleportDestination.Mask<bool> GetEqualsMask(
             ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TeleportDestination_Mask<bool>(false);
+            var ret = new TeleportDestination.Mask<bool>(false);
             ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -927,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ITeleportDestinationGetter item,
             ITeleportDestinationGetter rhs,
-            TeleportDestination_Mask<bool> ret,
+            TeleportDestination.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -939,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ITeleportDestinationGetter item,
             string? name = null,
-            TeleportDestination_Mask<bool>? printMask = null)
+            TeleportDestination.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -954,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter item,
             FileGeneration fg,
             string? name = null,
-            TeleportDestination_Mask<bool>? printMask = null)
+            TeleportDestination.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -978,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ITeleportDestinationGetter item,
             FileGeneration fg,
-            TeleportDestination_Mask<bool>? printMask = null)
+            TeleportDestination.Mask<bool>? printMask = null)
         {
             if (printMask?.Destination ?? true)
             {
@@ -996,14 +1310,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ITeleportDestinationGetter item,
-            TeleportDestination_Mask<bool?> checkMask)
+            TeleportDestination.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ITeleportDestinationGetter item,
-            TeleportDestination_Mask<bool> mask)
+            TeleportDestination.Mask<bool> mask)
         {
             mask.Destination = true;
             mask.Position = true;
@@ -1079,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public TeleportDestination DeepCopy(
             ITeleportDestinationGetter item,
-            TeleportDestination_TranslationMask? copyMask = null)
+            TeleportDestination.TranslationMask? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1090,8 +1404,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public TeleportDestination DeepCopy(
             ITeleportDestinationGetter item,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? copyMask = null)
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? copyMask = null)
         {
             TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1366,8 +1680,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ITeleportDestinationGetter item,
             XElement node,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null,
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1377,14 +1691,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TeleportDestination.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ITeleportDestinationGetter item,
             string path,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null,
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1417,8 +1731,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ITeleportDestinationGetter item,
             Stream stream,
-            out TeleportDestination_ErrorMask errorMask,
-            TeleportDestination_TranslationMask? translationMask = null,
+            out TeleportDestination.ErrorMask errorMask,
+            TeleportDestination.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1467,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestinationGetter item,
             XElement node,
             string? name = null,
-            TeleportDestination_TranslationMask? translationMask = null)
+            TeleportDestination.TranslationMask? translationMask = null)
         {
             ((TeleportDestinationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1511,321 +1825,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class TeleportDestination_Mask<T> :
-        IMask<T>,
-        IEquatable<TeleportDestination_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public TeleportDestination_Mask(T initialValue)
-        {
-            this.Destination = initialValue;
-            this.Position = initialValue;
-            this.Rotation = initialValue;
-        }
-
-        public TeleportDestination_Mask(
-            T Destination,
-            T Position,
-            T Rotation)
-        {
-            this.Destination = Destination;
-            this.Position = Position;
-            this.Rotation = Rotation;
-        }
-
-        #pragma warning disable CS8618
-        protected TeleportDestination_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Destination;
-        public T Position;
-        public T Rotation;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is TeleportDestination_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(TeleportDestination_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Destination, rhs.Destination)) return false;
-            if (!object.Equals(this.Position, rhs.Position)) return false;
-            if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Destination?.GetHashCode());
-            ret = ret.CombineHashCode(this.Position?.GetHashCode());
-            ret = ret.CombineHashCode(this.Rotation?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Destination)) return false;
-            if (!eval(this.Position)) return false;
-            if (!eval(this.Rotation)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public TeleportDestination_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new TeleportDestination_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(TeleportDestination_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Destination = eval(this.Destination);
-            obj.Position = eval(this.Position);
-            obj.Rotation = eval(this.Rotation);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(TeleportDestination_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, TeleportDestination_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(TeleportDestination_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Destination ?? true)
-                {
-                    fg.AppendLine($"Destination => {Destination}");
-                }
-                if (printMask?.Position ?? true)
-                {
-                    fg.AppendLine($"Position => {Position}");
-                }
-                if (printMask?.Rotation ?? true)
-                {
-                    fg.AppendLine($"Rotation => {Rotation}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class TeleportDestination_ErrorMask : IErrorMask, IErrorMask<TeleportDestination_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Destination;
-        public Exception? Position;
-        public Exception? Rotation;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    return Destination;
-                case TeleportDestination_FieldIndex.Position:
-                    return Position;
-                case TeleportDestination_FieldIndex.Rotation:
-                    return Rotation;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    this.Destination = ex;
-                    break;
-                case TeleportDestination_FieldIndex.Position:
-                    this.Position = ex;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    this.Rotation = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            TeleportDestination_FieldIndex enu = (TeleportDestination_FieldIndex)index;
-            switch (enu)
-            {
-                case TeleportDestination_FieldIndex.Destination:
-                    this.Destination = (Exception)obj;
-                    break;
-                case TeleportDestination_FieldIndex.Position:
-                    this.Position = (Exception)obj;
-                    break;
-                case TeleportDestination_FieldIndex.Rotation:
-                    this.Rotation = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Destination != null) return true;
-            if (Position != null) return true;
-            if (Rotation != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("TeleportDestination_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Destination => {Destination}");
-            fg.AppendLine($"Position => {Position}");
-            fg.AppendLine($"Rotation => {Rotation}");
-        }
-        #endregion
-
-        #region Combine
-        public TeleportDestination_ErrorMask Combine(TeleportDestination_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new TeleportDestination_ErrorMask();
-            ret.Destination = this.Destination.Combine(rhs.Destination);
-            ret.Position = this.Position.Combine(rhs.Position);
-            ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-            return ret;
-        }
-        public static TeleportDestination_ErrorMask? Combine(TeleportDestination_ErrorMask? lhs, TeleportDestination_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static TeleportDestination_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new TeleportDestination_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class TeleportDestination_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Destination;
-        public bool Position;
-        public bool Rotation;
-        #endregion
-
-        #region Ctors
-        public TeleportDestination_TranslationMask(bool defaultOn)
-        {
-            this.Destination = defaultOn;
-            this.Position = defaultOn;
-            this.Rotation = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Destination, null));
-            ret.Add((Position, null));
-            ret.Add((Rotation, null));
-        }
-    }
 }
 #endregion
 

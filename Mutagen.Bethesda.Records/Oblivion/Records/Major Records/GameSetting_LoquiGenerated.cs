@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new GameSetting CreateFromXml(
             XElement node,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -111,15 +111,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static GameSetting CreateFromXml(
             XElement node,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSetting.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting CreateFromXml(
             string path,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting CreateFromXml(
             string path,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GameSetting CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting CreateFromXml(
             Stream stream,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -186,8 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting CreateFromXml(
             Stream stream,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GameSetting CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -210,6 +210,227 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new GameSetting.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(GameSetting.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, GameSetting.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(GameSetting.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+            }
+
+            #endregion
+
+        }
         #endregion
 
         #region Mutagen
@@ -294,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GameSettingSetterCommon)((IGameSettingGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static GameSetting_Mask<bool> GetEqualsMask(
+        public static GameSetting.Mask<bool> GetEqualsMask(
             this IGameSettingGetter item,
             IGameSettingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -308,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IGameSettingGetter item,
             string? name = null,
-            GameSetting_Mask<bool>? printMask = null)
+            GameSetting.Mask<bool>? printMask = null)
         {
             return ((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -320,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGameSettingGetter item,
             FileGeneration fg,
             string? name = null,
-            GameSetting_Mask<bool>? printMask = null)
+            GameSetting.Mask<bool>? printMask = null)
         {
             ((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -331,16 +552,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IGameSettingGetter item,
-            GameSetting_Mask<bool?> checkMask)
+            GameSetting.Mask<bool?> checkMask)
         {
             return ((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static GameSetting_Mask<bool> GetHasBeenSetMask(this IGameSettingGetter item)
+        public static GameSetting.Mask<bool> GetHasBeenSetMask(this IGameSettingGetter item)
         {
-            var ret = new GameSetting_Mask<bool>(false);
+            var ret = new GameSetting.Mask<bool>(false);
             ((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -359,8 +580,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IGameSettingInternal lhs,
             IGameSettingGetter rhs,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? copyMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -368,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSetting.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -386,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting DeepCopy(
             this IGameSettingGetter item,
-            GameSetting_TranslationMask? copyMask = null)
+            GameSetting.TranslationMask? copyMask = null)
         {
             return ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -395,8 +616,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GameSetting DeepCopy(
             this IGameSettingGetter item,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? copyMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? copyMask = null)
         {
             return ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -420,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             XElement node,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -433,8 +654,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             XElement node,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -442,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSetting.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -461,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             string path,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -473,8 +694,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             string path,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -488,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGameSettingInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -501,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             Stream stream,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -513,8 +734,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             Stream stream,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -528,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGameSettingInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GameSetting_TranslationMask? translationMask = null)
+            GameSetting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -605,9 +826,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(GameSetting_Mask<>);
+        public static readonly Type MaskType = typeof(GameSetting.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GameSetting_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GameSetting.ErrorMask);
 
         public static readonly Type ClassType = typeof(GameSetting);
 
@@ -839,12 +1060,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly GameSettingCommon Instance = new GameSettingCommon();
 
-        public GameSetting_Mask<bool> GetEqualsMask(
+        public GameSetting.Mask<bool> GetEqualsMask(
             IGameSettingGetter item,
             IGameSettingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GameSetting_Mask<bool>(false);
+            var ret = new GameSetting.Mask<bool>(false);
             ((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -856,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IGameSettingGetter item,
             IGameSettingGetter rhs,
-            GameSetting_Mask<bool> ret,
+            GameSetting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -866,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IGameSettingGetter item,
             string? name = null,
-            GameSetting_Mask<bool>? printMask = null)
+            GameSetting.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -881,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingGetter item,
             FileGeneration fg,
             string? name = null,
-            GameSetting_Mask<bool>? printMask = null)
+            GameSetting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -905,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IGameSettingGetter item,
             FileGeneration fg,
-            GameSetting_Mask<bool>? printMask = null)
+            GameSetting.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -915,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IGameSettingGetter item,
-            GameSetting_Mask<bool?> checkMask)
+            GameSetting.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -924,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IGameSettingGetter item,
-            GameSetting_Mask<bool> mask)
+            GameSetting.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
@@ -1128,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public GameSetting DeepCopy(
             IGameSettingGetter item,
-            GameSetting_TranslationMask? copyMask = null)
+            GameSetting.TranslationMask? copyMask = null)
         {
             GameSetting ret = (GameSetting)((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1139,8 +1360,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public GameSetting DeepCopy(
             IGameSettingGetter item,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? copyMask = null)
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? copyMask = null)
         {
             GameSetting ret = (GameSetting)((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1341,8 +1562,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGameSettingGetter item,
             XElement node,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null,
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1352,14 +1573,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSetting.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IGameSettingGetter item,
             string path,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null,
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1375,8 +1596,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGameSettingGetter item,
             Stream stream,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask? translationMask = null,
+            out GameSetting.ErrorMask errorMask,
+            GameSetting.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1393,226 +1614,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class GameSetting_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<GameSetting_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public GameSetting_Mask(T initialValue)
-        : base(initialValue)
-        {
-        }
-
-        public GameSetting_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-        }
-
-        #pragma warning disable CS8618
-        protected GameSetting_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is GameSetting_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(GameSetting_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new GameSetting_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new GameSetting_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(GameSetting_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(GameSetting_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, GameSetting_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(GameSetting_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class GameSetting_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<GameSetting_ErrorMask>
-    {
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("GameSetting_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-        }
-        #endregion
-
-        #region Combine
-        public GameSetting_ErrorMask Combine(GameSetting_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new GameSetting_ErrorMask();
-            return ret;
-        }
-        public static GameSetting_ErrorMask? Combine(GameSetting_ErrorMask? lhs, GameSetting_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new GameSetting_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new GameSetting_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class GameSetting_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Ctors
-        public GameSetting_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-        }
-
-        #endregion
-
-    }
 }
 #endregion
 

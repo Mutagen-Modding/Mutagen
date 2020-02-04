@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Activator CreateFromXml(
             XElement node,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -148,15 +148,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Activator CreateFromXml(
             XElement node,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Activator CreateFromXml(
             string path,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,8 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Activator CreateFromXml(
             string path,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Activator CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Activator CreateFromXml(
             Stream stream,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -220,8 +220,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Activator CreateFromXml(
             Stream stream,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Activator CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -244,6 +244,352 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Script = initialValue;
+                this.Sound = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Script,
+                T Sound)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Script = Script;
+                this.Sound = Sound;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Script;
+            public T Sound;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Sound)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Activator.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.Sound = eval(this.Sound);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Activator.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Activator.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Activator.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        fg.AppendLine($"Sound => {Sound}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Script;
+            public Exception? Sound;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Activator_FieldIndex enu = (Activator_FieldIndex)index;
+                switch (enu)
+                {
+                    case Activator_FieldIndex.Name:
+                        return Name;
+                    case Activator_FieldIndex.Model:
+                        return Model;
+                    case Activator_FieldIndex.Script:
+                        return Script;
+                    case Activator_FieldIndex.Sound:
+                        return Sound;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Activator_FieldIndex enu = (Activator_FieldIndex)index;
+                switch (enu)
+                {
+                    case Activator_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Activator_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Activator_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Activator_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Activator_FieldIndex enu = (Activator_FieldIndex)index;
+                switch (enu)
+                {
+                    case Activator_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Activator_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Activator_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Activator_FieldIndex.Sound:
+                        this.Sound = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Script != null) return true;
+                if (Sound != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Sound => {Sound}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Script;
+            public bool Sound;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.Sound = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Sound, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -367,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Activator_Mask<bool> GetEqualsMask(
+        public static Activator.Mask<bool> GetEqualsMask(
             this IActivatorGetter item,
             IActivatorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -381,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IActivatorGetter item,
             string? name = null,
-            Activator_Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -393,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorGetter item,
             FileGeneration fg,
             string? name = null,
-            Activator_Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -404,16 +750,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IActivatorGetter item,
-            Activator_Mask<bool?> checkMask)
+            Activator.Mask<bool?> checkMask)
         {
             return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Activator_Mask<bool> GetHasBeenSetMask(this IActivatorGetter item)
+        public static Activator.Mask<bool> GetHasBeenSetMask(this IActivatorGetter item)
         {
-            var ret = new Activator_Mask<bool>(false);
+            var ret = new Activator.Mask<bool>(false);
             ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -432,8 +778,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IActivatorInternal lhs,
             IActivatorGetter rhs,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? copyMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ActivatorSetterTranslationCommon)((IActivatorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -441,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -459,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Activator DeepCopy(
             this IActivatorGetter item,
-            Activator_TranslationMask? copyMask = null)
+            Activator.TranslationMask? copyMask = null)
         {
             return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -468,8 +814,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Activator DeepCopy(
             this IActivatorGetter item,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? copyMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? copyMask = null)
         {
             return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -493,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IActivatorInternal item,
             XElement node,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -506,8 +852,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IActivatorInternal item,
             XElement node,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -515,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -534,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IActivatorInternal item,
             string path,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -546,8 +892,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IActivatorInternal item,
             string path,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -561,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -574,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IActivatorInternal item,
             Stream stream,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -586,8 +932,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IActivatorInternal item,
             Stream stream,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -601,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Activator_TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -682,9 +1028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(Activator_Mask<>);
+        public static readonly Type MaskType = typeof(Activator.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Activator_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Activator.ErrorMask);
 
         public static readonly Type ClassType = typeof(Activator);
 
@@ -1049,12 +1395,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ActivatorCommon Instance = new ActivatorCommon();
 
-        public Activator_Mask<bool> GetEqualsMask(
+        public Activator.Mask<bool> GetEqualsMask(
             IActivatorGetter item,
             IActivatorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Activator_Mask<bool>(false);
+            var ret = new Activator.Mask<bool>(false);
             ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1066,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IActivatorGetter item,
             IActivatorGetter rhs,
-            Activator_Mask<bool> ret,
+            Activator.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1084,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IActivatorGetter item,
             string? name = null,
-            Activator_Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1099,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IActivatorGetter item,
             FileGeneration fg,
             string? name = null,
-            Activator_Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1123,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IActivatorGetter item,
             FileGeneration fg,
-            Activator_Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1149,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IActivatorGetter item,
-            Activator_Mask<bool?> checkMask)
+            Activator.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1163,11 +1509,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IActivatorGetter item,
-            Activator_Mask<bool> mask)
+            Activator.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
             mask.Sound = item.Sound.HasBeenSet;
             base.FillHasBeenSetMask(
@@ -1436,7 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Activator DeepCopy(
             IActivatorGetter item,
-            Activator_TranslationMask? copyMask = null)
+            Activator.TranslationMask? copyMask = null)
         {
             Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1447,8 +1793,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Activator DeepCopy(
             IActivatorGetter item,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? copyMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? copyMask = null)
         {
             Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1766,8 +2112,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IActivatorGetter item,
             XElement node,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1777,14 +2123,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IActivatorGetter item,
             string path,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1800,8 +2146,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IActivatorGetter item,
             Stream stream,
-            out Activator_ErrorMask errorMask,
-            Activator_TranslationMask? translationMask = null,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1818,351 +2164,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Activator_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Activator_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Activator_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Script = initialValue;
-            this.Sound = initialValue;
-        }
-
-        public Activator_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Script,
-            T Sound)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Script = Script;
-            this.Sound = Sound;
-        }
-
-        #pragma warning disable CS8618
-        protected Activator_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Script;
-        public T Sound;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Activator_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Activator_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Sound, rhs.Sound)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Sound)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Activator_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Activator_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Activator_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Script = eval(this.Script);
-            obj.Sound = eval(this.Sound);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Activator_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Activator_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Activator_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {Sound}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Activator_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Activator_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Script;
-        public Exception? Sound;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    return Name;
-                case Activator_FieldIndex.Model:
-                    return Model;
-                case Activator_FieldIndex.Script:
-                    return Script;
-                case Activator_FieldIndex.Sound:
-                    return Sound;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Activator_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Activator_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Activator_FieldIndex.Sound:
-                    this.Sound = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Activator_FieldIndex enu = (Activator_FieldIndex)index;
-            switch (enu)
-            {
-                case Activator_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Activator_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Activator_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Activator_FieldIndex.Sound:
-                    this.Sound = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Script != null) return true;
-            if (Sound != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Activator_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Sound => {Sound}");
-        }
-        #endregion
-
-        #region Combine
-        public Activator_ErrorMask Combine(Activator_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Activator_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Sound = this.Sound.Combine(rhs.Sound);
-            return ret;
-        }
-        public static Activator_ErrorMask? Combine(Activator_ErrorMask? lhs, Activator_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Activator_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Activator_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Activator_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Script;
-        public bool Sound;
-        #endregion
-
-        #region Ctors
-        public Activator_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.Sound = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((Sound, null));
-        }
-    }
 }
 #endregion
 

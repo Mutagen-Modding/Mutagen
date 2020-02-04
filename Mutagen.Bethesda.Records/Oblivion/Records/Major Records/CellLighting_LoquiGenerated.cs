@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CellLighting CreateFromXml(
             XElement node,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -139,15 +139,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CellLighting CreateFromXml(
             XElement node,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellLighting.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellLighting CreateFromXml(
             string path,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,8 +177,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellLighting CreateFromXml(
             string path,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellLighting CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellLighting CreateFromXml(
             Stream stream,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -211,8 +211,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellLighting CreateFromXml(
             Stream stream,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellLighting CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -235,6 +235,482 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.AmbientColor = initialValue;
+                this.DirectionalColor = initialValue;
+                this.FogColor = initialValue;
+                this.FogNear = initialValue;
+                this.FogFar = initialValue;
+                this.DirectionalRotationXY = initialValue;
+                this.DirectionalRotationZ = initialValue;
+                this.DirectionalFade = initialValue;
+                this.FogClipDistance = initialValue;
+            }
+
+            public Mask(
+                T AmbientColor,
+                T DirectionalColor,
+                T FogColor,
+                T FogNear,
+                T FogFar,
+                T DirectionalRotationXY,
+                T DirectionalRotationZ,
+                T DirectionalFade,
+                T FogClipDistance)
+            {
+                this.AmbientColor = AmbientColor;
+                this.DirectionalColor = DirectionalColor;
+                this.FogColor = FogColor;
+                this.FogNear = FogNear;
+                this.FogFar = FogFar;
+                this.DirectionalRotationXY = DirectionalRotationXY;
+                this.DirectionalRotationZ = DirectionalRotationZ;
+                this.DirectionalFade = DirectionalFade;
+                this.FogClipDistance = FogClipDistance;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T AmbientColor;
+            public T DirectionalColor;
+            public T FogColor;
+            public T FogNear;
+            public T FogFar;
+            public T DirectionalRotationXY;
+            public T DirectionalRotationZ;
+            public T DirectionalFade;
+            public T FogClipDistance;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
+                if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
+                if (!object.Equals(this.FogColor, rhs.FogColor)) return false;
+                if (!object.Equals(this.FogNear, rhs.FogNear)) return false;
+                if (!object.Equals(this.FogFar, rhs.FogFar)) return false;
+                if (!object.Equals(this.DirectionalRotationXY, rhs.DirectionalRotationXY)) return false;
+                if (!object.Equals(this.DirectionalRotationZ, rhs.DirectionalRotationZ)) return false;
+                if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
+                if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.AmbientColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.DirectionalColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.FogColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.FogNear?.GetHashCode());
+                ret = ret.CombineHashCode(this.FogFar?.GetHashCode());
+                ret = ret.CombineHashCode(this.DirectionalRotationXY?.GetHashCode());
+                ret = ret.CombineHashCode(this.DirectionalRotationZ?.GetHashCode());
+                ret = ret.CombineHashCode(this.DirectionalFade?.GetHashCode());
+                ret = ret.CombineHashCode(this.FogClipDistance?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.AmbientColor)) return false;
+                if (!eval(this.DirectionalColor)) return false;
+                if (!eval(this.FogColor)) return false;
+                if (!eval(this.FogNear)) return false;
+                if (!eval(this.FogFar)) return false;
+                if (!eval(this.DirectionalRotationXY)) return false;
+                if (!eval(this.DirectionalRotationZ)) return false;
+                if (!eval(this.DirectionalFade)) return false;
+                if (!eval(this.FogClipDistance)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new CellLighting.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.AmbientColor = eval(this.AmbientColor);
+                obj.DirectionalColor = eval(this.DirectionalColor);
+                obj.FogColor = eval(this.FogColor);
+                obj.FogNear = eval(this.FogNear);
+                obj.FogFar = eval(this.FogFar);
+                obj.DirectionalRotationXY = eval(this.DirectionalRotationXY);
+                obj.DirectionalRotationZ = eval(this.DirectionalRotationZ);
+                obj.DirectionalFade = eval(this.DirectionalFade);
+                obj.FogClipDistance = eval(this.FogClipDistance);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(CellLighting.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, CellLighting.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(CellLighting.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.AmbientColor ?? true)
+                    {
+                        fg.AppendLine($"AmbientColor => {AmbientColor}");
+                    }
+                    if (printMask?.DirectionalColor ?? true)
+                    {
+                        fg.AppendLine($"DirectionalColor => {DirectionalColor}");
+                    }
+                    if (printMask?.FogColor ?? true)
+                    {
+                        fg.AppendLine($"FogColor => {FogColor}");
+                    }
+                    if (printMask?.FogNear ?? true)
+                    {
+                        fg.AppendLine($"FogNear => {FogNear}");
+                    }
+                    if (printMask?.FogFar ?? true)
+                    {
+                        fg.AppendLine($"FogFar => {FogFar}");
+                    }
+                    if (printMask?.DirectionalRotationXY ?? true)
+                    {
+                        fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
+                    }
+                    if (printMask?.DirectionalRotationZ ?? true)
+                    {
+                        fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
+                    }
+                    if (printMask?.DirectionalFade ?? true)
+                    {
+                        fg.AppendLine($"DirectionalFade => {DirectionalFade}");
+                    }
+                    if (printMask?.FogClipDistance ?? true)
+                    {
+                        fg.AppendLine($"FogClipDistance => {FogClipDistance}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? AmbientColor;
+            public Exception? DirectionalColor;
+            public Exception? FogColor;
+            public Exception? FogNear;
+            public Exception? FogFar;
+            public Exception? DirectionalRotationXY;
+            public Exception? DirectionalRotationZ;
+            public Exception? DirectionalFade;
+            public Exception? FogClipDistance;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
+                switch (enu)
+                {
+                    case CellLighting_FieldIndex.AmbientColor:
+                        return AmbientColor;
+                    case CellLighting_FieldIndex.DirectionalColor:
+                        return DirectionalColor;
+                    case CellLighting_FieldIndex.FogColor:
+                        return FogColor;
+                    case CellLighting_FieldIndex.FogNear:
+                        return FogNear;
+                    case CellLighting_FieldIndex.FogFar:
+                        return FogFar;
+                    case CellLighting_FieldIndex.DirectionalRotationXY:
+                        return DirectionalRotationXY;
+                    case CellLighting_FieldIndex.DirectionalRotationZ:
+                        return DirectionalRotationZ;
+                    case CellLighting_FieldIndex.DirectionalFade:
+                        return DirectionalFade;
+                    case CellLighting_FieldIndex.FogClipDistance:
+                        return FogClipDistance;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
+                switch (enu)
+                {
+                    case CellLighting_FieldIndex.AmbientColor:
+                        this.AmbientColor = ex;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalColor:
+                        this.DirectionalColor = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogColor:
+                        this.FogColor = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogNear:
+                        this.FogNear = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogFar:
+                        this.FogFar = ex;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalRotationXY:
+                        this.DirectionalRotationXY = ex;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalRotationZ:
+                        this.DirectionalRotationZ = ex;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
+                switch (enu)
+                {
+                    case CellLighting_FieldIndex.AmbientColor:
+                        this.AmbientColor = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalColor:
+                        this.DirectionalColor = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogColor:
+                        this.FogColor = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogNear:
+                        this.FogNear = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogFar:
+                        this.FogFar = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalRotationXY:
+                        this.DirectionalRotationXY = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalRotationZ:
+                        this.DirectionalRotationZ = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = (Exception)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (AmbientColor != null) return true;
+                if (DirectionalColor != null) return true;
+                if (FogColor != null) return true;
+                if (FogNear != null) return true;
+                if (FogFar != null) return true;
+                if (DirectionalRotationXY != null) return true;
+                if (DirectionalRotationZ != null) return true;
+                if (DirectionalFade != null) return true;
+                if (FogClipDistance != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"AmbientColor => {AmbientColor}");
+                fg.AppendLine($"DirectionalColor => {DirectionalColor}");
+                fg.AppendLine($"FogColor => {FogColor}");
+                fg.AppendLine($"FogNear => {FogNear}");
+                fg.AppendLine($"FogFar => {FogFar}");
+                fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
+                fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
+                fg.AppendLine($"DirectionalFade => {DirectionalFade}");
+                fg.AppendLine($"FogClipDistance => {FogClipDistance}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
+                ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
+                ret.FogColor = this.FogColor.Combine(rhs.FogColor);
+                ret.FogNear = this.FogNear.Combine(rhs.FogNear);
+                ret.FogFar = this.FogFar.Combine(rhs.FogFar);
+                ret.DirectionalRotationXY = this.DirectionalRotationXY.Combine(rhs.DirectionalRotationXY);
+                ret.DirectionalRotationZ = this.DirectionalRotationZ.Combine(rhs.DirectionalRotationZ);
+                ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
+                ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool AmbientColor;
+            public bool DirectionalColor;
+            public bool FogColor;
+            public bool FogNear;
+            public bool FogFar;
+            public bool DirectionalRotationXY;
+            public bool DirectionalRotationZ;
+            public bool DirectionalFade;
+            public bool FogClipDistance;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.AmbientColor = defaultOn;
+                this.DirectionalColor = defaultOn;
+                this.FogColor = defaultOn;
+                this.FogNear = defaultOn;
+                this.FogFar = defaultOn;
+                this.DirectionalRotationXY = defaultOn;
+                this.DirectionalRotationZ = defaultOn;
+                this.DirectionalFade = defaultOn;
+                this.FogClipDistance = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((AmbientColor, null));
+                ret.Add((DirectionalColor, null));
+                ret.Add((FogColor, null));
+                ret.Add((FogNear, null));
+                ret.Add((FogFar, null));
+                ret.Add((DirectionalRotationXY, null));
+                ret.Add((DirectionalRotationZ, null));
+                ret.Add((DirectionalFade, null));
+                ret.Add((FogClipDistance, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -354,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellLighting_Mask<bool> GetEqualsMask(
+        public static CellLighting.Mask<bool> GetEqualsMask(
             this ICellLightingGetter item,
             ICellLightingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -368,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ICellLightingGetter item,
             string? name = null,
-            CellLighting_Mask<bool>? printMask = null)
+            CellLighting.Mask<bool>? printMask = null)
         {
             return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -380,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLightingGetter item,
             FileGeneration fg,
             string? name = null,
-            CellLighting_Mask<bool>? printMask = null)
+            CellLighting.Mask<bool>? printMask = null)
         {
             ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -391,16 +867,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ICellLightingGetter item,
-            CellLighting_Mask<bool?> checkMask)
+            CellLighting.Mask<bool?> checkMask)
         {
             return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static CellLighting_Mask<bool> GetHasBeenSetMask(this ICellLightingGetter item)
+        public static CellLighting.Mask<bool> GetHasBeenSetMask(this ICellLightingGetter item)
         {
-            var ret = new CellLighting_Mask<bool>(false);
+            var ret = new CellLighting.Mask<bool>(false);
             ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -419,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICellLighting lhs,
             ICellLightingGetter rhs,
-            CellLighting_TranslationMask? copyMask = null)
+            CellLighting.TranslationMask? copyMask = null)
         {
             ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -431,8 +907,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICellLighting lhs,
             ICellLightingGetter rhs,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? copyMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -440,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellLighting.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -458,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellLighting DeepCopy(
             this ICellLightingGetter item,
-            CellLighting_TranslationMask? copyMask = null)
+            CellLighting.TranslationMask? copyMask = null)
         {
             return ((CellLightingSetterTranslationCommon)((ICellLightingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,8 +943,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellLighting DeepCopy(
             this ICellLightingGetter item,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? copyMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? copyMask = null)
         {
             return ((CellLightingSetterTranslationCommon)((ICellLightingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -492,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellLighting item,
             XElement node,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -505,8 +981,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellLighting item,
             XElement node,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -514,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellLighting.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -533,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellLighting item,
             string path,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -545,8 +1021,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellLighting item,
             string path,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -560,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLighting item,
             string path,
             ErrorMaskBuilder? errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -573,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellLighting item,
             Stream stream,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -585,8 +1061,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellLighting item,
             Stream stream,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -600,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLighting item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -681,9 +1157,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(CellLighting_Mask<>);
+        public static readonly Type MaskType = typeof(CellLighting.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellLighting_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CellLighting.ErrorMask);
 
         public static readonly Type ClassType = typeof(CellLighting);
 
@@ -1022,12 +1498,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly CellLightingCommon Instance = new CellLightingCommon();
 
-        public CellLighting_Mask<bool> GetEqualsMask(
+        public CellLighting.Mask<bool> GetEqualsMask(
             ICellLightingGetter item,
             ICellLightingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellLighting_Mask<bool>(false);
+            var ret = new CellLighting.Mask<bool>(false);
             ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1039,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ICellLightingGetter item,
             ICellLightingGetter rhs,
-            CellLighting_Mask<bool> ret,
+            CellLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1057,7 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ICellLightingGetter item,
             string? name = null,
-            CellLighting_Mask<bool>? printMask = null)
+            CellLighting.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1072,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLightingGetter item,
             FileGeneration fg,
             string? name = null,
-            CellLighting_Mask<bool>? printMask = null)
+            CellLighting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1096,7 +1572,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICellLightingGetter item,
             FileGeneration fg,
-            CellLighting_Mask<bool>? printMask = null)
+            CellLighting.Mask<bool>? printMask = null)
         {
             if (printMask?.AmbientColor ?? true)
             {
@@ -1138,14 +1614,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ICellLightingGetter item,
-            CellLighting_Mask<bool?> checkMask)
+            CellLighting.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ICellLightingGetter item,
-            CellLighting_Mask<bool> mask)
+            CellLighting.Mask<bool> mask)
         {
             mask.AmbientColor = true;
             mask.DirectionalColor = true;
@@ -1262,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CellLighting DeepCopy(
             ICellLightingGetter item,
-            CellLighting_TranslationMask? copyMask = null)
+            CellLighting.TranslationMask? copyMask = null)
         {
             CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1273,8 +1749,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CellLighting DeepCopy(
             ICellLightingGetter item,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? copyMask = null)
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? copyMask = null)
         {
             CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1710,8 +2186,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICellLightingGetter item,
             XElement node,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null,
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1721,14 +2197,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellLighting.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ICellLightingGetter item,
             string path,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null,
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1761,8 +2237,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICellLightingGetter item,
             Stream stream,
-            out CellLighting_ErrorMask errorMask,
-            CellLighting_TranslationMask? translationMask = null,
+            out CellLighting.ErrorMask errorMask,
+            CellLighting.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1811,7 +2287,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLightingGetter item,
             XElement node,
             string? name = null,
-            CellLighting_TranslationMask? translationMask = null)
+            CellLighting.TranslationMask? translationMask = null)
         {
             ((CellLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1855,483 +2331,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class CellLighting_Mask<T> :
-        IMask<T>,
-        IEquatable<CellLighting_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public CellLighting_Mask(T initialValue)
-        {
-            this.AmbientColor = initialValue;
-            this.DirectionalColor = initialValue;
-            this.FogColor = initialValue;
-            this.FogNear = initialValue;
-            this.FogFar = initialValue;
-            this.DirectionalRotationXY = initialValue;
-            this.DirectionalRotationZ = initialValue;
-            this.DirectionalFade = initialValue;
-            this.FogClipDistance = initialValue;
-        }
-
-        public CellLighting_Mask(
-            T AmbientColor,
-            T DirectionalColor,
-            T FogColor,
-            T FogNear,
-            T FogFar,
-            T DirectionalRotationXY,
-            T DirectionalRotationZ,
-            T DirectionalFade,
-            T FogClipDistance)
-        {
-            this.AmbientColor = AmbientColor;
-            this.DirectionalColor = DirectionalColor;
-            this.FogColor = FogColor;
-            this.FogNear = FogNear;
-            this.FogFar = FogFar;
-            this.DirectionalRotationXY = DirectionalRotationXY;
-            this.DirectionalRotationZ = DirectionalRotationZ;
-            this.DirectionalFade = DirectionalFade;
-            this.FogClipDistance = FogClipDistance;
-        }
-
-        #pragma warning disable CS8618
-        protected CellLighting_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T AmbientColor;
-        public T DirectionalColor;
-        public T FogColor;
-        public T FogNear;
-        public T FogFar;
-        public T DirectionalRotationXY;
-        public T DirectionalRotationZ;
-        public T DirectionalFade;
-        public T FogClipDistance;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is CellLighting_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(CellLighting_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
-            if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
-            if (!object.Equals(this.FogColor, rhs.FogColor)) return false;
-            if (!object.Equals(this.FogNear, rhs.FogNear)) return false;
-            if (!object.Equals(this.FogFar, rhs.FogFar)) return false;
-            if (!object.Equals(this.DirectionalRotationXY, rhs.DirectionalRotationXY)) return false;
-            if (!object.Equals(this.DirectionalRotationZ, rhs.DirectionalRotationZ)) return false;
-            if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
-            if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.AmbientColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogNear?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogFar?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalRotationXY?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalRotationZ?.GetHashCode());
-            ret = ret.CombineHashCode(this.DirectionalFade?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogClipDistance?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.AmbientColor)) return false;
-            if (!eval(this.DirectionalColor)) return false;
-            if (!eval(this.FogColor)) return false;
-            if (!eval(this.FogNear)) return false;
-            if (!eval(this.FogFar)) return false;
-            if (!eval(this.DirectionalRotationXY)) return false;
-            if (!eval(this.DirectionalRotationZ)) return false;
-            if (!eval(this.DirectionalFade)) return false;
-            if (!eval(this.FogClipDistance)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public CellLighting_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new CellLighting_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(CellLighting_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.AmbientColor = eval(this.AmbientColor);
-            obj.DirectionalColor = eval(this.DirectionalColor);
-            obj.FogColor = eval(this.FogColor);
-            obj.FogNear = eval(this.FogNear);
-            obj.FogFar = eval(this.FogFar);
-            obj.DirectionalRotationXY = eval(this.DirectionalRotationXY);
-            obj.DirectionalRotationZ = eval(this.DirectionalRotationZ);
-            obj.DirectionalFade = eval(this.DirectionalFade);
-            obj.FogClipDistance = eval(this.FogClipDistance);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(CellLighting_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, CellLighting_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(CellLighting_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.AmbientColor ?? true)
-                {
-                    fg.AppendLine($"AmbientColor => {AmbientColor}");
-                }
-                if (printMask?.DirectionalColor ?? true)
-                {
-                    fg.AppendLine($"DirectionalColor => {DirectionalColor}");
-                }
-                if (printMask?.FogColor ?? true)
-                {
-                    fg.AppendLine($"FogColor => {FogColor}");
-                }
-                if (printMask?.FogNear ?? true)
-                {
-                    fg.AppendLine($"FogNear => {FogNear}");
-                }
-                if (printMask?.FogFar ?? true)
-                {
-                    fg.AppendLine($"FogFar => {FogFar}");
-                }
-                if (printMask?.DirectionalRotationXY ?? true)
-                {
-                    fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
-                }
-                if (printMask?.DirectionalRotationZ ?? true)
-                {
-                    fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
-                }
-                if (printMask?.DirectionalFade ?? true)
-                {
-                    fg.AppendLine($"DirectionalFade => {DirectionalFade}");
-                }
-                if (printMask?.FogClipDistance ?? true)
-                {
-                    fg.AppendLine($"FogClipDistance => {FogClipDistance}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class CellLighting_ErrorMask : IErrorMask, IErrorMask<CellLighting_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? AmbientColor;
-        public Exception? DirectionalColor;
-        public Exception? FogColor;
-        public Exception? FogNear;
-        public Exception? FogFar;
-        public Exception? DirectionalRotationXY;
-        public Exception? DirectionalRotationZ;
-        public Exception? DirectionalFade;
-        public Exception? FogClipDistance;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    return AmbientColor;
-                case CellLighting_FieldIndex.DirectionalColor:
-                    return DirectionalColor;
-                case CellLighting_FieldIndex.FogColor:
-                    return FogColor;
-                case CellLighting_FieldIndex.FogNear:
-                    return FogNear;
-                case CellLighting_FieldIndex.FogFar:
-                    return FogFar;
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    return DirectionalRotationXY;
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    return DirectionalRotationZ;
-                case CellLighting_FieldIndex.DirectionalFade:
-                    return DirectionalFade;
-                case CellLighting_FieldIndex.FogClipDistance:
-                    return FogClipDistance;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    this.AmbientColor = ex;
-                    break;
-                case CellLighting_FieldIndex.DirectionalColor:
-                    this.DirectionalColor = ex;
-                    break;
-                case CellLighting_FieldIndex.FogColor:
-                    this.FogColor = ex;
-                    break;
-                case CellLighting_FieldIndex.FogNear:
-                    this.FogNear = ex;
-                    break;
-                case CellLighting_FieldIndex.FogFar:
-                    this.FogFar = ex;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    this.DirectionalRotationXY = ex;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    this.DirectionalRotationZ = ex;
-                    break;
-                case CellLighting_FieldIndex.DirectionalFade:
-                    this.DirectionalFade = ex;
-                    break;
-                case CellLighting_FieldIndex.FogClipDistance:
-                    this.FogClipDistance = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
-            switch (enu)
-            {
-                case CellLighting_FieldIndex.AmbientColor:
-                    this.AmbientColor = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalColor:
-                    this.DirectionalColor = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.FogColor:
-                    this.FogColor = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.FogNear:
-                    this.FogNear = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.FogFar:
-                    this.FogFar = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationXY:
-                    this.DirectionalRotationXY = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalRotationZ:
-                    this.DirectionalRotationZ = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.DirectionalFade:
-                    this.DirectionalFade = (Exception)obj;
-                    break;
-                case CellLighting_FieldIndex.FogClipDistance:
-                    this.FogClipDistance = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (AmbientColor != null) return true;
-            if (DirectionalColor != null) return true;
-            if (FogColor != null) return true;
-            if (FogNear != null) return true;
-            if (FogFar != null) return true;
-            if (DirectionalRotationXY != null) return true;
-            if (DirectionalRotationZ != null) return true;
-            if (DirectionalFade != null) return true;
-            if (FogClipDistance != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("CellLighting_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"AmbientColor => {AmbientColor}");
-            fg.AppendLine($"DirectionalColor => {DirectionalColor}");
-            fg.AppendLine($"FogColor => {FogColor}");
-            fg.AppendLine($"FogNear => {FogNear}");
-            fg.AppendLine($"FogFar => {FogFar}");
-            fg.AppendLine($"DirectionalRotationXY => {DirectionalRotationXY}");
-            fg.AppendLine($"DirectionalRotationZ => {DirectionalRotationZ}");
-            fg.AppendLine($"DirectionalFade => {DirectionalFade}");
-            fg.AppendLine($"FogClipDistance => {FogClipDistance}");
-        }
-        #endregion
-
-        #region Combine
-        public CellLighting_ErrorMask Combine(CellLighting_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new CellLighting_ErrorMask();
-            ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
-            ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
-            ret.FogColor = this.FogColor.Combine(rhs.FogColor);
-            ret.FogNear = this.FogNear.Combine(rhs.FogNear);
-            ret.FogFar = this.FogFar.Combine(rhs.FogFar);
-            ret.DirectionalRotationXY = this.DirectionalRotationXY.Combine(rhs.DirectionalRotationXY);
-            ret.DirectionalRotationZ = this.DirectionalRotationZ.Combine(rhs.DirectionalRotationZ);
-            ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
-            ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
-            return ret;
-        }
-        public static CellLighting_ErrorMask? Combine(CellLighting_ErrorMask? lhs, CellLighting_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static CellLighting_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new CellLighting_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class CellLighting_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool AmbientColor;
-        public bool DirectionalColor;
-        public bool FogColor;
-        public bool FogNear;
-        public bool FogFar;
-        public bool DirectionalRotationXY;
-        public bool DirectionalRotationZ;
-        public bool DirectionalFade;
-        public bool FogClipDistance;
-        #endregion
-
-        #region Ctors
-        public CellLighting_TranslationMask(bool defaultOn)
-        {
-            this.AmbientColor = defaultOn;
-            this.DirectionalColor = defaultOn;
-            this.FogColor = defaultOn;
-            this.FogNear = defaultOn;
-            this.FogFar = defaultOn;
-            this.DirectionalRotationXY = defaultOn;
-            this.DirectionalRotationZ = defaultOn;
-            this.DirectionalFade = defaultOn;
-            this.FogClipDistance = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((AmbientColor, null));
-            ret.Add((DirectionalColor, null));
-            ret.Add((FogColor, null));
-            ret.Add((FogNear, null));
-            ret.Add((FogFar, null));
-            ret.Add((DirectionalRotationXY, null));
-            ret.Add((DirectionalRotationZ, null));
-            ret.Add((DirectionalFade, null));
-            ret.Add((FogClipDistance, null));
-        }
-    }
 }
 #endregion
 

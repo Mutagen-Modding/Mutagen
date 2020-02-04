@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new ConditionGlobal CreateFromXml(
             XElement node,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -117,15 +117,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ConditionGlobal CreateFromXml(
             XElement node,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ConditionGlobal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ConditionGlobal.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ConditionGlobal CreateFromXml(
             string path,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ConditionGlobal CreateFromXml(
             string path,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ConditionGlobal CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ConditionGlobal CreateFromXml(
             Stream stream,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ConditionGlobal CreateFromXml(
             Stream stream,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ConditionGlobal CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,6 +213,294 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            Condition.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.ComparisonValue = initialValue;
+                this.Data = new MaskItem<T, ConditionData.Mask<T>?>(initialValue, new ConditionData.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T CompareOperator,
+                T Flags,
+                T Unknown1,
+                T ComparisonValue,
+                T Data)
+            : base(
+                CompareOperator: CompareOperator,
+                Flags: Flags,
+                Unknown1: Unknown1)
+            {
+                this.ComparisonValue = ComparisonValue;
+                this.Data = new MaskItem<T, ConditionData.Mask<T>?>(Data, new ConditionData.Mask<T>(Data));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T ComparisonValue;
+            public MaskItem<T, ConditionData.Mask<T>?>? Data { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ComparisonValue, rhs.ComparisonValue)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.ComparisonValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.Data?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.ComparisonValue)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ConditionGlobal.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.ComparisonValue = eval(this.ComparisonValue);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ConditionData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ConditionGlobal.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ConditionGlobal.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ConditionGlobal.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.ComparisonValue ?? true)
+                    {
+                        fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            Condition.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? ComparisonValue;
+            public MaskItem<Exception?, ConditionData.ErrorMask?>? Data;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                ConditionGlobal_FieldIndex enu = (ConditionGlobal_FieldIndex)index;
+                switch (enu)
+                {
+                    case ConditionGlobal_FieldIndex.ComparisonValue:
+                        return ComparisonValue;
+                    case ConditionGlobal_FieldIndex.Data:
+                        return Data;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                ConditionGlobal_FieldIndex enu = (ConditionGlobal_FieldIndex)index;
+                switch (enu)
+                {
+                    case ConditionGlobal_FieldIndex.ComparisonValue:
+                        this.ComparisonValue = ex;
+                        break;
+                    case ConditionGlobal_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ConditionData.ErrorMask?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                ConditionGlobal_FieldIndex enu = (ConditionGlobal_FieldIndex)index;
+                switch (enu)
+                {
+                    case ConditionGlobal_FieldIndex.ComparisonValue:
+                        this.ComparisonValue = (Exception)obj;
+                        break;
+                    case ConditionGlobal_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ConditionData.ErrorMask?>?)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (ComparisonValue != null) return true;
+                if (Data != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                Data?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.ComparisonValue = this.ComparisonValue.Combine(rhs.ComparisonValue);
+                ret.Data = new MaskItem<Exception?, ConditionData.ErrorMask?>(ExceptionExt.Combine(this.Data?.Overall, rhs.Data?.Overall), (this.Data?.Specific as IErrorMask<ConditionData.ErrorMask>)?.Combine(rhs.Data?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            Condition.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool ComparisonValue;
+            public MaskItem<bool, ConditionData.TranslationMask?> Data;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.ComparisonValue = defaultOn;
+                this.Data = new MaskItem<bool, ConditionData.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ComparisonValue, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -314,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ConditionGlobalSetterCommon)((IConditionGlobalGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ConditionGlobal_Mask<bool> GetEqualsMask(
+        public static ConditionGlobal.Mask<bool> GetEqualsMask(
             this IConditionGlobalGetter item,
             IConditionGlobalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -328,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IConditionGlobalGetter item,
             string? name = null,
-            ConditionGlobal_Mask<bool>? printMask = null)
+            ConditionGlobal.Mask<bool>? printMask = null)
         {
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -340,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGlobalGetter item,
             FileGeneration fg,
             string? name = null,
-            ConditionGlobal_Mask<bool>? printMask = null)
+            ConditionGlobal.Mask<bool>? printMask = null)
         {
             ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -351,16 +639,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IConditionGlobalGetter item,
-            ConditionGlobal_Mask<bool?> checkMask)
+            ConditionGlobal.Mask<bool?> checkMask)
         {
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ConditionGlobal_Mask<bool> GetHasBeenSetMask(this IConditionGlobalGetter item)
+        public static ConditionGlobal.Mask<bool> GetHasBeenSetMask(this IConditionGlobalGetter item)
         {
-            var ret = new ConditionGlobal_Mask<bool>(false);
+            var ret = new ConditionGlobal.Mask<bool>(false);
             ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -379,8 +667,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IConditionGlobal lhs,
             IConditionGlobalGetter rhs,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? copyMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionGlobalSetterTranslationCommon)((IConditionGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -388,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ConditionGlobal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ConditionGlobal.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -406,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ConditionGlobal DeepCopy(
             this IConditionGlobalGetter item,
-            ConditionGlobal_TranslationMask? copyMask = null)
+            ConditionGlobal.TranslationMask? copyMask = null)
         {
             return ((ConditionGlobalSetterTranslationCommon)((IConditionGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -415,8 +703,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ConditionGlobal DeepCopy(
             this IConditionGlobalGetter item,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? copyMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? copyMask = null)
         {
             return ((ConditionGlobalSetterTranslationCommon)((IConditionGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -440,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IConditionGlobal item,
             XElement node,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -453,8 +741,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IConditionGlobal item,
             XElement node,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -462,7 +750,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ConditionGlobal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ConditionGlobal.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -481,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IConditionGlobal item,
             string path,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -493,8 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IConditionGlobal item,
             string path,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -508,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGlobal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -521,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IConditionGlobal item,
             Stream stream,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -533,8 +821,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IConditionGlobal item,
             Stream stream,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -548,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGlobal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null)
+            ConditionGlobal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -625,9 +913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(ConditionGlobal_Mask<>);
+        public static readonly Type MaskType = typeof(ConditionGlobal.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ConditionGlobal_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ConditionGlobal.ErrorMask);
 
         public static readonly Type ClassType = typeof(ConditionGlobal);
 
@@ -890,12 +1178,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly ConditionGlobalCommon Instance = new ConditionGlobalCommon();
 
-        public ConditionGlobal_Mask<bool> GetEqualsMask(
+        public ConditionGlobal.Mask<bool> GetEqualsMask(
             IConditionGlobalGetter item,
             IConditionGlobalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ConditionGlobal_Mask<bool>(false);
+            var ret = new ConditionGlobal.Mask<bool>(false);
             ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -907,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IConditionGlobalGetter item,
             IConditionGlobalGetter rhs,
-            ConditionGlobal_Mask<bool> ret,
+            ConditionGlobal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -919,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IConditionGlobalGetter item,
             string? name = null,
-            ConditionGlobal_Mask<bool>? printMask = null)
+            ConditionGlobal.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -934,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConditionGlobalGetter item,
             FileGeneration fg,
             string? name = null,
-            ConditionGlobal_Mask<bool>? printMask = null)
+            ConditionGlobal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -958,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IConditionGlobalGetter item,
             FileGeneration fg,
-            ConditionGlobal_Mask<bool>? printMask = null)
+            ConditionGlobal.Mask<bool>? printMask = null)
         {
             ConditionCommon.ToStringFields(
                 item: item,
@@ -976,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IConditionGlobalGetter item,
-            ConditionGlobal_Mask<bool?> checkMask)
+            ConditionGlobal.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -985,10 +1273,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IConditionGlobalGetter item,
-            ConditionGlobal_Mask<bool> mask)
+            ConditionGlobal.Mask<bool> mask)
         {
             mask.ComparisonValue = true;
-            mask.Data = new MaskItem<bool, ConditionData_Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, ConditionData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1136,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ConditionGlobal DeepCopy(
             IConditionGlobalGetter item,
-            ConditionGlobal_TranslationMask? copyMask = null)
+            ConditionGlobal.TranslationMask? copyMask = null)
         {
             ConditionGlobal ret = (ConditionGlobal)((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1147,8 +1435,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ConditionGlobal DeepCopy(
             IConditionGlobalGetter item,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? copyMask = null)
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? copyMask = null)
         {
             ConditionGlobal ret = (ConditionGlobal)((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1392,8 +1680,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGlobalGetter item,
             XElement node,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null,
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1403,14 +1691,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ConditionGlobal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ConditionGlobal.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IConditionGlobalGetter item,
             string path,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null,
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1426,8 +1714,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGlobalGetter item,
             Stream stream,
-            out ConditionGlobal_ErrorMask errorMask,
-            ConditionGlobal_TranslationMask? translationMask = null,
+            out ConditionGlobal.ErrorMask errorMask,
+            ConditionGlobal.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1444,293 +1732,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class ConditionGlobal_Mask<T> :
-        Condition_Mask<T>,
-        IMask<T>,
-        IEquatable<ConditionGlobal_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ConditionGlobal_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.ComparisonValue = initialValue;
-            this.Data = new MaskItem<T, ConditionData_Mask<T>?>(initialValue, new ConditionData_Mask<T>(initialValue));
-        }
-
-        public ConditionGlobal_Mask(
-            T CompareOperator,
-            T Flags,
-            T Unknown1,
-            T ComparisonValue,
-            T Data)
-        : base(
-            CompareOperator: CompareOperator,
-            Flags: Flags,
-            Unknown1: Unknown1)
-        {
-            this.ComparisonValue = ComparisonValue;
-            this.Data = new MaskItem<T, ConditionData_Mask<T>?>(Data, new ConditionData_Mask<T>(Data));
-        }
-
-        #pragma warning disable CS8618
-        protected ConditionGlobal_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T ComparisonValue;
-        public MaskItem<T, ConditionData_Mask<T>?>? Data { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ConditionGlobal_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ConditionGlobal_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.ComparisonValue, rhs.ComparisonValue)) return false;
-            if (!object.Equals(this.Data, rhs.Data)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ComparisonValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.Data?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.ComparisonValue)) return false;
-            if (Data != null)
-            {
-                if (!eval(this.Data.Overall)) return false;
-                if (this.Data.Specific != null && !this.Data.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new ConditionGlobal_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ConditionGlobal_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ConditionGlobal_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.ComparisonValue = eval(this.ComparisonValue);
-            obj.Data = this.Data == null ? null : new MaskItem<R, ConditionData_Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ConditionGlobal_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ConditionGlobal_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ConditionGlobal_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ComparisonValue ?? true)
-                {
-                    fg.AppendLine($"ComparisonValue => {ComparisonValue}");
-                }
-                if (printMask?.Data?.Overall ?? true)
-                {
-                    Data?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ConditionGlobal_ErrorMask : Condition_ErrorMask, IErrorMask<ConditionGlobal_ErrorMask>
-    {
-        #region Members
-        public Exception? ComparisonValue;
-        public MaskItem<Exception?, ConditionData_ErrorMask?>? Data;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            ConditionGlobal_FieldIndex enu = (ConditionGlobal_FieldIndex)index;
-            switch (enu)
-            {
-                case ConditionGlobal_FieldIndex.ComparisonValue:
-                    return ComparisonValue;
-                case ConditionGlobal_FieldIndex.Data:
-                    return Data;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            ConditionGlobal_FieldIndex enu = (ConditionGlobal_FieldIndex)index;
-            switch (enu)
-            {
-                case ConditionGlobal_FieldIndex.ComparisonValue:
-                    this.ComparisonValue = ex;
-                    break;
-                case ConditionGlobal_FieldIndex.Data:
-                    this.Data = new MaskItem<Exception?, ConditionData_ErrorMask?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            ConditionGlobal_FieldIndex enu = (ConditionGlobal_FieldIndex)index;
-            switch (enu)
-            {
-                case ConditionGlobal_FieldIndex.ComparisonValue:
-                    this.ComparisonValue = (Exception)obj;
-                    break;
-                case ConditionGlobal_FieldIndex.Data:
-                    this.Data = (MaskItem<Exception?, ConditionData_ErrorMask?>?)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ComparisonValue != null) return true;
-            if (Data != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ConditionGlobal_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"ComparisonValue => {ComparisonValue}");
-            Data?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public ConditionGlobal_ErrorMask Combine(ConditionGlobal_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ConditionGlobal_ErrorMask();
-            ret.ComparisonValue = this.ComparisonValue.Combine(rhs.ComparisonValue);
-            ret.Data = new MaskItem<Exception?, ConditionData_ErrorMask?>(ExceptionExt.Combine(this.Data?.Overall, rhs.Data?.Overall), (this.Data?.Specific as IErrorMask<ConditionData_ErrorMask>)?.Combine(rhs.Data?.Specific));
-            return ret;
-        }
-        public static ConditionGlobal_ErrorMask? Combine(ConditionGlobal_ErrorMask? lhs, ConditionGlobal_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new ConditionGlobal_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ConditionGlobal_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ConditionGlobal_TranslationMask : Condition_TranslationMask
-    {
-        #region Members
-        public bool ComparisonValue;
-        public MaskItem<bool, ConditionData_TranslationMask?> Data;
-        #endregion
-
-        #region Ctors
-        public ConditionGlobal_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.ComparisonValue = defaultOn;
-            this.Data = new MaskItem<bool, ConditionData_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((ComparisonValue, null));
-            ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

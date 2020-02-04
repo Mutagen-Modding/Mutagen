@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Enchantment CreateFromXml(
             XElement node,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -190,15 +190,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Enchantment CreateFromXml(
             XElement node,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Enchantment.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment CreateFromXml(
             string path,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -228,8 +228,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment CreateFromXml(
             string path,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Enchantment CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment CreateFromXml(
             Stream stream,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -262,8 +262,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment CreateFromXml(
             Stream stream,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Enchantment CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -286,6 +286,502 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Type = initialValue;
+                this.ChargeAmount = initialValue;
+                this.EnchantCost = initialValue;
+                this.Flags = initialValue;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.ENITDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Type,
+                T ChargeAmount,
+                T EnchantCost,
+                T Flags,
+                T Effects,
+                T ENITDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Type = Type;
+                this.ChargeAmount = ChargeAmount;
+                this.EnchantCost = EnchantCost;
+                this.Flags = Flags;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.ENITDataTypeState = ENITDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public T Type;
+            public T ChargeAmount;
+            public T EnchantCost;
+            public T Flags;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
+            public T ENITDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.ChargeAmount, rhs.ChargeAmount)) return false;
+                if (!object.Equals(this.EnchantCost, rhs.EnchantCost)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.ChargeAmount?.GetHashCode());
+                ret = ret.CombineHashCode(this.EnchantCost?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Effects?.GetHashCode());
+                ret = ret.CombineHashCode(this.ENITDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.ChargeAmount)) return false;
+                if (!eval(this.EnchantCost)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ENITDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Enchantment.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Type = eval(this.Type);
+                obj.ChargeAmount = eval(this.ChargeAmount);
+                obj.EnchantCost = eval(this.EnchantCost);
+                obj.Flags = eval(this.Flags);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Effect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Enchantment.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Enchantment.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Enchantment.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.ChargeAmount ?? true)
+                    {
+                        fg.AppendLine($"ChargeAmount => {ChargeAmount}");
+                    }
+                    if (printMask?.EnchantCost ?? true)
+                    {
+                        fg.AppendLine($"EnchantCost => {EnchantCost}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Effects?.Overall ?? true)
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Effects != null)
+                            {
+                                if (Effects.Overall != null)
+                                {
+                                    fg.AppendLine(Effects.Overall.ToString());
+                                }
+                                if (Effects.Specific != null)
+                                {
+                                    foreach (var subItem in Effects.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.ENITDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public Exception? Type;
+            public Exception? ChargeAmount;
+            public Exception? EnchantCost;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            public Exception? ENITDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
+                switch (enu)
+                {
+                    case Enchantment_FieldIndex.Name:
+                        return Name;
+                    case Enchantment_FieldIndex.Type:
+                        return Type;
+                    case Enchantment_FieldIndex.ChargeAmount:
+                        return ChargeAmount;
+                    case Enchantment_FieldIndex.EnchantCost:
+                        return EnchantCost;
+                    case Enchantment_FieldIndex.Flags:
+                        return Flags;
+                    case Enchantment_FieldIndex.Effects:
+                        return Effects;
+                    case Enchantment_FieldIndex.ENITDataTypeState:
+                        return ENITDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
+                switch (enu)
+                {
+                    case Enchantment_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Enchantment_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Enchantment_FieldIndex.ChargeAmount:
+                        this.ChargeAmount = ex;
+                        break;
+                    case Enchantment_FieldIndex.EnchantCost:
+                        this.EnchantCost = ex;
+                        break;
+                    case Enchantment_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Enchantment_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Enchantment_FieldIndex.ENITDataTypeState:
+                        this.ENITDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
+                switch (enu)
+                {
+                    case Enchantment_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Enchantment_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case Enchantment_FieldIndex.ChargeAmount:
+                        this.ChargeAmount = (Exception)obj;
+                        break;
+                    case Enchantment_FieldIndex.EnchantCost:
+                        this.EnchantCost = (Exception)obj;
+                        break;
+                    case Enchantment_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Enchantment_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
+                    case Enchantment_FieldIndex.ENITDataTypeState:
+                        this.ENITDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Type != null) return true;
+                if (ChargeAmount != null) return true;
+                if (EnchantCost != null) return true;
+                if (Flags != null) return true;
+                if (Effects != null) return true;
+                if (ENITDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"ChargeAmount => {ChargeAmount}");
+                fg.AppendLine($"EnchantCost => {EnchantCost}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Effects != null)
+                    {
+                        if (Effects.Overall != null)
+                        {
+                            fg.AppendLine(Effects.Overall.ToString());
+                        }
+                        if (Effects.Specific != null)
+                        {
+                            foreach (var subItem in Effects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.ChargeAmount = this.ChargeAmount.Combine(rhs.ChargeAmount);
+                ret.EnchantCost = this.EnchantCost.Combine(rhs.EnchantCost);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public bool Type;
+            public bool ChargeAmount;
+            public bool EnchantCost;
+            public bool Flags;
+            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public bool ENITDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Type = defaultOn;
+                this.ChargeAmount = defaultOn;
+                this.EnchantCost = defaultOn;
+                this.Flags = defaultOn;
+                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
+                this.ENITDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Type, null));
+                ret.Add((ChargeAmount, null));
+                ret.Add((EnchantCost, null));
+                ret.Add((Flags, null));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((ENITDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -420,7 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EnchantmentSetterCommon)((IEnchantmentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Enchantment_Mask<bool> GetEqualsMask(
+        public static Enchantment.Mask<bool> GetEqualsMask(
             this IEnchantmentGetter item,
             IEnchantmentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -434,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IEnchantmentGetter item,
             string? name = null,
-            Enchantment_Mask<bool>? printMask = null)
+            Enchantment.Mask<bool>? printMask = null)
         {
             return ((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -446,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentGetter item,
             FileGeneration fg,
             string? name = null,
-            Enchantment_Mask<bool>? printMask = null)
+            Enchantment.Mask<bool>? printMask = null)
         {
             ((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -457,16 +953,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IEnchantmentGetter item,
-            Enchantment_Mask<bool?> checkMask)
+            Enchantment.Mask<bool?> checkMask)
         {
             return ((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Enchantment_Mask<bool> GetHasBeenSetMask(this IEnchantmentGetter item)
+        public static Enchantment.Mask<bool> GetHasBeenSetMask(this IEnchantmentGetter item)
         {
-            var ret = new Enchantment_Mask<bool>(false);
+            var ret = new Enchantment.Mask<bool>(false);
             ((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -485,8 +981,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IEnchantmentInternal lhs,
             IEnchantmentGetter rhs,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? copyMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -494,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Enchantment.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -512,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment DeepCopy(
             this IEnchantmentGetter item,
-            Enchantment_TranslationMask? copyMask = null)
+            Enchantment.TranslationMask? copyMask = null)
         {
             return ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -521,8 +1017,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Enchantment DeepCopy(
             this IEnchantmentGetter item,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? copyMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? copyMask = null)
         {
             return ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -546,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             XElement node,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -559,8 +1055,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             XElement node,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -568,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Enchantment.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -587,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             string path,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -599,8 +1095,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             string path,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -614,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -627,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             Stream stream,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -639,8 +1135,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             Stream stream,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -654,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Enchantment_TranslationMask? translationMask = null)
+            Enchantment.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -738,9 +1234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 12;
 
-        public static readonly Type MaskType = typeof(Enchantment_Mask<>);
+        public static readonly Type MaskType = typeof(Enchantment.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Enchantment_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Enchantment.ErrorMask);
 
         public static readonly Type ClassType = typeof(Enchantment);
 
@@ -1148,12 +1644,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly EnchantmentCommon Instance = new EnchantmentCommon();
 
-        public Enchantment_Mask<bool> GetEqualsMask(
+        public Enchantment.Mask<bool> GetEqualsMask(
             IEnchantmentGetter item,
             IEnchantmentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Enchantment_Mask<bool>(false);
+            var ret = new Enchantment.Mask<bool>(false);
             ((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1165,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IEnchantmentGetter item,
             IEnchantmentGetter rhs,
-            Enchantment_Mask<bool> ret,
+            Enchantment.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1185,7 +1681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IEnchantmentGetter item,
             string? name = null,
-            Enchantment_Mask<bool>? printMask = null)
+            Enchantment.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1200,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentGetter item,
             FileGeneration fg,
             string? name = null,
-            Enchantment_Mask<bool>? printMask = null)
+            Enchantment.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1224,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IEnchantmentGetter item,
             FileGeneration fg,
-            Enchantment_Mask<bool>? printMask = null)
+            Enchantment.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1276,7 +1772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IEnchantmentGetter item,
-            Enchantment_Mask<bool?> checkMask)
+            Enchantment.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Effects?.Overall.HasValue ?? false && checkMask.Effects!.Overall.Value != item.Effects.HasBeenSet) return false;
@@ -1287,14 +1783,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IEnchantmentGetter item,
-            Enchantment_Mask<bool> mask)
+            Enchantment.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Type = true;
             mask.ChargeAmount = true;
             mask.EnchantCost = true;
             mask.Flags = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ENITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1578,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Enchantment DeepCopy(
             IEnchantmentGetter item,
-            Enchantment_TranslationMask? copyMask = null)
+            Enchantment.TranslationMask? copyMask = null)
         {
             Enchantment ret = (Enchantment)((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1589,8 +2085,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Enchantment DeepCopy(
             IEnchantmentGetter item,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? copyMask = null)
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? copyMask = null)
         {
             Enchantment ret = (Enchantment)((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2007,8 +2503,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEnchantmentGetter item,
             XElement node,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null,
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2018,14 +2514,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Enchantment.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IEnchantmentGetter item,
             string path,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null,
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2041,8 +2537,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEnchantmentGetter item,
             Stream stream,
-            out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask? translationMask = null,
+            out Enchantment.ErrorMask errorMask,
+            Enchantment.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2059,501 +2555,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Enchantment_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Enchantment_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Enchantment_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Type = initialValue;
-            this.ChargeAmount = initialValue;
-            this.EnchantCost = initialValue;
-            this.Flags = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.ENITDataTypeState = initialValue;
-        }
-
-        public Enchantment_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Type,
-            T ChargeAmount,
-            T EnchantCost,
-            T Flags,
-            T Effects,
-            T ENITDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Type = Type;
-            this.ChargeAmount = ChargeAmount;
-            this.EnchantCost = EnchantCost;
-            this.Flags = Flags;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.ENITDataTypeState = ENITDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Enchantment_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Type;
-        public T ChargeAmount;
-        public T EnchantCost;
-        public T Flags;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>? Effects;
-        public T ENITDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Enchantment_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Enchantment_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.ChargeAmount, rhs.ChargeAmount)) return false;
-            if (!object.Equals(this.EnchantCost, rhs.EnchantCost)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Effects, rhs.Effects)) return false;
-            if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.ChargeAmount?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnchantCost?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Effects?.GetHashCode());
-            ret = ret.CombineHashCode(this.ENITDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Type)) return false;
-            if (!eval(this.ChargeAmount)) return false;
-            if (!eval(this.EnchantCost)) return false;
-            if (!eval(this.Flags)) return false;
-            if (this.Effects != null)
-            {
-                if (!eval(this.Effects.Overall)) return false;
-                if (this.Effects.Specific != null)
-                {
-                    foreach (var item in this.Effects.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.ENITDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Enchantment_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Enchantment_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Enchantment_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Type = eval(this.Type);
-            obj.ChargeAmount = eval(this.ChargeAmount);
-            obj.EnchantCost = eval(this.EnchantCost);
-            obj.Flags = eval(this.Flags);
-            if (Effects != null)
-            {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect_Mask<R>?>>());
-                if (Effects.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Effect_Mask<R>?>>();
-                    obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Effect_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.ENITDataTypeState = eval(this.ENITDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Enchantment_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Enchantment_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Enchantment_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.ChargeAmount ?? true)
-                {
-                    fg.AppendLine($"ChargeAmount => {ChargeAmount}");
-                }
-                if (printMask?.EnchantCost ?? true)
-                {
-                    fg.AppendLine($"EnchantCost => {EnchantCost}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Effects != null)
-                        {
-                            if (Effects.Overall != null)
-                            {
-                                fg.AppendLine(Effects.Overall.ToString());
-                            }
-                            if (Effects.Specific != null)
-                            {
-                                foreach (var subItem in Effects.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.ENITDataTypeState ?? true)
-                {
-                    fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Enchantment_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Enchantment_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public Exception? Type;
-        public Exception? ChargeAmount;
-        public Exception? EnchantCost;
-        public Exception? Flags;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>? Effects;
-        public Exception? ENITDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    return Name;
-                case Enchantment_FieldIndex.Type:
-                    return Type;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    return ChargeAmount;
-                case Enchantment_FieldIndex.EnchantCost:
-                    return EnchantCost;
-                case Enchantment_FieldIndex.Flags:
-                    return Flags;
-                case Enchantment_FieldIndex.Effects:
-                    return Effects;
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    return ENITDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Enchantment_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    this.ChargeAmount = ex;
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    this.EnchantCost = ex;
-                    break;
-                case Enchantment_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ex, null);
-                    break;
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    this.ENITDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Enchantment_FieldIndex enu = (Enchantment_FieldIndex)index;
-            switch (enu)
-            {
-                case Enchantment_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Enchantment_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case Enchantment_FieldIndex.ChargeAmount:
-                    this.ChargeAmount = (Exception)obj;
-                    break;
-                case Enchantment_FieldIndex.EnchantCost:
-                    this.EnchantCost = (Exception)obj;
-                    break;
-                case Enchantment_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Enchantment_FieldIndex.Effects:
-                    this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>)obj;
-                    break;
-                case Enchantment_FieldIndex.ENITDataTypeState:
-                    this.ENITDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Type != null) return true;
-            if (ChargeAmount != null) return true;
-            if (EnchantCost != null) return true;
-            if (Flags != null) return true;
-            if (Effects != null) return true;
-            if (ENITDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Enchantment_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"ChargeAmount => {ChargeAmount}");
-            fg.AppendLine($"EnchantCost => {EnchantCost}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("Effects =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Effects != null)
-                {
-                    if (Effects.Overall != null)
-                    {
-                        fg.AppendLine(Effects.Overall.ToString());
-                    }
-                    if (Effects.Specific != null)
-                    {
-                        foreach (var subItem in Effects.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"ENITDataTypeState => {ENITDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Enchantment_ErrorMask Combine(Enchantment_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Enchantment_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.ChargeAmount = this.ChargeAmount.Combine(rhs.ChargeAmount);
-            ret.EnchantCost = this.EnchantCost.Combine(rhs.EnchantCost);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-            ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
-            return ret;
-        }
-        public static Enchantment_ErrorMask? Combine(Enchantment_ErrorMask? lhs, Enchantment_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Enchantment_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Enchantment_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Enchantment_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Type;
-        public bool ChargeAmount;
-        public bool EnchantCost;
-        public bool Flags;
-        public MaskItem<bool, Effect_TranslationMask?> Effects;
-        public bool ENITDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Enchantment_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Type = defaultOn;
-            this.ChargeAmount = defaultOn;
-            this.EnchantCost = defaultOn;
-            this.Flags = defaultOn;
-            this.Effects = new MaskItem<bool, Effect_TranslationMask?>(defaultOn, null);
-            this.ENITDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Type, null));
-            ret.Add((ChargeAmount, null));
-            ret.Add((EnchantCost, null));
-            ret.Add((Flags, null));
-            ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
-            ret.Add((ENITDataTypeState, null));
-        }
-    }
 }
 #endregion
 

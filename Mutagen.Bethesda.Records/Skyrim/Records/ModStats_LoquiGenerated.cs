@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ModStats CreateFromXml(
             XElement node,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -119,15 +119,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ModStats CreateFromXml(
             XElement node,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModStats CreateFromXml(
             string path,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModStats CreateFromXml(
             string path,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModStats CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModStats CreateFromXml(
             Stream stream,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModStats CreateFromXml(
             Stream stream,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModStats CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,6 +215,320 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Version = initialValue;
+                this.NumRecords = initialValue;
+                this.NextObjectID = initialValue;
+            }
+
+            public Mask(
+                T Version,
+                T NumRecords,
+                T NextObjectID)
+            {
+                this.Version = Version;
+                this.NumRecords = NumRecords;
+                this.NextObjectID = NextObjectID;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Version;
+            public T NumRecords;
+            public T NextObjectID;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.NumRecords, rhs.NumRecords)) return false;
+                if (!object.Equals(this.NextObjectID, rhs.NextObjectID)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Version?.GetHashCode());
+                ret = ret.CombineHashCode(this.NumRecords?.GetHashCode());
+                ret = ret.CombineHashCode(this.NextObjectID?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Version)) return false;
+                if (!eval(this.NumRecords)) return false;
+                if (!eval(this.NextObjectID)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ModStats.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Version = eval(this.Version);
+                obj.NumRecords = eval(this.NumRecords);
+                obj.NextObjectID = eval(this.NextObjectID);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ModStats.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ModStats.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ModStats.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Version ?? true)
+                    {
+                        fg.AppendLine($"Version => {Version}");
+                    }
+                    if (printMask?.NumRecords ?? true)
+                    {
+                        fg.AppendLine($"NumRecords => {NumRecords}");
+                    }
+                    if (printMask?.NextObjectID ?? true)
+                    {
+                        fg.AppendLine($"NextObjectID => {NextObjectID}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Version;
+            public Exception? NumRecords;
+            public Exception? NextObjectID;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case ModStats_FieldIndex.Version:
+                        return Version;
+                    case ModStats_FieldIndex.NumRecords:
+                        return NumRecords;
+                    case ModStats_FieldIndex.NextObjectID:
+                        return NextObjectID;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case ModStats_FieldIndex.Version:
+                        this.Version = ex;
+                        break;
+                    case ModStats_FieldIndex.NumRecords:
+                        this.NumRecords = ex;
+                        break;
+                    case ModStats_FieldIndex.NextObjectID:
+                        this.NextObjectID = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case ModStats_FieldIndex.Version:
+                        this.Version = (Exception)obj;
+                        break;
+                    case ModStats_FieldIndex.NumRecords:
+                        this.NumRecords = (Exception)obj;
+                        break;
+                    case ModStats_FieldIndex.NextObjectID:
+                        this.NextObjectID = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Version != null) return true;
+                if (NumRecords != null) return true;
+                if (NextObjectID != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Version => {Version}");
+                fg.AppendLine($"NumRecords => {NumRecords}");
+                fg.AppendLine($"NextObjectID => {NextObjectID}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Version = this.Version.Combine(rhs.Version);
+                ret.NumRecords = this.NumRecords.Combine(rhs.NumRecords);
+                ret.NextObjectID = this.NextObjectID.Combine(rhs.NextObjectID);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Version;
+            public bool NumRecords;
+            public bool NextObjectID;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Version = defaultOn;
+                this.NumRecords = defaultOn;
+                this.NextObjectID = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Version, null));
+                ret.Add((NumRecords, null));
+                ret.Add((NextObjectID, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -322,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ModStats_Mask<bool> GetEqualsMask(
+        public static ModStats.Mask<bool> GetEqualsMask(
             this IModStatsGetter item,
             IModStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -336,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IModStatsGetter item,
             string? name = null,
-            ModStats_Mask<bool>? printMask = null)
+            ModStats.Mask<bool>? printMask = null)
         {
             return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -348,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStatsGetter item,
             FileGeneration fg,
             string? name = null,
-            ModStats_Mask<bool>? printMask = null)
+            ModStats.Mask<bool>? printMask = null)
         {
             ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,16 +673,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IModStatsGetter item,
-            ModStats_Mask<bool?> checkMask)
+            ModStats.Mask<bool?> checkMask)
         {
             return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ModStats_Mask<bool> GetHasBeenSetMask(this IModStatsGetter item)
+        public static ModStats.Mask<bool> GetHasBeenSetMask(this IModStatsGetter item)
         {
-            var ret = new ModStats_Mask<bool>(false);
+            var ret = new ModStats.Mask<bool>(false);
             ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -387,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IModStats lhs,
             IModStatsGetter rhs,
-            ModStats_TranslationMask? copyMask = null)
+            ModStats.TranslationMask? copyMask = null)
         {
             ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -399,8 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IModStats lhs,
             IModStatsGetter rhs,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? copyMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -408,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -426,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModStats DeepCopy(
             this IModStatsGetter item,
-            ModStats_TranslationMask? copyMask = null)
+            ModStats.TranslationMask? copyMask = null)
         {
             return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -435,8 +749,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModStats DeepCopy(
             this IModStatsGetter item,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? copyMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? copyMask = null)
         {
             return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -460,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModStats item,
             XElement node,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -473,8 +787,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModStats item,
             XElement node,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -482,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -501,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModStats item,
             string path,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,8 +827,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModStats item,
             string path,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStats item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -541,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModStats item,
             Stream stream,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,8 +867,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModStats item,
             Stream stream,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStats item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,9 +957,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ModStats_Mask<>);
+        public static readonly Type MaskType = typeof(ModStats.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ModStats_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ModStats.ErrorMask);
 
         public static readonly Type ClassType = typeof(ModStats);
 
@@ -900,12 +1214,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ModStatsCommon Instance = new ModStatsCommon();
 
-        public ModStats_Mask<bool> GetEqualsMask(
+        public ModStats.Mask<bool> GetEqualsMask(
             IModStatsGetter item,
             IModStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModStats_Mask<bool>(false);
+            var ret = new ModStats.Mask<bool>(false);
             ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IModStatsGetter item,
             IModStatsGetter rhs,
-            ModStats_Mask<bool> ret,
+            ModStats.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -929,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IModStatsGetter item,
             string? name = null,
-            ModStats_Mask<bool>? printMask = null)
+            ModStats.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -944,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModStatsGetter item,
             FileGeneration fg,
             string? name = null,
-            ModStats_Mask<bool>? printMask = null)
+            ModStats.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IModStatsGetter item,
             FileGeneration fg,
-            ModStats_Mask<bool>? printMask = null)
+            ModStats.Mask<bool>? printMask = null)
         {
             if (printMask?.Version ?? true)
             {
@@ -986,14 +1300,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IModStatsGetter item,
-            ModStats_Mask<bool?> checkMask)
+            ModStats.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IModStatsGetter item,
-            ModStats_Mask<bool> mask)
+            ModStats.Mask<bool> mask)
         {
             mask.Version = true;
             mask.NumRecords = true;
@@ -1068,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ModStats DeepCopy(
             IModStatsGetter item,
-            ModStats_TranslationMask? copyMask = null)
+            ModStats.TranslationMask? copyMask = null)
         {
             ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1079,8 +1393,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ModStats DeepCopy(
             IModStatsGetter item,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? copyMask = null)
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? copyMask = null)
         {
             ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1354,8 +1668,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IModStatsGetter item,
             XElement node,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null,
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1365,14 +1679,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IModStatsGetter item,
             string path,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null,
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1405,8 +1719,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IModStatsGetter item,
             Stream stream,
-            out ModStats_ErrorMask errorMask,
-            ModStats_TranslationMask? translationMask = null,
+            out ModStats.ErrorMask errorMask,
+            ModStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1455,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStatsGetter item,
             XElement node,
             string? name = null,
-            ModStats_TranslationMask? translationMask = null)
+            ModStats.TranslationMask? translationMask = null)
         {
             ((ModStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1499,321 +1813,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class ModStats_Mask<T> :
-        IMask<T>,
-        IEquatable<ModStats_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ModStats_Mask(T initialValue)
-        {
-            this.Version = initialValue;
-            this.NumRecords = initialValue;
-            this.NextObjectID = initialValue;
-        }
-
-        public ModStats_Mask(
-            T Version,
-            T NumRecords,
-            T NextObjectID)
-        {
-            this.Version = Version;
-            this.NumRecords = NumRecords;
-            this.NextObjectID = NextObjectID;
-        }
-
-        #pragma warning disable CS8618
-        protected ModStats_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Version;
-        public T NumRecords;
-        public T NextObjectID;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ModStats_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ModStats_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Version, rhs.Version)) return false;
-            if (!object.Equals(this.NumRecords, rhs.NumRecords)) return false;
-            if (!object.Equals(this.NextObjectID, rhs.NextObjectID)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Version?.GetHashCode());
-            ret = ret.CombineHashCode(this.NumRecords?.GetHashCode());
-            ret = ret.CombineHashCode(this.NextObjectID?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Version)) return false;
-            if (!eval(this.NumRecords)) return false;
-            if (!eval(this.NextObjectID)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ModStats_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ModStats_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ModStats_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Version = eval(this.Version);
-            obj.NumRecords = eval(this.NumRecords);
-            obj.NextObjectID = eval(this.NextObjectID);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ModStats_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ModStats_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ModStats_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Version ?? true)
-                {
-                    fg.AppendLine($"Version => {Version}");
-                }
-                if (printMask?.NumRecords ?? true)
-                {
-                    fg.AppendLine($"NumRecords => {NumRecords}");
-                }
-                if (printMask?.NextObjectID ?? true)
-                {
-                    fg.AppendLine($"NextObjectID => {NextObjectID}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ModStats_ErrorMask : IErrorMask, IErrorMask<ModStats_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Version;
-        public Exception? NumRecords;
-        public Exception? NextObjectID;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
-            switch (enu)
-            {
-                case ModStats_FieldIndex.Version:
-                    return Version;
-                case ModStats_FieldIndex.NumRecords:
-                    return NumRecords;
-                case ModStats_FieldIndex.NextObjectID:
-                    return NextObjectID;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
-            switch (enu)
-            {
-                case ModStats_FieldIndex.Version:
-                    this.Version = ex;
-                    break;
-                case ModStats_FieldIndex.NumRecords:
-                    this.NumRecords = ex;
-                    break;
-                case ModStats_FieldIndex.NextObjectID:
-                    this.NextObjectID = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
-            switch (enu)
-            {
-                case ModStats_FieldIndex.Version:
-                    this.Version = (Exception)obj;
-                    break;
-                case ModStats_FieldIndex.NumRecords:
-                    this.NumRecords = (Exception)obj;
-                    break;
-                case ModStats_FieldIndex.NextObjectID:
-                    this.NextObjectID = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Version != null) return true;
-            if (NumRecords != null) return true;
-            if (NextObjectID != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ModStats_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Version => {Version}");
-            fg.AppendLine($"NumRecords => {NumRecords}");
-            fg.AppendLine($"NextObjectID => {NextObjectID}");
-        }
-        #endregion
-
-        #region Combine
-        public ModStats_ErrorMask Combine(ModStats_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ModStats_ErrorMask();
-            ret.Version = this.Version.Combine(rhs.Version);
-            ret.NumRecords = this.NumRecords.Combine(rhs.NumRecords);
-            ret.NextObjectID = this.NextObjectID.Combine(rhs.NextObjectID);
-            return ret;
-        }
-        public static ModStats_ErrorMask? Combine(ModStats_ErrorMask? lhs, ModStats_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ModStats_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ModStats_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ModStats_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Version;
-        public bool NumRecords;
-        public bool NextObjectID;
-        #endregion
-
-        #region Ctors
-        public ModStats_TranslationMask(bool defaultOn)
-        {
-            this.Version = defaultOn;
-            this.NumRecords = defaultOn;
-            this.NextObjectID = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Version, null));
-            ret.Add((NumRecords, null));
-            ret.Add((NextObjectID, null));
-        }
-    }
 }
 #endregion
 

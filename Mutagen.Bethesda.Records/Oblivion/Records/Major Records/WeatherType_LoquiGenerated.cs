@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherType CreateFromXml(
             XElement node,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -124,15 +124,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherType CreateFromXml(
             XElement node,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             string path,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             string path,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             Stream stream,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,8 +196,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType CreateFromXml(
             Stream stream,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -220,6 +220,347 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Sunrise = initialValue;
+                this.Day = initialValue;
+                this.Sunset = initialValue;
+                this.Night = initialValue;
+            }
+
+            public Mask(
+                T Sunrise,
+                T Day,
+                T Sunset,
+                T Night)
+            {
+                this.Sunrise = Sunrise;
+                this.Day = Day;
+                this.Sunset = Sunset;
+                this.Night = Night;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Sunrise;
+            public T Day;
+            public T Sunset;
+            public T Night;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Sunrise, rhs.Sunrise)) return false;
+                if (!object.Equals(this.Day, rhs.Day)) return false;
+                if (!object.Equals(this.Sunset, rhs.Sunset)) return false;
+                if (!object.Equals(this.Night, rhs.Night)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Sunrise?.GetHashCode());
+                ret = ret.CombineHashCode(this.Day?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sunset?.GetHashCode());
+                ret = ret.CombineHashCode(this.Night?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Sunrise)) return false;
+                if (!eval(this.Day)) return false;
+                if (!eval(this.Sunset)) return false;
+                if (!eval(this.Night)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new WeatherType.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Sunrise = eval(this.Sunrise);
+                obj.Day = eval(this.Day);
+                obj.Sunset = eval(this.Sunset);
+                obj.Night = eval(this.Night);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(WeatherType.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, WeatherType.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(WeatherType.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Sunrise ?? true)
+                    {
+                        fg.AppendLine($"Sunrise => {Sunrise}");
+                    }
+                    if (printMask?.Day ?? true)
+                    {
+                        fg.AppendLine($"Day => {Day}");
+                    }
+                    if (printMask?.Sunset ?? true)
+                    {
+                        fg.AppendLine($"Sunset => {Sunset}");
+                    }
+                    if (printMask?.Night ?? true)
+                    {
+                        fg.AppendLine($"Night => {Night}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Sunrise;
+            public Exception? Day;
+            public Exception? Sunset;
+            public Exception? Night;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeatherType_FieldIndex.Sunrise:
+                        return Sunrise;
+                    case WeatherType_FieldIndex.Day:
+                        return Day;
+                    case WeatherType_FieldIndex.Sunset:
+                        return Sunset;
+                    case WeatherType_FieldIndex.Night:
+                        return Night;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeatherType_FieldIndex.Sunrise:
+                        this.Sunrise = ex;
+                        break;
+                    case WeatherType_FieldIndex.Day:
+                        this.Day = ex;
+                        break;
+                    case WeatherType_FieldIndex.Sunset:
+                        this.Sunset = ex;
+                        break;
+                    case WeatherType_FieldIndex.Night:
+                        this.Night = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeatherType_FieldIndex.Sunrise:
+                        this.Sunrise = (Exception)obj;
+                        break;
+                    case WeatherType_FieldIndex.Day:
+                        this.Day = (Exception)obj;
+                        break;
+                    case WeatherType_FieldIndex.Sunset:
+                        this.Sunset = (Exception)obj;
+                        break;
+                    case WeatherType_FieldIndex.Night:
+                        this.Night = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Sunrise != null) return true;
+                if (Day != null) return true;
+                if (Sunset != null) return true;
+                if (Night != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Sunrise => {Sunrise}");
+                fg.AppendLine($"Day => {Day}");
+                fg.AppendLine($"Sunset => {Sunset}");
+                fg.AppendLine($"Night => {Night}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Sunrise = this.Sunrise.Combine(rhs.Sunrise);
+                ret.Day = this.Day.Combine(rhs.Day);
+                ret.Sunset = this.Sunset.Combine(rhs.Sunset);
+                ret.Night = this.Night.Combine(rhs.Night);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Sunrise;
+            public bool Day;
+            public bool Sunset;
+            public bool Night;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Sunrise = defaultOn;
+                this.Day = defaultOn;
+                this.Sunset = defaultOn;
+                this.Night = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Sunrise, null));
+                ret.Add((Day, null));
+                ret.Add((Sunset, null));
+                ret.Add((Night, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -325,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static WeatherType_Mask<bool> GetEqualsMask(
+        public static WeatherType.Mask<bool> GetEqualsMask(
             this IWeatherTypeGetter item,
             IWeatherTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -339,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IWeatherTypeGetter item,
             string? name = null,
-            WeatherType_Mask<bool>? printMask = null)
+            WeatherType.Mask<bool>? printMask = null)
         {
             return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -351,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             FileGeneration fg,
             string? name = null,
-            WeatherType_Mask<bool>? printMask = null)
+            WeatherType.Mask<bool>? printMask = null)
         {
             ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -362,16 +703,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IWeatherTypeGetter item,
-            WeatherType_Mask<bool?> checkMask)
+            WeatherType.Mask<bool?> checkMask)
         {
             return ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static WeatherType_Mask<bool> GetHasBeenSetMask(this IWeatherTypeGetter item)
+        public static WeatherType.Mask<bool> GetHasBeenSetMask(this IWeatherTypeGetter item)
         {
-            var ret = new WeatherType_Mask<bool>(false);
+            var ret = new WeatherType.Mask<bool>(false);
             ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -390,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWeatherType lhs,
             IWeatherTypeGetter rhs,
-            WeatherType_TranslationMask? copyMask = null)
+            WeatherType.TranslationMask? copyMask = null)
         {
             ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -402,8 +743,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWeatherType lhs,
             IWeatherTypeGetter rhs,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? copyMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -411,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -429,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType DeepCopy(
             this IWeatherTypeGetter item,
-            WeatherType_TranslationMask? copyMask = null)
+            WeatherType.TranslationMask? copyMask = null)
         {
             return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -438,8 +779,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherType DeepCopy(
             this IWeatherTypeGetter item,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? copyMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? copyMask = null)
         {
             return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -463,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             XElement node,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -476,8 +817,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             XElement node,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -485,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -504,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             string path,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -516,8 +857,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             string path,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -531,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             string path,
             ErrorMaskBuilder? errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -544,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             Stream stream,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -556,8 +897,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherType item,
             Stream stream,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -571,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -647,9 +988,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(WeatherType_Mask<>);
+        public static readonly Type MaskType = typeof(WeatherType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(WeatherType_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeatherType.ErrorMask);
 
         public static readonly Type ClassType = typeof(WeatherType);
 
@@ -920,12 +1261,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly WeatherTypeCommon Instance = new WeatherTypeCommon();
 
-        public WeatherType_Mask<bool> GetEqualsMask(
+        public WeatherType.Mask<bool> GetEqualsMask(
             IWeatherTypeGetter item,
             IWeatherTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WeatherType_Mask<bool>(false);
+            var ret = new WeatherType.Mask<bool>(false);
             ((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -937,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IWeatherTypeGetter item,
             IWeatherTypeGetter rhs,
-            WeatherType_Mask<bool> ret,
+            WeatherType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -950,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IWeatherTypeGetter item,
             string? name = null,
-            WeatherType_Mask<bool>? printMask = null)
+            WeatherType.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -965,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherTypeGetter item,
             FileGeneration fg,
             string? name = null,
-            WeatherType_Mask<bool>? printMask = null)
+            WeatherType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -989,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWeatherTypeGetter item,
             FileGeneration fg,
-            WeatherType_Mask<bool>? printMask = null)
+            WeatherType.Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise ?? true)
             {
@@ -1011,14 +1352,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IWeatherTypeGetter item,
-            WeatherType_Mask<bool?> checkMask)
+            WeatherType.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IWeatherTypeGetter item,
-            WeatherType_Mask<bool> mask)
+            WeatherType.Mask<bool> mask)
         {
             mask.Sunrise = true;
             mask.Day = true;
@@ -1100,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherType DeepCopy(
             IWeatherTypeGetter item,
-            WeatherType_TranslationMask? copyMask = null)
+            WeatherType.TranslationMask? copyMask = null)
         {
             WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1111,8 +1452,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherType DeepCopy(
             IWeatherTypeGetter item,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? copyMask = null)
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? copyMask = null)
         {
             WeatherType ret = (WeatherType)((WeatherTypeCommon)((IWeatherTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1413,8 +1754,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             XElement node,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null,
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1424,14 +1765,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             string path,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null,
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1464,8 +1805,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherTypeGetter item,
             Stream stream,
-            out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask? translationMask = null,
+            out WeatherType.ErrorMask errorMask,
+            WeatherType.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1514,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             XElement node,
             string? name = null,
-            WeatherType_TranslationMask? translationMask = null)
+            WeatherType.TranslationMask? translationMask = null)
         {
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1558,348 +1899,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class WeatherType_Mask<T> :
-        IMask<T>,
-        IEquatable<WeatherType_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public WeatherType_Mask(T initialValue)
-        {
-            this.Sunrise = initialValue;
-            this.Day = initialValue;
-            this.Sunset = initialValue;
-            this.Night = initialValue;
-        }
-
-        public WeatherType_Mask(
-            T Sunrise,
-            T Day,
-            T Sunset,
-            T Night)
-        {
-            this.Sunrise = Sunrise;
-            this.Day = Day;
-            this.Sunset = Sunset;
-            this.Night = Night;
-        }
-
-        #pragma warning disable CS8618
-        protected WeatherType_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Sunrise;
-        public T Day;
-        public T Sunset;
-        public T Night;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is WeatherType_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(WeatherType_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Sunrise, rhs.Sunrise)) return false;
-            if (!object.Equals(this.Day, rhs.Day)) return false;
-            if (!object.Equals(this.Sunset, rhs.Sunset)) return false;
-            if (!object.Equals(this.Night, rhs.Night)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Sunrise?.GetHashCode());
-            ret = ret.CombineHashCode(this.Day?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sunset?.GetHashCode());
-            ret = ret.CombineHashCode(this.Night?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Sunrise)) return false;
-            if (!eval(this.Day)) return false;
-            if (!eval(this.Sunset)) return false;
-            if (!eval(this.Night)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public WeatherType_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new WeatherType_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(WeatherType_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Sunrise = eval(this.Sunrise);
-            obj.Day = eval(this.Day);
-            obj.Sunset = eval(this.Sunset);
-            obj.Night = eval(this.Night);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(WeatherType_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, WeatherType_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(WeatherType_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Sunrise ?? true)
-                {
-                    fg.AppendLine($"Sunrise => {Sunrise}");
-                }
-                if (printMask?.Day ?? true)
-                {
-                    fg.AppendLine($"Day => {Day}");
-                }
-                if (printMask?.Sunset ?? true)
-                {
-                    fg.AppendLine($"Sunset => {Sunset}");
-                }
-                if (printMask?.Night ?? true)
-                {
-                    fg.AppendLine($"Night => {Night}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class WeatherType_ErrorMask : IErrorMask, IErrorMask<WeatherType_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Sunrise;
-        public Exception? Day;
-        public Exception? Sunset;
-        public Exception? Night;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                    return Sunrise;
-                case WeatherType_FieldIndex.Day:
-                    return Day;
-                case WeatherType_FieldIndex.Sunset:
-                    return Sunset;
-                case WeatherType_FieldIndex.Night:
-                    return Night;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                    this.Sunrise = ex;
-                    break;
-                case WeatherType_FieldIndex.Day:
-                    this.Day = ex;
-                    break;
-                case WeatherType_FieldIndex.Sunset:
-                    this.Sunset = ex;
-                    break;
-                case WeatherType_FieldIndex.Night:
-                    this.Night = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            WeatherType_FieldIndex enu = (WeatherType_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherType_FieldIndex.Sunrise:
-                    this.Sunrise = (Exception)obj;
-                    break;
-                case WeatherType_FieldIndex.Day:
-                    this.Day = (Exception)obj;
-                    break;
-                case WeatherType_FieldIndex.Sunset:
-                    this.Sunset = (Exception)obj;
-                    break;
-                case WeatherType_FieldIndex.Night:
-                    this.Night = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Sunrise != null) return true;
-            if (Day != null) return true;
-            if (Sunset != null) return true;
-            if (Night != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("WeatherType_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Sunrise => {Sunrise}");
-            fg.AppendLine($"Day => {Day}");
-            fg.AppendLine($"Sunset => {Sunset}");
-            fg.AppendLine($"Night => {Night}");
-        }
-        #endregion
-
-        #region Combine
-        public WeatherType_ErrorMask Combine(WeatherType_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new WeatherType_ErrorMask();
-            ret.Sunrise = this.Sunrise.Combine(rhs.Sunrise);
-            ret.Day = this.Day.Combine(rhs.Day);
-            ret.Sunset = this.Sunset.Combine(rhs.Sunset);
-            ret.Night = this.Night.Combine(rhs.Night);
-            return ret;
-        }
-        public static WeatherType_ErrorMask? Combine(WeatherType_ErrorMask? lhs, WeatherType_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static WeatherType_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new WeatherType_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class WeatherType_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Sunrise;
-        public bool Day;
-        public bool Sunset;
-        public bool Night;
-        #endregion
-
-        #region Ctors
-        public WeatherType_TranslationMask(bool defaultOn)
-        {
-            this.Sunrise = defaultOn;
-            this.Day = defaultOn;
-            this.Sunset = defaultOn;
-            this.Night = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Sunrise, null));
-            ret.Add((Day, null));
-            ret.Add((Sunset, null));
-            ret.Add((Night, null));
-        }
-    }
 }
 #endregion
 

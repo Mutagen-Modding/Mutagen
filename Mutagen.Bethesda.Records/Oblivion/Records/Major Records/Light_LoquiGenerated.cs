@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Light CreateFromXml(
             XElement node,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -284,15 +284,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Light CreateFromXml(
             XElement node,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Light.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Light CreateFromXml(
             string path,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -322,8 +322,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Light CreateFromXml(
             string path,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Light CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Light CreateFromXml(
             Stream stream,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -356,8 +356,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Light CreateFromXml(
             Stream stream,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Light CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -380,6 +380,649 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ItemAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Script = initialValue;
+                this.Name = initialValue;
+                this.Icon = initialValue;
+                this.Time = initialValue;
+                this.Radius = initialValue;
+                this.Color = initialValue;
+                this.Flags = initialValue;
+                this.FalloffExponent = initialValue;
+                this.FOV = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.Fade = initialValue;
+                this.Sound = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Model,
+                T Script,
+                T Name,
+                T Icon,
+                T Time,
+                T Radius,
+                T Color,
+                T Flags,
+                T FalloffExponent,
+                T FOV,
+                T Value,
+                T Weight,
+                T Fade,
+                T Sound,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Script = Script;
+                this.Name = Name;
+                this.Icon = Icon;
+                this.Time = Time;
+                this.Radius = Radius;
+                this.Color = Color;
+                this.Flags = Flags;
+                this.FalloffExponent = FalloffExponent;
+                this.FOV = FOV;
+                this.Value = Value;
+                this.Weight = Weight;
+                this.Fade = Fade;
+                this.Sound = Sound;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Script;
+            public T Name;
+            public T Icon;
+            public T Time;
+            public T Radius;
+            public T Color;
+            public T Flags;
+            public T FalloffExponent;
+            public T FOV;
+            public T Value;
+            public T Weight;
+            public T Fade;
+            public T Sound;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Time, rhs.Time)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.FalloffExponent, rhs.FalloffExponent)) return false;
+                if (!object.Equals(this.FOV, rhs.FOV)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Fade, rhs.Fade)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Time?.GetHashCode());
+                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
+                ret = ret.CombineHashCode(this.Color?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.FalloffExponent?.GetHashCode());
+                ret = ret.CombineHashCode(this.FOV?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fade?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Time)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Color)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.FalloffExponent)) return false;
+                if (!eval(this.FOV)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.Fade)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Light.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.Name = eval(this.Name);
+                obj.Icon = eval(this.Icon);
+                obj.Time = eval(this.Time);
+                obj.Radius = eval(this.Radius);
+                obj.Color = eval(this.Color);
+                obj.Flags = eval(this.Flags);
+                obj.FalloffExponent = eval(this.FalloffExponent);
+                obj.FOV = eval(this.FOV);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.Fade = eval(this.Fade);
+                obj.Sound = eval(this.Sound);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Light.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Light.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Light.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Time ?? true)
+                    {
+                        fg.AppendLine($"Time => {Time}");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendLine($"Radius => {Radius}");
+                    }
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendLine($"Color => {Color}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.FalloffExponent ?? true)
+                    {
+                        fg.AppendLine($"FalloffExponent => {FalloffExponent}");
+                    }
+                    if (printMask?.FOV ?? true)
+                    {
+                        fg.AppendLine($"FOV => {FOV}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.Fade ?? true)
+                    {
+                        fg.AppendLine($"Fade => {Fade}");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        fg.AppendLine($"Sound => {Sound}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ItemAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Script;
+            public Exception? Name;
+            public Exception? Icon;
+            public Exception? Time;
+            public Exception? Radius;
+            public Exception? Color;
+            public Exception? Flags;
+            public Exception? FalloffExponent;
+            public Exception? FOV;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? Fade;
+            public Exception? Sound;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Light_FieldIndex enu = (Light_FieldIndex)index;
+                switch (enu)
+                {
+                    case Light_FieldIndex.Model:
+                        return Model;
+                    case Light_FieldIndex.Script:
+                        return Script;
+                    case Light_FieldIndex.Name:
+                        return Name;
+                    case Light_FieldIndex.Icon:
+                        return Icon;
+                    case Light_FieldIndex.Time:
+                        return Time;
+                    case Light_FieldIndex.Radius:
+                        return Radius;
+                    case Light_FieldIndex.Color:
+                        return Color;
+                    case Light_FieldIndex.Flags:
+                        return Flags;
+                    case Light_FieldIndex.FalloffExponent:
+                        return FalloffExponent;
+                    case Light_FieldIndex.FOV:
+                        return FOV;
+                    case Light_FieldIndex.Value:
+                        return Value;
+                    case Light_FieldIndex.Weight:
+                        return Weight;
+                    case Light_FieldIndex.Fade:
+                        return Fade;
+                    case Light_FieldIndex.Sound:
+                        return Sound;
+                    case Light_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Light_FieldIndex enu = (Light_FieldIndex)index;
+                switch (enu)
+                {
+                    case Light_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Light_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Light_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Light_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Light_FieldIndex.Time:
+                        this.Time = ex;
+                        break;
+                    case Light_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case Light_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
+                    case Light_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Light_FieldIndex.FalloffExponent:
+                        this.FalloffExponent = ex;
+                        break;
+                    case Light_FieldIndex.FOV:
+                        this.FOV = ex;
+                        break;
+                    case Light_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Light_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Light_FieldIndex.Fade:
+                        this.Fade = ex;
+                        break;
+                    case Light_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case Light_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Light_FieldIndex enu = (Light_FieldIndex)index;
+                switch (enu)
+                {
+                    case Light_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Light_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Time:
+                        this.Time = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Radius:
+                        this.Radius = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Color:
+                        this.Color = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.FalloffExponent:
+                        this.FalloffExponent = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.FOV:
+                        this.FOV = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Fade:
+                        this.Fade = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.Sound:
+                        this.Sound = (Exception)obj;
+                        break;
+                    case Light_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Script != null) return true;
+                if (Name != null) return true;
+                if (Icon != null) return true;
+                if (Time != null) return true;
+                if (Radius != null) return true;
+                if (Color != null) return true;
+                if (Flags != null) return true;
+                if (FalloffExponent != null) return true;
+                if (FOV != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (Fade != null) return true;
+                if (Sound != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                Model?.ToString(fg);
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Time => {Time}");
+                fg.AppendLine($"Radius => {Radius}");
+                fg.AppendLine($"Color => {Color}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"FalloffExponent => {FalloffExponent}");
+                fg.AppendLine($"FOV => {FOV}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"Fade => {Fade}");
+                fg.AppendLine($"Sound => {Sound}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Time = this.Time.Combine(rhs.Time);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Color = this.Color.Combine(rhs.Color);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.FalloffExponent = this.FalloffExponent.Combine(rhs.FalloffExponent);
+                ret.FOV = this.FOV.Combine(rhs.FOV);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Fade = this.Fade.Combine(rhs.Fade);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ItemAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Script;
+            public bool Name;
+            public bool Icon;
+            public bool Time;
+            public bool Radius;
+            public bool Color;
+            public bool Flags;
+            public bool FalloffExponent;
+            public bool FOV;
+            public bool Value;
+            public bool Weight;
+            public bool Fade;
+            public bool Sound;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.Name = defaultOn;
+                this.Icon = defaultOn;
+                this.Time = defaultOn;
+                this.Radius = defaultOn;
+                this.Color = defaultOn;
+                this.Flags = defaultOn;
+                this.FalloffExponent = defaultOn;
+                this.FOV = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.Fade = defaultOn;
+                this.Sound = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Name, null));
+                ret.Add((Icon, null));
+                ret.Add((Time, null));
+                ret.Add((Radius, null));
+                ret.Add((Color, null));
+                ret.Add((Flags, null));
+                ret.Add((FalloffExponent, null));
+                ret.Add((FOV, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((Fade, null));
+                ret.Add((Sound, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -531,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LightSetterCommon)((ILightGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Light_Mask<bool> GetEqualsMask(
+        public static Light.Mask<bool> GetEqualsMask(
             this ILightGetter item,
             ILightGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -545,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILightGetter item,
             string? name = null,
-            Light_Mask<bool>? printMask = null)
+            Light.Mask<bool>? printMask = null)
         {
             return ((LightCommon)((ILightGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -557,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightGetter item,
             FileGeneration fg,
             string? name = null,
-            Light_Mask<bool>? printMask = null)
+            Light.Mask<bool>? printMask = null)
         {
             ((LightCommon)((ILightGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -568,16 +1211,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILightGetter item,
-            Light_Mask<bool?> checkMask)
+            Light.Mask<bool?> checkMask)
         {
             return ((LightCommon)((ILightGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Light_Mask<bool> GetHasBeenSetMask(this ILightGetter item)
+        public static Light.Mask<bool> GetHasBeenSetMask(this ILightGetter item)
         {
-            var ret = new Light_Mask<bool>(false);
+            var ret = new Light.Mask<bool>(false);
             ((LightCommon)((ILightGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -596,8 +1239,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILightInternal lhs,
             ILightGetter rhs,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? copyMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -605,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Light.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -623,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Light DeepCopy(
             this ILightGetter item,
-            Light_TranslationMask? copyMask = null)
+            Light.TranslationMask? copyMask = null)
         {
             return ((LightSetterTranslationCommon)((ILightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -632,8 +1275,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Light DeepCopy(
             this ILightGetter item,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? copyMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? copyMask = null)
         {
             return ((LightSetterTranslationCommon)((ILightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -657,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILightInternal item,
             XElement node,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -670,8 +1313,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILightInternal item,
             XElement node,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -679,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Light.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -698,7 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILightInternal item,
             string path,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -710,8 +1353,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILightInternal item,
             string path,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -725,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -738,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILightInternal item,
             Stream stream,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -750,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILightInternal item,
             Stream stream,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -765,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Light_TranslationMask? translationMask = null)
+            Light.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -857,9 +1500,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 20;
 
-        public static readonly Type MaskType = typeof(Light_Mask<>);
+        public static readonly Type MaskType = typeof(Light.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Light_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Light.ErrorMask);
 
         public static readonly Type ClassType = typeof(Light);
 
@@ -1407,12 +2050,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly LightCommon Instance = new LightCommon();
 
-        public Light_Mask<bool> GetEqualsMask(
+        public Light.Mask<bool> GetEqualsMask(
             ILightGetter item,
             ILightGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Light_Mask<bool>(false);
+            var ret = new Light.Mask<bool>(false);
             ((LightCommon)((ILightGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1424,7 +2067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILightGetter item,
             ILightGetter rhs,
-            Light_Mask<bool> ret,
+            Light.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1453,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILightGetter item,
             string? name = null,
-            Light_Mask<bool>? printMask = null)
+            Light.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1468,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILightGetter item,
             FileGeneration fg,
             string? name = null,
-            Light_Mask<bool>? printMask = null)
+            Light.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1492,7 +2135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILightGetter item,
             FileGeneration fg,
-            Light_Mask<bool>? printMask = null)
+            Light.Mask<bool>? printMask = null)
         {
             ItemAbstractCommon.ToStringFields(
                 item: item,
@@ -1562,7 +2205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILightGetter item,
-            Light_Mask<bool?> checkMask)
+            Light.Mask<bool?> checkMask)
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
@@ -1578,10 +2221,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ILightGetter item,
-            Light_Mask<bool> mask)
+            Light.Mask<bool> mask)
         {
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
             mask.Name = (item.Name != null);
             mask.Icon = (item.Icon != null);
@@ -1993,7 +2636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Light DeepCopy(
             ILightGetter item,
-            Light_TranslationMask? copyMask = null)
+            Light.TranslationMask? copyMask = null)
         {
             Light ret = (Light)((LightCommon)((ILightGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2004,8 +2647,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Light DeepCopy(
             ILightGetter item,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? copyMask = null)
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? copyMask = null)
         {
             Light ret = (Light)((LightCommon)((ILightGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2649,8 +3292,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILightGetter item,
             XElement node,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null,
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2660,14 +3303,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Light.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILightGetter item,
             string path,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null,
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2683,8 +3326,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILightGetter item,
             Stream stream,
-            out Light_ErrorMask errorMask,
-            Light_TranslationMask? translationMask = null,
+            out Light.ErrorMask errorMask,
+            Light.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2701,648 +3344,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Light_Mask<T> :
-        ItemAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<Light_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Light_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Script = initialValue;
-            this.Name = initialValue;
-            this.Icon = initialValue;
-            this.Time = initialValue;
-            this.Radius = initialValue;
-            this.Color = initialValue;
-            this.Flags = initialValue;
-            this.FalloffExponent = initialValue;
-            this.FOV = initialValue;
-            this.Value = initialValue;
-            this.Weight = initialValue;
-            this.Fade = initialValue;
-            this.Sound = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Light_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Model,
-            T Script,
-            T Name,
-            T Icon,
-            T Time,
-            T Radius,
-            T Color,
-            T Flags,
-            T FalloffExponent,
-            T FOV,
-            T Value,
-            T Weight,
-            T Fade,
-            T Sound,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Script = Script;
-            this.Name = Name;
-            this.Icon = Icon;
-            this.Time = Time;
-            this.Radius = Radius;
-            this.Color = Color;
-            this.Flags = Flags;
-            this.FalloffExponent = FalloffExponent;
-            this.FOV = FOV;
-            this.Value = Value;
-            this.Weight = Weight;
-            this.Fade = Fade;
-            this.Sound = Sound;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Light_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Script;
-        public T Name;
-        public T Icon;
-        public T Time;
-        public T Radius;
-        public T Color;
-        public T Flags;
-        public T FalloffExponent;
-        public T FOV;
-        public T Value;
-        public T Weight;
-        public T Fade;
-        public T Sound;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Light_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Light_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Time, rhs.Time)) return false;
-            if (!object.Equals(this.Radius, rhs.Radius)) return false;
-            if (!object.Equals(this.Color, rhs.Color)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.FalloffExponent, rhs.FalloffExponent)) return false;
-            if (!object.Equals(this.FOV, rhs.FOV)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.Fade, rhs.Fade)) return false;
-            if (!object.Equals(this.Sound, rhs.Sound)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Time?.GetHashCode());
-            ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-            ret = ret.CombineHashCode(this.Color?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.FalloffExponent?.GetHashCode());
-            ret = ret.CombineHashCode(this.FOV?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fade?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Time)) return false;
-            if (!eval(this.Radius)) return false;
-            if (!eval(this.Color)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.FalloffExponent)) return false;
-            if (!eval(this.FOV)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.Fade)) return false;
-            if (!eval(this.Sound)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Light_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Light_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Light_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Script = eval(this.Script);
-            obj.Name = eval(this.Name);
-            obj.Icon = eval(this.Icon);
-            obj.Time = eval(this.Time);
-            obj.Radius = eval(this.Radius);
-            obj.Color = eval(this.Color);
-            obj.Flags = eval(this.Flags);
-            obj.FalloffExponent = eval(this.FalloffExponent);
-            obj.FOV = eval(this.FOV);
-            obj.Value = eval(this.Value);
-            obj.Weight = eval(this.Weight);
-            obj.Fade = eval(this.Fade);
-            obj.Sound = eval(this.Sound);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Light_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Light_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Light_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Time ?? true)
-                {
-                    fg.AppendLine($"Time => {Time}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {Radius}");
-                }
-                if (printMask?.Color ?? true)
-                {
-                    fg.AppendLine($"Color => {Color}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.FalloffExponent ?? true)
-                {
-                    fg.AppendLine($"FalloffExponent => {FalloffExponent}");
-                }
-                if (printMask?.FOV ?? true)
-                {
-                    fg.AppendLine($"FOV => {FOV}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.Fade ?? true)
-                {
-                    fg.AppendLine($"Fade => {Fade}");
-                }
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {Sound}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Light_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Light_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Script;
-        public Exception? Name;
-        public Exception? Icon;
-        public Exception? Time;
-        public Exception? Radius;
-        public Exception? Color;
-        public Exception? Flags;
-        public Exception? FalloffExponent;
-        public Exception? FOV;
-        public Exception? Value;
-        public Exception? Weight;
-        public Exception? Fade;
-        public Exception? Sound;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Light_FieldIndex enu = (Light_FieldIndex)index;
-            switch (enu)
-            {
-                case Light_FieldIndex.Model:
-                    return Model;
-                case Light_FieldIndex.Script:
-                    return Script;
-                case Light_FieldIndex.Name:
-                    return Name;
-                case Light_FieldIndex.Icon:
-                    return Icon;
-                case Light_FieldIndex.Time:
-                    return Time;
-                case Light_FieldIndex.Radius:
-                    return Radius;
-                case Light_FieldIndex.Color:
-                    return Color;
-                case Light_FieldIndex.Flags:
-                    return Flags;
-                case Light_FieldIndex.FalloffExponent:
-                    return FalloffExponent;
-                case Light_FieldIndex.FOV:
-                    return FOV;
-                case Light_FieldIndex.Value:
-                    return Value;
-                case Light_FieldIndex.Weight:
-                    return Weight;
-                case Light_FieldIndex.Fade:
-                    return Fade;
-                case Light_FieldIndex.Sound:
-                    return Sound;
-                case Light_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Light_FieldIndex enu = (Light_FieldIndex)index;
-            switch (enu)
-            {
-                case Light_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Light_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Light_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Light_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Light_FieldIndex.Time:
-                    this.Time = ex;
-                    break;
-                case Light_FieldIndex.Radius:
-                    this.Radius = ex;
-                    break;
-                case Light_FieldIndex.Color:
-                    this.Color = ex;
-                    break;
-                case Light_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Light_FieldIndex.FalloffExponent:
-                    this.FalloffExponent = ex;
-                    break;
-                case Light_FieldIndex.FOV:
-                    this.FOV = ex;
-                    break;
-                case Light_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case Light_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Light_FieldIndex.Fade:
-                    this.Fade = ex;
-                    break;
-                case Light_FieldIndex.Sound:
-                    this.Sound = ex;
-                    break;
-                case Light_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Light_FieldIndex enu = (Light_FieldIndex)index;
-            switch (enu)
-            {
-                case Light_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Light_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Time:
-                    this.Time = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Radius:
-                    this.Radius = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Color:
-                    this.Color = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Light_FieldIndex.FalloffExponent:
-                    this.FalloffExponent = (Exception)obj;
-                    break;
-                case Light_FieldIndex.FOV:
-                    this.FOV = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Fade:
-                    this.Fade = (Exception)obj;
-                    break;
-                case Light_FieldIndex.Sound:
-                    this.Sound = (Exception)obj;
-                    break;
-                case Light_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Model != null) return true;
-            if (Script != null) return true;
-            if (Name != null) return true;
-            if (Icon != null) return true;
-            if (Time != null) return true;
-            if (Radius != null) return true;
-            if (Color != null) return true;
-            if (Flags != null) return true;
-            if (FalloffExponent != null) return true;
-            if (FOV != null) return true;
-            if (Value != null) return true;
-            if (Weight != null) return true;
-            if (Fade != null) return true;
-            if (Sound != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Light_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            Model?.ToString(fg);
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Time => {Time}");
-            fg.AppendLine($"Radius => {Radius}");
-            fg.AppendLine($"Color => {Color}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"FalloffExponent => {FalloffExponent}");
-            fg.AppendLine($"FOV => {FOV}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"Fade => {Fade}");
-            fg.AppendLine($"Sound => {Sound}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Light_ErrorMask Combine(Light_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Light_ErrorMask();
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Time = this.Time.Combine(rhs.Time);
-            ret.Radius = this.Radius.Combine(rhs.Radius);
-            ret.Color = this.Color.Combine(rhs.Color);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.FalloffExponent = this.FalloffExponent.Combine(rhs.FalloffExponent);
-            ret.FOV = this.FOV.Combine(rhs.FOV);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.Fade = this.Fade.Combine(rhs.Fade);
-            ret.Sound = this.Sound.Combine(rhs.Sound);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Light_ErrorMask? Combine(Light_ErrorMask? lhs, Light_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Light_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Light_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Light_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Script;
-        public bool Name;
-        public bool Icon;
-        public bool Time;
-        public bool Radius;
-        public bool Color;
-        public bool Flags;
-        public bool FalloffExponent;
-        public bool FOV;
-        public bool Value;
-        public bool Weight;
-        public bool Fade;
-        public bool Sound;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Light_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.Name = defaultOn;
-            this.Icon = defaultOn;
-            this.Time = defaultOn;
-            this.Radius = defaultOn;
-            this.Color = defaultOn;
-            this.Flags = defaultOn;
-            this.FalloffExponent = defaultOn;
-            this.FOV = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.Fade = defaultOn;
-            this.Sound = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((Name, null));
-            ret.Add((Icon, null));
-            ret.Add((Time, null));
-            ret.Add((Radius, null));
-            ret.Add((Color, null));
-            ret.Add((Flags, null));
-            ret.Add((FalloffExponent, null));
-            ret.Add((FOV, null));
-            ret.Add((Value, null));
-            ret.Add((Weight, null));
-            ret.Add((Fade, null));
-            ret.Add((Sound, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

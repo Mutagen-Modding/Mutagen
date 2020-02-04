@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Furnature CreateFromXml(
             XElement node,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -153,15 +153,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Furnature CreateFromXml(
             XElement node,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Furnature.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Furnature CreateFromXml(
             string path,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Furnature CreateFromXml(
             string path,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Furnature CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Furnature CreateFromXml(
             Stream stream,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,8 +225,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Furnature CreateFromXml(
             Stream stream,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Furnature CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -249,6 +249,352 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Script = initialValue;
+                this.MarkerFlags = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Script,
+                T MarkerFlags)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Script = Script;
+                this.MarkerFlags = MarkerFlags;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Script;
+            public T MarkerFlags;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.MarkerFlags, rhs.MarkerFlags)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.MarkerFlags?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (!eval(this.MarkerFlags)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Furnature.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.MarkerFlags = eval(this.MarkerFlags);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Furnature.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Furnature.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Furnature.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.MarkerFlags ?? true)
+                    {
+                        fg.AppendLine($"MarkerFlags => {MarkerFlags}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Script;
+            public Exception? MarkerFlags;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
+                switch (enu)
+                {
+                    case Furnature_FieldIndex.Name:
+                        return Name;
+                    case Furnature_FieldIndex.Model:
+                        return Model;
+                    case Furnature_FieldIndex.Script:
+                        return Script;
+                    case Furnature_FieldIndex.MarkerFlags:
+                        return MarkerFlags;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
+                switch (enu)
+                {
+                    case Furnature_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Furnature_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Furnature_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Furnature_FieldIndex.MarkerFlags:
+                        this.MarkerFlags = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
+                switch (enu)
+                {
+                    case Furnature_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Furnature_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Furnature_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Furnature_FieldIndex.MarkerFlags:
+                        this.MarkerFlags = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Script != null) return true;
+                if (MarkerFlags != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"MarkerFlags => {MarkerFlags}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.MarkerFlags = this.MarkerFlags.Combine(rhs.MarkerFlags);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Script;
+            public bool MarkerFlags;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.MarkerFlags = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((MarkerFlags, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -375,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FurnatureSetterCommon)((IFurnatureGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Furnature_Mask<bool> GetEqualsMask(
+        public static Furnature.Mask<bool> GetEqualsMask(
             this IFurnatureGetter item,
             IFurnatureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -389,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IFurnatureGetter item,
             string? name = null,
-            Furnature_Mask<bool>? printMask = null)
+            Furnature.Mask<bool>? printMask = null)
         {
             return ((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -401,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureGetter item,
             FileGeneration fg,
             string? name = null,
-            Furnature_Mask<bool>? printMask = null)
+            Furnature.Mask<bool>? printMask = null)
         {
             ((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -412,16 +758,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IFurnatureGetter item,
-            Furnature_Mask<bool?> checkMask)
+            Furnature.Mask<bool?> checkMask)
         {
             return ((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Furnature_Mask<bool> GetHasBeenSetMask(this IFurnatureGetter item)
+        public static Furnature.Mask<bool> GetHasBeenSetMask(this IFurnatureGetter item)
         {
-            var ret = new Furnature_Mask<bool>(false);
+            var ret = new Furnature.Mask<bool>(false);
             ((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -440,8 +786,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IFurnatureInternal lhs,
             IFurnatureGetter rhs,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? copyMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -449,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Furnature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -467,7 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Furnature DeepCopy(
             this IFurnatureGetter item,
-            Furnature_TranslationMask? copyMask = null)
+            Furnature.TranslationMask? copyMask = null)
         {
             return ((FurnatureSetterTranslationCommon)((IFurnatureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -476,8 +822,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Furnature DeepCopy(
             this IFurnatureGetter item,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? copyMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? copyMask = null)
         {
             return ((FurnatureSetterTranslationCommon)((IFurnatureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -501,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             XElement node,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -514,8 +860,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             XElement node,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -523,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Furnature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -542,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             string path,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -554,8 +900,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             string path,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -569,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -582,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             Stream stream,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -594,8 +940,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             Stream stream,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -609,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Furnature_TranslationMask? translationMask = null)
+            Furnature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -690,9 +1036,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(Furnature_Mask<>);
+        public static readonly Type MaskType = typeof(Furnature.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Furnature_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Furnature.ErrorMask);
 
         public static readonly Type ClassType = typeof(Furnature);
 
@@ -1054,12 +1400,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly FurnatureCommon Instance = new FurnatureCommon();
 
-        public Furnature_Mask<bool> GetEqualsMask(
+        public Furnature.Mask<bool> GetEqualsMask(
             IFurnatureGetter item,
             IFurnatureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Furnature_Mask<bool>(false);
+            var ret = new Furnature.Mask<bool>(false);
             ((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1071,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IFurnatureGetter item,
             IFurnatureGetter rhs,
-            Furnature_Mask<bool> ret,
+            Furnature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1089,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IFurnatureGetter item,
             string? name = null,
-            Furnature_Mask<bool>? printMask = null)
+            Furnature.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1104,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFurnatureGetter item,
             FileGeneration fg,
             string? name = null,
-            Furnature_Mask<bool>? printMask = null)
+            Furnature.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1128,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IFurnatureGetter item,
             FileGeneration fg,
-            Furnature_Mask<bool>? printMask = null)
+            Furnature.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1154,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IFurnatureGetter item,
-            Furnature_Mask<bool?> checkMask)
+            Furnature.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1168,11 +1514,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IFurnatureGetter item,
-            Furnature_Mask<bool> mask)
+            Furnature.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
             mask.MarkerFlags = item.MarkerFlags_IsSet;
             base.FillHasBeenSetMask(
@@ -1447,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Furnature DeepCopy(
             IFurnatureGetter item,
-            Furnature_TranslationMask? copyMask = null)
+            Furnature.TranslationMask? copyMask = null)
         {
             Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1458,8 +1804,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Furnature DeepCopy(
             IFurnatureGetter item,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? copyMask = null)
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? copyMask = null)
         {
             Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1777,8 +2123,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFurnatureGetter item,
             XElement node,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null,
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1788,14 +2134,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Furnature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFurnatureGetter item,
             string path,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null,
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1811,8 +2157,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFurnatureGetter item,
             Stream stream,
-            out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask? translationMask = null,
+            out Furnature.ErrorMask errorMask,
+            Furnature.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1829,351 +2175,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Furnature_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Furnature_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Furnature_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Script = initialValue;
-            this.MarkerFlags = initialValue;
-        }
-
-        public Furnature_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Script,
-            T MarkerFlags)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Script = Script;
-            this.MarkerFlags = MarkerFlags;
-        }
-
-        #pragma warning disable CS8618
-        protected Furnature_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Script;
-        public T MarkerFlags;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Furnature_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Furnature_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.MarkerFlags, rhs.MarkerFlags)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.MarkerFlags?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Script)) return false;
-            if (!eval(this.MarkerFlags)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Furnature_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Furnature_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Furnature_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Script = eval(this.Script);
-            obj.MarkerFlags = eval(this.MarkerFlags);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Furnature_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Furnature_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Furnature_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.MarkerFlags ?? true)
-                {
-                    fg.AppendLine($"MarkerFlags => {MarkerFlags}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Furnature_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Furnature_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Script;
-        public Exception? MarkerFlags;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    return Name;
-                case Furnature_FieldIndex.Model:
-                    return Model;
-                case Furnature_FieldIndex.Script:
-                    return Script;
-                case Furnature_FieldIndex.MarkerFlags:
-                    return MarkerFlags;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Furnature_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Furnature_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    this.MarkerFlags = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Furnature_FieldIndex enu = (Furnature_FieldIndex)index;
-            switch (enu)
-            {
-                case Furnature_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Furnature_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Furnature_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Furnature_FieldIndex.MarkerFlags:
-                    this.MarkerFlags = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Script != null) return true;
-            if (MarkerFlags != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Furnature_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"MarkerFlags => {MarkerFlags}");
-        }
-        #endregion
-
-        #region Combine
-        public Furnature_ErrorMask Combine(Furnature_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Furnature_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.MarkerFlags = this.MarkerFlags.Combine(rhs.MarkerFlags);
-            return ret;
-        }
-        public static Furnature_ErrorMask? Combine(Furnature_ErrorMask? lhs, Furnature_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Furnature_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Furnature_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Furnature_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Script;
-        public bool MarkerFlags;
-        #endregion
-
-        #region Ctors
-        public Furnature_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.MarkerFlags = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((MarkerFlags, null));
-        }
-    }
 }
 #endregion
 

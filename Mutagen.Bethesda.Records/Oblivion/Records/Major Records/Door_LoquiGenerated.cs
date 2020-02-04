@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Door CreateFromXml(
             XElement node,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -185,15 +185,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Door CreateFromXml(
             XElement node,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Door.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door CreateFromXml(
             string path,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -223,8 +223,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door CreateFromXml(
             string path,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Door CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door CreateFromXml(
             Stream stream,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -257,8 +257,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door CreateFromXml(
             Stream stream,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Door CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -281,6 +281,531 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Script = initialValue;
+                this.OpenSound = initialValue;
+                this.CloseSound = initialValue;
+                this.LoopSound = initialValue;
+                this.Flags = initialValue;
+                this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Script,
+                T OpenSound,
+                T CloseSound,
+                T LoopSound,
+                T Flags,
+                T RandomTeleportDestinations)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Script = Script;
+                this.OpenSound = OpenSound;
+                this.CloseSound = CloseSound;
+                this.LoopSound = LoopSound;
+                this.Flags = Flags;
+                this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RandomTeleportDestinations, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Script;
+            public T OpenSound;
+            public T CloseSound;
+            public T LoopSound;
+            public T Flags;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? RandomTeleportDestinations;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
+                if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
+                if (!object.Equals(this.LoopSound, rhs.LoopSound)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.RandomTeleportDestinations, rhs.RandomTeleportDestinations)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.OpenSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.CloseSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.LoopSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.RandomTeleportDestinations?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (!eval(this.OpenSound)) return false;
+                if (!eval(this.CloseSound)) return false;
+                if (!eval(this.LoopSound)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.RandomTeleportDestinations != null)
+                {
+                    if (!eval(this.RandomTeleportDestinations.Overall)) return false;
+                    if (this.RandomTeleportDestinations.Specific != null)
+                    {
+                        foreach (var item in this.RandomTeleportDestinations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Door.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.OpenSound = eval(this.OpenSound);
+                obj.CloseSound = eval(this.CloseSound);
+                obj.LoopSound = eval(this.LoopSound);
+                obj.Flags = eval(this.Flags);
+                if (RandomTeleportDestinations != null)
+                {
+                    obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RandomTeleportDestinations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RandomTeleportDestinations.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RandomTeleportDestinations.Specific = l;
+                        foreach (var item in RandomTeleportDestinations.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Door.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Door.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Door.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.OpenSound ?? true)
+                    {
+                        fg.AppendLine($"OpenSound => {OpenSound}");
+                    }
+                    if (printMask?.CloseSound ?? true)
+                    {
+                        fg.AppendLine($"CloseSound => {CloseSound}");
+                    }
+                    if (printMask?.LoopSound ?? true)
+                    {
+                        fg.AppendLine($"LoopSound => {LoopSound}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.RandomTeleportDestinations?.Overall ?? true)
+                    {
+                        fg.AppendLine("RandomTeleportDestinations =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (RandomTeleportDestinations != null)
+                            {
+                                if (RandomTeleportDestinations.Overall != null)
+                                {
+                                    fg.AppendLine(RandomTeleportDestinations.Overall.ToString());
+                                }
+                                if (RandomTeleportDestinations.Specific != null)
+                                {
+                                    foreach (var subItem in RandomTeleportDestinations.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Script;
+            public Exception? OpenSound;
+            public Exception? CloseSound;
+            public Exception? LoopSound;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RandomTeleportDestinations;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Door_FieldIndex enu = (Door_FieldIndex)index;
+                switch (enu)
+                {
+                    case Door_FieldIndex.Name:
+                        return Name;
+                    case Door_FieldIndex.Model:
+                        return Model;
+                    case Door_FieldIndex.Script:
+                        return Script;
+                    case Door_FieldIndex.OpenSound:
+                        return OpenSound;
+                    case Door_FieldIndex.CloseSound:
+                        return CloseSound;
+                    case Door_FieldIndex.LoopSound:
+                        return LoopSound;
+                    case Door_FieldIndex.Flags:
+                        return Flags;
+                    case Door_FieldIndex.RandomTeleportDestinations:
+                        return RandomTeleportDestinations;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Door_FieldIndex enu = (Door_FieldIndex)index;
+                switch (enu)
+                {
+                    case Door_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Door_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Door_FieldIndex.OpenSound:
+                        this.OpenSound = ex;
+                        break;
+                    case Door_FieldIndex.CloseSound:
+                        this.CloseSound = ex;
+                        break;
+                    case Door_FieldIndex.LoopSound:
+                        this.LoopSound = ex;
+                        break;
+                    case Door_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Door_FieldIndex.RandomTeleportDestinations:
+                        this.RandomTeleportDestinations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Door_FieldIndex enu = (Door_FieldIndex)index;
+                switch (enu)
+                {
+                    case Door_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Door_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Door_FieldIndex.OpenSound:
+                        this.OpenSound = (Exception)obj;
+                        break;
+                    case Door_FieldIndex.CloseSound:
+                        this.CloseSound = (Exception)obj;
+                        break;
+                    case Door_FieldIndex.LoopSound:
+                        this.LoopSound = (Exception)obj;
+                        break;
+                    case Door_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Door_FieldIndex.RandomTeleportDestinations:
+                        this.RandomTeleportDestinations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Script != null) return true;
+                if (OpenSound != null) return true;
+                if (CloseSound != null) return true;
+                if (LoopSound != null) return true;
+                if (Flags != null) return true;
+                if (RandomTeleportDestinations != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"OpenSound => {OpenSound}");
+                fg.AppendLine($"CloseSound => {CloseSound}");
+                fg.AppendLine($"LoopSound => {LoopSound}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine("RandomTeleportDestinations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (RandomTeleportDestinations != null)
+                    {
+                        if (RandomTeleportDestinations.Overall != null)
+                        {
+                            fg.AppendLine(RandomTeleportDestinations.Overall.ToString());
+                        }
+                        if (RandomTeleportDestinations.Specific != null)
+                        {
+                            foreach (var subItem in RandomTeleportDestinations.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
+                ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
+                ret.LoopSound = this.LoopSound.Combine(rhs.LoopSound);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.RandomTeleportDestinations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RandomTeleportDestinations?.Overall, rhs.RandomTeleportDestinations?.Overall), ExceptionExt.Combine(this.RandomTeleportDestinations?.Specific, rhs.RandomTeleportDestinations?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Script;
+            public bool OpenSound;
+            public bool CloseSound;
+            public bool LoopSound;
+            public bool Flags;
+            public bool RandomTeleportDestinations;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.OpenSound = defaultOn;
+                this.CloseSound = defaultOn;
+                this.LoopSound = defaultOn;
+                this.Flags = defaultOn;
+                this.RandomTeleportDestinations = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((OpenSound, null));
+                ret.Add((CloseSound, null));
+                ret.Add((LoopSound, null));
+                ret.Add((Flags, null));
+                ret.Add((RandomTeleportDestinations, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -412,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Door_Mask<bool> GetEqualsMask(
+        public static Door.Mask<bool> GetEqualsMask(
             this IDoorGetter item,
             IDoorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -426,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IDoorGetter item,
             string? name = null,
-            Door_Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -438,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorGetter item,
             FileGeneration fg,
             string? name = null,
-            Door_Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -449,16 +974,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IDoorGetter item,
-            Door_Mask<bool?> checkMask)
+            Door.Mask<bool?> checkMask)
         {
             return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Door_Mask<bool> GetHasBeenSetMask(this IDoorGetter item)
+        public static Door.Mask<bool> GetHasBeenSetMask(this IDoorGetter item)
         {
-            var ret = new Door_Mask<bool>(false);
+            var ret = new Door.Mask<bool>(false);
             ((DoorCommon)((IDoorGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -477,8 +1002,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IDoorInternal lhs,
             IDoorGetter rhs,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? copyMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -486,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Door.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -504,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door DeepCopy(
             this IDoorGetter item,
-            Door_TranslationMask? copyMask = null)
+            Door.TranslationMask? copyMask = null)
         {
             return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -513,8 +1038,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Door DeepCopy(
             this IDoorGetter item,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? copyMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? copyMask = null)
         {
             return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -538,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDoorInternal item,
             XElement node,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -551,8 +1076,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDoorInternal item,
             XElement node,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -560,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Door.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -579,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDoorInternal item,
             string path,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -591,8 +1116,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDoorInternal item,
             string path,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -606,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -619,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDoorInternal item,
             Stream stream,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -631,8 +1156,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDoorInternal item,
             Stream stream,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -646,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Door_TranslationMask? translationMask = null)
+            Door.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -731,9 +1256,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 13;
 
-        public static readonly Type MaskType = typeof(Door_Mask<>);
+        public static readonly Type MaskType = typeof(Door.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Door_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Door.ErrorMask);
 
         public static readonly Type ClassType = typeof(Door);
 
@@ -1186,12 +1711,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly DoorCommon Instance = new DoorCommon();
 
-        public Door_Mask<bool> GetEqualsMask(
+        public Door.Mask<bool> GetEqualsMask(
             IDoorGetter item,
             IDoorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Door_Mask<bool>(false);
+            var ret = new Door.Mask<bool>(false);
             ((DoorCommon)((IDoorGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1203,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IDoorGetter item,
             IDoorGetter rhs,
-            Door_Mask<bool> ret,
+            Door.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1228,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IDoorGetter item,
             string? name = null,
-            Door_Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1243,7 +1768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDoorGetter item,
             FileGeneration fg,
             string? name = null,
-            Door_Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1267,7 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IDoorGetter item,
             FileGeneration fg,
-            Door_Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1323,7 +1848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IDoorGetter item,
-            Door_Mask<bool?> checkMask)
+            Door.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1341,11 +1866,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IDoorGetter item,
-            Door_Mask<bool> mask)
+            Door.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
             mask.OpenSound = item.OpenSound.HasBeenSet;
             mask.CloseSound = item.CloseSound.HasBeenSet;
@@ -1679,7 +2204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Door DeepCopy(
             IDoorGetter item,
-            Door_TranslationMask? copyMask = null)
+            Door.TranslationMask? copyMask = null)
         {
             Door ret = (Door)((DoorCommon)((IDoorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1690,8 +2215,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Door DeepCopy(
             IDoorGetter item,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? copyMask = null)
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? copyMask = null)
         {
             Door ret = (Door)((DoorCommon)((IDoorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2142,8 +2667,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDoorGetter item,
             XElement node,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null,
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2153,14 +2678,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Door.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IDoorGetter item,
             string path,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null,
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2176,8 +2701,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDoorGetter item,
             Stream stream,
-            out Door_ErrorMask errorMask,
-            Door_TranslationMask? translationMask = null,
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2194,530 +2719,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Door_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Door_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Door_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Script = initialValue;
-            this.OpenSound = initialValue;
-            this.CloseSound = initialValue;
-            this.LoopSound = initialValue;
-            this.Flags = initialValue;
-            this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public Door_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Script,
-            T OpenSound,
-            T CloseSound,
-            T LoopSound,
-            T Flags,
-            T RandomTeleportDestinations)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Script = Script;
-            this.OpenSound = OpenSound;
-            this.CloseSound = CloseSound;
-            this.LoopSound = LoopSound;
-            this.Flags = Flags;
-            this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RandomTeleportDestinations, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected Door_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Script;
-        public T OpenSound;
-        public T CloseSound;
-        public T LoopSound;
-        public T Flags;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? RandomTeleportDestinations;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Door_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Door_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
-            if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
-            if (!object.Equals(this.LoopSound, rhs.LoopSound)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.RandomTeleportDestinations, rhs.RandomTeleportDestinations)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.OpenSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.CloseSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.LoopSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.RandomTeleportDestinations?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Script)) return false;
-            if (!eval(this.OpenSound)) return false;
-            if (!eval(this.CloseSound)) return false;
-            if (!eval(this.LoopSound)) return false;
-            if (!eval(this.Flags)) return false;
-            if (this.RandomTeleportDestinations != null)
-            {
-                if (!eval(this.RandomTeleportDestinations.Overall)) return false;
-                if (this.RandomTeleportDestinations.Specific != null)
-                {
-                    foreach (var item in this.RandomTeleportDestinations.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Door_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Door_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Door_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Script = eval(this.Script);
-            obj.OpenSound = eval(this.OpenSound);
-            obj.CloseSound = eval(this.CloseSound);
-            obj.LoopSound = eval(this.LoopSound);
-            obj.Flags = eval(this.Flags);
-            if (RandomTeleportDestinations != null)
-            {
-                obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RandomTeleportDestinations.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (RandomTeleportDestinations.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.RandomTeleportDestinations.Specific = l;
-                    foreach (var item in RandomTeleportDestinations.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Door_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Door_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Door_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.OpenSound ?? true)
-                {
-                    fg.AppendLine($"OpenSound => {OpenSound}");
-                }
-                if (printMask?.CloseSound ?? true)
-                {
-                    fg.AppendLine($"CloseSound => {CloseSound}");
-                }
-                if (printMask?.LoopSound ?? true)
-                {
-                    fg.AppendLine($"LoopSound => {LoopSound}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.RandomTeleportDestinations?.Overall ?? true)
-                {
-                    fg.AppendLine("RandomTeleportDestinations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (RandomTeleportDestinations != null)
-                        {
-                            if (RandomTeleportDestinations.Overall != null)
-                            {
-                                fg.AppendLine(RandomTeleportDestinations.Overall.ToString());
-                            }
-                            if (RandomTeleportDestinations.Specific != null)
-                            {
-                                foreach (var subItem in RandomTeleportDestinations.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Door_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Door_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Script;
-        public Exception? OpenSound;
-        public Exception? CloseSound;
-        public Exception? LoopSound;
-        public Exception? Flags;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RandomTeleportDestinations;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    return Name;
-                case Door_FieldIndex.Model:
-                    return Model;
-                case Door_FieldIndex.Script:
-                    return Script;
-                case Door_FieldIndex.OpenSound:
-                    return OpenSound;
-                case Door_FieldIndex.CloseSound:
-                    return CloseSound;
-                case Door_FieldIndex.LoopSound:
-                    return LoopSound;
-                case Door_FieldIndex.Flags:
-                    return Flags;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    return RandomTeleportDestinations;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Door_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Door_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    this.OpenSound = ex;
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    this.CloseSound = ex;
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    this.LoopSound = ex;
-                    break;
-                case Door_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    this.RandomTeleportDestinations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Door_FieldIndex enu = (Door_FieldIndex)index;
-            switch (enu)
-            {
-                case Door_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Door_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Door_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Door_FieldIndex.OpenSound:
-                    this.OpenSound = (Exception)obj;
-                    break;
-                case Door_FieldIndex.CloseSound:
-                    this.CloseSound = (Exception)obj;
-                    break;
-                case Door_FieldIndex.LoopSound:
-                    this.LoopSound = (Exception)obj;
-                    break;
-                case Door_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Door_FieldIndex.RandomTeleportDestinations:
-                    this.RandomTeleportDestinations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Script != null) return true;
-            if (OpenSound != null) return true;
-            if (CloseSound != null) return true;
-            if (LoopSound != null) return true;
-            if (Flags != null) return true;
-            if (RandomTeleportDestinations != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Door_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"OpenSound => {OpenSound}");
-            fg.AppendLine($"CloseSound => {CloseSound}");
-            fg.AppendLine($"LoopSound => {LoopSound}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("RandomTeleportDestinations =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (RandomTeleportDestinations != null)
-                {
-                    if (RandomTeleportDestinations.Overall != null)
-                    {
-                        fg.AppendLine(RandomTeleportDestinations.Overall.ToString());
-                    }
-                    if (RandomTeleportDestinations.Specific != null)
-                    {
-                        foreach (var subItem in RandomTeleportDestinations.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public Door_ErrorMask Combine(Door_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Door_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
-            ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
-            ret.LoopSound = this.LoopSound.Combine(rhs.LoopSound);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.RandomTeleportDestinations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RandomTeleportDestinations?.Overall, rhs.RandomTeleportDestinations?.Overall), ExceptionExt.Combine(this.RandomTeleportDestinations?.Specific, rhs.RandomTeleportDestinations?.Specific));
-            return ret;
-        }
-        public static Door_ErrorMask? Combine(Door_ErrorMask? lhs, Door_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Door_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Door_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Door_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Script;
-        public bool OpenSound;
-        public bool CloseSound;
-        public bool LoopSound;
-        public bool Flags;
-        public bool RandomTeleportDestinations;
-        #endregion
-
-        #region Ctors
-        public Door_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.OpenSound = defaultOn;
-            this.CloseSound = defaultOn;
-            this.LoopSound = defaultOn;
-            this.Flags = defaultOn;
-            this.RandomTeleportDestinations = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((OpenSound, null));
-            ret.Add((CloseSound, null));
-            ret.Add((LoopSound, null));
-            ret.Add((Flags, null));
-            ret.Add((RandomTeleportDestinations, null));
-        }
-    }
 }
 #endregion
 

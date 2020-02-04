@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static MajorRecord CreateFromXml(
             XElement node,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -124,15 +124,15 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static MajorRecord CreateFromXml(
             XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MajorRecord.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda
 
         public static MajorRecord CreateFromXml(
             string path,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,8 +165,8 @@ namespace Mutagen.Bethesda
 
         public static MajorRecord CreateFromXml(
             string path,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda
         public static MajorRecord CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda
 
         public static MajorRecord CreateFromXml(
             Stream stream,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda
 
         public static MajorRecord CreateFromXml(
             Stream stream,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda
         public static MajorRecord CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -223,6 +223,347 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.MajorRecordFlagsRaw = initialValue;
+                this.FormKey = initialValue;
+                this.Version = initialValue;
+                this.EditorID = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID)
+            {
+                this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+                this.FormKey = FormKey;
+                this.Version = Version;
+                this.EditorID = EditorID;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T MajorRecordFlagsRaw;
+            public T FormKey;
+            public T Version;
+            public T EditorID;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.MajorRecordFlagsRaw, rhs.MajorRecordFlagsRaw)) return false;
+                if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
+                if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.MajorRecordFlagsRaw?.GetHashCode());
+                ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
+                ret = ret.CombineHashCode(this.Version?.GetHashCode());
+                ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public virtual bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.MajorRecordFlagsRaw)) return false;
+                if (!eval(this.FormKey)) return false;
+                if (!eval(this.Version)) return false;
+                if (!eval(this.EditorID)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new MajorRecord.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.MajorRecordFlagsRaw = eval(this.MajorRecordFlagsRaw);
+                obj.FormKey = eval(this.FormKey);
+                obj.Version = eval(this.Version);
+                obj.EditorID = eval(this.EditorID);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(MajorRecord.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, MajorRecord.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(MajorRecord.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.MajorRecordFlagsRaw ?? true)
+                    {
+                        fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
+                    }
+                    if (printMask?.FormKey ?? true)
+                    {
+                        fg.AppendLine($"FormKey => {FormKey}");
+                    }
+                    if (printMask?.Version ?? true)
+                    {
+                        fg.AppendLine($"Version => {Version}");
+                    }
+                    if (printMask?.EditorID ?? true)
+                    {
+                        fg.AppendLine($"EditorID => {EditorID}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? MajorRecordFlagsRaw;
+            public Exception? FormKey;
+            public Exception? Version;
+            public Exception? EditorID;
+            #endregion
+
+            #region IErrorMask
+            public virtual object? GetNthMask(int index)
+            {
+                MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
+                switch (enu)
+                {
+                    case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                        return MajorRecordFlagsRaw;
+                    case MajorRecord_FieldIndex.FormKey:
+                        return FormKey;
+                    case MajorRecord_FieldIndex.Version:
+                        return Version;
+                    case MajorRecord_FieldIndex.EditorID:
+                        return EditorID;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthException(int index, Exception ex)
+            {
+                MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
+                switch (enu)
+                {
+                    case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                        this.MajorRecordFlagsRaw = ex;
+                        break;
+                    case MajorRecord_FieldIndex.FormKey:
+                        this.FormKey = ex;
+                        break;
+                    case MajorRecord_FieldIndex.Version:
+                        this.Version = ex;
+                        break;
+                    case MajorRecord_FieldIndex.EditorID:
+                        this.EditorID = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthMask(int index, object obj)
+            {
+                MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
+                switch (enu)
+                {
+                    case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                        this.MajorRecordFlagsRaw = (Exception)obj;
+                        break;
+                    case MajorRecord_FieldIndex.FormKey:
+                        this.FormKey = (Exception)obj;
+                        break;
+                    case MajorRecord_FieldIndex.Version:
+                        this.Version = (Exception)obj;
+                        break;
+                    case MajorRecord_FieldIndex.EditorID:
+                        this.EditorID = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (MajorRecordFlagsRaw != null) return true;
+                if (FormKey != null) return true;
+                if (Version != null) return true;
+                if (EditorID != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public virtual void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected virtual void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
+                fg.AppendLine($"FormKey => {FormKey}");
+                fg.AppendLine($"Version => {Version}");
+                fg.AppendLine($"EditorID => {EditorID}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.MajorRecordFlagsRaw = this.MajorRecordFlagsRaw.Combine(rhs.MajorRecordFlagsRaw);
+                ret.FormKey = this.FormKey.Combine(rhs.FormKey);
+                ret.Version = this.Version.Combine(rhs.Version);
+                ret.EditorID = this.EditorID.Combine(rhs.EditorID);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool MajorRecordFlagsRaw;
+            public bool FormKey;
+            public bool Version;
+            public bool EditorID;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.MajorRecordFlagsRaw = defaultOn;
+                this.FormKey = defaultOn;
+                this.Version = defaultOn;
+                this.EditorID = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((MajorRecordFlagsRaw, null));
+                ret.Add((FormKey, null));
+                ret.Add((Version, null));
+                ret.Add((EditorID, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -345,7 +686,7 @@ namespace Mutagen.Bethesda
             ((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MajorRecord_Mask<bool> GetEqualsMask(
+        public static MajorRecord.Mask<bool> GetEqualsMask(
             this IMajorRecordGetter item,
             IMajorRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -359,7 +700,7 @@ namespace Mutagen.Bethesda
         public static string ToString(
             this IMajorRecordGetter item,
             string? name = null,
-            MajorRecord_Mask<bool>? printMask = null)
+            MajorRecord.Mask<bool>? printMask = null)
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -371,7 +712,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordGetter item,
             FileGeneration fg,
             string? name = null,
-            MajorRecord_Mask<bool>? printMask = null)
+            MajorRecord.Mask<bool>? printMask = null)
         {
             ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -382,16 +723,16 @@ namespace Mutagen.Bethesda
 
         public static bool HasBeenSet(
             this IMajorRecordGetter item,
-            MajorRecord_Mask<bool?> checkMask)
+            MajorRecord.Mask<bool?> checkMask)
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MajorRecord_Mask<bool> GetHasBeenSetMask(this IMajorRecordGetter item)
+        public static MajorRecord.Mask<bool> GetHasBeenSetMask(this IMajorRecordGetter item)
         {
-            var ret = new MajorRecord_Mask<bool>(false);
+            var ret = new MajorRecord.Mask<bool>(false);
             ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -410,7 +751,7 @@ namespace Mutagen.Bethesda
         public static void DeepCopyIn(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
-            MajorRecord_TranslationMask? copyMask = null)
+            MajorRecord.TranslationMask? copyMask = null)
         {
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -422,8 +763,8 @@ namespace Mutagen.Bethesda
         public static void DeepCopyIn(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? copyMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -431,7 +772,7 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MajorRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -449,7 +790,7 @@ namespace Mutagen.Bethesda
 
         public static MajorRecord DeepCopy(
             this IMajorRecordGetter item,
-            MajorRecord_TranslationMask? copyMask = null)
+            MajorRecord.TranslationMask? copyMask = null)
         {
             return ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -458,8 +799,8 @@ namespace Mutagen.Bethesda
 
         public static MajorRecord DeepCopy(
             this IMajorRecordGetter item,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? copyMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? copyMask = null)
         {
             return ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -483,7 +824,7 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             XElement node,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -496,8 +837,8 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -505,7 +846,7 @@ namespace Mutagen.Bethesda
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MajorRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -524,7 +865,7 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             string path,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -536,8 +877,8 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             string path,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -551,7 +892,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -564,7 +905,7 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             Stream stream,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -576,8 +917,8 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             Stream stream,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -591,7 +932,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -706,9 +1047,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(MajorRecord_Mask<>);
+        public static readonly Type MaskType = typeof(MajorRecord.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MajorRecord_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MajorRecord.ErrorMask);
 
         public static readonly Type ClassType = typeof(MajorRecord);
 
@@ -1208,12 +1549,12 @@ namespace Mutagen.Bethesda.Internals
     {
         public static readonly MajorRecordCommon Instance = new MajorRecordCommon();
 
-        public MajorRecord_Mask<bool> GetEqualsMask(
+        public MajorRecord.Mask<bool> GetEqualsMask(
             IMajorRecordGetter item,
             IMajorRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MajorRecord_Mask<bool>(false);
+            var ret = new MajorRecord.Mask<bool>(false);
             ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1225,7 +1566,7 @@ namespace Mutagen.Bethesda.Internals
         public void FillEqualsMask(
             IMajorRecordGetter item,
             IMajorRecordGetter rhs,
-            MajorRecord_Mask<bool> ret,
+            MajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1238,7 +1579,7 @@ namespace Mutagen.Bethesda.Internals
         public string ToString(
             IMajorRecordGetter item,
             string? name = null,
-            MajorRecord_Mask<bool>? printMask = null)
+            MajorRecord.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1253,7 +1594,7 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordGetter item,
             FileGeneration fg,
             string? name = null,
-            MajorRecord_Mask<bool>? printMask = null)
+            MajorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1277,7 +1618,7 @@ namespace Mutagen.Bethesda.Internals
         protected static void ToStringFields(
             IMajorRecordGetter item,
             FileGeneration fg,
-            MajorRecord_Mask<bool>? printMask = null)
+            MajorRecord.Mask<bool>? printMask = null)
         {
             if (printMask?.MajorRecordFlagsRaw ?? true)
             {
@@ -1299,7 +1640,7 @@ namespace Mutagen.Bethesda.Internals
         
         public bool HasBeenSet(
             IMajorRecordGetter item,
-            MajorRecord_Mask<bool?> checkMask)
+            MajorRecord.Mask<bool?> checkMask)
         {
             if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != (item.EditorID != null)) return false;
             return true;
@@ -1307,7 +1648,7 @@ namespace Mutagen.Bethesda.Internals
         
         public void FillHasBeenSetMask(
             IMajorRecordGetter item,
-            MajorRecord_Mask<bool> mask)
+            MajorRecord.Mask<bool> mask)
         {
             mask.MajorRecordFlagsRaw = true;
             mask.FormKey = true;
@@ -1435,7 +1776,7 @@ namespace Mutagen.Bethesda.Internals
         
         public MajorRecord DeepCopy(
             IMajorRecordGetter item,
-            MajorRecord_TranslationMask? copyMask = null)
+            MajorRecord.TranslationMask? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1446,8 +1787,8 @@ namespace Mutagen.Bethesda.Internals
         
         public MajorRecord DeepCopy(
             IMajorRecordGetter item,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? copyMask = null)
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? copyMask = null)
         {
             MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1731,8 +2072,8 @@ namespace Mutagen.Bethesda
         public static void WriteToXml(
             this IMajorRecordGetter item,
             XElement node,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null,
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1742,14 +2083,14 @@ namespace Mutagen.Bethesda
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MajorRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IMajorRecordGetter item,
             string path,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null,
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1782,8 +2123,8 @@ namespace Mutagen.Bethesda
         public static void WriteToXml(
             this IMajorRecordGetter item,
             Stream stream,
-            out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask? translationMask = null,
+            out MajorRecord.ErrorMask errorMask,
+            MajorRecord.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1832,7 +2173,7 @@ namespace Mutagen.Bethesda
             this IMajorRecordGetter item,
             XElement node,
             string? name = null,
-            MajorRecord_TranslationMask? translationMask = null)
+            MajorRecord.TranslationMask? translationMask = null)
         {
             ((MajorRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1876,348 +2217,6 @@ namespace Mutagen.Bethesda
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Internals
-{
-    public class MajorRecord_Mask<T> :
-        IMask<T>,
-        IEquatable<MajorRecord_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public MajorRecord_Mask(T initialValue)
-        {
-            this.MajorRecordFlagsRaw = initialValue;
-            this.FormKey = initialValue;
-            this.Version = initialValue;
-            this.EditorID = initialValue;
-        }
-
-        public MajorRecord_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID)
-        {
-            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
-            this.FormKey = FormKey;
-            this.Version = Version;
-            this.EditorID = EditorID;
-        }
-
-        #pragma warning disable CS8618
-        protected MajorRecord_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T MajorRecordFlagsRaw;
-        public T FormKey;
-        public T Version;
-        public T EditorID;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is MajorRecord_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(MajorRecord_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.MajorRecordFlagsRaw, rhs.MajorRecordFlagsRaw)) return false;
-            if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
-            if (!object.Equals(this.Version, rhs.Version)) return false;
-            if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.MajorRecordFlagsRaw?.GetHashCode());
-            ret = ret.CombineHashCode(this.FormKey?.GetHashCode());
-            ret = ret.CombineHashCode(this.Version?.GetHashCode());
-            ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public virtual bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.MajorRecordFlagsRaw)) return false;
-            if (!eval(this.FormKey)) return false;
-            if (!eval(this.Version)) return false;
-            if (!eval(this.EditorID)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public MajorRecord_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new MajorRecord_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(MajorRecord_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.MajorRecordFlagsRaw = eval(this.MajorRecordFlagsRaw);
-            obj.FormKey = eval(this.FormKey);
-            obj.Version = eval(this.Version);
-            obj.EditorID = eval(this.EditorID);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(MajorRecord_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, MajorRecord_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(MajorRecord_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.MajorRecordFlagsRaw ?? true)
-                {
-                    fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
-                }
-                if (printMask?.FormKey ?? true)
-                {
-                    fg.AppendLine($"FormKey => {FormKey}");
-                }
-                if (printMask?.Version ?? true)
-                {
-                    fg.AppendLine($"Version => {Version}");
-                }
-                if (printMask?.EditorID ?? true)
-                {
-                    fg.AppendLine($"EditorID => {EditorID}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class MajorRecord_ErrorMask : IErrorMask, IErrorMask<MajorRecord_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? MajorRecordFlagsRaw;
-        public Exception? FormKey;
-        public Exception? Version;
-        public Exception? EditorID;
-        #endregion
-
-        #region IErrorMask
-        public virtual object? GetNthMask(int index)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return MajorRecordFlagsRaw;
-                case MajorRecord_FieldIndex.FormKey:
-                    return FormKey;
-                case MajorRecord_FieldIndex.Version:
-                    return Version;
-                case MajorRecord_FieldIndex.EditorID:
-                    return EditorID;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthException(int index, Exception ex)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    this.MajorRecordFlagsRaw = ex;
-                    break;
-                case MajorRecord_FieldIndex.FormKey:
-                    this.FormKey = ex;
-                    break;
-                case MajorRecord_FieldIndex.Version:
-                    this.Version = ex;
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    this.EditorID = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthMask(int index, object obj)
-        {
-            MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
-            switch (enu)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    this.MajorRecordFlagsRaw = (Exception)obj;
-                    break;
-                case MajorRecord_FieldIndex.FormKey:
-                    this.FormKey = (Exception)obj;
-                    break;
-                case MajorRecord_FieldIndex.Version:
-                    this.Version = (Exception)obj;
-                    break;
-                case MajorRecord_FieldIndex.EditorID:
-                    this.EditorID = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (MajorRecordFlagsRaw != null) return true;
-            if (FormKey != null) return true;
-            if (Version != null) return true;
-            if (EditorID != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public virtual void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("MajorRecord_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected virtual void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"MajorRecordFlagsRaw => {MajorRecordFlagsRaw}");
-            fg.AppendLine($"FormKey => {FormKey}");
-            fg.AppendLine($"Version => {Version}");
-            fg.AppendLine($"EditorID => {EditorID}");
-        }
-        #endregion
-
-        #region Combine
-        public MajorRecord_ErrorMask Combine(MajorRecord_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new MajorRecord_ErrorMask();
-            ret.MajorRecordFlagsRaw = this.MajorRecordFlagsRaw.Combine(rhs.MajorRecordFlagsRaw);
-            ret.FormKey = this.FormKey.Combine(rhs.FormKey);
-            ret.Version = this.Version.Combine(rhs.Version);
-            ret.EditorID = this.EditorID.Combine(rhs.EditorID);
-            return ret;
-        }
-        public static MajorRecord_ErrorMask? Combine(MajorRecord_ErrorMask? lhs, MajorRecord_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static MajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new MajorRecord_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class MajorRecord_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool MajorRecordFlagsRaw;
-        public bool FormKey;
-        public bool Version;
-        public bool EditorID;
-        #endregion
-
-        #region Ctors
-        public MajorRecord_TranslationMask(bool defaultOn)
-        {
-            this.MajorRecordFlagsRaw = defaultOn;
-            this.FormKey = defaultOn;
-            this.Version = defaultOn;
-            this.EditorID = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((MajorRecordFlagsRaw, null));
-            ret.Add((FormKey, null));
-            ret.Add((Version, null));
-            ret.Add((EditorID, null));
-        }
-    }
 }
 #endregion
 

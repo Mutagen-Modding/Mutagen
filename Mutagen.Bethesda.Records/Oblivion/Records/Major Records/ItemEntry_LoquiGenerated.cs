@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ItemEntry CreateFromXml(
             XElement node,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ItemEntry CreateFromXml(
             XElement node,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ItemEntry.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemEntry CreateFromXml(
             string path,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemEntry CreateFromXml(
             string path,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemEntry CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemEntry CreateFromXml(
             Stream stream,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,8 +200,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemEntry CreateFromXml(
             Stream stream,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemEntry CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,6 +224,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Item = initialValue;
+                this.Count = initialValue;
+            }
+
+            public Mask(
+                T Item,
+                T Count)
+            {
+                this.Item = Item;
+                this.Count = Count;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Item;
+            public T Count;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Item, rhs.Item)) return false;
+                if (!object.Equals(this.Count, rhs.Count)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Item?.GetHashCode());
+                ret = ret.CombineHashCode(this.Count?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Item)) return false;
+                if (!eval(this.Count)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ItemEntry.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Item = eval(this.Item);
+                obj.Count = eval(this.Count);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ItemEntry.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ItemEntry.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ItemEntry.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Item ?? true)
+                    {
+                        fg.AppendLine($"Item => {Item}");
+                    }
+                    if (printMask?.Count ?? true)
+                    {
+                        fg.AppendLine($"Count => {Count}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Item;
+            public Exception? Count;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
+                switch (enu)
+                {
+                    case ItemEntry_FieldIndex.Item:
+                        return Item;
+                    case ItemEntry_FieldIndex.Count:
+                        return Count;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
+                switch (enu)
+                {
+                    case ItemEntry_FieldIndex.Item:
+                        this.Item = ex;
+                        break;
+                    case ItemEntry_FieldIndex.Count:
+                        this.Count = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
+                switch (enu)
+                {
+                    case ItemEntry_FieldIndex.Item:
+                        this.Item = (Exception)obj;
+                        break;
+                    case ItemEntry_FieldIndex.Count:
+                        this.Count = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Item != null) return true;
+                if (Count != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Item => {Item}");
+                fg.AppendLine($"Count => {Count}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Item = this.Item.Combine(rhs.Item);
+                ret.Count = this.Count.Combine(rhs.Count);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Item;
+            public bool Count;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Item = defaultOn;
+                this.Count = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Item, null));
+                ret.Add((Count, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -332,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ItemEntrySetterCommon)((IItemEntryGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ItemEntry_Mask<bool> GetEqualsMask(
+        public static ItemEntry.Mask<bool> GetEqualsMask(
             this IItemEntryGetter item,
             IItemEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -346,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IItemEntryGetter item,
             string? name = null,
-            ItemEntry_Mask<bool>? printMask = null)
+            ItemEntry.Mask<bool>? printMask = null)
         {
             return ((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -358,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntryGetter item,
             FileGeneration fg,
             string? name = null,
-            ItemEntry_Mask<bool>? printMask = null)
+            ItemEntry.Mask<bool>? printMask = null)
         {
             ((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,16 +656,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IItemEntryGetter item,
-            ItemEntry_Mask<bool?> checkMask)
+            ItemEntry.Mask<bool?> checkMask)
         {
             return ((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ItemEntry_Mask<bool> GetHasBeenSetMask(this IItemEntryGetter item)
+        public static ItemEntry.Mask<bool> GetHasBeenSetMask(this IItemEntryGetter item)
         {
-            var ret = new ItemEntry_Mask<bool>(false);
+            var ret = new ItemEntry.Mask<bool>(false);
             ((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -397,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IItemEntry lhs,
             IItemEntryGetter rhs,
-            ItemEntry_TranslationMask? copyMask = null)
+            ItemEntry.TranslationMask? copyMask = null)
         {
             ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -409,8 +696,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IItemEntry lhs,
             IItemEntryGetter rhs,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? copyMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -418,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ItemEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -436,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemEntry DeepCopy(
             this IItemEntryGetter item,
-            ItemEntry_TranslationMask? copyMask = null)
+            ItemEntry.TranslationMask? copyMask = null)
         {
             return ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -445,8 +732,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ItemEntry DeepCopy(
             this IItemEntryGetter item,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? copyMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? copyMask = null)
         {
             return ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -470,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemEntry item,
             XElement node,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -483,8 +770,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemEntry item,
             XElement node,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -492,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ItemEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -511,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemEntry item,
             string path,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -523,8 +810,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemEntry item,
             string path,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -538,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntry item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -551,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemEntry item,
             Stream stream,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -563,8 +850,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IItemEntry item,
             Stream stream,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -578,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntry item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -652,9 +939,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ItemEntry_Mask<>);
+        public static readonly Type MaskType = typeof(ItemEntry.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ItemEntry_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ItemEntry.ErrorMask);
 
         public static readonly Type ClassType = typeof(ItemEntry);
 
@@ -900,12 +1187,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ItemEntryCommon Instance = new ItemEntryCommon();
 
-        public ItemEntry_Mask<bool> GetEqualsMask(
+        public ItemEntry.Mask<bool> GetEqualsMask(
             IItemEntryGetter item,
             IItemEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ItemEntry_Mask<bool>(false);
+            var ret = new ItemEntry.Mask<bool>(false);
             ((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IItemEntryGetter item,
             IItemEntryGetter rhs,
-            ItemEntry_Mask<bool> ret,
+            ItemEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -928,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IItemEntryGetter item,
             string? name = null,
-            ItemEntry_Mask<bool>? printMask = null)
+            ItemEntry.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -943,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemEntryGetter item,
             FileGeneration fg,
             string? name = null,
-            ItemEntry_Mask<bool>? printMask = null)
+            ItemEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -967,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IItemEntryGetter item,
             FileGeneration fg,
-            ItemEntry_Mask<bool>? printMask = null)
+            ItemEntry.Mask<bool>? printMask = null)
         {
             if (printMask?.Item ?? true)
             {
@@ -981,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IItemEntryGetter item,
-            ItemEntry_Mask<bool?> checkMask)
+            ItemEntry.Mask<bool?> checkMask)
         {
             if (checkMask.Count.HasValue && checkMask.Count.Value != (item.Count != null)) return false;
             return true;
@@ -989,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IItemEntryGetter item,
-            ItemEntry_Mask<bool> mask)
+            ItemEntry.Mask<bool> mask)
         {
             mask.Item = true;
             mask.Count = (item.Count != null);
@@ -1061,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ItemEntry DeepCopy(
             IItemEntryGetter item,
-            ItemEntry_TranslationMask? copyMask = null)
+            ItemEntry.TranslationMask? copyMask = null)
         {
             ItemEntry ret = (ItemEntry)((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1072,8 +1359,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ItemEntry DeepCopy(
             IItemEntryGetter item,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? copyMask = null)
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? copyMask = null)
         {
             ItemEntry ret = (ItemEntry)((ItemEntryCommon)((IItemEntryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1322,8 +1609,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IItemEntryGetter item,
             XElement node,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null,
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1333,14 +1620,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ItemEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IItemEntryGetter item,
             string path,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null,
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1373,8 +1660,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IItemEntryGetter item,
             Stream stream,
-            out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask? translationMask = null,
+            out ItemEntry.ErrorMask errorMask,
+            ItemEntry.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1423,7 +1710,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntryGetter item,
             XElement node,
             string? name = null,
-            ItemEntry_TranslationMask? translationMask = null)
+            ItemEntry.TranslationMask? translationMask = null)
         {
             ((ItemEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1467,294 +1754,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class ItemEntry_Mask<T> :
-        IMask<T>,
-        IEquatable<ItemEntry_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ItemEntry_Mask(T initialValue)
-        {
-            this.Item = initialValue;
-            this.Count = initialValue;
-        }
-
-        public ItemEntry_Mask(
-            T Item,
-            T Count)
-        {
-            this.Item = Item;
-            this.Count = Count;
-        }
-
-        #pragma warning disable CS8618
-        protected ItemEntry_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Item;
-        public T Count;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ItemEntry_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ItemEntry_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Item, rhs.Item)) return false;
-            if (!object.Equals(this.Count, rhs.Count)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Item?.GetHashCode());
-            ret = ret.CombineHashCode(this.Count?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Item)) return false;
-            if (!eval(this.Count)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ItemEntry_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ItemEntry_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ItemEntry_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Item = eval(this.Item);
-            obj.Count = eval(this.Count);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ItemEntry_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ItemEntry_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ItemEntry_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Item ?? true)
-                {
-                    fg.AppendLine($"Item => {Item}");
-                }
-                if (printMask?.Count ?? true)
-                {
-                    fg.AppendLine($"Count => {Count}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ItemEntry_ErrorMask : IErrorMask, IErrorMask<ItemEntry_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Item;
-        public Exception? Count;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    return Item;
-                case ItemEntry_FieldIndex.Count:
-                    return Count;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    this.Item = ex;
-                    break;
-                case ItemEntry_FieldIndex.Count:
-                    this.Count = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ItemEntry_FieldIndex enu = (ItemEntry_FieldIndex)index;
-            switch (enu)
-            {
-                case ItemEntry_FieldIndex.Item:
-                    this.Item = (Exception)obj;
-                    break;
-                case ItemEntry_FieldIndex.Count:
-                    this.Count = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Item != null) return true;
-            if (Count != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ItemEntry_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Item => {Item}");
-            fg.AppendLine($"Count => {Count}");
-        }
-        #endregion
-
-        #region Combine
-        public ItemEntry_ErrorMask Combine(ItemEntry_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ItemEntry_ErrorMask();
-            ret.Item = this.Item.Combine(rhs.Item);
-            ret.Count = this.Count.Combine(rhs.Count);
-            return ret;
-        }
-        public static ItemEntry_ErrorMask? Combine(ItemEntry_ErrorMask? lhs, ItemEntry_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ItemEntry_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ItemEntry_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ItemEntry_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Item;
-        public bool Count;
-        #endregion
-
-        #region Ctors
-        public ItemEntry_TranslationMask(bool defaultOn)
-        {
-            this.Item = defaultOn;
-            this.Count = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Item, null));
-            ret.Add((Count, null));
-        }
-    }
 }
 #endregion
 

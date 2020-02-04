@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public static class ListGroupExt
     {
-        public static readonly ListGroup_TranslationMask<CellBlock_TranslationMask> XmlFolderTranslationMask = new ListGroup_TranslationMask<CellBlock_TranslationMask>(true)
+        public static readonly ListGroup.TranslationMask<CellBlock.TranslationMask> XmlFolderTranslationMask = new ListGroup.TranslationMask<CellBlock.TranslationMask>(true)
         {
-            Records = new MaskItem<bool, CellBlock_TranslationMask?>(false, default)
+            Records = new MaskItem<bool, CellBlock.TranslationMask?>(false, default)
         };
 
         public static async Task CreateFromXmlFolder<T>(

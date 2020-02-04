@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static MasterReference CreateFromXml(
             XElement node,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -123,15 +123,15 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static MasterReference CreateFromXml(
             XElement node,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda
 
         public static MasterReference CreateFromXml(
             string path,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda
 
         public static MasterReference CreateFromXml(
             string path,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda
         public static MasterReference CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda
 
         public static MasterReference CreateFromXml(
             Stream stream,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda
 
         public static MasterReference CreateFromXml(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda
         public static MasterReference CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,6 +219,293 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Master = initialValue;
+                this.FileSize = initialValue;
+            }
+
+            public Mask(
+                T Master,
+                T FileSize)
+            {
+                this.Master = Master;
+                this.FileSize = FileSize;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Master;
+            public T FileSize;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Master, rhs.Master)) return false;
+                if (!object.Equals(this.FileSize, rhs.FileSize)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Master?.GetHashCode());
+                ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Master)) return false;
+                if (!eval(this.FileSize)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new MasterReference.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Master = eval(this.Master);
+                obj.FileSize = eval(this.FileSize);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(MasterReference.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, MasterReference.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(MasterReference.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Master ?? true)
+                    {
+                        fg.AppendLine($"Master => {Master}");
+                    }
+                    if (printMask?.FileSize ?? true)
+                    {
+                        fg.AppendLine($"FileSize => {FileSize}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Master;
+            public Exception? FileSize;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+                switch (enu)
+                {
+                    case MasterReference_FieldIndex.Master:
+                        return Master;
+                    case MasterReference_FieldIndex.FileSize:
+                        return FileSize;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+                switch (enu)
+                {
+                    case MasterReference_FieldIndex.Master:
+                        this.Master = ex;
+                        break;
+                    case MasterReference_FieldIndex.FileSize:
+                        this.FileSize = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+                switch (enu)
+                {
+                    case MasterReference_FieldIndex.Master:
+                        this.Master = (Exception)obj;
+                        break;
+                    case MasterReference_FieldIndex.FileSize:
+                        this.FileSize = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Master != null) return true;
+                if (FileSize != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Master => {Master}");
+                fg.AppendLine($"FileSize => {FileSize}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Master = this.Master.Combine(rhs.Master);
+                ret.FileSize = this.FileSize.Combine(rhs.FileSize);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Master;
+            public bool FileSize;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Master = defaultOn;
+                this.FileSize = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Master, null));
+                ret.Add((FileSize, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -324,7 +611,7 @@ namespace Mutagen.Bethesda
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MasterReference_Mask<bool> GetEqualsMask(
+        public static MasterReference.Mask<bool> GetEqualsMask(
             this IMasterReferenceGetter item,
             IMasterReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -338,7 +625,7 @@ namespace Mutagen.Bethesda
         public static string ToString(
             this IMasterReferenceGetter item,
             string? name = null,
-            MasterReference_Mask<bool>? printMask = null)
+            MasterReference.Mask<bool>? printMask = null)
         {
             return ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,7 +637,7 @@ namespace Mutagen.Bethesda
             this IMasterReferenceGetter item,
             FileGeneration fg,
             string? name = null,
-            MasterReference_Mask<bool>? printMask = null)
+            MasterReference.Mask<bool>? printMask = null)
         {
             ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -361,16 +648,16 @@ namespace Mutagen.Bethesda
 
         public static bool HasBeenSet(
             this IMasterReferenceGetter item,
-            MasterReference_Mask<bool?> checkMask)
+            MasterReference.Mask<bool?> checkMask)
         {
             return ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MasterReference_Mask<bool> GetHasBeenSetMask(this IMasterReferenceGetter item)
+        public static MasterReference.Mask<bool> GetHasBeenSetMask(this IMasterReferenceGetter item)
         {
-            var ret = new MasterReference_Mask<bool>(false);
+            var ret = new MasterReference.Mask<bool>(false);
             ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -389,7 +676,7 @@ namespace Mutagen.Bethesda
         public static void DeepCopyIn(
             this IMasterReference lhs,
             IMasterReferenceGetter rhs,
-            MasterReference_TranslationMask? copyMask = null)
+            MasterReference.TranslationMask? copyMask = null)
         {
             ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -401,8 +688,8 @@ namespace Mutagen.Bethesda
         public static void DeepCopyIn(
             this IMasterReference lhs,
             IMasterReferenceGetter rhs,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? copyMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -410,7 +697,7 @@ namespace Mutagen.Bethesda
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -428,7 +715,7 @@ namespace Mutagen.Bethesda
 
         public static MasterReference DeepCopy(
             this IMasterReferenceGetter item,
-            MasterReference_TranslationMask? copyMask = null)
+            MasterReference.TranslationMask? copyMask = null)
         {
             return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -437,8 +724,8 @@ namespace Mutagen.Bethesda
 
         public static MasterReference DeepCopy(
             this IMasterReferenceGetter item,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? copyMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? copyMask = null)
         {
             return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -462,7 +749,7 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMasterReference item,
             XElement node,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -475,8 +762,8 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMasterReference item,
             XElement node,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -484,7 +771,7 @@ namespace Mutagen.Bethesda
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -503,7 +790,7 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMasterReference item,
             string path,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -515,8 +802,8 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMasterReference item,
             string path,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -530,7 +817,7 @@ namespace Mutagen.Bethesda
             this IMasterReference item,
             string path,
             ErrorMaskBuilder? errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -543,7 +830,7 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMasterReference item,
             Stream stream,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -555,8 +842,8 @@ namespace Mutagen.Bethesda
         public static void CopyInFromXml(
             this IMasterReference item,
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -570,7 +857,7 @@ namespace Mutagen.Bethesda
             this IMasterReference item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -644,9 +931,9 @@ namespace Mutagen.Bethesda.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(MasterReference_Mask<>);
+        public static readonly Type MaskType = typeof(MasterReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MasterReference_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MasterReference.ErrorMask);
 
         public static readonly Type ClassType = typeof(MasterReference);
 
@@ -915,12 +1202,12 @@ namespace Mutagen.Bethesda.Internals
     {
         public static readonly MasterReferenceCommon Instance = new MasterReferenceCommon();
 
-        public MasterReference_Mask<bool> GetEqualsMask(
+        public MasterReference.Mask<bool> GetEqualsMask(
             IMasterReferenceGetter item,
             IMasterReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MasterReference_Mask<bool>(false);
+            var ret = new MasterReference.Mask<bool>(false);
             ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -932,7 +1219,7 @@ namespace Mutagen.Bethesda.Internals
         public void FillEqualsMask(
             IMasterReferenceGetter item,
             IMasterReferenceGetter rhs,
-            MasterReference_Mask<bool> ret,
+            MasterReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -943,7 +1230,7 @@ namespace Mutagen.Bethesda.Internals
         public string ToString(
             IMasterReferenceGetter item,
             string? name = null,
-            MasterReference_Mask<bool>? printMask = null)
+            MasterReference.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -958,7 +1245,7 @@ namespace Mutagen.Bethesda.Internals
             IMasterReferenceGetter item,
             FileGeneration fg,
             string? name = null,
-            MasterReference_Mask<bool>? printMask = null)
+            MasterReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -982,7 +1269,7 @@ namespace Mutagen.Bethesda.Internals
         protected static void ToStringFields(
             IMasterReferenceGetter item,
             FileGeneration fg,
-            MasterReference_Mask<bool>? printMask = null)
+            MasterReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Master ?? true)
             {
@@ -996,7 +1283,7 @@ namespace Mutagen.Bethesda.Internals
         
         public bool HasBeenSet(
             IMasterReferenceGetter item,
-            MasterReference_Mask<bool?> checkMask)
+            MasterReference.Mask<bool?> checkMask)
         {
             if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != (item.FileSize != null)) return false;
             return true;
@@ -1004,7 +1291,7 @@ namespace Mutagen.Bethesda.Internals
         
         public void FillHasBeenSetMask(
             IMasterReferenceGetter item,
-            MasterReference_Mask<bool> mask)
+            MasterReference.Mask<bool> mask)
         {
             mask.Master = true;
             mask.FileSize = (item.FileSize != null);
@@ -1075,7 +1362,7 @@ namespace Mutagen.Bethesda.Internals
         
         public MasterReference DeepCopy(
             IMasterReferenceGetter item,
-            MasterReference_TranslationMask? copyMask = null)
+            MasterReference.TranslationMask? copyMask = null)
         {
             MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1086,8 +1373,8 @@ namespace Mutagen.Bethesda.Internals
         
         public MasterReference DeepCopy(
             IMasterReferenceGetter item,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? copyMask = null)
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? copyMask = null)
         {
             MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1335,8 +1622,8 @@ namespace Mutagen.Bethesda
         public static void WriteToXml(
             this IMasterReferenceGetter item,
             XElement node,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null,
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1346,14 +1633,14 @@ namespace Mutagen.Bethesda
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MasterReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IMasterReferenceGetter item,
             string path,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null,
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1386,8 +1673,8 @@ namespace Mutagen.Bethesda
         public static void WriteToXml(
             this IMasterReferenceGetter item,
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask? translationMask = null,
+            out MasterReference.ErrorMask errorMask,
+            MasterReference.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1436,7 +1723,7 @@ namespace Mutagen.Bethesda
             this IMasterReferenceGetter item,
             XElement node,
             string? name = null,
-            MasterReference_TranslationMask? translationMask = null)
+            MasterReference.TranslationMask? translationMask = null)
         {
             ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1480,294 +1767,6 @@ namespace Mutagen.Bethesda
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Internals
-{
-    public class MasterReference_Mask<T> :
-        IMask<T>,
-        IEquatable<MasterReference_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public MasterReference_Mask(T initialValue)
-        {
-            this.Master = initialValue;
-            this.FileSize = initialValue;
-        }
-
-        public MasterReference_Mask(
-            T Master,
-            T FileSize)
-        {
-            this.Master = Master;
-            this.FileSize = FileSize;
-        }
-
-        #pragma warning disable CS8618
-        protected MasterReference_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Master;
-        public T FileSize;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is MasterReference_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(MasterReference_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Master, rhs.Master)) return false;
-            if (!object.Equals(this.FileSize, rhs.FileSize)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Master?.GetHashCode());
-            ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Master)) return false;
-            if (!eval(this.FileSize)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public MasterReference_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new MasterReference_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(MasterReference_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Master = eval(this.Master);
-            obj.FileSize = eval(this.FileSize);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(MasterReference_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, MasterReference_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(MasterReference_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Master ?? true)
-                {
-                    fg.AppendLine($"Master => {Master}");
-                }
-                if (printMask?.FileSize ?? true)
-                {
-                    fg.AppendLine($"FileSize => {FileSize}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class MasterReference_ErrorMask : IErrorMask, IErrorMask<MasterReference_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Master;
-        public Exception? FileSize;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    return Master;
-                case MasterReference_FieldIndex.FileSize:
-                    return FileSize;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = ex;
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
-            switch (enu)
-            {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = (Exception)obj;
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Master != null) return true;
-            if (FileSize != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("MasterReference_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Master => {Master}");
-            fg.AppendLine($"FileSize => {FileSize}");
-        }
-        #endregion
-
-        #region Combine
-        public MasterReference_ErrorMask Combine(MasterReference_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new MasterReference_ErrorMask();
-            ret.Master = this.Master.Combine(rhs.Master);
-            ret.FileSize = this.FileSize.Combine(rhs.FileSize);
-            return ret;
-        }
-        public static MasterReference_ErrorMask? Combine(MasterReference_ErrorMask? lhs, MasterReference_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static MasterReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new MasterReference_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class MasterReference_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Master;
-        public bool FileSize;
-        #endregion
-
-        #region Ctors
-        public MasterReference_TranslationMask(bool defaultOn)
-        {
-            this.Master = defaultOn;
-            this.FileSize = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Master, null));
-            ret.Add((FileSize, null));
-        }
-    }
 }
 #endregion
 

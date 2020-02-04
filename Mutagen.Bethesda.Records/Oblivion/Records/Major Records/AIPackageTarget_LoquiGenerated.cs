@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageTarget CreateFromXml(
             XElement node,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -119,15 +119,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageTarget CreateFromXml(
             XElement node,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageTarget.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageTarget CreateFromXml(
             string path,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageTarget CreateFromXml(
             string path,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageTarget CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageTarget CreateFromXml(
             Stream stream,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageTarget CreateFromXml(
             Stream stream,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageTarget CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,6 +215,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.ObjectType = initialValue;
+                this.Object = initialValue;
+                this.Count = initialValue;
+            }
+
+            public Mask(
+                T ObjectType,
+                T Object,
+                T Count)
+            {
+                this.ObjectType = ObjectType;
+                this.Object = Object;
+                this.Count = Count;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T ObjectType;
+            public T Object;
+            public T Count;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.ObjectType, rhs.ObjectType)) return false;
+                if (!object.Equals(this.Object, rhs.Object)) return false;
+                if (!object.Equals(this.Count, rhs.Count)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.ObjectType?.GetHashCode());
+                ret = ret.CombineHashCode(this.Object?.GetHashCode());
+                ret = ret.CombineHashCode(this.Count?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.ObjectType)) return false;
+                if (!eval(this.Object)) return false;
+                if (!eval(this.Count)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AIPackageTarget.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.ObjectType = eval(this.ObjectType);
+                obj.Object = eval(this.Object);
+                obj.Count = eval(this.Count);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AIPackageTarget.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AIPackageTarget.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AIPackageTarget.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.ObjectType ?? true)
+                    {
+                        fg.AppendLine($"ObjectType => {ObjectType}");
+                    }
+                    if (printMask?.Object ?? true)
+                    {
+                        fg.AppendLine($"Object => {Object}");
+                    }
+                    if (printMask?.Count ?? true)
+                    {
+                        fg.AppendLine($"Count => {Count}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? ObjectType;
+            public Exception? Object;
+            public Exception? Count;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageTarget_FieldIndex.ObjectType:
+                        return ObjectType;
+                    case AIPackageTarget_FieldIndex.Object:
+                        return Object;
+                    case AIPackageTarget_FieldIndex.Count:
+                        return Count;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageTarget_FieldIndex.ObjectType:
+                        this.ObjectType = ex;
+                        break;
+                    case AIPackageTarget_FieldIndex.Object:
+                        this.Object = ex;
+                        break;
+                    case AIPackageTarget_FieldIndex.Count:
+                        this.Count = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageTarget_FieldIndex.ObjectType:
+                        this.ObjectType = (Exception)obj;
+                        break;
+                    case AIPackageTarget_FieldIndex.Object:
+                        this.Object = (Exception)obj;
+                        break;
+                    case AIPackageTarget_FieldIndex.Count:
+                        this.Count = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (ObjectType != null) return true;
+                if (Object != null) return true;
+                if (Count != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"ObjectType => {ObjectType}");
+                fg.AppendLine($"Object => {Object}");
+                fg.AppendLine($"Count => {Count}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.ObjectType = this.ObjectType.Combine(rhs.ObjectType);
+                ret.Object = this.Object.Combine(rhs.Object);
+                ret.Count = this.Count.Combine(rhs.Count);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool ObjectType;
+            public bool Object;
+            public bool Count;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.ObjectType = defaultOn;
+                this.Object = defaultOn;
+                this.Count = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((ObjectType, null));
+                ret.Add((Object, null));
+                ret.Add((Count, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -322,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AIPackageTarget_Mask<bool> GetEqualsMask(
+        public static AIPackageTarget.Mask<bool> GetEqualsMask(
             this IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -336,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAIPackageTargetGetter item,
             string? name = null,
-            AIPackageTarget_Mask<bool>? printMask = null)
+            AIPackageTarget.Mask<bool>? printMask = null)
         {
             return ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -348,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTargetGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackageTarget_Mask<bool>? printMask = null)
+            AIPackageTarget.Mask<bool>? printMask = null)
         {
             ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,16 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAIPackageTargetGetter item,
-            AIPackageTarget_Mask<bool?> checkMask)
+            AIPackageTarget.Mask<bool?> checkMask)
         {
             return ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AIPackageTarget_Mask<bool> GetHasBeenSetMask(this IAIPackageTargetGetter item)
+        public static AIPackageTarget.Mask<bool> GetHasBeenSetMask(this IAIPackageTargetGetter item)
         {
-            var ret = new AIPackageTarget_Mask<bool>(false);
+            var ret = new AIPackageTarget.Mask<bool>(false);
             ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -387,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs,
-            AIPackageTarget_TranslationMask? copyMask = null)
+            AIPackageTarget.TranslationMask? copyMask = null)
         {
             ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -399,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? copyMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -408,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -426,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageTarget DeepCopy(
             this IAIPackageTargetGetter item,
-            AIPackageTarget_TranslationMask? copyMask = null)
+            AIPackageTarget.TranslationMask? copyMask = null)
         {
             return ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -435,8 +749,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageTarget DeepCopy(
             this IAIPackageTargetGetter item,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? copyMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? copyMask = null)
         {
             return ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -460,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             XElement node,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -473,8 +787,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             XElement node,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -482,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -501,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             string path,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,8 +827,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             string path,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTarget item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -541,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             Stream stream,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,8 +867,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             Stream stream,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTarget item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,9 +957,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(AIPackageTarget_Mask<>);
+        public static readonly Type MaskType = typeof(AIPackageTarget.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AIPackageTarget_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AIPackageTarget.ErrorMask);
 
         public static readonly Type ClassType = typeof(AIPackageTarget);
 
@@ -900,12 +1214,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly AIPackageTargetCommon Instance = new AIPackageTargetCommon();
 
-        public AIPackageTarget_Mask<bool> GetEqualsMask(
+        public AIPackageTarget.Mask<bool> GetEqualsMask(
             IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackageTarget_Mask<bool>(false);
+            var ret = new AIPackageTarget.Mask<bool>(false);
             ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAIPackageTargetGetter item,
             IAIPackageTargetGetter rhs,
-            AIPackageTarget_Mask<bool> ret,
+            AIPackageTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -929,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAIPackageTargetGetter item,
             string? name = null,
-            AIPackageTarget_Mask<bool>? printMask = null)
+            AIPackageTarget.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -944,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTargetGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackageTarget_Mask<bool>? printMask = null)
+            AIPackageTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAIPackageTargetGetter item,
             FileGeneration fg,
-            AIPackageTarget_Mask<bool>? printMask = null)
+            AIPackageTarget.Mask<bool>? printMask = null)
         {
             if (printMask?.ObjectType ?? true)
             {
@@ -986,14 +1300,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAIPackageTargetGetter item,
-            AIPackageTarget_Mask<bool?> checkMask)
+            AIPackageTarget.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IAIPackageTargetGetter item,
-            AIPackageTarget_Mask<bool> mask)
+            AIPackageTarget.Mask<bool> mask)
         {
             mask.ObjectType = true;
             mask.Object = true;
@@ -1068,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageTarget DeepCopy(
             IAIPackageTargetGetter item,
-            AIPackageTarget_TranslationMask? copyMask = null)
+            AIPackageTarget.TranslationMask? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1079,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageTarget DeepCopy(
             IAIPackageTargetGetter item,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? copyMask = null)
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? copyMask = null)
         {
             AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1354,8 +1668,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageTargetGetter item,
             XElement node,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null,
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1365,14 +1679,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAIPackageTargetGetter item,
             string path,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null,
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1405,8 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageTargetGetter item,
             Stream stream,
-            out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask? translationMask = null,
+            out AIPackageTarget.ErrorMask errorMask,
+            AIPackageTarget.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1455,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTargetGetter item,
             XElement node,
             string? name = null,
-            AIPackageTarget_TranslationMask? translationMask = null)
+            AIPackageTarget.TranslationMask? translationMask = null)
         {
             ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1499,321 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AIPackageTarget_Mask<T> :
-        IMask<T>,
-        IEquatable<AIPackageTarget_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AIPackageTarget_Mask(T initialValue)
-        {
-            this.ObjectType = initialValue;
-            this.Object = initialValue;
-            this.Count = initialValue;
-        }
-
-        public AIPackageTarget_Mask(
-            T ObjectType,
-            T Object,
-            T Count)
-        {
-            this.ObjectType = ObjectType;
-            this.Object = Object;
-            this.Count = Count;
-        }
-
-        #pragma warning disable CS8618
-        protected AIPackageTarget_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T ObjectType;
-        public T Object;
-        public T Count;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AIPackageTarget_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AIPackageTarget_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.ObjectType, rhs.ObjectType)) return false;
-            if (!object.Equals(this.Object, rhs.Object)) return false;
-            if (!object.Equals(this.Count, rhs.Count)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ObjectType?.GetHashCode());
-            ret = ret.CombineHashCode(this.Object?.GetHashCode());
-            ret = ret.CombineHashCode(this.Count?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.ObjectType)) return false;
-            if (!eval(this.Object)) return false;
-            if (!eval(this.Count)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public AIPackageTarget_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AIPackageTarget_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AIPackageTarget_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.ObjectType = eval(this.ObjectType);
-            obj.Object = eval(this.Object);
-            obj.Count = eval(this.Count);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AIPackageTarget_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AIPackageTarget_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AIPackageTarget_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ObjectType ?? true)
-                {
-                    fg.AppendLine($"ObjectType => {ObjectType}");
-                }
-                if (printMask?.Object ?? true)
-                {
-                    fg.AppendLine($"Object => {Object}");
-                }
-                if (printMask?.Count ?? true)
-                {
-                    fg.AppendLine($"Count => {Count}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AIPackageTarget_ErrorMask : IErrorMask, IErrorMask<AIPackageTarget_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? ObjectType;
-        public Exception? Object;
-        public Exception? Count;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    return ObjectType;
-                case AIPackageTarget_FieldIndex.Object:
-                    return Object;
-                case AIPackageTarget_FieldIndex.Count:
-                    return Count;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    this.ObjectType = ex;
-                    break;
-                case AIPackageTarget_FieldIndex.Object:
-                    this.Object = ex;
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    this.Count = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            AIPackageTarget_FieldIndex enu = (AIPackageTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageTarget_FieldIndex.ObjectType:
-                    this.ObjectType = (Exception)obj;
-                    break;
-                case AIPackageTarget_FieldIndex.Object:
-                    this.Object = (Exception)obj;
-                    break;
-                case AIPackageTarget_FieldIndex.Count:
-                    this.Count = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ObjectType != null) return true;
-            if (Object != null) return true;
-            if (Count != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AIPackageTarget_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"ObjectType => {ObjectType}");
-            fg.AppendLine($"Object => {Object}");
-            fg.AppendLine($"Count => {Count}");
-        }
-        #endregion
-
-        #region Combine
-        public AIPackageTarget_ErrorMask Combine(AIPackageTarget_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AIPackageTarget_ErrorMask();
-            ret.ObjectType = this.ObjectType.Combine(rhs.ObjectType);
-            ret.Object = this.Object.Combine(rhs.Object);
-            ret.Count = this.Count.Combine(rhs.Count);
-            return ret;
-        }
-        public static AIPackageTarget_ErrorMask? Combine(AIPackageTarget_ErrorMask? lhs, AIPackageTarget_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static AIPackageTarget_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AIPackageTarget_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AIPackageTarget_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool ObjectType;
-        public bool Object;
-        public bool Count;
-        #endregion
-
-        #region Ctors
-        public AIPackageTarget_TranslationMask(bool defaultOn)
-        {
-            this.ObjectType = defaultOn;
-            this.Object = defaultOn;
-            this.Count = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((ObjectType, null));
-            ret.Add((Object, null));
-            ret.Add((Count, null));
-        }
-    }
 }
 #endregion
 

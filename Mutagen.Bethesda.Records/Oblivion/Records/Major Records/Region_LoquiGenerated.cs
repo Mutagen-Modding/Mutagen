@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Region CreateFromXml(
             XElement node,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -209,15 +209,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Region CreateFromXml(
             XElement node,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Region CreateFromXml(
             string path,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -247,8 +247,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Region CreateFromXml(
             string path,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Region CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Region CreateFromXml(
             Stream stream,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -281,8 +281,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Region CreateFromXml(
             Stream stream,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Region CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -305,6 +305,576 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Icon = initialValue;
+                this.MapColor = initialValue;
+                this.Worldspace = initialValue;
+                this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RegionArea.Mask<T>?>>());
+                this.Objects = new MaskItem<T, RegionDataObjects.Mask<T>?>(initialValue, new RegionDataObjects.Mask<T>(initialValue));
+                this.Weather = new MaskItem<T, RegionDataWeather.Mask<T>?>(initialValue, new RegionDataWeather.Mask<T>(initialValue));
+                this.MapName = new MaskItem<T, RegionDataMapName.Mask<T>?>(initialValue, new RegionDataMapName.Mask<T>(initialValue));
+                this.Grasses = new MaskItem<T, RegionDataGrasses.Mask<T>?>(initialValue, new RegionDataGrasses.Mask<T>(initialValue));
+                this.Sounds = new MaskItem<T, RegionDataSounds.Mask<T>?>(initialValue, new RegionDataSounds.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Icon,
+                T MapColor,
+                T Worldspace,
+                T Areas,
+                T Objects,
+                T Weather,
+                T MapName,
+                T Grasses,
+                T Sounds)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Icon = Icon;
+                this.MapColor = MapColor;
+                this.Worldspace = Worldspace;
+                this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea.Mask<T>?>>>(Areas, Enumerable.Empty<MaskItemIndexed<T, RegionArea.Mask<T>?>>());
+                this.Objects = new MaskItem<T, RegionDataObjects.Mask<T>?>(Objects, new RegionDataObjects.Mask<T>(Objects));
+                this.Weather = new MaskItem<T, RegionDataWeather.Mask<T>?>(Weather, new RegionDataWeather.Mask<T>(Weather));
+                this.MapName = new MaskItem<T, RegionDataMapName.Mask<T>?>(MapName, new RegionDataMapName.Mask<T>(MapName));
+                this.Grasses = new MaskItem<T, RegionDataGrasses.Mask<T>?>(Grasses, new RegionDataGrasses.Mask<T>(Grasses));
+                this.Sounds = new MaskItem<T, RegionDataSounds.Mask<T>?>(Sounds, new RegionDataSounds.Mask<T>(Sounds));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Icon;
+            public T MapColor;
+            public T Worldspace;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea.Mask<T>?>>>? Areas;
+            public MaskItem<T, RegionDataObjects.Mask<T>?>? Objects { get; set; }
+            public MaskItem<T, RegionDataWeather.Mask<T>?>? Weather { get; set; }
+            public MaskItem<T, RegionDataMapName.Mask<T>?>? MapName { get; set; }
+            public MaskItem<T, RegionDataGrasses.Mask<T>?>? Grasses { get; set; }
+            public MaskItem<T, RegionDataSounds.Mask<T>?>? Sounds { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.MapColor, rhs.MapColor)) return false;
+                if (!object.Equals(this.Worldspace, rhs.Worldspace)) return false;
+                if (!object.Equals(this.Areas, rhs.Areas)) return false;
+                if (!object.Equals(this.Objects, rhs.Objects)) return false;
+                if (!object.Equals(this.Weather, rhs.Weather)) return false;
+                if (!object.Equals(this.MapName, rhs.MapName)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.MapColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.Worldspace?.GetHashCode());
+                ret = ret.CombineHashCode(this.Areas?.GetHashCode());
+                ret = ret.CombineHashCode(this.Objects?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weather?.GetHashCode());
+                ret = ret.CombineHashCode(this.MapName?.GetHashCode());
+                ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.MapColor)) return false;
+                if (!eval(this.Worldspace)) return false;
+                if (this.Areas != null)
+                {
+                    if (!eval(this.Areas.Overall)) return false;
+                    if (this.Areas.Specific != null)
+                    {
+                        foreach (var item in this.Areas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (Objects != null)
+                {
+                    if (!eval(this.Objects.Overall)) return false;
+                    if (this.Objects.Specific != null && !this.Objects.Specific.AllEqual(eval)) return false;
+                }
+                if (Weather != null)
+                {
+                    if (!eval(this.Weather.Overall)) return false;
+                    if (this.Weather.Specific != null && !this.Weather.Specific.AllEqual(eval)) return false;
+                }
+                if (MapName != null)
+                {
+                    if (!eval(this.MapName.Overall)) return false;
+                    if (this.MapName.Specific != null && !this.MapName.Specific.AllEqual(eval)) return false;
+                }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.AllEqual(eval)) return false;
+                }
+                if (Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Region.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Icon = eval(this.Icon);
+                obj.MapColor = eval(this.MapColor);
+                obj.Worldspace = eval(this.Worldspace);
+                if (Areas != null)
+                {
+                    obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>>(eval(this.Areas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    if (Areas.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
+                        obj.Areas.Specific = l;
+                        foreach (var item in Areas.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Objects = this.Objects == null ? null : new MaskItem<R, RegionDataObjects.Mask<R>?>(eval(this.Objects.Overall), this.Objects.Specific?.Translate(eval));
+                obj.Weather = this.Weather == null ? null : new MaskItem<R, RegionDataWeather.Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
+                obj.MapName = this.MapName == null ? null : new MaskItem<R, RegionDataMapName.Mask<R>?>(eval(this.MapName.Overall), this.MapName.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, RegionDataGrasses.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionDataSounds.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Region.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Region.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Region.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.MapColor ?? true)
+                    {
+                        fg.AppendLine($"MapColor => {MapColor}");
+                    }
+                    if (printMask?.Worldspace ?? true)
+                    {
+                        fg.AppendLine($"Worldspace => {Worldspace}");
+                    }
+                    if (printMask?.Areas?.Overall ?? true)
+                    {
+                        fg.AppendLine("Areas =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Areas != null)
+                            {
+                                if (Areas.Overall != null)
+                                {
+                                    fg.AppendLine(Areas.Overall.ToString());
+                                }
+                                if (Areas.Specific != null)
+                                {
+                                    foreach (var subItem in Areas.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Objects?.Overall ?? true)
+                    {
+                        Objects?.ToString(fg);
+                    }
+                    if (printMask?.Weather?.Overall ?? true)
+                    {
+                        Weather?.ToString(fg);
+                    }
+                    if (printMask?.MapName?.Overall ?? true)
+                    {
+                        MapName?.ToString(fg);
+                    }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.ToString(fg);
+                    }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        Sounds?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Icon;
+            public Exception? MapColor;
+            public Exception? Worldspace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>? Areas;
+            public MaskItem<Exception?, RegionDataObjects.ErrorMask?>? Objects;
+            public MaskItem<Exception?, RegionDataWeather.ErrorMask?>? Weather;
+            public MaskItem<Exception?, RegionDataMapName.ErrorMask?>? MapName;
+            public MaskItem<Exception?, RegionDataGrasses.ErrorMask?>? Grasses;
+            public MaskItem<Exception?, RegionDataSounds.ErrorMask?>? Sounds;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Region_FieldIndex enu = (Region_FieldIndex)index;
+                switch (enu)
+                {
+                    case Region_FieldIndex.Icon:
+                        return Icon;
+                    case Region_FieldIndex.MapColor:
+                        return MapColor;
+                    case Region_FieldIndex.Worldspace:
+                        return Worldspace;
+                    case Region_FieldIndex.Areas:
+                        return Areas;
+                    case Region_FieldIndex.Objects:
+                        return Objects;
+                    case Region_FieldIndex.Weather:
+                        return Weather;
+                    case Region_FieldIndex.MapName:
+                        return MapName;
+                    case Region_FieldIndex.Grasses:
+                        return Grasses;
+                    case Region_FieldIndex.Sounds:
+                        return Sounds;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Region_FieldIndex enu = (Region_FieldIndex)index;
+                switch (enu)
+                {
+                    case Region_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = ex;
+                        break;
+                    case Region_FieldIndex.Worldspace:
+                        this.Worldspace = ex;
+                        break;
+                    case Region_FieldIndex.Areas:
+                        this.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Objects:
+                        this.Objects = new MaskItem<Exception?, RegionDataObjects.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = new MaskItem<Exception?, RegionDataWeather.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.MapName:
+                        this.MapName = new MaskItem<Exception?, RegionDataMapName.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, RegionDataGrasses.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, RegionDataSounds.ErrorMask?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Region_FieldIndex enu = (Region_FieldIndex)index;
+                switch (enu)
+                {
+                    case Region_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = (Exception)obj;
+                        break;
+                    case Region_FieldIndex.Worldspace:
+                        this.Worldspace = (Exception)obj;
+                        break;
+                    case Region_FieldIndex.Areas:
+                        this.Areas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
+                        break;
+                    case Region_FieldIndex.Objects:
+                        this.Objects = (MaskItem<Exception?, RegionDataObjects.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = (MaskItem<Exception?, RegionDataWeather.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.MapName:
+                        this.MapName = (MaskItem<Exception?, RegionDataMapName.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, RegionDataGrasses.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, RegionDataSounds.ErrorMask?>?)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Icon != null) return true;
+                if (MapColor != null) return true;
+                if (Worldspace != null) return true;
+                if (Areas != null) return true;
+                if (Objects != null) return true;
+                if (Weather != null) return true;
+                if (MapName != null) return true;
+                if (Grasses != null) return true;
+                if (Sounds != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"MapColor => {MapColor}");
+                fg.AppendLine($"Worldspace => {Worldspace}");
+                fg.AppendLine("Areas =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Areas != null)
+                    {
+                        if (Areas.Overall != null)
+                        {
+                            fg.AppendLine(Areas.Overall.ToString());
+                        }
+                        if (Areas.Specific != null)
+                        {
+                            foreach (var subItem in Areas.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                Objects?.ToString(fg);
+                Weather?.ToString(fg);
+                MapName?.ToString(fg);
+                Grasses?.ToString(fg);
+                Sounds?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.MapColor = this.MapColor.Combine(rhs.MapColor);
+                ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
+                ret.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ExceptionExt.Combine(this.Areas?.Overall, rhs.Areas?.Overall), ExceptionExt.Combine(this.Areas?.Specific, rhs.Areas?.Specific));
+                ret.Objects = new MaskItem<Exception?, RegionDataObjects.ErrorMask?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), (this.Objects?.Specific as IErrorMask<RegionDataObjects.ErrorMask>)?.Combine(rhs.Objects?.Specific));
+                ret.Weather = new MaskItem<Exception?, RegionDataWeather.ErrorMask?>(ExceptionExt.Combine(this.Weather?.Overall, rhs.Weather?.Overall), (this.Weather?.Specific as IErrorMask<RegionDataWeather.ErrorMask>)?.Combine(rhs.Weather?.Specific));
+                ret.MapName = new MaskItem<Exception?, RegionDataMapName.ErrorMask?>(ExceptionExt.Combine(this.MapName?.Overall, rhs.MapName?.Overall), (this.MapName?.Specific as IErrorMask<RegionDataMapName.ErrorMask>)?.Combine(rhs.MapName?.Specific));
+                ret.Grasses = new MaskItem<Exception?, RegionDataGrasses.ErrorMask?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), (this.Grasses?.Specific as IErrorMask<RegionDataGrasses.ErrorMask>)?.Combine(rhs.Grasses?.Specific));
+                ret.Sounds = new MaskItem<Exception?, RegionDataSounds.ErrorMask?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), (this.Sounds?.Specific as IErrorMask<RegionDataSounds.ErrorMask>)?.Combine(rhs.Sounds?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Icon;
+            public bool MapColor;
+            public bool Worldspace;
+            public MaskItem<bool, RegionArea.TranslationMask?> Areas;
+            public MaskItem<bool, RegionDataObjects.TranslationMask?> Objects;
+            public MaskItem<bool, RegionDataWeather.TranslationMask?> Weather;
+            public MaskItem<bool, RegionDataMapName.TranslationMask?> MapName;
+            public MaskItem<bool, RegionDataGrasses.TranslationMask?> Grasses;
+            public MaskItem<bool, RegionDataSounds.TranslationMask?> Sounds;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Icon = defaultOn;
+                this.MapColor = defaultOn;
+                this.Worldspace = defaultOn;
+                this.Areas = new MaskItem<bool, RegionArea.TranslationMask?>(defaultOn, null);
+                this.Objects = new MaskItem<bool, RegionDataObjects.TranslationMask?>(defaultOn, null);
+                this.Weather = new MaskItem<bool, RegionDataWeather.TranslationMask?>(defaultOn, null);
+                this.MapName = new MaskItem<bool, RegionDataMapName.TranslationMask?>(defaultOn, null);
+                this.Grasses = new MaskItem<bool, RegionDataGrasses.TranslationMask?>(defaultOn, null);
+                this.Sounds = new MaskItem<bool, RegionDataSounds.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Icon, null));
+                ret.Add((MapColor, null));
+                ret.Add((Worldspace, null));
+                ret.Add((Areas?.Overall ?? true, Areas?.Specific?.GetCrystal()));
+                ret.Add((Objects?.Overall ?? true, Objects?.Specific?.GetCrystal()));
+                ret.Add((Weather?.Overall ?? true, Weather?.Specific?.GetCrystal()));
+                ret.Add((MapName?.Overall ?? true, MapName?.Specific?.GetCrystal()));
+                ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
+                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -438,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Region_Mask<bool> GetEqualsMask(
+        public static Region.Mask<bool> GetEqualsMask(
             this IRegionGetter item,
             IRegionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -452,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionGetter item,
             string? name = null,
-            Region_Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -464,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionGetter item,
             FileGeneration fg,
             string? name = null,
-            Region_Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -475,16 +1045,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionGetter item,
-            Region_Mask<bool?> checkMask)
+            Region.Mask<bool?> checkMask)
         {
             return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Region_Mask<bool> GetHasBeenSetMask(this IRegionGetter item)
+        public static Region.Mask<bool> GetHasBeenSetMask(this IRegionGetter item)
         {
-            var ret = new Region_Mask<bool>(false);
+            var ret = new Region.Mask<bool>(false);
             ((RegionCommon)((IRegionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -503,8 +1073,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionInternal lhs,
             IRegionGetter rhs,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? copyMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -512,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -530,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Region DeepCopy(
             this IRegionGetter item,
-            Region_TranslationMask? copyMask = null)
+            Region.TranslationMask? copyMask = null)
         {
             return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -539,8 +1109,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Region DeepCopy(
             this IRegionGetter item,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? copyMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? copyMask = null)
         {
             return ((RegionSetterTranslationCommon)((IRegionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -564,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionInternal item,
             XElement node,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -577,8 +1147,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionInternal item,
             XElement node,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -586,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -605,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionInternal item,
             string path,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -617,8 +1187,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionInternal item,
             string path,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -632,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -645,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionInternal item,
             Stream stream,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -657,8 +1227,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionInternal item,
             Stream stream,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -672,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Region_TranslationMask? translationMask = null)
+            Region.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -758,9 +1328,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(Region_Mask<>);
+        public static readonly Type MaskType = typeof(Region.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Region_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Region.ErrorMask);
 
         public static readonly Type ClassType = typeof(Region);
 
@@ -1204,12 +1774,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly RegionCommon Instance = new RegionCommon();
 
-        public Region_Mask<bool> GetEqualsMask(
+        public Region.Mask<bool> GetEqualsMask(
             IRegionGetter item,
             IRegionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Region_Mask<bool>(false);
+            var ret = new Region.Mask<bool>(false);
             ((RegionCommon)((IRegionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1221,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionGetter item,
             IRegionGetter rhs,
-            Region_Mask<bool> ret,
+            Region.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1263,7 +1833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionGetter item,
             string? name = null,
-            Region_Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1278,7 +1848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionGetter item,
             FileGeneration fg,
             string? name = null,
-            Region_Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1302,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionGetter item,
             FileGeneration fg,
-            Region_Mask<bool>? printMask = null)
+            Region.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1362,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionGetter item,
-            Region_Mask<bool?> checkMask)
+            Region.Mask<bool?> checkMask)
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != (item.MapColor != null)) return false;
@@ -1385,22 +1955,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IRegionGetter item,
-            Region_Mask<bool> mask)
+            Region.Mask<bool> mask)
         {
             mask.Icon = (item.Icon != null);
             mask.MapColor = (item.MapColor != null);
             mask.Worldspace = item.Worldspace.HasBeenSet;
-            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea_Mask<bool>?>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea.Mask<bool>?>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemObjects = item.Objects;
-            mask.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
+            mask.Objects = new MaskItem<bool, RegionDataObjects.Mask<bool>?>(itemObjects != null, itemObjects?.GetHasBeenSetMask());
             var itemWeather = item.Weather;
-            mask.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>?>(itemWeather != null, itemWeather?.GetHasBeenSetMask());
+            mask.Weather = new MaskItem<bool, RegionDataWeather.Mask<bool>?>(itemWeather != null, itemWeather?.GetHasBeenSetMask());
             var itemMapName = item.MapName;
-            mask.MapName = new MaskItem<bool, RegionDataMapName_Mask<bool>?>(itemMapName != null, itemMapName?.GetHasBeenSetMask());
+            mask.MapName = new MaskItem<bool, RegionDataMapName.Mask<bool>?>(itemMapName != null, itemMapName?.GetHasBeenSetMask());
             var itemGrasses = item.Grasses;
-            mask.Grasses = new MaskItem<bool, RegionDataGrasses_Mask<bool>?>(itemGrasses != null, itemGrasses?.GetHasBeenSetMask());
+            mask.Grasses = new MaskItem<bool, RegionDataGrasses.Mask<bool>?>(itemGrasses != null, itemGrasses?.GetHasBeenSetMask());
             var itemSounds = item.Sounds;
-            mask.Sounds = new MaskItem<bool, RegionDataSounds_Mask<bool>?>(itemSounds != null, itemSounds?.GetHasBeenSetMask());
+            mask.Sounds = new MaskItem<bool, RegionDataSounds.Mask<bool>?>(itemSounds != null, itemSounds?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1851,7 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Region DeepCopy(
             IRegionGetter item,
-            Region_TranslationMask? copyMask = null)
+            Region.TranslationMask? copyMask = null)
         {
             Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1862,8 +2432,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Region DeepCopy(
             IRegionGetter item,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? copyMask = null)
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? copyMask = null)
         {
             Region ret = (Region)((RegionCommon)((IRegionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2353,8 +2923,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionGetter item,
             XElement node,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null,
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2364,14 +2934,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionGetter item,
             string path,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null,
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2387,8 +2957,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionGetter item,
             Stream stream,
-            out Region_ErrorMask errorMask,
-            Region_TranslationMask? translationMask = null,
+            out Region.ErrorMask errorMask,
+            Region.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2405,575 +2975,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Region_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Region_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Region_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Icon = initialValue;
-            this.MapColor = initialValue;
-            this.Worldspace = initialValue;
-            this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RegionArea_Mask<T>?>>());
-            this.Objects = new MaskItem<T, RegionDataObjects_Mask<T>?>(initialValue, new RegionDataObjects_Mask<T>(initialValue));
-            this.Weather = new MaskItem<T, RegionDataWeather_Mask<T>?>(initialValue, new RegionDataWeather_Mask<T>(initialValue));
-            this.MapName = new MaskItem<T, RegionDataMapName_Mask<T>?>(initialValue, new RegionDataMapName_Mask<T>(initialValue));
-            this.Grasses = new MaskItem<T, RegionDataGrasses_Mask<T>?>(initialValue, new RegionDataGrasses_Mask<T>(initialValue));
-            this.Sounds = new MaskItem<T, RegionDataSounds_Mask<T>?>(initialValue, new RegionDataSounds_Mask<T>(initialValue));
-        }
-
-        public Region_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Icon,
-            T MapColor,
-            T Worldspace,
-            T Areas,
-            T Objects,
-            T Weather,
-            T MapName,
-            T Grasses,
-            T Sounds)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Icon = Icon;
-            this.MapColor = MapColor;
-            this.Worldspace = Worldspace;
-            this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea_Mask<T>?>>>(Areas, Enumerable.Empty<MaskItemIndexed<T, RegionArea_Mask<T>?>>());
-            this.Objects = new MaskItem<T, RegionDataObjects_Mask<T>?>(Objects, new RegionDataObjects_Mask<T>(Objects));
-            this.Weather = new MaskItem<T, RegionDataWeather_Mask<T>?>(Weather, new RegionDataWeather_Mask<T>(Weather));
-            this.MapName = new MaskItem<T, RegionDataMapName_Mask<T>?>(MapName, new RegionDataMapName_Mask<T>(MapName));
-            this.Grasses = new MaskItem<T, RegionDataGrasses_Mask<T>?>(Grasses, new RegionDataGrasses_Mask<T>(Grasses));
-            this.Sounds = new MaskItem<T, RegionDataSounds_Mask<T>?>(Sounds, new RegionDataSounds_Mask<T>(Sounds));
-        }
-
-        #pragma warning disable CS8618
-        protected Region_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Icon;
-        public T MapColor;
-        public T Worldspace;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea_Mask<T>?>>>? Areas;
-        public MaskItem<T, RegionDataObjects_Mask<T>?>? Objects { get; set; }
-        public MaskItem<T, RegionDataWeather_Mask<T>?>? Weather { get; set; }
-        public MaskItem<T, RegionDataMapName_Mask<T>?>? MapName { get; set; }
-        public MaskItem<T, RegionDataGrasses_Mask<T>?>? Grasses { get; set; }
-        public MaskItem<T, RegionDataSounds_Mask<T>?>? Sounds { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Region_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Region_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.MapColor, rhs.MapColor)) return false;
-            if (!object.Equals(this.Worldspace, rhs.Worldspace)) return false;
-            if (!object.Equals(this.Areas, rhs.Areas)) return false;
-            if (!object.Equals(this.Objects, rhs.Objects)) return false;
-            if (!object.Equals(this.Weather, rhs.Weather)) return false;
-            if (!object.Equals(this.MapName, rhs.MapName)) return false;
-            if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.MapColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.Worldspace?.GetHashCode());
-            ret = ret.CombineHashCode(this.Areas?.GetHashCode());
-            ret = ret.CombineHashCode(this.Objects?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weather?.GetHashCode());
-            ret = ret.CombineHashCode(this.MapName?.GetHashCode());
-            ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.MapColor)) return false;
-            if (!eval(this.Worldspace)) return false;
-            if (this.Areas != null)
-            {
-                if (!eval(this.Areas.Overall)) return false;
-                if (this.Areas.Specific != null)
-                {
-                    foreach (var item in this.Areas.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (Objects != null)
-            {
-                if (!eval(this.Objects.Overall)) return false;
-                if (this.Objects.Specific != null && !this.Objects.Specific.AllEqual(eval)) return false;
-            }
-            if (Weather != null)
-            {
-                if (!eval(this.Weather.Overall)) return false;
-                if (this.Weather.Specific != null && !this.Weather.Specific.AllEqual(eval)) return false;
-            }
-            if (MapName != null)
-            {
-                if (!eval(this.MapName.Overall)) return false;
-                if (this.MapName.Specific != null && !this.MapName.Specific.AllEqual(eval)) return false;
-            }
-            if (Grasses != null)
-            {
-                if (!eval(this.Grasses.Overall)) return false;
-                if (this.Grasses.Specific != null && !this.Grasses.Specific.AllEqual(eval)) return false;
-            }
-            if (Sounds != null)
-            {
-                if (!eval(this.Sounds.Overall)) return false;
-                if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Region_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Region_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Region_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Icon = eval(this.Icon);
-            obj.MapColor = eval(this.MapColor);
-            obj.Worldspace = eval(this.Worldspace);
-            if (Areas != null)
-            {
-                obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea_Mask<R>?>>>(eval(this.Areas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea_Mask<R>?>>());
-                if (Areas.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, RegionArea_Mask<R>?>>();
-                    obj.Areas.Specific = l;
-                    foreach (var item in Areas.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, RegionArea_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RegionArea_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Objects = this.Objects == null ? null : new MaskItem<R, RegionDataObjects_Mask<R>?>(eval(this.Objects.Overall), this.Objects.Specific?.Translate(eval));
-            obj.Weather = this.Weather == null ? null : new MaskItem<R, RegionDataWeather_Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
-            obj.MapName = this.MapName == null ? null : new MaskItem<R, RegionDataMapName_Mask<R>?>(eval(this.MapName.Overall), this.MapName.Specific?.Translate(eval));
-            obj.Grasses = this.Grasses == null ? null : new MaskItem<R, RegionDataGrasses_Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
-            obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionDataSounds_Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Region_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Region_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Region_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.MapColor ?? true)
-                {
-                    fg.AppendLine($"MapColor => {MapColor}");
-                }
-                if (printMask?.Worldspace ?? true)
-                {
-                    fg.AppendLine($"Worldspace => {Worldspace}");
-                }
-                if (printMask?.Areas?.Overall ?? true)
-                {
-                    fg.AppendLine("Areas =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Areas != null)
-                        {
-                            if (Areas.Overall != null)
-                            {
-                                fg.AppendLine(Areas.Overall.ToString());
-                            }
-                            if (Areas.Specific != null)
-                            {
-                                foreach (var subItem in Areas.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Objects?.Overall ?? true)
-                {
-                    Objects?.ToString(fg);
-                }
-                if (printMask?.Weather?.Overall ?? true)
-                {
-                    Weather?.ToString(fg);
-                }
-                if (printMask?.MapName?.Overall ?? true)
-                {
-                    MapName?.ToString(fg);
-                }
-                if (printMask?.Grasses?.Overall ?? true)
-                {
-                    Grasses?.ToString(fg);
-                }
-                if (printMask?.Sounds?.Overall ?? true)
-                {
-                    Sounds?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Region_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Region_ErrorMask>
-    {
-        #region Members
-        public Exception? Icon;
-        public Exception? MapColor;
-        public Exception? Worldspace;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea_ErrorMask?>>?>? Areas;
-        public MaskItem<Exception?, RegionDataObjects_ErrorMask?>? Objects;
-        public MaskItem<Exception?, RegionDataWeather_ErrorMask?>? Weather;
-        public MaskItem<Exception?, RegionDataMapName_ErrorMask?>? MapName;
-        public MaskItem<Exception?, RegionDataGrasses_ErrorMask?>? Grasses;
-        public MaskItem<Exception?, RegionDataSounds_ErrorMask?>? Sounds;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    return Icon;
-                case Region_FieldIndex.MapColor:
-                    return MapColor;
-                case Region_FieldIndex.Worldspace:
-                    return Worldspace;
-                case Region_FieldIndex.Areas:
-                    return Areas;
-                case Region_FieldIndex.Objects:
-                    return Objects;
-                case Region_FieldIndex.Weather:
-                    return Weather;
-                case Region_FieldIndex.MapName:
-                    return MapName;
-                case Region_FieldIndex.Grasses:
-                    return Grasses;
-                case Region_FieldIndex.Sounds:
-                    return Sounds;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Region_FieldIndex.MapColor:
-                    this.MapColor = ex;
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    this.Worldspace = ex;
-                    break;
-                case Region_FieldIndex.Areas:
-                    this.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea_ErrorMask?>>?>(ex, null);
-                    break;
-                case Region_FieldIndex.Objects:
-                    this.Objects = new MaskItem<Exception?, RegionDataObjects_ErrorMask?>(ex, null);
-                    break;
-                case Region_FieldIndex.Weather:
-                    this.Weather = new MaskItem<Exception?, RegionDataWeather_ErrorMask?>(ex, null);
-                    break;
-                case Region_FieldIndex.MapName:
-                    this.MapName = new MaskItem<Exception?, RegionDataMapName_ErrorMask?>(ex, null);
-                    break;
-                case Region_FieldIndex.Grasses:
-                    this.Grasses = new MaskItem<Exception?, RegionDataGrasses_ErrorMask?>(ex, null);
-                    break;
-                case Region_FieldIndex.Sounds:
-                    this.Sounds = new MaskItem<Exception?, RegionDataSounds_ErrorMask?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Region_FieldIndex enu = (Region_FieldIndex)index;
-            switch (enu)
-            {
-                case Region_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Region_FieldIndex.MapColor:
-                    this.MapColor = (Exception)obj;
-                    break;
-                case Region_FieldIndex.Worldspace:
-                    this.Worldspace = (Exception)obj;
-                    break;
-                case Region_FieldIndex.Areas:
-                    this.Areas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea_ErrorMask?>>?>)obj;
-                    break;
-                case Region_FieldIndex.Objects:
-                    this.Objects = (MaskItem<Exception?, RegionDataObjects_ErrorMask?>?)obj;
-                    break;
-                case Region_FieldIndex.Weather:
-                    this.Weather = (MaskItem<Exception?, RegionDataWeather_ErrorMask?>?)obj;
-                    break;
-                case Region_FieldIndex.MapName:
-                    this.MapName = (MaskItem<Exception?, RegionDataMapName_ErrorMask?>?)obj;
-                    break;
-                case Region_FieldIndex.Grasses:
-                    this.Grasses = (MaskItem<Exception?, RegionDataGrasses_ErrorMask?>?)obj;
-                    break;
-                case Region_FieldIndex.Sounds:
-                    this.Sounds = (MaskItem<Exception?, RegionDataSounds_ErrorMask?>?)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Icon != null) return true;
-            if (MapColor != null) return true;
-            if (Worldspace != null) return true;
-            if (Areas != null) return true;
-            if (Objects != null) return true;
-            if (Weather != null) return true;
-            if (MapName != null) return true;
-            if (Grasses != null) return true;
-            if (Sounds != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Region_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"MapColor => {MapColor}");
-            fg.AppendLine($"Worldspace => {Worldspace}");
-            fg.AppendLine("Areas =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Areas != null)
-                {
-                    if (Areas.Overall != null)
-                    {
-                        fg.AppendLine(Areas.Overall.ToString());
-                    }
-                    if (Areas.Specific != null)
-                    {
-                        foreach (var subItem in Areas.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            Objects?.ToString(fg);
-            Weather?.ToString(fg);
-            MapName?.ToString(fg);
-            Grasses?.ToString(fg);
-            Sounds?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public Region_ErrorMask Combine(Region_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Region_ErrorMask();
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.MapColor = this.MapColor.Combine(rhs.MapColor);
-            ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
-            ret.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea_ErrorMask?>>?>(ExceptionExt.Combine(this.Areas?.Overall, rhs.Areas?.Overall), ExceptionExt.Combine(this.Areas?.Specific, rhs.Areas?.Specific));
-            ret.Objects = new MaskItem<Exception?, RegionDataObjects_ErrorMask?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), (this.Objects?.Specific as IErrorMask<RegionDataObjects_ErrorMask>)?.Combine(rhs.Objects?.Specific));
-            ret.Weather = new MaskItem<Exception?, RegionDataWeather_ErrorMask?>(ExceptionExt.Combine(this.Weather?.Overall, rhs.Weather?.Overall), (this.Weather?.Specific as IErrorMask<RegionDataWeather_ErrorMask>)?.Combine(rhs.Weather?.Specific));
-            ret.MapName = new MaskItem<Exception?, RegionDataMapName_ErrorMask?>(ExceptionExt.Combine(this.MapName?.Overall, rhs.MapName?.Overall), (this.MapName?.Specific as IErrorMask<RegionDataMapName_ErrorMask>)?.Combine(rhs.MapName?.Specific));
-            ret.Grasses = new MaskItem<Exception?, RegionDataGrasses_ErrorMask?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), (this.Grasses?.Specific as IErrorMask<RegionDataGrasses_ErrorMask>)?.Combine(rhs.Grasses?.Specific));
-            ret.Sounds = new MaskItem<Exception?, RegionDataSounds_ErrorMask?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), (this.Sounds?.Specific as IErrorMask<RegionDataSounds_ErrorMask>)?.Combine(rhs.Sounds?.Specific));
-            return ret;
-        }
-        public static Region_ErrorMask? Combine(Region_ErrorMask? lhs, Region_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Region_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Region_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Region_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Icon;
-        public bool MapColor;
-        public bool Worldspace;
-        public MaskItem<bool, RegionArea_TranslationMask?> Areas;
-        public MaskItem<bool, RegionDataObjects_TranslationMask?> Objects;
-        public MaskItem<bool, RegionDataWeather_TranslationMask?> Weather;
-        public MaskItem<bool, RegionDataMapName_TranslationMask?> MapName;
-        public MaskItem<bool, RegionDataGrasses_TranslationMask?> Grasses;
-        public MaskItem<bool, RegionDataSounds_TranslationMask?> Sounds;
-        #endregion
-
-        #region Ctors
-        public Region_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Icon = defaultOn;
-            this.MapColor = defaultOn;
-            this.Worldspace = defaultOn;
-            this.Areas = new MaskItem<bool, RegionArea_TranslationMask?>(defaultOn, null);
-            this.Objects = new MaskItem<bool, RegionDataObjects_TranslationMask?>(defaultOn, null);
-            this.Weather = new MaskItem<bool, RegionDataWeather_TranslationMask?>(defaultOn, null);
-            this.MapName = new MaskItem<bool, RegionDataMapName_TranslationMask?>(defaultOn, null);
-            this.Grasses = new MaskItem<bool, RegionDataGrasses_TranslationMask?>(defaultOn, null);
-            this.Sounds = new MaskItem<bool, RegionDataSounds_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Icon, null));
-            ret.Add((MapColor, null));
-            ret.Add((Worldspace, null));
-            ret.Add((Areas?.Overall ?? true, Areas?.Specific?.GetCrystal()));
-            ret.Add((Objects?.Overall ?? true, Objects?.Specific?.GetCrystal()));
-            ret.Add((Weather?.Overall ?? true, Weather?.Specific?.GetCrystal()));
-            ret.Add((MapName?.Overall ?? true, MapName?.Specific?.GetCrystal()));
-            ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
-            ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

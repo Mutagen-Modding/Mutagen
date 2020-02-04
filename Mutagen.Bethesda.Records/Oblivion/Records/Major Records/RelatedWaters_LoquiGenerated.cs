@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RelatedWaters CreateFromXml(
             XElement node,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -131,15 +131,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RelatedWaters CreateFromXml(
             XElement node,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RelatedWaters.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters CreateFromXml(
             string path,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,8 +169,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters CreateFromXml(
             string path,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RelatedWaters CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters CreateFromXml(
             Stream stream,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -203,8 +203,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters CreateFromXml(
             Stream stream,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RelatedWaters CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -227,6 +227,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.RelatedWaterDaytime = initialValue;
+                this.RelatedWaterNighttime = initialValue;
+                this.RelatedWaterUnderwater = initialValue;
+            }
+
+            public Mask(
+                T RelatedWaterDaytime,
+                T RelatedWaterNighttime,
+                T RelatedWaterUnderwater)
+            {
+                this.RelatedWaterDaytime = RelatedWaterDaytime;
+                this.RelatedWaterNighttime = RelatedWaterNighttime;
+                this.RelatedWaterUnderwater = RelatedWaterUnderwater;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T RelatedWaterDaytime;
+            public T RelatedWaterNighttime;
+            public T RelatedWaterUnderwater;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.RelatedWaterDaytime, rhs.RelatedWaterDaytime)) return false;
+                if (!object.Equals(this.RelatedWaterNighttime, rhs.RelatedWaterNighttime)) return false;
+                if (!object.Equals(this.RelatedWaterUnderwater, rhs.RelatedWaterUnderwater)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.RelatedWaterDaytime?.GetHashCode());
+                ret = ret.CombineHashCode(this.RelatedWaterNighttime?.GetHashCode());
+                ret = ret.CombineHashCode(this.RelatedWaterUnderwater?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.RelatedWaterDaytime)) return false;
+                if (!eval(this.RelatedWaterNighttime)) return false;
+                if (!eval(this.RelatedWaterUnderwater)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RelatedWaters.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.RelatedWaterDaytime = eval(this.RelatedWaterDaytime);
+                obj.RelatedWaterNighttime = eval(this.RelatedWaterNighttime);
+                obj.RelatedWaterUnderwater = eval(this.RelatedWaterUnderwater);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RelatedWaters.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RelatedWaters.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RelatedWaters.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.RelatedWaterDaytime ?? true)
+                    {
+                        fg.AppendLine($"RelatedWaterDaytime => {RelatedWaterDaytime}");
+                    }
+                    if (printMask?.RelatedWaterNighttime ?? true)
+                    {
+                        fg.AppendLine($"RelatedWaterNighttime => {RelatedWaterNighttime}");
+                    }
+                    if (printMask?.RelatedWaterUnderwater ?? true)
+                    {
+                        fg.AppendLine($"RelatedWaterUnderwater => {RelatedWaterUnderwater}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? RelatedWaterDaytime;
+            public Exception? RelatedWaterNighttime;
+            public Exception? RelatedWaterUnderwater;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
+                switch (enu)
+                {
+                    case RelatedWaters_FieldIndex.RelatedWaterDaytime:
+                        return RelatedWaterDaytime;
+                    case RelatedWaters_FieldIndex.RelatedWaterNighttime:
+                        return RelatedWaterNighttime;
+                    case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
+                        return RelatedWaterUnderwater;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
+                switch (enu)
+                {
+                    case RelatedWaters_FieldIndex.RelatedWaterDaytime:
+                        this.RelatedWaterDaytime = ex;
+                        break;
+                    case RelatedWaters_FieldIndex.RelatedWaterNighttime:
+                        this.RelatedWaterNighttime = ex;
+                        break;
+                    case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
+                        this.RelatedWaterUnderwater = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
+                switch (enu)
+                {
+                    case RelatedWaters_FieldIndex.RelatedWaterDaytime:
+                        this.RelatedWaterDaytime = (Exception)obj;
+                        break;
+                    case RelatedWaters_FieldIndex.RelatedWaterNighttime:
+                        this.RelatedWaterNighttime = (Exception)obj;
+                        break;
+                    case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
+                        this.RelatedWaterUnderwater = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (RelatedWaterDaytime != null) return true;
+                if (RelatedWaterNighttime != null) return true;
+                if (RelatedWaterUnderwater != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"RelatedWaterDaytime => {RelatedWaterDaytime}");
+                fg.AppendLine($"RelatedWaterNighttime => {RelatedWaterNighttime}");
+                fg.AppendLine($"RelatedWaterUnderwater => {RelatedWaterUnderwater}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.RelatedWaterDaytime = this.RelatedWaterDaytime.Combine(rhs.RelatedWaterDaytime);
+                ret.RelatedWaterNighttime = this.RelatedWaterNighttime.Combine(rhs.RelatedWaterNighttime);
+                ret.RelatedWaterUnderwater = this.RelatedWaterUnderwater.Combine(rhs.RelatedWaterUnderwater);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool RelatedWaterDaytime;
+            public bool RelatedWaterNighttime;
+            public bool RelatedWaterUnderwater;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.RelatedWaterDaytime = defaultOn;
+                this.RelatedWaterNighttime = defaultOn;
+                this.RelatedWaterUnderwater = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((RelatedWaterDaytime, null));
+                ret.Add((RelatedWaterNighttime, null));
+                ret.Add((RelatedWaterUnderwater, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -337,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RelatedWaters_Mask<bool> GetEqualsMask(
+        public static RelatedWaters.Mask<bool> GetEqualsMask(
             this IRelatedWatersGetter item,
             IRelatedWatersGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -351,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRelatedWatersGetter item,
             string? name = null,
-            RelatedWaters_Mask<bool>? printMask = null)
+            RelatedWaters.Mask<bool>? printMask = null)
         {
             return ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -363,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWatersGetter item,
             FileGeneration fg,
             string? name = null,
-            RelatedWaters_Mask<bool>? printMask = null)
+            RelatedWaters.Mask<bool>? printMask = null)
         {
             ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -374,16 +688,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRelatedWatersGetter item,
-            RelatedWaters_Mask<bool?> checkMask)
+            RelatedWaters.Mask<bool?> checkMask)
         {
             return ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RelatedWaters_Mask<bool> GetHasBeenSetMask(this IRelatedWatersGetter item)
+        public static RelatedWaters.Mask<bool> GetHasBeenSetMask(this IRelatedWatersGetter item)
         {
-            var ret = new RelatedWaters_Mask<bool>(false);
+            var ret = new RelatedWaters.Mask<bool>(false);
             ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -402,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRelatedWaters lhs,
             IRelatedWatersGetter rhs,
-            RelatedWaters_TranslationMask? copyMask = null)
+            RelatedWaters.TranslationMask? copyMask = null)
         {
             ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -414,8 +728,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRelatedWaters lhs,
             IRelatedWatersGetter rhs,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? copyMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -423,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RelatedWaters.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -441,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters DeepCopy(
             this IRelatedWatersGetter item,
-            RelatedWaters_TranslationMask? copyMask = null)
+            RelatedWaters.TranslationMask? copyMask = null)
         {
             return ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -450,8 +764,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RelatedWaters DeepCopy(
             this IRelatedWatersGetter item,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? copyMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? copyMask = null)
         {
             return ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -475,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelatedWaters item,
             XElement node,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -488,8 +802,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelatedWaters item,
             XElement node,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -497,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RelatedWaters.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -516,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelatedWaters item,
             string path,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,8 +842,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelatedWaters item,
             string path,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -543,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWaters item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -556,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelatedWaters item,
             Stream stream,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,8 +882,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelatedWaters item,
             Stream stream,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -583,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWaters item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -658,9 +972,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(RelatedWaters_Mask<>);
+        public static readonly Type MaskType = typeof(RelatedWaters.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RelatedWaters_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RelatedWaters.ErrorMask);
 
         public static readonly Type ClassType = typeof(RelatedWaters);
 
@@ -924,12 +1238,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RelatedWatersCommon Instance = new RelatedWatersCommon();
 
-        public RelatedWaters_Mask<bool> GetEqualsMask(
+        public RelatedWaters.Mask<bool> GetEqualsMask(
             IRelatedWatersGetter item,
             IRelatedWatersGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RelatedWaters_Mask<bool>(false);
+            var ret = new RelatedWaters.Mask<bool>(false);
             ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -941,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRelatedWatersGetter item,
             IRelatedWatersGetter rhs,
-            RelatedWaters_Mask<bool> ret,
+            RelatedWaters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -953,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRelatedWatersGetter item,
             string? name = null,
-            RelatedWaters_Mask<bool>? printMask = null)
+            RelatedWaters.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWatersGetter item,
             FileGeneration fg,
             string? name = null,
-            RelatedWaters_Mask<bool>? printMask = null)
+            RelatedWaters.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -992,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRelatedWatersGetter item,
             FileGeneration fg,
-            RelatedWaters_Mask<bool>? printMask = null)
+            RelatedWaters.Mask<bool>? printMask = null)
         {
             if (printMask?.RelatedWaterDaytime ?? true)
             {
@@ -1010,14 +1324,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRelatedWatersGetter item,
-            RelatedWaters_Mask<bool?> checkMask)
+            RelatedWaters.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRelatedWatersGetter item,
-            RelatedWaters_Mask<bool> mask)
+            RelatedWaters.Mask<bool> mask)
         {
             mask.RelatedWaterDaytime = true;
             mask.RelatedWaterNighttime = true;
@@ -1095,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RelatedWaters DeepCopy(
             IRelatedWatersGetter item,
-            RelatedWaters_TranslationMask? copyMask = null)
+            RelatedWaters.TranslationMask? copyMask = null)
         {
             RelatedWaters ret = (RelatedWaters)((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1106,8 +1420,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RelatedWaters DeepCopy(
             IRelatedWatersGetter item,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? copyMask = null)
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? copyMask = null)
         {
             RelatedWaters ret = (RelatedWaters)((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1384,8 +1698,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelatedWatersGetter item,
             XElement node,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null,
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1395,14 +1709,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RelatedWaters.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRelatedWatersGetter item,
             string path,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null,
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1435,8 +1749,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelatedWatersGetter item,
             Stream stream,
-            out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_TranslationMask? translationMask = null,
+            out RelatedWaters.ErrorMask errorMask,
+            RelatedWaters.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1485,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWatersGetter item,
             XElement node,
             string? name = null,
-            RelatedWaters_TranslationMask? translationMask = null)
+            RelatedWaters.TranslationMask? translationMask = null)
         {
             ((RelatedWatersXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1529,321 +1843,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RelatedWaters_Mask<T> :
-        IMask<T>,
-        IEquatable<RelatedWaters_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RelatedWaters_Mask(T initialValue)
-        {
-            this.RelatedWaterDaytime = initialValue;
-            this.RelatedWaterNighttime = initialValue;
-            this.RelatedWaterUnderwater = initialValue;
-        }
-
-        public RelatedWaters_Mask(
-            T RelatedWaterDaytime,
-            T RelatedWaterNighttime,
-            T RelatedWaterUnderwater)
-        {
-            this.RelatedWaterDaytime = RelatedWaterDaytime;
-            this.RelatedWaterNighttime = RelatedWaterNighttime;
-            this.RelatedWaterUnderwater = RelatedWaterUnderwater;
-        }
-
-        #pragma warning disable CS8618
-        protected RelatedWaters_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T RelatedWaterDaytime;
-        public T RelatedWaterNighttime;
-        public T RelatedWaterUnderwater;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RelatedWaters_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RelatedWaters_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.RelatedWaterDaytime, rhs.RelatedWaterDaytime)) return false;
-            if (!object.Equals(this.RelatedWaterNighttime, rhs.RelatedWaterNighttime)) return false;
-            if (!object.Equals(this.RelatedWaterUnderwater, rhs.RelatedWaterUnderwater)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.RelatedWaterDaytime?.GetHashCode());
-            ret = ret.CombineHashCode(this.RelatedWaterNighttime?.GetHashCode());
-            ret = ret.CombineHashCode(this.RelatedWaterUnderwater?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.RelatedWaterDaytime)) return false;
-            if (!eval(this.RelatedWaterNighttime)) return false;
-            if (!eval(this.RelatedWaterUnderwater)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RelatedWaters_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RelatedWaters_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RelatedWaters_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.RelatedWaterDaytime = eval(this.RelatedWaterDaytime);
-            obj.RelatedWaterNighttime = eval(this.RelatedWaterNighttime);
-            obj.RelatedWaterUnderwater = eval(this.RelatedWaterUnderwater);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RelatedWaters_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RelatedWaters_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RelatedWaters_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.RelatedWaterDaytime ?? true)
-                {
-                    fg.AppendLine($"RelatedWaterDaytime => {RelatedWaterDaytime}");
-                }
-                if (printMask?.RelatedWaterNighttime ?? true)
-                {
-                    fg.AppendLine($"RelatedWaterNighttime => {RelatedWaterNighttime}");
-                }
-                if (printMask?.RelatedWaterUnderwater ?? true)
-                {
-                    fg.AppendLine($"RelatedWaterUnderwater => {RelatedWaterUnderwater}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RelatedWaters_ErrorMask : IErrorMask, IErrorMask<RelatedWaters_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? RelatedWaterDaytime;
-        public Exception? RelatedWaterNighttime;
-        public Exception? RelatedWaterUnderwater;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    return RelatedWaterDaytime;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    return RelatedWaterNighttime;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    return RelatedWaterUnderwater;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    this.RelatedWaterDaytime = ex;
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    this.RelatedWaterNighttime = ex;
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    this.RelatedWaterUnderwater = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RelatedWaters_FieldIndex enu = (RelatedWaters_FieldIndex)index;
-            switch (enu)
-            {
-                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
-                    this.RelatedWaterDaytime = (Exception)obj;
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
-                    this.RelatedWaterNighttime = (Exception)obj;
-                    break;
-                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
-                    this.RelatedWaterUnderwater = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (RelatedWaterDaytime != null) return true;
-            if (RelatedWaterNighttime != null) return true;
-            if (RelatedWaterUnderwater != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RelatedWaters_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"RelatedWaterDaytime => {RelatedWaterDaytime}");
-            fg.AppendLine($"RelatedWaterNighttime => {RelatedWaterNighttime}");
-            fg.AppendLine($"RelatedWaterUnderwater => {RelatedWaterUnderwater}");
-        }
-        #endregion
-
-        #region Combine
-        public RelatedWaters_ErrorMask Combine(RelatedWaters_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RelatedWaters_ErrorMask();
-            ret.RelatedWaterDaytime = this.RelatedWaterDaytime.Combine(rhs.RelatedWaterDaytime);
-            ret.RelatedWaterNighttime = this.RelatedWaterNighttime.Combine(rhs.RelatedWaterNighttime);
-            ret.RelatedWaterUnderwater = this.RelatedWaterUnderwater.Combine(rhs.RelatedWaterUnderwater);
-            return ret;
-        }
-        public static RelatedWaters_ErrorMask? Combine(RelatedWaters_ErrorMask? lhs, RelatedWaters_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RelatedWaters_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RelatedWaters_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RelatedWaters_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool RelatedWaterDaytime;
-        public bool RelatedWaterNighttime;
-        public bool RelatedWaterUnderwater;
-        #endregion
-
-        #region Ctors
-        public RelatedWaters_TranslationMask(bool defaultOn)
-        {
-            this.RelatedWaterDaytime = defaultOn;
-            this.RelatedWaterNighttime = defaultOn;
-            this.RelatedWaterUnderwater = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((RelatedWaterDaytime, null));
-            ret.Add((RelatedWaterNighttime, null));
-            ret.Add((RelatedWaterUnderwater, null));
-        }
-    }
 }
 #endregion
 

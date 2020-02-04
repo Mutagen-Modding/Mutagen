@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GroupErrTest()
         {
-            Group_ErrorMask<NPC_ErrorMask> group_ErrorMask = new Group_ErrorMask<NPC_ErrorMask>();
+            Group.ErrorMask<NPC.ErrorMask> group_ErrorMask = new Group.ErrorMask<NPC.ErrorMask>();
             group_ErrorMask.SetNthMask(
                 (int)Group_FieldIndex.RecordCache,
-                new MaskItem<Exception?, IEnumerable<MaskItem<Exception, NPC_ErrorMask>>?>(null, null));
+                new MaskItem<Exception?, IEnumerable<MaskItem<Exception, NPC.ErrorMask>>?>(null, null));
         }
     }
 }

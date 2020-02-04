@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static QuestTarget CreateFromXml(
             XElement node,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -146,15 +146,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static QuestTarget CreateFromXml(
             XElement node,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestTarget CreateFromXml(
             string path,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,8 +184,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestTarget CreateFromXml(
             string path,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static QuestTarget CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestTarget CreateFromXml(
             Stream stream,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,8 +218,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestTarget CreateFromXml(
             Stream stream,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static QuestTarget CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -242,6 +242,420 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Target = initialValue;
+                this.Flags = initialValue;
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.QSTADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T Target,
+                T Flags,
+                T Conditions,
+                T QSTADataTypeState)
+            {
+                this.Target = Target;
+                this.Flags = Flags;
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.QSTADataTypeState = QSTADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Target;
+            public T Flags;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
+            public T QSTADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.QSTADataTypeState, rhs.QSTADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Target?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
+                ret = ret.CombineHashCode(this.QSTADataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Target)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.QSTADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new QuestTarget.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Target = eval(this.Target);
+                obj.Flags = eval(this.Flags);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.QSTADataTypeState = eval(this.QSTADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(QuestTarget.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, QuestTarget.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(QuestTarget.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Target ?? true)
+                    {
+                        fg.AppendLine($"Target => {Target}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Conditions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Conditions != null)
+                            {
+                                if (Conditions.Overall != null)
+                                {
+                                    fg.AppendLine(Conditions.Overall.ToString());
+                                }
+                                if (Conditions.Specific != null)
+                                {
+                                    foreach (var subItem in Conditions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.QSTADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Target;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? QSTADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+                switch (enu)
+                {
+                    case QuestTarget_FieldIndex.Target:
+                        return Target;
+                    case QuestTarget_FieldIndex.Flags:
+                        return Flags;
+                    case QuestTarget_FieldIndex.Conditions:
+                        return Conditions;
+                    case QuestTarget_FieldIndex.QSTADataTypeState:
+                        return QSTADataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+                switch (enu)
+                {
+                    case QuestTarget_FieldIndex.Target:
+                        this.Target = ex;
+                        break;
+                    case QuestTarget_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case QuestTarget_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case QuestTarget_FieldIndex.QSTADataTypeState:
+                        this.QSTADataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
+                switch (enu)
+                {
+                    case QuestTarget_FieldIndex.Target:
+                        this.Target = (Exception)obj;
+                        break;
+                    case QuestTarget_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case QuestTarget_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case QuestTarget_FieldIndex.QSTADataTypeState:
+                        this.QSTADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Target != null) return true;
+                if (Flags != null) return true;
+                if (Conditions != null) return true;
+                if (QSTADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Target => {Target}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Conditions != null)
+                    {
+                        if (Conditions.Overall != null)
+                        {
+                            fg.AppendLine(Conditions.Overall.ToString());
+                        }
+                        if (Conditions.Specific != null)
+                        {
+                            foreach (var subItem in Conditions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Target = this.Target.Combine(rhs.Target);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.QSTADataTypeState = this.QSTADataTypeState.Combine(rhs.QSTADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Target;
+            public bool Flags;
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool QSTADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Target = defaultOn;
+                this.Flags = defaultOn;
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.QSTADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Target, null));
+                ret.Add((Flags, null));
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((QSTADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -359,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static QuestTarget_Mask<bool> GetEqualsMask(
+        public static QuestTarget.Mask<bool> GetEqualsMask(
             this IQuestTargetGetter item,
             IQuestTargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -373,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IQuestTargetGetter item,
             string? name = null,
-            QuestTarget_Mask<bool>? printMask = null)
+            QuestTarget.Mask<bool>? printMask = null)
         {
             return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -385,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestTargetGetter item,
             FileGeneration fg,
             string? name = null,
-            QuestTarget_Mask<bool>? printMask = null)
+            QuestTarget.Mask<bool>? printMask = null)
         {
             ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -396,16 +810,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IQuestTargetGetter item,
-            QuestTarget_Mask<bool?> checkMask)
+            QuestTarget.Mask<bool?> checkMask)
         {
             return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static QuestTarget_Mask<bool> GetHasBeenSetMask(this IQuestTargetGetter item)
+        public static QuestTarget.Mask<bool> GetHasBeenSetMask(this IQuestTargetGetter item)
         {
-            var ret = new QuestTarget_Mask<bool>(false);
+            var ret = new QuestTarget.Mask<bool>(false);
             ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -424,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IQuestTarget lhs,
             IQuestTargetGetter rhs,
-            QuestTarget_TranslationMask? copyMask = null)
+            QuestTarget.TranslationMask? copyMask = null)
         {
             ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -436,8 +850,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IQuestTarget lhs,
             IQuestTargetGetter rhs,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? copyMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -445,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -463,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestTarget DeepCopy(
             this IQuestTargetGetter item,
-            QuestTarget_TranslationMask? copyMask = null)
+            QuestTarget.TranslationMask? copyMask = null)
         {
             return ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -472,8 +886,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestTarget DeepCopy(
             this IQuestTargetGetter item,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? copyMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? copyMask = null)
         {
             return ((QuestTargetSetterTranslationCommon)((IQuestTargetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -497,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestTarget item,
             XElement node,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -510,8 +924,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestTarget item,
             XElement node,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -519,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -538,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestTarget item,
             string path,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -550,8 +964,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestTarget item,
             string path,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -565,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestTarget item,
             string path,
             ErrorMaskBuilder? errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -578,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestTarget item,
             Stream stream,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -590,8 +1004,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestTarget item,
             Stream stream,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -605,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestTarget item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -681,9 +1095,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(QuestTarget_Mask<>);
+        public static readonly Type MaskType = typeof(QuestTarget.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(QuestTarget_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(QuestTarget.ErrorMask);
 
         public static readonly Type ClassType = typeof(QuestTarget);
 
@@ -999,12 +1413,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly QuestTargetCommon Instance = new QuestTargetCommon();
 
-        public QuestTarget_Mask<bool> GetEqualsMask(
+        public QuestTarget.Mask<bool> GetEqualsMask(
             IQuestTargetGetter item,
             IQuestTargetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new QuestTarget_Mask<bool>(false);
+            var ret = new QuestTarget.Mask<bool>(false);
             ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1016,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IQuestTargetGetter item,
             IQuestTargetGetter rhs,
-            QuestTarget_Mask<bool> ret,
+            QuestTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1032,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IQuestTargetGetter item,
             string? name = null,
-            QuestTarget_Mask<bool>? printMask = null)
+            QuestTarget.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1047,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetGetter item,
             FileGeneration fg,
             string? name = null,
-            QuestTarget_Mask<bool>? printMask = null)
+            QuestTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1071,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IQuestTargetGetter item,
             FileGeneration fg,
-            QuestTarget_Mask<bool>? printMask = null)
+            QuestTarget.Mask<bool>? printMask = null)
         {
             if (printMask?.Target ?? true)
             {
@@ -1107,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IQuestTargetGetter item,
-            QuestTarget_Mask<bool?> checkMask)
+            QuestTarget.Mask<bool?> checkMask)
         {
             if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != item.Conditions.HasBeenSet) return false;
             return true;
@@ -1115,11 +1529,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IQuestTargetGetter item,
-            QuestTarget_Mask<bool> mask)
+            QuestTarget.Mask<bool> mask)
         {
             mask.Target = true;
             mask.Flags = true;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.QSTADataTypeState = true;
         }
         
@@ -1225,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public QuestTarget DeepCopy(
             IQuestTargetGetter item,
-            QuestTarget_TranslationMask? copyMask = null)
+            QuestTarget.TranslationMask? copyMask = null)
         {
             QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1236,8 +1650,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public QuestTarget DeepCopy(
             IQuestTargetGetter item,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? copyMask = null)
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? copyMask = null)
         {
             QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1565,8 +1979,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IQuestTargetGetter item,
             XElement node,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null,
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1576,14 +1990,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestTarget_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestTarget.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IQuestTargetGetter item,
             string path,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null,
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1616,8 +2030,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IQuestTargetGetter item,
             Stream stream,
-            out QuestTarget_ErrorMask errorMask,
-            QuestTarget_TranslationMask? translationMask = null,
+            out QuestTarget.ErrorMask errorMask,
+            QuestTarget.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1666,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestTargetGetter item,
             XElement node,
             string? name = null,
-            QuestTarget_TranslationMask? translationMask = null)
+            QuestTarget.TranslationMask? translationMask = null)
         {
             ((QuestTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1710,421 +2124,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class QuestTarget_Mask<T> :
-        IMask<T>,
-        IEquatable<QuestTarget_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public QuestTarget_Mask(T initialValue)
-        {
-            this.Target = initialValue;
-            this.Flags = initialValue;
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.QSTADataTypeState = initialValue;
-        }
-
-        public QuestTarget_Mask(
-            T Target,
-            T Flags,
-            T Conditions,
-            T QSTADataTypeState)
-        {
-            this.Target = Target;
-            this.Flags = Flags;
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.QSTADataTypeState = QSTADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected QuestTarget_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Target;
-        public T Flags;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>? Conditions;
-        public T QSTADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is QuestTarget_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(QuestTarget_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Target, rhs.Target)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-            if (!object.Equals(this.QSTADataTypeState, rhs.QSTADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Target?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-            ret = ret.CombineHashCode(this.QSTADataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Target)) return false;
-            if (!eval(this.Flags)) return false;
-            if (this.Conditions != null)
-            {
-                if (!eval(this.Conditions.Overall)) return false;
-                if (this.Conditions.Specific != null)
-                {
-                    foreach (var item in this.Conditions.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.QSTADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public QuestTarget_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new QuestTarget_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(QuestTarget_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Target = eval(this.Target);
-            obj.Flags = eval(this.Flags);
-            if (Conditions != null)
-            {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition_Mask<R>?>>());
-                if (Conditions.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Condition_Mask<R>?>>();
-                    obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Condition_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.QSTADataTypeState = eval(this.QSTADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(QuestTarget_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, QuestTarget_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(QuestTarget_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Target ?? true)
-                {
-                    fg.AppendLine($"Target => {Target}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Conditions != null)
-                        {
-                            if (Conditions.Overall != null)
-                            {
-                                fg.AppendLine(Conditions.Overall.ToString());
-                            }
-                            if (Conditions.Specific != null)
-                            {
-                                foreach (var subItem in Conditions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.QSTADataTypeState ?? true)
-                {
-                    fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class QuestTarget_ErrorMask : IErrorMask, IErrorMask<QuestTarget_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Target;
-        public Exception? Flags;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>? Conditions;
-        public Exception? QSTADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    return Target;
-                case QuestTarget_FieldIndex.Flags:
-                    return Flags;
-                case QuestTarget_FieldIndex.Conditions:
-                    return Conditions;
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    return QSTADataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    this.Target = ex;
-                    break;
-                case QuestTarget_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case QuestTarget_FieldIndex.Conditions:
-                    this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ex, null);
-                    break;
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    this.QSTADataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            QuestTarget_FieldIndex enu = (QuestTarget_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestTarget_FieldIndex.Target:
-                    this.Target = (Exception)obj;
-                    break;
-                case QuestTarget_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case QuestTarget_FieldIndex.Conditions:
-                    this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>)obj;
-                    break;
-                case QuestTarget_FieldIndex.QSTADataTypeState:
-                    this.QSTADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Target != null) return true;
-            if (Flags != null) return true;
-            if (Conditions != null) return true;
-            if (QSTADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("QuestTarget_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Target => {Target}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("Conditions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Conditions != null)
-                {
-                    if (Conditions.Overall != null)
-                    {
-                        fg.AppendLine(Conditions.Overall.ToString());
-                    }
-                    if (Conditions.Specific != null)
-                    {
-                        foreach (var subItem in Conditions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"QSTADataTypeState => {QSTADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public QuestTarget_ErrorMask Combine(QuestTarget_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new QuestTarget_ErrorMask();
-            ret.Target = this.Target.Combine(rhs.Target);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-            ret.QSTADataTypeState = this.QSTADataTypeState.Combine(rhs.QSTADataTypeState);
-            return ret;
-        }
-        public static QuestTarget_ErrorMask? Combine(QuestTarget_ErrorMask? lhs, QuestTarget_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static QuestTarget_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new QuestTarget_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class QuestTarget_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Target;
-        public bool Flags;
-        public MaskItem<bool, Condition_TranslationMask?> Conditions;
-        public bool QSTADataTypeState;
-        #endregion
-
-        #region Ctors
-        public QuestTarget_TranslationMask(bool defaultOn)
-        {
-            this.Target = defaultOn;
-            this.Flags = defaultOn;
-            this.Conditions = new MaskItem<bool, Condition_TranslationMask?>(defaultOn, null);
-            this.QSTADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Target, null));
-            ret.Add((Flags, null));
-            ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-            ret.Add((QSTADataTypeState, null));
-        }
-    }
 }
 #endregion
 

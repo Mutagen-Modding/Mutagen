@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new PlacedObject CreateFromXml(
             XElement node,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -111,15 +111,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static PlacedObject CreateFromXml(
             XElement node,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static PlacedObject CreateFromXml(
             string path,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -149,8 +149,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static PlacedObject CreateFromXml(
             string path,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static PlacedObject CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static PlacedObject CreateFromXml(
             Stream stream,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -183,8 +183,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static PlacedObject CreateFromXml(
             Stream stream,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static PlacedObject CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,6 +207,231 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            SkyrimMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T SkyrimMajorRecordFlags,
+                T FormVersion,
+                T Version2)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+                FormVersion: FormVersion,
+                Version2: Version2)
+            {
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new PlacedObject.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(PlacedObject.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, PlacedObject.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(PlacedObject.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            SkyrimMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            SkyrimMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+            }
+
+            #endregion
+
+        }
         #endregion
 
         #region Mutagen
@@ -319,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PlacedObject_Mask<bool> GetEqualsMask(
+        public static PlacedObject.Mask<bool> GetEqualsMask(
             this IPlacedObjectGetter item,
             IPlacedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -333,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IPlacedObjectGetter item,
             string? name = null,
-            PlacedObject_Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -345,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IPlacedObjectGetter item,
             FileGeneration fg,
             string? name = null,
-            PlacedObject_Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -356,16 +581,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IPlacedObjectGetter item,
-            PlacedObject_Mask<bool?> checkMask)
+            PlacedObject.Mask<bool?> checkMask)
         {
             return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static PlacedObject_Mask<bool> GetHasBeenSetMask(this IPlacedObjectGetter item)
+        public static PlacedObject.Mask<bool> GetHasBeenSetMask(this IPlacedObjectGetter item)
         {
-            var ret = new PlacedObject_Mask<bool>(false);
+            var ret = new PlacedObject.Mask<bool>(false);
             ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -384,8 +609,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IPlacedObjectInternal lhs,
             IPlacedObjectGetter rhs,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? copyMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -393,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -411,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static PlacedObject DeepCopy(
             this IPlacedObjectGetter item,
-            PlacedObject_TranslationMask? copyMask = null)
+            PlacedObject.TranslationMask? copyMask = null)
         {
             return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -420,8 +645,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static PlacedObject DeepCopy(
             this IPlacedObjectGetter item,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? copyMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -445,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IPlacedObjectInternal item,
             XElement node,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -458,8 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IPlacedObjectInternal item,
             XElement node,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -467,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -486,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IPlacedObjectInternal item,
             string path,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -498,8 +723,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IPlacedObjectInternal item,
             string path,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IPlacedObjectInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -526,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IPlacedObjectInternal item,
             Stream stream,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -538,8 +763,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IPlacedObjectInternal item,
             Stream stream,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IPlacedObjectInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            PlacedObject_TranslationMask? translationMask = null)
+            PlacedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -632,9 +857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(PlacedObject_Mask<>);
+        public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlacedObject_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlacedObject.ErrorMask);
 
         public static readonly Type ClassType = typeof(PlacedObject);
 
@@ -885,12 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
 
-        public PlacedObject_Mask<bool> GetEqualsMask(
+        public PlacedObject.Mask<bool> GetEqualsMask(
             IPlacedObjectGetter item,
             IPlacedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PlacedObject_Mask<bool>(false);
+            var ret = new PlacedObject.Mask<bool>(false);
             ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -902,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IPlacedObjectGetter item,
             IPlacedObjectGetter rhs,
-            PlacedObject_Mask<bool> ret,
+            PlacedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -912,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IPlacedObjectGetter item,
             string? name = null,
-            PlacedObject_Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -927,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedObjectGetter item,
             FileGeneration fg,
             string? name = null,
-            PlacedObject_Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -951,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IPlacedObjectGetter item,
             FileGeneration fg,
-            PlacedObject_Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -961,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IPlacedObjectGetter item,
-            PlacedObject_Mask<bool?> checkMask)
+            PlacedObject.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -970,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IPlacedObjectGetter item,
-            PlacedObject_Mask<bool> mask)
+            PlacedObject.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
@@ -1182,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public PlacedObject DeepCopy(
             IPlacedObjectGetter item,
-            PlacedObject_TranslationMask? copyMask = null)
+            PlacedObject.TranslationMask? copyMask = null)
         {
             PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1193,8 +1418,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public PlacedObject DeepCopy(
             IPlacedObjectGetter item,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? copyMask = null)
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1395,8 +1620,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IPlacedObjectGetter item,
             XElement node,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1406,14 +1631,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IPlacedObjectGetter item,
             string path,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1429,8 +1654,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IPlacedObjectGetter item,
             Stream stream,
-            out PlacedObject_ErrorMask errorMask,
-            PlacedObject_TranslationMask? translationMask = null,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1447,230 +1672,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class PlacedObject_Mask<T> :
-        SkyrimMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<PlacedObject_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public PlacedObject_Mask(T initialValue)
-        : base(initialValue)
-        {
-        }
-
-        public PlacedObject_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T SkyrimMajorRecordFlags,
-            T FormVersion,
-            T Version2)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
-            FormVersion: FormVersion,
-            Version2: Version2)
-        {
-        }
-
-        #pragma warning disable CS8618
-        protected PlacedObject_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PlacedObject_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(PlacedObject_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new PlacedObject_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new PlacedObject_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(PlacedObject_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(PlacedObject_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, PlacedObject_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(PlacedObject_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class PlacedObject_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<PlacedObject_ErrorMask>
-    {
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("PlacedObject_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-        }
-        #endregion
-
-        #region Combine
-        public PlacedObject_ErrorMask Combine(PlacedObject_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new PlacedObject_ErrorMask();
-            return ret;
-        }
-        public static PlacedObject_ErrorMask? Combine(PlacedObject_ErrorMask? lhs, PlacedObject_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new PlacedObject_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new PlacedObject_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class PlacedObject_TranslationMask : SkyrimMajorRecord_TranslationMask
-    {
-        #region Ctors
-        public PlacedObject_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-        }
-
-        #endregion
-
-    }
 }
 #endregion
 

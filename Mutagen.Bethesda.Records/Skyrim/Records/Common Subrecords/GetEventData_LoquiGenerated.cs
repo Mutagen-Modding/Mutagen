@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new GetEventData CreateFromXml(
             XElement node,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -140,15 +140,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static GetEventData CreateFromXml(
             XElement node,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GetEventData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             string path,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,8 +178,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             string path,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static GetEventData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             Stream stream,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,8 +212,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData CreateFromXml(
             Stream stream,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static GetEventData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -236,6 +236,419 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ConditionData.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Unknown2 = initialValue;
+                this.EventFunction = initialValue;
+                this.EventMember = initialValue;
+                this.Parameter3 = initialValue;
+                this.RunOnType = initialValue;
+                this.Reference = initialValue;
+                this.Unknown3 = initialValue;
+            }
+
+            public Mask(
+                T Unknown2,
+                T EventFunction,
+                T EventMember,
+                T Parameter3,
+                T RunOnType,
+                T Reference,
+                T Unknown3)
+            : base()
+            {
+                this.Unknown2 = Unknown2;
+                this.EventFunction = EventFunction;
+                this.EventMember = EventMember;
+                this.Parameter3 = Parameter3;
+                this.RunOnType = RunOnType;
+                this.Reference = Reference;
+                this.Unknown3 = Unknown3;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Unknown2;
+            public T EventFunction;
+            public T EventMember;
+            public T Parameter3;
+            public T RunOnType;
+            public T Reference;
+            public T Unknown3;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.EventFunction, rhs.EventFunction)) return false;
+                if (!object.Equals(this.EventMember, rhs.EventMember)) return false;
+                if (!object.Equals(this.Parameter3, rhs.Parameter3)) return false;
+                if (!object.Equals(this.RunOnType, rhs.RunOnType)) return false;
+                if (!object.Equals(this.Reference, rhs.Reference)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
+                ret = ret.CombineHashCode(this.EventFunction?.GetHashCode());
+                ret = ret.CombineHashCode(this.EventMember?.GetHashCode());
+                ret = ret.CombineHashCode(this.Parameter3?.GetHashCode());
+                ret = ret.CombineHashCode(this.RunOnType?.GetHashCode());
+                ret = ret.CombineHashCode(this.Reference?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown3?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.EventFunction)) return false;
+                if (!eval(this.EventMember)) return false;
+                if (!eval(this.Parameter3)) return false;
+                if (!eval(this.RunOnType)) return false;
+                if (!eval(this.Reference)) return false;
+                if (!eval(this.Unknown3)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new GetEventData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.EventFunction = eval(this.EventFunction);
+                obj.EventMember = eval(this.EventMember);
+                obj.Parameter3 = eval(this.Parameter3);
+                obj.RunOnType = eval(this.RunOnType);
+                obj.Reference = eval(this.Reference);
+                obj.Unknown3 = eval(this.Unknown3);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(GetEventData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, GetEventData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(GetEventData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                    }
+                    if (printMask?.EventFunction ?? true)
+                    {
+                        fg.AppendLine($"EventFunction => {EventFunction}");
+                    }
+                    if (printMask?.EventMember ?? true)
+                    {
+                        fg.AppendLine($"EventMember => {EventMember}");
+                    }
+                    if (printMask?.Parameter3 ?? true)
+                    {
+                        fg.AppendLine($"Parameter3 => {Parameter3}");
+                    }
+                    if (printMask?.RunOnType ?? true)
+                    {
+                        fg.AppendLine($"RunOnType => {RunOnType}");
+                    }
+                    if (printMask?.Reference ?? true)
+                    {
+                        fg.AppendLine($"Reference => {Reference}");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        fg.AppendLine($"Unknown3 => {Unknown3}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ConditionData.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Unknown2;
+            public Exception? EventFunction;
+            public Exception? EventMember;
+            public Exception? Parameter3;
+            public Exception? RunOnType;
+            public Exception? Reference;
+            public Exception? Unknown3;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
+                switch (enu)
+                {
+                    case GetEventData_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case GetEventData_FieldIndex.EventFunction:
+                        return EventFunction;
+                    case GetEventData_FieldIndex.EventMember:
+                        return EventMember;
+                    case GetEventData_FieldIndex.Parameter3:
+                        return Parameter3;
+                    case GetEventData_FieldIndex.RunOnType:
+                        return RunOnType;
+                    case GetEventData_FieldIndex.Reference:
+                        return Reference;
+                    case GetEventData_FieldIndex.Unknown3:
+                        return Unknown3;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
+                switch (enu)
+                {
+                    case GetEventData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case GetEventData_FieldIndex.EventFunction:
+                        this.EventFunction = ex;
+                        break;
+                    case GetEventData_FieldIndex.EventMember:
+                        this.EventMember = ex;
+                        break;
+                    case GetEventData_FieldIndex.Parameter3:
+                        this.Parameter3 = ex;
+                        break;
+                    case GetEventData_FieldIndex.RunOnType:
+                        this.RunOnType = ex;
+                        break;
+                    case GetEventData_FieldIndex.Reference:
+                        this.Reference = ex;
+                        break;
+                    case GetEventData_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
+                switch (enu)
+                {
+                    case GetEventData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception)obj;
+                        break;
+                    case GetEventData_FieldIndex.EventFunction:
+                        this.EventFunction = (Exception)obj;
+                        break;
+                    case GetEventData_FieldIndex.EventMember:
+                        this.EventMember = (Exception)obj;
+                        break;
+                    case GetEventData_FieldIndex.Parameter3:
+                        this.Parameter3 = (Exception)obj;
+                        break;
+                    case GetEventData_FieldIndex.RunOnType:
+                        this.RunOnType = (Exception)obj;
+                        break;
+                    case GetEventData_FieldIndex.Reference:
+                        this.Reference = (Exception)obj;
+                        break;
+                    case GetEventData_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Unknown2 != null) return true;
+                if (EventFunction != null) return true;
+                if (EventMember != null) return true;
+                if (Parameter3 != null) return true;
+                if (RunOnType != null) return true;
+                if (Reference != null) return true;
+                if (Unknown3 != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Unknown2 => {Unknown2}");
+                fg.AppendLine($"EventFunction => {EventFunction}");
+                fg.AppendLine($"EventMember => {EventMember}");
+                fg.AppendLine($"Parameter3 => {Parameter3}");
+                fg.AppendLine($"RunOnType => {RunOnType}");
+                fg.AppendLine($"Reference => {Reference}");
+                fg.AppendLine($"Unknown3 => {Unknown3}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.EventFunction = this.EventFunction.Combine(rhs.EventFunction);
+                ret.EventMember = this.EventMember.Combine(rhs.EventMember);
+                ret.Parameter3 = this.Parameter3.Combine(rhs.Parameter3);
+                ret.RunOnType = this.RunOnType.Combine(rhs.RunOnType);
+                ret.Reference = this.Reference.Combine(rhs.Reference);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ConditionData.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Unknown2;
+            public bool EventFunction;
+            public bool EventMember;
+            public bool Parameter3;
+            public bool RunOnType;
+            public bool Reference;
+            public bool Unknown3;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Unknown2 = defaultOn;
+                this.EventFunction = defaultOn;
+                this.EventMember = defaultOn;
+                this.Parameter3 = defaultOn;
+                this.RunOnType = defaultOn;
+                this.Reference = defaultOn;
+                this.Unknown3 = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Unknown2, null));
+                ret.Add((EventFunction, null));
+                ret.Add((EventMember, null));
+                ret.Add((Parameter3, null));
+                ret.Add((RunOnType, null));
+                ret.Add((Reference, null));
+                ret.Add((Unknown3, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -346,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static GetEventData_Mask<bool> GetEqualsMask(
+        public static GetEventData.Mask<bool> GetEqualsMask(
             this IGetEventDataGetter item,
             IGetEventDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -360,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IGetEventDataGetter item,
             string? name = null,
-            GetEventData_Mask<bool>? printMask = null)
+            GetEventData.Mask<bool>? printMask = null)
         {
             return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -372,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventDataGetter item,
             FileGeneration fg,
             string? name = null,
-            GetEventData_Mask<bool>? printMask = null)
+            GetEventData.Mask<bool>? printMask = null)
         {
             ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -383,16 +796,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IGetEventDataGetter item,
-            GetEventData_Mask<bool?> checkMask)
+            GetEventData.Mask<bool?> checkMask)
         {
             return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static GetEventData_Mask<bool> GetHasBeenSetMask(this IGetEventDataGetter item)
+        public static GetEventData.Mask<bool> GetHasBeenSetMask(this IGetEventDataGetter item)
         {
-            var ret = new GetEventData_Mask<bool>(false);
+            var ret = new GetEventData.Mask<bool>(false);
             ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -411,8 +824,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IGetEventData lhs,
             IGetEventDataGetter rhs,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? copyMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -420,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GetEventData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -438,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData DeepCopy(
             this IGetEventDataGetter item,
-            GetEventData_TranslationMask? copyMask = null)
+            GetEventData.TranslationMask? copyMask = null)
         {
             return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -447,8 +860,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GetEventData DeepCopy(
             this IGetEventDataGetter item,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? copyMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? copyMask = null)
         {
             return ((GetEventDataSetterTranslationCommon)((IGetEventDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -472,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             XElement node,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -485,8 +898,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             XElement node,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -494,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GetEventData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -513,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             string path,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -525,8 +938,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             string path,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -540,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -553,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             Stream stream,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -565,8 +978,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGetEventData item,
             Stream stream,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -580,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGetEventData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GetEventData_TranslationMask? translationMask = null)
+            GetEventData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -659,9 +1072,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(GetEventData_Mask<>);
+        public static readonly Type MaskType = typeof(GetEventData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GetEventData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GetEventData.ErrorMask);
 
         public static readonly Type ClassType = typeof(GetEventData);
 
@@ -975,12 +1388,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly GetEventDataCommon Instance = new GetEventDataCommon();
 
-        public GetEventData_Mask<bool> GetEqualsMask(
+        public GetEventData.Mask<bool> GetEqualsMask(
             IGetEventDataGetter item,
             IGetEventDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GetEventData_Mask<bool>(false);
+            var ret = new GetEventData.Mask<bool>(false);
             ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -992,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IGetEventDataGetter item,
             IGetEventDataGetter rhs,
-            GetEventData_Mask<bool> ret,
+            GetEventData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1009,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IGetEventDataGetter item,
             string? name = null,
-            GetEventData_Mask<bool>? printMask = null)
+            GetEventData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1024,7 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGetEventDataGetter item,
             FileGeneration fg,
             string? name = null,
-            GetEventData_Mask<bool>? printMask = null)
+            GetEventData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1048,7 +1461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IGetEventDataGetter item,
             FileGeneration fg,
-            GetEventData_Mask<bool>? printMask = null)
+            GetEventData.Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
@@ -1086,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IGetEventDataGetter item,
-            GetEventData_Mask<bool?> checkMask)
+            GetEventData.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1095,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IGetEventDataGetter item,
-            GetEventData_Mask<bool> mask)
+            GetEventData.Mask<bool> mask)
         {
             mask.Unknown2 = true;
             mask.EventFunction = true;
@@ -1251,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public GetEventData DeepCopy(
             IGetEventDataGetter item,
-            GetEventData_TranslationMask? copyMask = null)
+            GetEventData.TranslationMask? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1262,8 +1675,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public GetEventData DeepCopy(
             IGetEventDataGetter item,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? copyMask = null)
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? copyMask = null)
         {
             GetEventData ret = (GetEventData)((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1640,8 +2053,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IGetEventDataGetter item,
             XElement node,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null,
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1651,14 +2064,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GetEventData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IGetEventDataGetter item,
             string path,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null,
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1674,8 +2087,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IGetEventDataGetter item,
             Stream stream,
-            out GetEventData_ErrorMask errorMask,
-            GetEventData_TranslationMask? translationMask = null,
+            out GetEventData.ErrorMask errorMask,
+            GetEventData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1692,418 +2105,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class GetEventData_Mask<T> :
-        ConditionData_Mask<T>,
-        IMask<T>,
-        IEquatable<GetEventData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public GetEventData_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Unknown2 = initialValue;
-            this.EventFunction = initialValue;
-            this.EventMember = initialValue;
-            this.Parameter3 = initialValue;
-            this.RunOnType = initialValue;
-            this.Reference = initialValue;
-            this.Unknown3 = initialValue;
-        }
-
-        public GetEventData_Mask(
-            T Unknown2,
-            T EventFunction,
-            T EventMember,
-            T Parameter3,
-            T RunOnType,
-            T Reference,
-            T Unknown3)
-        : base()
-        {
-            this.Unknown2 = Unknown2;
-            this.EventFunction = EventFunction;
-            this.EventMember = EventMember;
-            this.Parameter3 = Parameter3;
-            this.RunOnType = RunOnType;
-            this.Reference = Reference;
-            this.Unknown3 = Unknown3;
-        }
-
-        #pragma warning disable CS8618
-        protected GetEventData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Unknown2;
-        public T EventFunction;
-        public T EventMember;
-        public T Parameter3;
-        public T RunOnType;
-        public T Reference;
-        public T Unknown3;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is GetEventData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(GetEventData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-            if (!object.Equals(this.EventFunction, rhs.EventFunction)) return false;
-            if (!object.Equals(this.EventMember, rhs.EventMember)) return false;
-            if (!object.Equals(this.Parameter3, rhs.Parameter3)) return false;
-            if (!object.Equals(this.RunOnType, rhs.RunOnType)) return false;
-            if (!object.Equals(this.Reference, rhs.Reference)) return false;
-            if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-            ret = ret.CombineHashCode(this.EventFunction?.GetHashCode());
-            ret = ret.CombineHashCode(this.EventMember?.GetHashCode());
-            ret = ret.CombineHashCode(this.Parameter3?.GetHashCode());
-            ret = ret.CombineHashCode(this.RunOnType?.GetHashCode());
-            ret = ret.CombineHashCode(this.Reference?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown3?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Unknown2)) return false;
-            if (!eval(this.EventFunction)) return false;
-            if (!eval(this.EventMember)) return false;
-            if (!eval(this.Parameter3)) return false;
-            if (!eval(this.RunOnType)) return false;
-            if (!eval(this.Reference)) return false;
-            if (!eval(this.Unknown3)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new GetEventData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new GetEventData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(GetEventData_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Unknown2 = eval(this.Unknown2);
-            obj.EventFunction = eval(this.EventFunction);
-            obj.EventMember = eval(this.EventMember);
-            obj.Parameter3 = eval(this.Parameter3);
-            obj.RunOnType = eval(this.RunOnType);
-            obj.Reference = eval(this.Reference);
-            obj.Unknown3 = eval(this.Unknown3);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(GetEventData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, GetEventData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(GetEventData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Unknown2 ?? true)
-                {
-                    fg.AppendLine($"Unknown2 => {Unknown2}");
-                }
-                if (printMask?.EventFunction ?? true)
-                {
-                    fg.AppendLine($"EventFunction => {EventFunction}");
-                }
-                if (printMask?.EventMember ?? true)
-                {
-                    fg.AppendLine($"EventMember => {EventMember}");
-                }
-                if (printMask?.Parameter3 ?? true)
-                {
-                    fg.AppendLine($"Parameter3 => {Parameter3}");
-                }
-                if (printMask?.RunOnType ?? true)
-                {
-                    fg.AppendLine($"RunOnType => {RunOnType}");
-                }
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {Reference}");
-                }
-                if (printMask?.Unknown3 ?? true)
-                {
-                    fg.AppendLine($"Unknown3 => {Unknown3}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class GetEventData_ErrorMask : ConditionData_ErrorMask, IErrorMask<GetEventData_ErrorMask>
-    {
-        #region Members
-        public Exception? Unknown2;
-        public Exception? EventFunction;
-        public Exception? EventMember;
-        public Exception? Parameter3;
-        public Exception? RunOnType;
-        public Exception? Reference;
-        public Exception? Unknown3;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
-            switch (enu)
-            {
-                case GetEventData_FieldIndex.Unknown2:
-                    return Unknown2;
-                case GetEventData_FieldIndex.EventFunction:
-                    return EventFunction;
-                case GetEventData_FieldIndex.EventMember:
-                    return EventMember;
-                case GetEventData_FieldIndex.Parameter3:
-                    return Parameter3;
-                case GetEventData_FieldIndex.RunOnType:
-                    return RunOnType;
-                case GetEventData_FieldIndex.Reference:
-                    return Reference;
-                case GetEventData_FieldIndex.Unknown3:
-                    return Unknown3;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
-            switch (enu)
-            {
-                case GetEventData_FieldIndex.Unknown2:
-                    this.Unknown2 = ex;
-                    break;
-                case GetEventData_FieldIndex.EventFunction:
-                    this.EventFunction = ex;
-                    break;
-                case GetEventData_FieldIndex.EventMember:
-                    this.EventMember = ex;
-                    break;
-                case GetEventData_FieldIndex.Parameter3:
-                    this.Parameter3 = ex;
-                    break;
-                case GetEventData_FieldIndex.RunOnType:
-                    this.RunOnType = ex;
-                    break;
-                case GetEventData_FieldIndex.Reference:
-                    this.Reference = ex;
-                    break;
-                case GetEventData_FieldIndex.Unknown3:
-                    this.Unknown3 = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
-            switch (enu)
-            {
-                case GetEventData_FieldIndex.Unknown2:
-                    this.Unknown2 = (Exception)obj;
-                    break;
-                case GetEventData_FieldIndex.EventFunction:
-                    this.EventFunction = (Exception)obj;
-                    break;
-                case GetEventData_FieldIndex.EventMember:
-                    this.EventMember = (Exception)obj;
-                    break;
-                case GetEventData_FieldIndex.Parameter3:
-                    this.Parameter3 = (Exception)obj;
-                    break;
-                case GetEventData_FieldIndex.RunOnType:
-                    this.RunOnType = (Exception)obj;
-                    break;
-                case GetEventData_FieldIndex.Reference:
-                    this.Reference = (Exception)obj;
-                    break;
-                case GetEventData_FieldIndex.Unknown3:
-                    this.Unknown3 = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Unknown2 != null) return true;
-            if (EventFunction != null) return true;
-            if (EventMember != null) return true;
-            if (Parameter3 != null) return true;
-            if (RunOnType != null) return true;
-            if (Reference != null) return true;
-            if (Unknown3 != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("GetEventData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Unknown2 => {Unknown2}");
-            fg.AppendLine($"EventFunction => {EventFunction}");
-            fg.AppendLine($"EventMember => {EventMember}");
-            fg.AppendLine($"Parameter3 => {Parameter3}");
-            fg.AppendLine($"RunOnType => {RunOnType}");
-            fg.AppendLine($"Reference => {Reference}");
-            fg.AppendLine($"Unknown3 => {Unknown3}");
-        }
-        #endregion
-
-        #region Combine
-        public GetEventData_ErrorMask Combine(GetEventData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new GetEventData_ErrorMask();
-            ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-            ret.EventFunction = this.EventFunction.Combine(rhs.EventFunction);
-            ret.EventMember = this.EventMember.Combine(rhs.EventMember);
-            ret.Parameter3 = this.Parameter3.Combine(rhs.Parameter3);
-            ret.RunOnType = this.RunOnType.Combine(rhs.RunOnType);
-            ret.Reference = this.Reference.Combine(rhs.Reference);
-            ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-            return ret;
-        }
-        public static GetEventData_ErrorMask? Combine(GetEventData_ErrorMask? lhs, GetEventData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new GetEventData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new GetEventData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class GetEventData_TranslationMask : ConditionData_TranslationMask
-    {
-        #region Members
-        public bool Unknown2;
-        public bool EventFunction;
-        public bool EventMember;
-        public bool Parameter3;
-        public bool RunOnType;
-        public bool Reference;
-        public bool Unknown3;
-        #endregion
-
-        #region Ctors
-        public GetEventData_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Unknown2 = defaultOn;
-            this.EventFunction = defaultOn;
-            this.EventMember = defaultOn;
-            this.Parameter3 = defaultOn;
-            this.RunOnType = defaultOn;
-            this.Reference = defaultOn;
-            this.Unknown3 = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Unknown2, null));
-            ret.Add((EventFunction, null));
-            ret.Add((EventMember, null));
-            ret.Add((Parameter3, null));
-            ret.Add((RunOnType, null));
-            ret.Add((Reference, null));
-            ret.Add((Unknown3, null));
-        }
-    }
 }
 #endregion
 

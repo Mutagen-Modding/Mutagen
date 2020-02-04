@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Condition CreateFromXml(
             XElement node,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -142,15 +142,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Condition CreateFromXml(
             XElement node,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Condition CreateFromXml(
             string path,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -180,8 +180,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Condition CreateFromXml(
             string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Condition CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Condition CreateFromXml(
             Stream stream,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -214,8 +214,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Condition CreateFromXml(
             Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Condition CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,6 +238,455 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.CompareOperator = initialValue;
+                this.Flags = initialValue;
+                this.Fluff = initialValue;
+                this.ComparisonValue = initialValue;
+                this.Function = initialValue;
+                this.FirstParameter = initialValue;
+                this.SecondParameter = initialValue;
+                this.ThirdParameter = initialValue;
+            }
+
+            public Mask(
+                T CompareOperator,
+                T Flags,
+                T Fluff,
+                T ComparisonValue,
+                T Function,
+                T FirstParameter,
+                T SecondParameter,
+                T ThirdParameter)
+            {
+                this.CompareOperator = CompareOperator;
+                this.Flags = Flags;
+                this.Fluff = Fluff;
+                this.ComparisonValue = ComparisonValue;
+                this.Function = Function;
+                this.FirstParameter = FirstParameter;
+                this.SecondParameter = SecondParameter;
+                this.ThirdParameter = ThirdParameter;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T CompareOperator;
+            public T Flags;
+            public T Fluff;
+            public T ComparisonValue;
+            public T Function;
+            public T FirstParameter;
+            public T SecondParameter;
+            public T ThirdParameter;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.ComparisonValue, rhs.ComparisonValue)) return false;
+                if (!object.Equals(this.Function, rhs.Function)) return false;
+                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.ThirdParameter, rhs.ThirdParameter)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.CompareOperator?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.ComparisonValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.Function?.GetHashCode());
+                ret = ret.CombineHashCode(this.FirstParameter?.GetHashCode());
+                ret = ret.CombineHashCode(this.SecondParameter?.GetHashCode());
+                ret = ret.CombineHashCode(this.ThirdParameter?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.CompareOperator)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Fluff)) return false;
+                if (!eval(this.ComparisonValue)) return false;
+                if (!eval(this.Function)) return false;
+                if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.ThirdParameter)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Condition.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.CompareOperator = eval(this.CompareOperator);
+                obj.Flags = eval(this.Flags);
+                obj.Fluff = eval(this.Fluff);
+                obj.ComparisonValue = eval(this.ComparisonValue);
+                obj.Function = eval(this.Function);
+                obj.FirstParameter = eval(this.FirstParameter);
+                obj.SecondParameter = eval(this.SecondParameter);
+                obj.ThirdParameter = eval(this.ThirdParameter);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Condition.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Condition.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Condition.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.CompareOperator ?? true)
+                    {
+                        fg.AppendLine($"CompareOperator => {CompareOperator}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Fluff ?? true)
+                    {
+                        fg.AppendLine($"Fluff => {Fluff}");
+                    }
+                    if (printMask?.ComparisonValue ?? true)
+                    {
+                        fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                    }
+                    if (printMask?.Function ?? true)
+                    {
+                        fg.AppendLine($"Function => {Function}");
+                    }
+                    if (printMask?.FirstParameter ?? true)
+                    {
+                        fg.AppendLine($"FirstParameter => {FirstParameter}");
+                    }
+                    if (printMask?.SecondParameter ?? true)
+                    {
+                        fg.AppendLine($"SecondParameter => {SecondParameter}");
+                    }
+                    if (printMask?.ThirdParameter ?? true)
+                    {
+                        fg.AppendLine($"ThirdParameter => {ThirdParameter}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? CompareOperator;
+            public Exception? Flags;
+            public Exception? Fluff;
+            public Exception? ComparisonValue;
+            public Exception? Function;
+            public Exception? FirstParameter;
+            public Exception? SecondParameter;
+            public Exception? ThirdParameter;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Condition_FieldIndex enu = (Condition_FieldIndex)index;
+                switch (enu)
+                {
+                    case Condition_FieldIndex.CompareOperator:
+                        return CompareOperator;
+                    case Condition_FieldIndex.Flags:
+                        return Flags;
+                    case Condition_FieldIndex.Fluff:
+                        return Fluff;
+                    case Condition_FieldIndex.ComparisonValue:
+                        return ComparisonValue;
+                    case Condition_FieldIndex.Function:
+                        return Function;
+                    case Condition_FieldIndex.FirstParameter:
+                        return FirstParameter;
+                    case Condition_FieldIndex.SecondParameter:
+                        return SecondParameter;
+                    case Condition_FieldIndex.ThirdParameter:
+                        return ThirdParameter;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Condition_FieldIndex enu = (Condition_FieldIndex)index;
+                switch (enu)
+                {
+                    case Condition_FieldIndex.CompareOperator:
+                        this.CompareOperator = ex;
+                        break;
+                    case Condition_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Condition_FieldIndex.Fluff:
+                        this.Fluff = ex;
+                        break;
+                    case Condition_FieldIndex.ComparisonValue:
+                        this.ComparisonValue = ex;
+                        break;
+                    case Condition_FieldIndex.Function:
+                        this.Function = ex;
+                        break;
+                    case Condition_FieldIndex.FirstParameter:
+                        this.FirstParameter = ex;
+                        break;
+                    case Condition_FieldIndex.SecondParameter:
+                        this.SecondParameter = ex;
+                        break;
+                    case Condition_FieldIndex.ThirdParameter:
+                        this.ThirdParameter = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Condition_FieldIndex enu = (Condition_FieldIndex)index;
+                switch (enu)
+                {
+                    case Condition_FieldIndex.CompareOperator:
+                        this.CompareOperator = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.Fluff:
+                        this.Fluff = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.ComparisonValue:
+                        this.ComparisonValue = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.Function:
+                        this.Function = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.FirstParameter:
+                        this.FirstParameter = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.SecondParameter:
+                        this.SecondParameter = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.ThirdParameter:
+                        this.ThirdParameter = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (CompareOperator != null) return true;
+                if (Flags != null) return true;
+                if (Fluff != null) return true;
+                if (ComparisonValue != null) return true;
+                if (Function != null) return true;
+                if (FirstParameter != null) return true;
+                if (SecondParameter != null) return true;
+                if (ThirdParameter != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"CompareOperator => {CompareOperator}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Fluff => {Fluff}");
+                fg.AppendLine($"ComparisonValue => {ComparisonValue}");
+                fg.AppendLine($"Function => {Function}");
+                fg.AppendLine($"FirstParameter => {FirstParameter}");
+                fg.AppendLine($"SecondParameter => {SecondParameter}");
+                fg.AppendLine($"ThirdParameter => {ThirdParameter}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.ComparisonValue = this.ComparisonValue.Combine(rhs.ComparisonValue);
+                ret.Function = this.Function.Combine(rhs.Function);
+                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.ThirdParameter = this.ThirdParameter.Combine(rhs.ThirdParameter);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool CompareOperator;
+            public bool Flags;
+            public bool Fluff;
+            public bool ComparisonValue;
+            public bool Function;
+            public bool FirstParameter;
+            public bool SecondParameter;
+            public bool ThirdParameter;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.CompareOperator = defaultOn;
+                this.Flags = defaultOn;
+                this.Fluff = defaultOn;
+                this.ComparisonValue = defaultOn;
+                this.Function = defaultOn;
+                this.FirstParameter = defaultOn;
+                this.SecondParameter = defaultOn;
+                this.ThirdParameter = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((CompareOperator, null));
+                ret.Add((Flags, null));
+                ret.Add((Fluff, null));
+                ret.Add((ComparisonValue, null));
+                ret.Add((Function, null));
+                ret.Add((FirstParameter, null));
+                ret.Add((SecondParameter, null));
+                ret.Add((ThirdParameter, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -366,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Condition_Mask<bool> GetEqualsMask(
+        public static Condition.Mask<bool> GetEqualsMask(
             this IConditionGetter item,
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -380,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IConditionGetter item,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -392,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IConditionGetter item,
             FileGeneration fg,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -403,16 +852,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IConditionGetter item,
-            Condition_Mask<bool?> checkMask)
+            Condition.Mask<bool?> checkMask)
         {
             return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Condition_Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
+        public static Condition.Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
         {
-            var ret = new Condition_Mask<bool>(false);
+            var ret = new Condition.Mask<bool>(false);
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -431,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
-            Condition_TranslationMask? copyMask = null)
+            Condition.TranslationMask? copyMask = null)
         {
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -443,8 +892,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? copyMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -452,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -470,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            Condition_TranslationMask? copyMask = null)
+            Condition.TranslationMask? copyMask = null)
         {
             return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -479,8 +928,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? copyMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? copyMask = null)
         {
             return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -504,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICondition item,
             XElement node,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -517,8 +966,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICondition item,
             XElement node,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -526,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -545,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICondition item,
             string path,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -557,8 +1006,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICondition item,
             string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -572,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICondition item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -585,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICondition item,
             Stream stream,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -597,8 +1046,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICondition item,
             Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -612,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICondition item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -692,9 +1141,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Condition_Mask<>);
+        public static readonly Type MaskType = typeof(Condition.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Condition_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Condition.ErrorMask);
 
         public static readonly Type ClassType = typeof(Condition);
 
@@ -1028,12 +1477,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ConditionCommon Instance = new ConditionCommon();
 
-        public Condition_Mask<bool> GetEqualsMask(
+        public Condition.Mask<bool> GetEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Condition_Mask<bool>(false);
+            var ret = new Condition.Mask<bool>(false);
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1045,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
-            Condition_Mask<bool> ret,
+            Condition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1062,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IConditionGetter item,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1077,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IConditionGetter item,
             FileGeneration fg,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1101,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IConditionGetter item,
             FileGeneration fg,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             if (printMask?.CompareOperator ?? true)
             {
@@ -1139,14 +1588,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IConditionGetter item,
-            Condition_Mask<bool?> checkMask)
+            Condition.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IConditionGetter item,
-            Condition_Mask<bool> mask)
+            Condition.Mask<bool> mask)
         {
             mask.CompareOperator = true;
             mask.Flags = true;
@@ -1256,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            Condition_TranslationMask? copyMask = null)
+            Condition.TranslationMask? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1267,8 +1716,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? copyMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1678,8 +2127,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IConditionGetter item,
             XElement node,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null,
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1689,14 +2138,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IConditionGetter item,
             string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null,
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1729,8 +2178,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IConditionGetter item,
             Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null,
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1779,7 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IConditionGetter item,
             XElement node,
             string? name = null,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1823,456 +2272,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Condition_Mask<T> :
-        IMask<T>,
-        IEquatable<Condition_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Condition_Mask(T initialValue)
-        {
-            this.CompareOperator = initialValue;
-            this.Flags = initialValue;
-            this.Fluff = initialValue;
-            this.ComparisonValue = initialValue;
-            this.Function = initialValue;
-            this.FirstParameter = initialValue;
-            this.SecondParameter = initialValue;
-            this.ThirdParameter = initialValue;
-        }
-
-        public Condition_Mask(
-            T CompareOperator,
-            T Flags,
-            T Fluff,
-            T ComparisonValue,
-            T Function,
-            T FirstParameter,
-            T SecondParameter,
-            T ThirdParameter)
-        {
-            this.CompareOperator = CompareOperator;
-            this.Flags = Flags;
-            this.Fluff = Fluff;
-            this.ComparisonValue = ComparisonValue;
-            this.Function = Function;
-            this.FirstParameter = FirstParameter;
-            this.SecondParameter = SecondParameter;
-            this.ThirdParameter = ThirdParameter;
-        }
-
-        #pragma warning disable CS8618
-        protected Condition_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T CompareOperator;
-        public T Flags;
-        public T Fluff;
-        public T ComparisonValue;
-        public T Function;
-        public T FirstParameter;
-        public T SecondParameter;
-        public T ThirdParameter;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Condition_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Condition_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.ComparisonValue, rhs.ComparisonValue)) return false;
-            if (!object.Equals(this.Function, rhs.Function)) return false;
-            if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
-            if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
-            if (!object.Equals(this.ThirdParameter, rhs.ThirdParameter)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.CompareOperator?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.ComparisonValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.Function?.GetHashCode());
-            ret = ret.CombineHashCode(this.FirstParameter?.GetHashCode());
-            ret = ret.CombineHashCode(this.SecondParameter?.GetHashCode());
-            ret = ret.CombineHashCode(this.ThirdParameter?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.CompareOperator)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Fluff)) return false;
-            if (!eval(this.ComparisonValue)) return false;
-            if (!eval(this.Function)) return false;
-            if (!eval(this.FirstParameter)) return false;
-            if (!eval(this.SecondParameter)) return false;
-            if (!eval(this.ThirdParameter)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Condition_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Condition_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Condition_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.CompareOperator = eval(this.CompareOperator);
-            obj.Flags = eval(this.Flags);
-            obj.Fluff = eval(this.Fluff);
-            obj.ComparisonValue = eval(this.ComparisonValue);
-            obj.Function = eval(this.Function);
-            obj.FirstParameter = eval(this.FirstParameter);
-            obj.SecondParameter = eval(this.SecondParameter);
-            obj.ThirdParameter = eval(this.ThirdParameter);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Condition_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Condition_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Condition_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.CompareOperator ?? true)
-                {
-                    fg.AppendLine($"CompareOperator => {CompareOperator}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff}");
-                }
-                if (printMask?.ComparisonValue ?? true)
-                {
-                    fg.AppendLine($"ComparisonValue => {ComparisonValue}");
-                }
-                if (printMask?.Function ?? true)
-                {
-                    fg.AppendLine($"Function => {Function}");
-                }
-                if (printMask?.FirstParameter ?? true)
-                {
-                    fg.AppendLine($"FirstParameter => {FirstParameter}");
-                }
-                if (printMask?.SecondParameter ?? true)
-                {
-                    fg.AppendLine($"SecondParameter => {SecondParameter}");
-                }
-                if (printMask?.ThirdParameter ?? true)
-                {
-                    fg.AppendLine($"ThirdParameter => {ThirdParameter}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Condition_ErrorMask : IErrorMask, IErrorMask<Condition_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? CompareOperator;
-        public Exception? Flags;
-        public Exception? Fluff;
-        public Exception? ComparisonValue;
-        public Exception? Function;
-        public Exception? FirstParameter;
-        public Exception? SecondParameter;
-        public Exception? ThirdParameter;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return CompareOperator;
-                case Condition_FieldIndex.Flags:
-                    return Flags;
-                case Condition_FieldIndex.Fluff:
-                    return Fluff;
-                case Condition_FieldIndex.ComparisonValue:
-                    return ComparisonValue;
-                case Condition_FieldIndex.Function:
-                    return Function;
-                case Condition_FieldIndex.FirstParameter:
-                    return FirstParameter;
-                case Condition_FieldIndex.SecondParameter:
-                    return SecondParameter;
-                case Condition_FieldIndex.ThirdParameter:
-                    return ThirdParameter;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    this.CompareOperator = ex;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Condition_FieldIndex.Fluff:
-                    this.Fluff = ex;
-                    break;
-                case Condition_FieldIndex.ComparisonValue:
-                    this.ComparisonValue = ex;
-                    break;
-                case Condition_FieldIndex.Function:
-                    this.Function = ex;
-                    break;
-                case Condition_FieldIndex.FirstParameter:
-                    this.FirstParameter = ex;
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    this.SecondParameter = ex;
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    this.ThirdParameter = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    this.CompareOperator = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.ComparisonValue:
-                    this.ComparisonValue = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.Function:
-                    this.Function = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.FirstParameter:
-                    this.FirstParameter = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.SecondParameter:
-                    this.SecondParameter = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.ThirdParameter:
-                    this.ThirdParameter = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (CompareOperator != null) return true;
-            if (Flags != null) return true;
-            if (Fluff != null) return true;
-            if (ComparisonValue != null) return true;
-            if (Function != null) return true;
-            if (FirstParameter != null) return true;
-            if (SecondParameter != null) return true;
-            if (ThirdParameter != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Condition_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"CompareOperator => {CompareOperator}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Fluff => {Fluff}");
-            fg.AppendLine($"ComparisonValue => {ComparisonValue}");
-            fg.AppendLine($"Function => {Function}");
-            fg.AppendLine($"FirstParameter => {FirstParameter}");
-            fg.AppendLine($"SecondParameter => {SecondParameter}");
-            fg.AppendLine($"ThirdParameter => {ThirdParameter}");
-        }
-        #endregion
-
-        #region Combine
-        public Condition_ErrorMask Combine(Condition_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Condition_ErrorMask();
-            ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.ComparisonValue = this.ComparisonValue.Combine(rhs.ComparisonValue);
-            ret.Function = this.Function.Combine(rhs.Function);
-            ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
-            ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
-            ret.ThirdParameter = this.ThirdParameter.Combine(rhs.ThirdParameter);
-            return ret;
-        }
-        public static Condition_ErrorMask? Combine(Condition_ErrorMask? lhs, Condition_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Condition_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Condition_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Condition_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool CompareOperator;
-        public bool Flags;
-        public bool Fluff;
-        public bool ComparisonValue;
-        public bool Function;
-        public bool FirstParameter;
-        public bool SecondParameter;
-        public bool ThirdParameter;
-        #endregion
-
-        #region Ctors
-        public Condition_TranslationMask(bool defaultOn)
-        {
-            this.CompareOperator = defaultOn;
-            this.Flags = defaultOn;
-            this.Fluff = defaultOn;
-            this.ComparisonValue = defaultOn;
-            this.Function = defaultOn;
-            this.FirstParameter = defaultOn;
-            this.SecondParameter = defaultOn;
-            this.ThirdParameter = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((CompareOperator, null));
-            ret.Add((Flags, null));
-            ret.Add((Fluff, null));
-            ret.Add((ComparisonValue, null));
-            ret.Add((Function, null));
-            ret.Add((FirstParameter, null));
-            ret.Add((SecondParameter, null));
-            ret.Add((ThirdParameter, null));
-        }
-    }
 }
 #endregion
 

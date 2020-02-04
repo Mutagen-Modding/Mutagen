@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ObjectBounds CreateFromXml(
             XElement node,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -116,15 +116,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ObjectBounds CreateFromXml(
             XElement node,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectBounds.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ObjectBounds CreateFromXml(
             string path,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ObjectBounds CreateFromXml(
             string path,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ObjectBounds CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ObjectBounds CreateFromXml(
             Stream stream,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -188,8 +188,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ObjectBounds CreateFromXml(
             Stream stream,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ObjectBounds CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,6 +212,293 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.First = initialValue;
+                this.Second = initialValue;
+            }
+
+            public Mask(
+                T First,
+                T Second)
+            {
+                this.First = First;
+                this.Second = Second;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T First;
+            public T Second;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.First, rhs.First)) return false;
+                if (!object.Equals(this.Second, rhs.Second)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.First?.GetHashCode());
+                ret = ret.CombineHashCode(this.Second?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.First)) return false;
+                if (!eval(this.Second)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ObjectBounds.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.First = eval(this.First);
+                obj.Second = eval(this.Second);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ObjectBounds.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ObjectBounds.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ObjectBounds.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.First ?? true)
+                    {
+                        fg.AppendLine($"First => {First}");
+                    }
+                    if (printMask?.Second ?? true)
+                    {
+                        fg.AppendLine($"Second => {Second}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? First;
+            public Exception? Second;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
+                switch (enu)
+                {
+                    case ObjectBounds_FieldIndex.First:
+                        return First;
+                    case ObjectBounds_FieldIndex.Second:
+                        return Second;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
+                switch (enu)
+                {
+                    case ObjectBounds_FieldIndex.First:
+                        this.First = ex;
+                        break;
+                    case ObjectBounds_FieldIndex.Second:
+                        this.Second = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
+                switch (enu)
+                {
+                    case ObjectBounds_FieldIndex.First:
+                        this.First = (Exception)obj;
+                        break;
+                    case ObjectBounds_FieldIndex.Second:
+                        this.Second = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (First != null) return true;
+                if (Second != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"First => {First}");
+                fg.AppendLine($"Second => {Second}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.First = this.First.Combine(rhs.First);
+                ret.Second = this.Second.Combine(rhs.Second);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool First;
+            public bool Second;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.First = defaultOn;
+                this.Second = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((First, null));
+                ret.Add((Second, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -317,7 +604,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ObjectBounds_Mask<bool> GetEqualsMask(
+        public static ObjectBounds.Mask<bool> GetEqualsMask(
             this IObjectBoundsGetter item,
             IObjectBoundsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -331,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IObjectBoundsGetter item,
             string? name = null,
-            ObjectBounds_Mask<bool>? printMask = null)
+            ObjectBounds.Mask<bool>? printMask = null)
         {
             return ((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -343,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBoundsGetter item,
             FileGeneration fg,
             string? name = null,
-            ObjectBounds_Mask<bool>? printMask = null)
+            ObjectBounds.Mask<bool>? printMask = null)
         {
             ((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -354,16 +641,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IObjectBoundsGetter item,
-            ObjectBounds_Mask<bool?> checkMask)
+            ObjectBounds.Mask<bool?> checkMask)
         {
             return ((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ObjectBounds_Mask<bool> GetHasBeenSetMask(this IObjectBoundsGetter item)
+        public static ObjectBounds.Mask<bool> GetHasBeenSetMask(this IObjectBoundsGetter item)
         {
-            var ret = new ObjectBounds_Mask<bool>(false);
+            var ret = new ObjectBounds.Mask<bool>(false);
             ((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -382,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
-            ObjectBounds_TranslationMask? copyMask = null)
+            ObjectBounds.TranslationMask? copyMask = null)
         {
             ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -394,8 +681,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? copyMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -403,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectBounds.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -421,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ObjectBounds DeepCopy(
             this IObjectBoundsGetter item,
-            ObjectBounds_TranslationMask? copyMask = null)
+            ObjectBounds.TranslationMask? copyMask = null)
         {
             return ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -430,8 +717,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ObjectBounds DeepCopy(
             this IObjectBoundsGetter item,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? copyMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? copyMask = null)
         {
             return ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -455,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IObjectBounds item,
             XElement node,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -468,8 +755,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IObjectBounds item,
             XElement node,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -477,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectBounds.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -496,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IObjectBounds item,
             string path,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -508,8 +795,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IObjectBounds item,
             string path,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -523,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBounds item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -536,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IObjectBounds item,
             Stream stream,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -548,8 +835,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IObjectBounds item,
             Stream stream,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -563,7 +850,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBounds item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -637,9 +924,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ObjectBounds_Mask<>);
+        public static readonly Type MaskType = typeof(ObjectBounds.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ObjectBounds_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ObjectBounds.ErrorMask);
 
         public static readonly Type ClassType = typeof(ObjectBounds);
 
@@ -881,12 +1168,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ObjectBoundsCommon Instance = new ObjectBoundsCommon();
 
-        public ObjectBounds_Mask<bool> GetEqualsMask(
+        public ObjectBounds.Mask<bool> GetEqualsMask(
             IObjectBoundsGetter item,
             IObjectBoundsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ObjectBounds_Mask<bool>(false);
+            var ret = new ObjectBounds.Mask<bool>(false);
             ((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -898,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IObjectBoundsGetter item,
             IObjectBoundsGetter rhs,
-            ObjectBounds_Mask<bool> ret,
+            ObjectBounds.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -909,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IObjectBoundsGetter item,
             string? name = null,
-            ObjectBounds_Mask<bool>? printMask = null)
+            ObjectBounds.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -924,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBoundsGetter item,
             FileGeneration fg,
             string? name = null,
-            ObjectBounds_Mask<bool>? printMask = null)
+            ObjectBounds.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -948,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IObjectBoundsGetter item,
             FileGeneration fg,
-            ObjectBounds_Mask<bool>? printMask = null)
+            ObjectBounds.Mask<bool>? printMask = null)
         {
             if (printMask?.First ?? true)
             {
@@ -962,14 +1249,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IObjectBoundsGetter item,
-            ObjectBounds_Mask<bool?> checkMask)
+            ObjectBounds.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IObjectBoundsGetter item,
-            ObjectBounds_Mask<bool> mask)
+            ObjectBounds.Mask<bool> mask)
         {
             mask.First = true;
             mask.Second = true;
@@ -1037,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ObjectBounds DeepCopy(
             IObjectBoundsGetter item,
-            ObjectBounds_TranslationMask? copyMask = null)
+            ObjectBounds.TranslationMask? copyMask = null)
         {
             ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1048,8 +1335,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ObjectBounds DeepCopy(
             IObjectBoundsGetter item,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? copyMask = null)
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? copyMask = null)
         {
             ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1296,8 +1583,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IObjectBoundsGetter item,
             XElement node,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null,
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1307,14 +1594,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectBounds.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IObjectBoundsGetter item,
             string path,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null,
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1347,8 +1634,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IObjectBoundsGetter item,
             Stream stream,
-            out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask? translationMask = null,
+            out ObjectBounds.ErrorMask errorMask,
+            ObjectBounds.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1397,7 +1684,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBoundsGetter item,
             XElement node,
             string? name = null,
-            ObjectBounds_TranslationMask? translationMask = null)
+            ObjectBounds.TranslationMask? translationMask = null)
         {
             ((ObjectBoundsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1441,294 +1728,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class ObjectBounds_Mask<T> :
-        IMask<T>,
-        IEquatable<ObjectBounds_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ObjectBounds_Mask(T initialValue)
-        {
-            this.First = initialValue;
-            this.Second = initialValue;
-        }
-
-        public ObjectBounds_Mask(
-            T First,
-            T Second)
-        {
-            this.First = First;
-            this.Second = Second;
-        }
-
-        #pragma warning disable CS8618
-        protected ObjectBounds_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T First;
-        public T Second;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ObjectBounds_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ObjectBounds_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.First, rhs.First)) return false;
-            if (!object.Equals(this.Second, rhs.Second)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.First?.GetHashCode());
-            ret = ret.CombineHashCode(this.Second?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.First)) return false;
-            if (!eval(this.Second)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ObjectBounds_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ObjectBounds_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ObjectBounds_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.First = eval(this.First);
-            obj.Second = eval(this.Second);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ObjectBounds_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ObjectBounds_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ObjectBounds_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.First ?? true)
-                {
-                    fg.AppendLine($"First => {First}");
-                }
-                if (printMask?.Second ?? true)
-                {
-                    fg.AppendLine($"Second => {Second}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ObjectBounds_ErrorMask : IErrorMask, IErrorMask<ObjectBounds_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? First;
-        public Exception? Second;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectBounds_FieldIndex.First:
-                    return First;
-                case ObjectBounds_FieldIndex.Second:
-                    return Second;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectBounds_FieldIndex.First:
-                    this.First = ex;
-                    break;
-                case ObjectBounds_FieldIndex.Second:
-                    this.Second = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ObjectBounds_FieldIndex enu = (ObjectBounds_FieldIndex)index;
-            switch (enu)
-            {
-                case ObjectBounds_FieldIndex.First:
-                    this.First = (Exception)obj;
-                    break;
-                case ObjectBounds_FieldIndex.Second:
-                    this.Second = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (First != null) return true;
-            if (Second != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ObjectBounds_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"First => {First}");
-            fg.AppendLine($"Second => {Second}");
-        }
-        #endregion
-
-        #region Combine
-        public ObjectBounds_ErrorMask Combine(ObjectBounds_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ObjectBounds_ErrorMask();
-            ret.First = this.First.Combine(rhs.First);
-            ret.Second = this.Second.Combine(rhs.Second);
-            return ret;
-        }
-        public static ObjectBounds_ErrorMask? Combine(ObjectBounds_ErrorMask? lhs, ObjectBounds_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ObjectBounds_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ObjectBounds_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ObjectBounds_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool First;
-        public bool Second;
-        #endregion
-
-        #region Ctors
-        public ObjectBounds_TranslationMask(bool defaultOn)
-        {
-            this.First = defaultOn;
-            this.Second = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((First, null));
-            ret.Add((Second, null));
-        }
-    }
 }
 #endregion
 

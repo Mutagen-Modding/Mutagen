@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RaceStats CreateFromXml(
             XElement node,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -134,15 +134,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RaceStats CreateFromXml(
             XElement node,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceStats.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceStats CreateFromXml(
             string path,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -172,8 +172,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceStats CreateFromXml(
             string path,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceStats CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceStats CreateFromXml(
             Stream stream,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -206,8 +206,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceStats CreateFromXml(
             Stream stream,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceStats CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -230,6 +230,455 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Strength = initialValue;
+                this.Intelligence = initialValue;
+                this.Willpower = initialValue;
+                this.Agility = initialValue;
+                this.Speed = initialValue;
+                this.Endurance = initialValue;
+                this.Personality = initialValue;
+                this.Luck = initialValue;
+            }
+
+            public Mask(
+                T Strength,
+                T Intelligence,
+                T Willpower,
+                T Agility,
+                T Speed,
+                T Endurance,
+                T Personality,
+                T Luck)
+            {
+                this.Strength = Strength;
+                this.Intelligence = Intelligence;
+                this.Willpower = Willpower;
+                this.Agility = Agility;
+                this.Speed = Speed;
+                this.Endurance = Endurance;
+                this.Personality = Personality;
+                this.Luck = Luck;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Strength;
+            public T Intelligence;
+            public T Willpower;
+            public T Agility;
+            public T Speed;
+            public T Endurance;
+            public T Personality;
+            public T Luck;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Strength, rhs.Strength)) return false;
+                if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
+                if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
+                if (!object.Equals(this.Agility, rhs.Agility)) return false;
+                if (!object.Equals(this.Speed, rhs.Speed)) return false;
+                if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
+                if (!object.Equals(this.Personality, rhs.Personality)) return false;
+                if (!object.Equals(this.Luck, rhs.Luck)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Strength?.GetHashCode());
+                ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
+                ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
+                ret = ret.CombineHashCode(this.Agility?.GetHashCode());
+                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
+                ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
+                ret = ret.CombineHashCode(this.Personality?.GetHashCode());
+                ret = ret.CombineHashCode(this.Luck?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Strength)) return false;
+                if (!eval(this.Intelligence)) return false;
+                if (!eval(this.Willpower)) return false;
+                if (!eval(this.Agility)) return false;
+                if (!eval(this.Speed)) return false;
+                if (!eval(this.Endurance)) return false;
+                if (!eval(this.Personality)) return false;
+                if (!eval(this.Luck)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RaceStats.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Strength = eval(this.Strength);
+                obj.Intelligence = eval(this.Intelligence);
+                obj.Willpower = eval(this.Willpower);
+                obj.Agility = eval(this.Agility);
+                obj.Speed = eval(this.Speed);
+                obj.Endurance = eval(this.Endurance);
+                obj.Personality = eval(this.Personality);
+                obj.Luck = eval(this.Luck);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RaceStats.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RaceStats.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RaceStats.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Strength ?? true)
+                    {
+                        fg.AppendLine($"Strength => {Strength}");
+                    }
+                    if (printMask?.Intelligence ?? true)
+                    {
+                        fg.AppendLine($"Intelligence => {Intelligence}");
+                    }
+                    if (printMask?.Willpower ?? true)
+                    {
+                        fg.AppendLine($"Willpower => {Willpower}");
+                    }
+                    if (printMask?.Agility ?? true)
+                    {
+                        fg.AppendLine($"Agility => {Agility}");
+                    }
+                    if (printMask?.Speed ?? true)
+                    {
+                        fg.AppendLine($"Speed => {Speed}");
+                    }
+                    if (printMask?.Endurance ?? true)
+                    {
+                        fg.AppendLine($"Endurance => {Endurance}");
+                    }
+                    if (printMask?.Personality ?? true)
+                    {
+                        fg.AppendLine($"Personality => {Personality}");
+                    }
+                    if (printMask?.Luck ?? true)
+                    {
+                        fg.AppendLine($"Luck => {Luck}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Strength;
+            public Exception? Intelligence;
+            public Exception? Willpower;
+            public Exception? Agility;
+            public Exception? Speed;
+            public Exception? Endurance;
+            public Exception? Personality;
+            public Exception? Luck;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case RaceStats_FieldIndex.Strength:
+                        return Strength;
+                    case RaceStats_FieldIndex.Intelligence:
+                        return Intelligence;
+                    case RaceStats_FieldIndex.Willpower:
+                        return Willpower;
+                    case RaceStats_FieldIndex.Agility:
+                        return Agility;
+                    case RaceStats_FieldIndex.Speed:
+                        return Speed;
+                    case RaceStats_FieldIndex.Endurance:
+                        return Endurance;
+                    case RaceStats_FieldIndex.Personality:
+                        return Personality;
+                    case RaceStats_FieldIndex.Luck:
+                        return Luck;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case RaceStats_FieldIndex.Strength:
+                        this.Strength = ex;
+                        break;
+                    case RaceStats_FieldIndex.Intelligence:
+                        this.Intelligence = ex;
+                        break;
+                    case RaceStats_FieldIndex.Willpower:
+                        this.Willpower = ex;
+                        break;
+                    case RaceStats_FieldIndex.Agility:
+                        this.Agility = ex;
+                        break;
+                    case RaceStats_FieldIndex.Speed:
+                        this.Speed = ex;
+                        break;
+                    case RaceStats_FieldIndex.Endurance:
+                        this.Endurance = ex;
+                        break;
+                    case RaceStats_FieldIndex.Personality:
+                        this.Personality = ex;
+                        break;
+                    case RaceStats_FieldIndex.Luck:
+                        this.Luck = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case RaceStats_FieldIndex.Strength:
+                        this.Strength = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Intelligence:
+                        this.Intelligence = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Willpower:
+                        this.Willpower = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Agility:
+                        this.Agility = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Speed:
+                        this.Speed = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Endurance:
+                        this.Endurance = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Personality:
+                        this.Personality = (Exception)obj;
+                        break;
+                    case RaceStats_FieldIndex.Luck:
+                        this.Luck = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Strength != null) return true;
+                if (Intelligence != null) return true;
+                if (Willpower != null) return true;
+                if (Agility != null) return true;
+                if (Speed != null) return true;
+                if (Endurance != null) return true;
+                if (Personality != null) return true;
+                if (Luck != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Strength => {Strength}");
+                fg.AppendLine($"Intelligence => {Intelligence}");
+                fg.AppendLine($"Willpower => {Willpower}");
+                fg.AppendLine($"Agility => {Agility}");
+                fg.AppendLine($"Speed => {Speed}");
+                fg.AppendLine($"Endurance => {Endurance}");
+                fg.AppendLine($"Personality => {Personality}");
+                fg.AppendLine($"Luck => {Luck}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Strength = this.Strength.Combine(rhs.Strength);
+                ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
+                ret.Willpower = this.Willpower.Combine(rhs.Willpower);
+                ret.Agility = this.Agility.Combine(rhs.Agility);
+                ret.Speed = this.Speed.Combine(rhs.Speed);
+                ret.Endurance = this.Endurance.Combine(rhs.Endurance);
+                ret.Personality = this.Personality.Combine(rhs.Personality);
+                ret.Luck = this.Luck.Combine(rhs.Luck);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Strength;
+            public bool Intelligence;
+            public bool Willpower;
+            public bool Agility;
+            public bool Speed;
+            public bool Endurance;
+            public bool Personality;
+            public bool Luck;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Strength = defaultOn;
+                this.Intelligence = defaultOn;
+                this.Willpower = defaultOn;
+                this.Agility = defaultOn;
+                this.Speed = defaultOn;
+                this.Endurance = defaultOn;
+                this.Personality = defaultOn;
+                this.Luck = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Strength, null));
+                ret.Add((Intelligence, null));
+                ret.Add((Willpower, null));
+                ret.Add((Agility, null));
+                ret.Add((Speed, null));
+                ret.Add((Endurance, null));
+                ret.Add((Personality, null));
+                ret.Add((Luck, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -343,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RaceStats_Mask<bool> GetEqualsMask(
+        public static RaceStats.Mask<bool> GetEqualsMask(
             this IRaceStatsGetter item,
             IRaceStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -357,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRaceStatsGetter item,
             string? name = null,
-            RaceStats_Mask<bool>? printMask = null)
+            RaceStats.Mask<bool>? printMask = null)
         {
             return ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStatsGetter item,
             FileGeneration fg,
             string? name = null,
-            RaceStats_Mask<bool>? printMask = null)
+            RaceStats.Mask<bool>? printMask = null)
         {
             ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -380,16 +829,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRaceStatsGetter item,
-            RaceStats_Mask<bool?> checkMask)
+            RaceStats.Mask<bool?> checkMask)
         {
             return ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RaceStats_Mask<bool> GetHasBeenSetMask(this IRaceStatsGetter item)
+        public static RaceStats.Mask<bool> GetHasBeenSetMask(this IRaceStatsGetter item)
         {
-            var ret = new RaceStats_Mask<bool>(false);
+            var ret = new RaceStats.Mask<bool>(false);
             ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -408,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRaceStats lhs,
             IRaceStatsGetter rhs,
-            RaceStats_TranslationMask? copyMask = null)
+            RaceStats.TranslationMask? copyMask = null)
         {
             ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -420,8 +869,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRaceStats lhs,
             IRaceStatsGetter rhs,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? copyMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -429,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -447,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceStats DeepCopy(
             this IRaceStatsGetter item,
-            RaceStats_TranslationMask? copyMask = null)
+            RaceStats.TranslationMask? copyMask = null)
         {
             return ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -456,8 +905,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceStats DeepCopy(
             this IRaceStatsGetter item,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? copyMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? copyMask = null)
         {
             return ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -481,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceStats item,
             XElement node,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -494,8 +943,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceStats item,
             XElement node,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -503,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -522,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceStats item,
             string path,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -534,8 +983,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceStats item,
             string path,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -549,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStats item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -562,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceStats item,
             Stream stream,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -574,8 +1023,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceStats item,
             Stream stream,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -589,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStats item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -669,9 +1118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(RaceStats_Mask<>);
+        public static readonly Type MaskType = typeof(RaceStats.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RaceStats_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RaceStats.ErrorMask);
 
         public static readonly Type ClassType = typeof(RaceStats);
 
@@ -986,12 +1435,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RaceStatsCommon Instance = new RaceStatsCommon();
 
-        public RaceStats_Mask<bool> GetEqualsMask(
+        public RaceStats.Mask<bool> GetEqualsMask(
             IRaceStatsGetter item,
             IRaceStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RaceStats_Mask<bool>(false);
+            var ret = new RaceStats.Mask<bool>(false);
             ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1003,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRaceStatsGetter item,
             IRaceStatsGetter rhs,
-            RaceStats_Mask<bool> ret,
+            RaceStats.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1020,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRaceStatsGetter item,
             string? name = null,
-            RaceStats_Mask<bool>? printMask = null)
+            RaceStats.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1035,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGetter item,
             FileGeneration fg,
             string? name = null,
-            RaceStats_Mask<bool>? printMask = null)
+            RaceStats.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1059,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRaceStatsGetter item,
             FileGeneration fg,
-            RaceStats_Mask<bool>? printMask = null)
+            RaceStats.Mask<bool>? printMask = null)
         {
             if (printMask?.Strength ?? true)
             {
@@ -1097,14 +1546,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRaceStatsGetter item,
-            RaceStats_Mask<bool?> checkMask)
+            RaceStats.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRaceStatsGetter item,
-            RaceStats_Mask<bool> mask)
+            RaceStats.Mask<bool> mask)
         {
             mask.Strength = true;
             mask.Intelligence = true;
@@ -1214,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceStats DeepCopy(
             IRaceStatsGetter item,
-            RaceStats_TranslationMask? copyMask = null)
+            RaceStats.TranslationMask? copyMask = null)
         {
             RaceStats ret = (RaceStats)((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1225,8 +1674,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceStats DeepCopy(
             IRaceStatsGetter item,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? copyMask = null)
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? copyMask = null)
         {
             RaceStats ret = (RaceStats)((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1635,8 +2084,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRaceStatsGetter item,
             XElement node,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null,
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1646,14 +2095,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRaceStatsGetter item,
             string path,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null,
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1686,8 +2135,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRaceStatsGetter item,
             Stream stream,
-            out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask? translationMask = null,
+            out RaceStats.ErrorMask errorMask,
+            RaceStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1736,7 +2185,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStatsGetter item,
             XElement node,
             string? name = null,
-            RaceStats_TranslationMask? translationMask = null)
+            RaceStats.TranslationMask? translationMask = null)
         {
             ((RaceStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1780,456 +2229,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RaceStats_Mask<T> :
-        IMask<T>,
-        IEquatable<RaceStats_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RaceStats_Mask(T initialValue)
-        {
-            this.Strength = initialValue;
-            this.Intelligence = initialValue;
-            this.Willpower = initialValue;
-            this.Agility = initialValue;
-            this.Speed = initialValue;
-            this.Endurance = initialValue;
-            this.Personality = initialValue;
-            this.Luck = initialValue;
-        }
-
-        public RaceStats_Mask(
-            T Strength,
-            T Intelligence,
-            T Willpower,
-            T Agility,
-            T Speed,
-            T Endurance,
-            T Personality,
-            T Luck)
-        {
-            this.Strength = Strength;
-            this.Intelligence = Intelligence;
-            this.Willpower = Willpower;
-            this.Agility = Agility;
-            this.Speed = Speed;
-            this.Endurance = Endurance;
-            this.Personality = Personality;
-            this.Luck = Luck;
-        }
-
-        #pragma warning disable CS8618
-        protected RaceStats_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Strength;
-        public T Intelligence;
-        public T Willpower;
-        public T Agility;
-        public T Speed;
-        public T Endurance;
-        public T Personality;
-        public T Luck;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RaceStats_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RaceStats_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Strength, rhs.Strength)) return false;
-            if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
-            if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
-            if (!object.Equals(this.Agility, rhs.Agility)) return false;
-            if (!object.Equals(this.Speed, rhs.Speed)) return false;
-            if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
-            if (!object.Equals(this.Personality, rhs.Personality)) return false;
-            if (!object.Equals(this.Luck, rhs.Luck)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Strength?.GetHashCode());
-            ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
-            ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
-            ret = ret.CombineHashCode(this.Agility?.GetHashCode());
-            ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-            ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
-            ret = ret.CombineHashCode(this.Personality?.GetHashCode());
-            ret = ret.CombineHashCode(this.Luck?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Strength)) return false;
-            if (!eval(this.Intelligence)) return false;
-            if (!eval(this.Willpower)) return false;
-            if (!eval(this.Agility)) return false;
-            if (!eval(this.Speed)) return false;
-            if (!eval(this.Endurance)) return false;
-            if (!eval(this.Personality)) return false;
-            if (!eval(this.Luck)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RaceStats_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RaceStats_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RaceStats_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Strength = eval(this.Strength);
-            obj.Intelligence = eval(this.Intelligence);
-            obj.Willpower = eval(this.Willpower);
-            obj.Agility = eval(this.Agility);
-            obj.Speed = eval(this.Speed);
-            obj.Endurance = eval(this.Endurance);
-            obj.Personality = eval(this.Personality);
-            obj.Luck = eval(this.Luck);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RaceStats_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RaceStats_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RaceStats_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Strength ?? true)
-                {
-                    fg.AppendLine($"Strength => {Strength}");
-                }
-                if (printMask?.Intelligence ?? true)
-                {
-                    fg.AppendLine($"Intelligence => {Intelligence}");
-                }
-                if (printMask?.Willpower ?? true)
-                {
-                    fg.AppendLine($"Willpower => {Willpower}");
-                }
-                if (printMask?.Agility ?? true)
-                {
-                    fg.AppendLine($"Agility => {Agility}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {Speed}");
-                }
-                if (printMask?.Endurance ?? true)
-                {
-                    fg.AppendLine($"Endurance => {Endurance}");
-                }
-                if (printMask?.Personality ?? true)
-                {
-                    fg.AppendLine($"Personality => {Personality}");
-                }
-                if (printMask?.Luck ?? true)
-                {
-                    fg.AppendLine($"Luck => {Luck}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RaceStats_ErrorMask : IErrorMask, IErrorMask<RaceStats_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Strength;
-        public Exception? Intelligence;
-        public Exception? Willpower;
-        public Exception? Agility;
-        public Exception? Speed;
-        public Exception? Endurance;
-        public Exception? Personality;
-        public Exception? Luck;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    return Strength;
-                case RaceStats_FieldIndex.Intelligence:
-                    return Intelligence;
-                case RaceStats_FieldIndex.Willpower:
-                    return Willpower;
-                case RaceStats_FieldIndex.Agility:
-                    return Agility;
-                case RaceStats_FieldIndex.Speed:
-                    return Speed;
-                case RaceStats_FieldIndex.Endurance:
-                    return Endurance;
-                case RaceStats_FieldIndex.Personality:
-                    return Personality;
-                case RaceStats_FieldIndex.Luck:
-                    return Luck;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    this.Strength = ex;
-                    break;
-                case RaceStats_FieldIndex.Intelligence:
-                    this.Intelligence = ex;
-                    break;
-                case RaceStats_FieldIndex.Willpower:
-                    this.Willpower = ex;
-                    break;
-                case RaceStats_FieldIndex.Agility:
-                    this.Agility = ex;
-                    break;
-                case RaceStats_FieldIndex.Speed:
-                    this.Speed = ex;
-                    break;
-                case RaceStats_FieldIndex.Endurance:
-                    this.Endurance = ex;
-                    break;
-                case RaceStats_FieldIndex.Personality:
-                    this.Personality = ex;
-                    break;
-                case RaceStats_FieldIndex.Luck:
-                    this.Luck = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RaceStats_FieldIndex enu = (RaceStats_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceStats_FieldIndex.Strength:
-                    this.Strength = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Intelligence:
-                    this.Intelligence = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Willpower:
-                    this.Willpower = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Agility:
-                    this.Agility = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Speed:
-                    this.Speed = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Endurance:
-                    this.Endurance = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Personality:
-                    this.Personality = (Exception)obj;
-                    break;
-                case RaceStats_FieldIndex.Luck:
-                    this.Luck = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Strength != null) return true;
-            if (Intelligence != null) return true;
-            if (Willpower != null) return true;
-            if (Agility != null) return true;
-            if (Speed != null) return true;
-            if (Endurance != null) return true;
-            if (Personality != null) return true;
-            if (Luck != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RaceStats_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Strength => {Strength}");
-            fg.AppendLine($"Intelligence => {Intelligence}");
-            fg.AppendLine($"Willpower => {Willpower}");
-            fg.AppendLine($"Agility => {Agility}");
-            fg.AppendLine($"Speed => {Speed}");
-            fg.AppendLine($"Endurance => {Endurance}");
-            fg.AppendLine($"Personality => {Personality}");
-            fg.AppendLine($"Luck => {Luck}");
-        }
-        #endregion
-
-        #region Combine
-        public RaceStats_ErrorMask Combine(RaceStats_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RaceStats_ErrorMask();
-            ret.Strength = this.Strength.Combine(rhs.Strength);
-            ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
-            ret.Willpower = this.Willpower.Combine(rhs.Willpower);
-            ret.Agility = this.Agility.Combine(rhs.Agility);
-            ret.Speed = this.Speed.Combine(rhs.Speed);
-            ret.Endurance = this.Endurance.Combine(rhs.Endurance);
-            ret.Personality = this.Personality.Combine(rhs.Personality);
-            ret.Luck = this.Luck.Combine(rhs.Luck);
-            return ret;
-        }
-        public static RaceStats_ErrorMask? Combine(RaceStats_ErrorMask? lhs, RaceStats_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RaceStats_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RaceStats_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RaceStats_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        #endregion
-
-        #region Ctors
-        public RaceStats_TranslationMask(bool defaultOn)
-        {
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Strength, null));
-            ret.Add((Intelligence, null));
-            ret.Add((Willpower, null));
-            ret.Add((Agility, null));
-            ret.Add((Speed, null));
-            ret.Add((Endurance, null));
-            ret.Add((Personality, null));
-            ret.Add((Luck, null));
-        }
-    }
 }
 #endregion
 

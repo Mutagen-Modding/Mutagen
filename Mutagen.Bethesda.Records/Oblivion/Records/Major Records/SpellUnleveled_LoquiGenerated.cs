@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new SpellUnleveled CreateFromXml(
             XElement node,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -178,15 +178,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SpellUnleveled CreateFromXml(
             XElement node,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SpellUnleveled.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled CreateFromXml(
             string path,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -216,8 +216,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled CreateFromXml(
             string path,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SpellUnleveled CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled CreateFromXml(
             Stream stream,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -250,8 +250,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled CreateFromXml(
             Stream stream,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SpellUnleveled CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -274,6 +274,477 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            Spell.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Type = initialValue;
+                this.Cost = initialValue;
+                this.Level = initialValue;
+                this.Flag = initialValue;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.SPITDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Type,
+                T Cost,
+                T Level,
+                T Flag,
+                T Effects,
+                T SPITDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags,
+                Name: Name)
+            {
+                this.Type = Type;
+                this.Cost = Cost;
+                this.Level = Level;
+                this.Flag = Flag;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.SPITDataTypeState = SPITDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Type;
+            public T Cost;
+            public T Level;
+            public T Flag;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
+            public T SPITDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Cost, rhs.Cost)) return false;
+                if (!object.Equals(this.Level, rhs.Level)) return false;
+                if (!object.Equals(this.Flag, rhs.Flag)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.SPITDataTypeState, rhs.SPITDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.Cost?.GetHashCode());
+                ret = ret.CombineHashCode(this.Level?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flag?.GetHashCode());
+                ret = ret.CombineHashCode(this.Effects?.GetHashCode());
+                ret = ret.CombineHashCode(this.SPITDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Cost)) return false;
+                if (!eval(this.Level)) return false;
+                if (!eval(this.Flag)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SPITDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SpellUnleveled.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Type = eval(this.Type);
+                obj.Cost = eval(this.Cost);
+                obj.Level = eval(this.Level);
+                obj.Flag = eval(this.Flag);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Effect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SPITDataTypeState = eval(this.SPITDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SpellUnleveled.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SpellUnleveled.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SpellUnleveled.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.Cost ?? true)
+                    {
+                        fg.AppendLine($"Cost => {Cost}");
+                    }
+                    if (printMask?.Level ?? true)
+                    {
+                        fg.AppendLine($"Level => {Level}");
+                    }
+                    if (printMask?.Flag ?? true)
+                    {
+                        fg.AppendLine($"Flag => {Flag}");
+                    }
+                    if (printMask?.Effects?.Overall ?? true)
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Effects != null)
+                            {
+                                if (Effects.Overall != null)
+                                {
+                                    fg.AppendLine(Effects.Overall.ToString());
+                                }
+                                if (Effects.Specific != null)
+                                {
+                                    foreach (var subItem in Effects.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.SPITDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"SPITDataTypeState => {SPITDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            Spell.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Type;
+            public Exception? Cost;
+            public Exception? Level;
+            public Exception? Flag;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            public Exception? SPITDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
+                switch (enu)
+                {
+                    case SpellUnleveled_FieldIndex.Type:
+                        return Type;
+                    case SpellUnleveled_FieldIndex.Cost:
+                        return Cost;
+                    case SpellUnleveled_FieldIndex.Level:
+                        return Level;
+                    case SpellUnleveled_FieldIndex.Flag:
+                        return Flag;
+                    case SpellUnleveled_FieldIndex.Effects:
+                        return Effects;
+                    case SpellUnleveled_FieldIndex.SPITDataTypeState:
+                        return SPITDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
+                switch (enu)
+                {
+                    case SpellUnleveled_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case SpellUnleveled_FieldIndex.Cost:
+                        this.Cost = ex;
+                        break;
+                    case SpellUnleveled_FieldIndex.Level:
+                        this.Level = ex;
+                        break;
+                    case SpellUnleveled_FieldIndex.Flag:
+                        this.Flag = ex;
+                        break;
+                    case SpellUnleveled_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SpellUnleveled_FieldIndex.SPITDataTypeState:
+                        this.SPITDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
+                switch (enu)
+                {
+                    case SpellUnleveled_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case SpellUnleveled_FieldIndex.Cost:
+                        this.Cost = (Exception)obj;
+                        break;
+                    case SpellUnleveled_FieldIndex.Level:
+                        this.Level = (Exception)obj;
+                        break;
+                    case SpellUnleveled_FieldIndex.Flag:
+                        this.Flag = (Exception)obj;
+                        break;
+                    case SpellUnleveled_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
+                    case SpellUnleveled_FieldIndex.SPITDataTypeState:
+                        this.SPITDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Type != null) return true;
+                if (Cost != null) return true;
+                if (Level != null) return true;
+                if (Flag != null) return true;
+                if (Effects != null) return true;
+                if (SPITDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"Cost => {Cost}");
+                fg.AppendLine($"Level => {Level}");
+                fg.AppendLine($"Flag => {Flag}");
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Effects != null)
+                    {
+                        if (Effects.Overall != null)
+                        {
+                            fg.AppendLine(Effects.Overall.ToString());
+                        }
+                        if (Effects.Specific != null)
+                        {
+                            foreach (var subItem in Effects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"SPITDataTypeState => {SPITDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Cost = this.Cost.Combine(rhs.Cost);
+                ret.Level = this.Level.Combine(rhs.Level);
+                ret.Flag = this.Flag.Combine(rhs.Flag);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            Spell.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Type;
+            public bool Cost;
+            public bool Level;
+            public bool Flag;
+            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public bool SPITDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Type = defaultOn;
+                this.Cost = defaultOn;
+                this.Level = defaultOn;
+                this.Flag = defaultOn;
+                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
+                this.SPITDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Type, null));
+                ret.Add((Cost, null));
+                ret.Add((Level, null));
+                ret.Add((Flag, null));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((SPITDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -406,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SpellUnleveled_Mask<bool> GetEqualsMask(
+        public static SpellUnleveled.Mask<bool> GetEqualsMask(
             this ISpellUnleveledGetter item,
             ISpellUnleveledGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -420,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISpellUnleveledGetter item,
             string? name = null,
-            SpellUnleveled_Mask<bool>? printMask = null)
+            SpellUnleveled.Mask<bool>? printMask = null)
         {
             return ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -432,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledGetter item,
             FileGeneration fg,
             string? name = null,
-            SpellUnleveled_Mask<bool>? printMask = null)
+            SpellUnleveled.Mask<bool>? printMask = null)
         {
             ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -443,16 +914,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISpellUnleveledGetter item,
-            SpellUnleveled_Mask<bool?> checkMask)
+            SpellUnleveled.Mask<bool?> checkMask)
         {
             return ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SpellUnleveled_Mask<bool> GetHasBeenSetMask(this ISpellUnleveledGetter item)
+        public static SpellUnleveled.Mask<bool> GetHasBeenSetMask(this ISpellUnleveledGetter item)
         {
-            var ret = new SpellUnleveled_Mask<bool>(false);
+            var ret = new SpellUnleveled.Mask<bool>(false);
             ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -471,8 +942,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISpellUnleveledInternal lhs,
             ISpellUnleveledGetter rhs,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? copyMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -480,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SpellUnleveled.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -498,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled DeepCopy(
             this ISpellUnleveledGetter item,
-            SpellUnleveled_TranslationMask? copyMask = null)
+            SpellUnleveled.TranslationMask? copyMask = null)
         {
             return ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -507,8 +978,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SpellUnleveled DeepCopy(
             this ISpellUnleveledGetter item,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? copyMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? copyMask = null)
         {
             return ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -532,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             XElement node,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -545,8 +1016,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             XElement node,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -554,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SpellUnleveled.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -573,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             string path,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -585,8 +1056,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             string path,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -600,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -613,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             Stream stream,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -625,8 +1096,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             Stream stream,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -640,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null)
+            SpellUnleveled.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -724,9 +1195,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 12;
 
-        public static readonly Type MaskType = typeof(SpellUnleveled_Mask<>);
+        public static readonly Type MaskType = typeof(SpellUnleveled.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SpellUnleveled_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SpellUnleveled.ErrorMask);
 
         public static readonly Type ClassType = typeof(SpellUnleveled);
 
@@ -1123,12 +1594,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly SpellUnleveledCommon Instance = new SpellUnleveledCommon();
 
-        public SpellUnleveled_Mask<bool> GetEqualsMask(
+        public SpellUnleveled.Mask<bool> GetEqualsMask(
             ISpellUnleveledGetter item,
             ISpellUnleveledGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SpellUnleveled_Mask<bool>(false);
+            var ret = new SpellUnleveled.Mask<bool>(false);
             ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1140,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISpellUnleveledGetter item,
             ISpellUnleveledGetter rhs,
-            SpellUnleveled_Mask<bool> ret,
+            SpellUnleveled.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1159,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISpellUnleveledGetter item,
             string? name = null,
-            SpellUnleveled_Mask<bool>? printMask = null)
+            SpellUnleveled.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1174,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter item,
             FileGeneration fg,
             string? name = null,
-            SpellUnleveled_Mask<bool>? printMask = null)
+            SpellUnleveled.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1198,7 +1669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISpellUnleveledGetter item,
             FileGeneration fg,
-            SpellUnleveled_Mask<bool>? printMask = null)
+            SpellUnleveled.Mask<bool>? printMask = null)
         {
             SpellCommon.ToStringFields(
                 item: item,
@@ -1246,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISpellUnleveledGetter item,
-            SpellUnleveled_Mask<bool?> checkMask)
+            SpellUnleveled.Mask<bool?> checkMask)
         {
             if (checkMask.Effects?.Overall.HasValue ?? false && checkMask.Effects!.Overall.Value != item.Effects.HasBeenSet) return false;
             return base.HasBeenSet(
@@ -1256,13 +1727,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ISpellUnleveledGetter item,
-            SpellUnleveled_Mask<bool> mask)
+            SpellUnleveled.Mask<bool> mask)
         {
             mask.Type = true;
             mask.Cost = true;
             mask.Level = true;
             mask.Flag = true;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.SPITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1657,7 +2128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SpellUnleveled DeepCopy(
             ISpellUnleveledGetter item,
-            SpellUnleveled_TranslationMask? copyMask = null)
+            SpellUnleveled.TranslationMask? copyMask = null)
         {
             SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1668,8 +2139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SpellUnleveled DeepCopy(
             ISpellUnleveledGetter item,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? copyMask = null)
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? copyMask = null)
         {
             SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2088,8 +2559,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISpellUnleveledGetter item,
             XElement node,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null,
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2099,14 +2570,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SpellUnleveled.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISpellUnleveledGetter item,
             string path,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null,
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2122,8 +2593,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISpellUnleveledGetter item,
             Stream stream,
-            out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_TranslationMask? translationMask = null,
+            out SpellUnleveled.ErrorMask errorMask,
+            SpellUnleveled.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2140,476 +2611,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class SpellUnleveled_Mask<T> :
-        Spell_Mask<T>,
-        IMask<T>,
-        IEquatable<SpellUnleveled_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SpellUnleveled_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Type = initialValue;
-            this.Cost = initialValue;
-            this.Level = initialValue;
-            this.Flag = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.SPITDataTypeState = initialValue;
-        }
-
-        public SpellUnleveled_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Type,
-            T Cost,
-            T Level,
-            T Flag,
-            T Effects,
-            T SPITDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags,
-            Name: Name)
-        {
-            this.Type = Type;
-            this.Cost = Cost;
-            this.Level = Level;
-            this.Flag = Flag;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.SPITDataTypeState = SPITDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected SpellUnleveled_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Type;
-        public T Cost;
-        public T Level;
-        public T Flag;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>? Effects;
-        public T SPITDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SpellUnleveled_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SpellUnleveled_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.Cost, rhs.Cost)) return false;
-            if (!object.Equals(this.Level, rhs.Level)) return false;
-            if (!object.Equals(this.Flag, rhs.Flag)) return false;
-            if (!object.Equals(this.Effects, rhs.Effects)) return false;
-            if (!object.Equals(this.SPITDataTypeState, rhs.SPITDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.Cost?.GetHashCode());
-            ret = ret.CombineHashCode(this.Level?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flag?.GetHashCode());
-            ret = ret.CombineHashCode(this.Effects?.GetHashCode());
-            ret = ret.CombineHashCode(this.SPITDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Type)) return false;
-            if (!eval(this.Cost)) return false;
-            if (!eval(this.Level)) return false;
-            if (!eval(this.Flag)) return false;
-            if (this.Effects != null)
-            {
-                if (!eval(this.Effects.Overall)) return false;
-                if (this.Effects.Specific != null)
-                {
-                    foreach (var item in this.Effects.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.SPITDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new SpellUnleveled_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SpellUnleveled_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SpellUnleveled_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Type = eval(this.Type);
-            obj.Cost = eval(this.Cost);
-            obj.Level = eval(this.Level);
-            obj.Flag = eval(this.Flag);
-            if (Effects != null)
-            {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect_Mask<R>?>>());
-                if (Effects.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Effect_Mask<R>?>>();
-                    obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Effect_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.SPITDataTypeState = eval(this.SPITDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SpellUnleveled_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SpellUnleveled_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SpellUnleveled_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.Cost ?? true)
-                {
-                    fg.AppendLine($"Cost => {Cost}");
-                }
-                if (printMask?.Level ?? true)
-                {
-                    fg.AppendLine($"Level => {Level}");
-                }
-                if (printMask?.Flag ?? true)
-                {
-                    fg.AppendLine($"Flag => {Flag}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Effects != null)
-                        {
-                            if (Effects.Overall != null)
-                            {
-                                fg.AppendLine(Effects.Overall.ToString());
-                            }
-                            if (Effects.Specific != null)
-                            {
-                                foreach (var subItem in Effects.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.SPITDataTypeState ?? true)
-                {
-                    fg.AppendLine($"SPITDataTypeState => {SPITDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SpellUnleveled_ErrorMask : Spell_ErrorMask, IErrorMask<SpellUnleveled_ErrorMask>
-    {
-        #region Members
-        public Exception? Type;
-        public Exception? Cost;
-        public Exception? Level;
-        public Exception? Flag;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>? Effects;
-        public Exception? SPITDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    return Type;
-                case SpellUnleveled_FieldIndex.Cost:
-                    return Cost;
-                case SpellUnleveled_FieldIndex.Level:
-                    return Level;
-                case SpellUnleveled_FieldIndex.Flag:
-                    return Flag;
-                case SpellUnleveled_FieldIndex.Effects:
-                    return Effects;
-                case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                    return SPITDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case SpellUnleveled_FieldIndex.Cost:
-                    this.Cost = ex;
-                    break;
-                case SpellUnleveled_FieldIndex.Level:
-                    this.Level = ex;
-                    break;
-                case SpellUnleveled_FieldIndex.Flag:
-                    this.Flag = ex;
-                    break;
-                case SpellUnleveled_FieldIndex.Effects:
-                    this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ex, null);
-                    break;
-                case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                    this.SPITDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
-            switch (enu)
-            {
-                case SpellUnleveled_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Cost:
-                    this.Cost = (Exception)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Level:
-                    this.Level = (Exception)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Flag:
-                    this.Flag = (Exception)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.Effects:
-                    this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>)obj;
-                    break;
-                case SpellUnleveled_FieldIndex.SPITDataTypeState:
-                    this.SPITDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Type != null) return true;
-            if (Cost != null) return true;
-            if (Level != null) return true;
-            if (Flag != null) return true;
-            if (Effects != null) return true;
-            if (SPITDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SpellUnleveled_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"Cost => {Cost}");
-            fg.AppendLine($"Level => {Level}");
-            fg.AppendLine($"Flag => {Flag}");
-            fg.AppendLine("Effects =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Effects != null)
-                {
-                    if (Effects.Overall != null)
-                    {
-                        fg.AppendLine(Effects.Overall.ToString());
-                    }
-                    if (Effects.Specific != null)
-                    {
-                        foreach (var subItem in Effects.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"SPITDataTypeState => {SPITDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public SpellUnleveled_ErrorMask Combine(SpellUnleveled_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SpellUnleveled_ErrorMask();
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.Cost = this.Cost.Combine(rhs.Cost);
-            ret.Level = this.Level.Combine(rhs.Level);
-            ret.Flag = this.Flag.Combine(rhs.Flag);
-            ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-            ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
-            return ret;
-        }
-        public static SpellUnleveled_ErrorMask? Combine(SpellUnleveled_ErrorMask? lhs, SpellUnleveled_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new SpellUnleveled_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SpellUnleveled_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SpellUnleveled_TranslationMask : Spell_TranslationMask
-    {
-        #region Members
-        public bool Type;
-        public bool Cost;
-        public bool Level;
-        public bool Flag;
-        public MaskItem<bool, Effect_TranslationMask?> Effects;
-        public bool SPITDataTypeState;
-        #endregion
-
-        #region Ctors
-        public SpellUnleveled_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Type = defaultOn;
-            this.Cost = defaultOn;
-            this.Level = defaultOn;
-            this.Flag = defaultOn;
-            this.Effects = new MaskItem<bool, Effect_TranslationMask?>(defaultOn, null);
-            this.SPITDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Type, null));
-            ret.Add((Cost, null));
-            ret.Add((Level, null));
-            ret.Add((Flag, null));
-            ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
-            ret.Add((SPITDataTypeState, null));
-        }
-    }
 }
 #endregion
 

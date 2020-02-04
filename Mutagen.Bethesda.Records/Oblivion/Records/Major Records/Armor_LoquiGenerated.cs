@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Armor CreateFromXml(
             XElement node,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -166,15 +166,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Armor CreateFromXml(
             XElement node,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Armor.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Armor CreateFromXml(
             string path,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Armor CreateFromXml(
             string path,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Armor CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Armor CreateFromXml(
             Stream stream,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,8 +238,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Armor CreateFromXml(
             Stream stream,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Armor CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -262,6 +262,401 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ClothingAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.ArmorValue = initialValue;
+                this.Value = initialValue;
+                this.Health = initialValue;
+                this.Weight = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Script,
+                T Enchantment,
+                T EnchantmentPoints,
+                T BipedFlags,
+                T Flags,
+                T MaleBipedModel,
+                T MaleWorldModel,
+                T MaleIcon,
+                T FemaleBipedModel,
+                T FemaleWorldModel,
+                T FemaleIcon,
+                T BMDTDataTypeState,
+                T ArmorValue,
+                T Value,
+                T Health,
+                T Weight,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags,
+                Name: Name,
+                Script: Script,
+                Enchantment: Enchantment,
+                EnchantmentPoints: EnchantmentPoints,
+                BipedFlags: BipedFlags,
+                Flags: Flags,
+                MaleBipedModel: MaleBipedModel,
+                MaleWorldModel: MaleWorldModel,
+                MaleIcon: MaleIcon,
+                FemaleBipedModel: FemaleBipedModel,
+                FemaleWorldModel: FemaleWorldModel,
+                FemaleIcon: FemaleIcon,
+                BMDTDataTypeState: BMDTDataTypeState)
+            {
+                this.ArmorValue = ArmorValue;
+                this.Value = Value;
+                this.Health = Health;
+                this.Weight = Weight;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T ArmorValue;
+            public T Value;
+            public T Health;
+            public T Weight;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ArmorValue, rhs.ArmorValue)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.ArmorValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Health?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.ArmorValue)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Health)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Armor.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.ArmorValue = eval(this.ArmorValue);
+                obj.Value = eval(this.Value);
+                obj.Health = eval(this.Health);
+                obj.Weight = eval(this.Weight);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Armor.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Armor.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Armor.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.ArmorValue ?? true)
+                    {
+                        fg.AppendLine($"ArmorValue => {ArmorValue}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        fg.AppendLine($"Health => {Health}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ClothingAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? ArmorValue;
+            public Exception? Value;
+            public Exception? Health;
+            public Exception? Weight;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Armor_FieldIndex enu = (Armor_FieldIndex)index;
+                switch (enu)
+                {
+                    case Armor_FieldIndex.ArmorValue:
+                        return ArmorValue;
+                    case Armor_FieldIndex.Value:
+                        return Value;
+                    case Armor_FieldIndex.Health:
+                        return Health;
+                    case Armor_FieldIndex.Weight:
+                        return Weight;
+                    case Armor_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Armor_FieldIndex enu = (Armor_FieldIndex)index;
+                switch (enu)
+                {
+                    case Armor_FieldIndex.ArmorValue:
+                        this.ArmorValue = ex;
+                        break;
+                    case Armor_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Armor_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case Armor_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Armor_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Armor_FieldIndex enu = (Armor_FieldIndex)index;
+                switch (enu)
+                {
+                    case Armor_FieldIndex.ArmorValue:
+                        this.ArmorValue = (Exception)obj;
+                        break;
+                    case Armor_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case Armor_FieldIndex.Health:
+                        this.Health = (Exception)obj;
+                        break;
+                    case Armor_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case Armor_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (ArmorValue != null) return true;
+                if (Value != null) return true;
+                if (Health != null) return true;
+                if (Weight != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"ArmorValue => {ArmorValue}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Health => {Health}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.ArmorValue = this.ArmorValue.Combine(rhs.ArmorValue);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ClothingAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool ArmorValue;
+            public bool Value;
+            public bool Health;
+            public bool Weight;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.ArmorValue = defaultOn;
+                this.Value = defaultOn;
+                this.Health = defaultOn;
+                this.Weight = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ArmorValue, null));
+                ret.Add((Value, null));
+                ret.Add((Health, null));
+                ret.Add((Weight, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -389,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ArmorSetterCommon)((IArmorGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Armor_Mask<bool> GetEqualsMask(
+        public static Armor.Mask<bool> GetEqualsMask(
             this IArmorGetter item,
             IArmorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -403,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IArmorGetter item,
             string? name = null,
-            Armor_Mask<bool>? printMask = null)
+            Armor.Mask<bool>? printMask = null)
         {
             return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -415,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorGetter item,
             FileGeneration fg,
             string? name = null,
-            Armor_Mask<bool>? printMask = null)
+            Armor.Mask<bool>? printMask = null)
         {
             ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -426,16 +821,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IArmorGetter item,
-            Armor_Mask<bool?> checkMask)
+            Armor.Mask<bool?> checkMask)
         {
             return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Armor_Mask<bool> GetHasBeenSetMask(this IArmorGetter item)
+        public static Armor.Mask<bool> GetHasBeenSetMask(this IArmorGetter item)
         {
-            var ret = new Armor_Mask<bool>(false);
+            var ret = new Armor.Mask<bool>(false);
             ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -454,8 +849,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IArmorInternal lhs,
             IArmorGetter rhs,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? copyMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ArmorSetterTranslationCommon)((IArmorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -463,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Armor.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -481,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Armor DeepCopy(
             this IArmorGetter item,
-            Armor_TranslationMask? copyMask = null)
+            Armor.TranslationMask? copyMask = null)
         {
             return ((ArmorSetterTranslationCommon)((IArmorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -490,8 +885,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Armor DeepCopy(
             this IArmorGetter item,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? copyMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? copyMask = null)
         {
             return ((ArmorSetterTranslationCommon)((IArmorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -515,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IArmorInternal item,
             XElement node,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -528,8 +923,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IArmorInternal item,
             XElement node,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -537,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Armor.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -556,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IArmorInternal item,
             string path,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -568,8 +963,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IArmorInternal item,
             string path,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -583,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -596,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IArmorInternal item,
             Stream stream,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -608,8 +1003,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IArmorInternal item,
             Stream stream,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -623,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Armor_TranslationMask? translationMask = null)
+            Armor.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -718,9 +1113,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 23;
 
-        public static readonly Type MaskType = typeof(Armor_Mask<>);
+        public static readonly Type MaskType = typeof(Armor.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Armor_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Armor.ErrorMask);
 
         public static readonly Type ClassType = typeof(Armor);
 
@@ -1089,12 +1484,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ArmorCommon Instance = new ArmorCommon();
 
-        public Armor_Mask<bool> GetEqualsMask(
+        public Armor.Mask<bool> GetEqualsMask(
             IArmorGetter item,
             IArmorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Armor_Mask<bool>(false);
+            var ret = new Armor.Mask<bool>(false);
             ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1106,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IArmorGetter item,
             IArmorGetter rhs,
-            Armor_Mask<bool> ret,
+            Armor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1121,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IArmorGetter item,
             string? name = null,
-            Armor_Mask<bool>? printMask = null)
+            Armor.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1136,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorGetter item,
             FileGeneration fg,
             string? name = null,
-            Armor_Mask<bool>? printMask = null)
+            Armor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1160,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IArmorGetter item,
             FileGeneration fg,
-            Armor_Mask<bool>? printMask = null)
+            Armor.Mask<bool>? printMask = null)
         {
             ClothingAbstractCommon.ToStringFields(
                 item: item,
@@ -1190,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IArmorGetter item,
-            Armor_Mask<bool?> checkMask)
+            Armor.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1199,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IArmorGetter item,
-            Armor_Mask<bool> mask)
+            Armor.Mask<bool> mask)
         {
             mask.ArmorValue = true;
             mask.Value = true;
@@ -1586,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Armor DeepCopy(
             IArmorGetter item,
-            Armor_TranslationMask? copyMask = null)
+            Armor.TranslationMask? copyMask = null)
         {
             Armor ret = (Armor)((ArmorCommon)((IArmorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1597,8 +1992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Armor DeepCopy(
             IArmorGetter item,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? copyMask = null)
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? copyMask = null)
         {
             Armor ret = (Armor)((ArmorCommon)((IArmorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1968,8 +2363,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IArmorGetter item,
             XElement node,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null,
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1979,14 +2374,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Armor.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IArmorGetter item,
             string path,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null,
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2002,8 +2397,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IArmorGetter item,
             Stream stream,
-            out Armor_ErrorMask errorMask,
-            Armor_TranslationMask? translationMask = null,
+            out Armor.ErrorMask errorMask,
+            Armor.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2020,400 +2415,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Armor_Mask<T> :
-        ClothingAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<Armor_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Armor_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.ArmorValue = initialValue;
-            this.Value = initialValue;
-            this.Health = initialValue;
-            this.Weight = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Armor_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Script,
-            T Enchantment,
-            T EnchantmentPoints,
-            T BipedFlags,
-            T Flags,
-            T MaleBipedModel,
-            T MaleWorldModel,
-            T MaleIcon,
-            T FemaleBipedModel,
-            T FemaleWorldModel,
-            T FemaleIcon,
-            T BMDTDataTypeState,
-            T ArmorValue,
-            T Value,
-            T Health,
-            T Weight,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags,
-            Name: Name,
-            Script: Script,
-            Enchantment: Enchantment,
-            EnchantmentPoints: EnchantmentPoints,
-            BipedFlags: BipedFlags,
-            Flags: Flags,
-            MaleBipedModel: MaleBipedModel,
-            MaleWorldModel: MaleWorldModel,
-            MaleIcon: MaleIcon,
-            FemaleBipedModel: FemaleBipedModel,
-            FemaleWorldModel: FemaleWorldModel,
-            FemaleIcon: FemaleIcon,
-            BMDTDataTypeState: BMDTDataTypeState)
-        {
-            this.ArmorValue = ArmorValue;
-            this.Value = Value;
-            this.Health = Health;
-            this.Weight = Weight;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Armor_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T ArmorValue;
-        public T Value;
-        public T Health;
-        public T Weight;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Armor_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Armor_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.ArmorValue, rhs.ArmorValue)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Health, rhs.Health)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ArmorValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Health?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.ArmorValue)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Health)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Armor_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Armor_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Armor_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.ArmorValue = eval(this.ArmorValue);
-            obj.Value = eval(this.Value);
-            obj.Health = eval(this.Health);
-            obj.Weight = eval(this.Weight);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Armor_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Armor_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Armor_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ArmorValue ?? true)
-                {
-                    fg.AppendLine($"ArmorValue => {ArmorValue}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {Health}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Armor_ErrorMask : ClothingAbstract_ErrorMask, IErrorMask<Armor_ErrorMask>
-    {
-        #region Members
-        public Exception? ArmorValue;
-        public Exception? Value;
-        public Exception? Health;
-        public Exception? Weight;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    return ArmorValue;
-                case Armor_FieldIndex.Value:
-                    return Value;
-                case Armor_FieldIndex.Health:
-                    return Health;
-                case Armor_FieldIndex.Weight:
-                    return Weight;
-                case Armor_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    this.ArmorValue = ex;
-                    break;
-                case Armor_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case Armor_FieldIndex.Health:
-                    this.Health = ex;
-                    break;
-                case Armor_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Armor_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Armor_FieldIndex enu = (Armor_FieldIndex)index;
-            switch (enu)
-            {
-                case Armor_FieldIndex.ArmorValue:
-                    this.ArmorValue = (Exception)obj;
-                    break;
-                case Armor_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case Armor_FieldIndex.Health:
-                    this.Health = (Exception)obj;
-                    break;
-                case Armor_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Armor_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ArmorValue != null) return true;
-            if (Value != null) return true;
-            if (Health != null) return true;
-            if (Weight != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Armor_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"ArmorValue => {ArmorValue}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Health => {Health}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Armor_ErrorMask Combine(Armor_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Armor_ErrorMask();
-            ret.ArmorValue = this.ArmorValue.Combine(rhs.ArmorValue);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Health = this.Health.Combine(rhs.Health);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Armor_ErrorMask? Combine(Armor_ErrorMask? lhs, Armor_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Armor_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Armor_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Armor_TranslationMask : ClothingAbstract_TranslationMask
-    {
-        #region Members
-        public bool ArmorValue;
-        public bool Value;
-        public bool Health;
-        public bool Weight;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Armor_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.ArmorValue = defaultOn;
-            this.Value = defaultOn;
-            this.Health = defaultOn;
-            this.Weight = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((ArmorValue, null));
-            ret.Add((Value, null));
-            ret.Add((Health, null));
-            ret.Add((Weight, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

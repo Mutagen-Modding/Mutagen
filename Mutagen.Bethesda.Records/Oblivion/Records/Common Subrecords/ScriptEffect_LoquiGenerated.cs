@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ScriptEffect CreateFromXml(
             XElement node,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -168,15 +168,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ScriptEffect CreateFromXml(
             XElement node,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptEffect.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect CreateFromXml(
             string path,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -206,8 +206,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect CreateFromXml(
             string path,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptEffect CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect CreateFromXml(
             Stream stream,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -240,8 +240,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect CreateFromXml(
             Stream stream,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptEffect CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -264,6 +264,401 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Script = initialValue;
+                this.MagicSchool = initialValue;
+                this.VisualEffect = initialValue;
+                this.Flags = initialValue;
+                this.Name = initialValue;
+                this.SCITDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T Script,
+                T MagicSchool,
+                T VisualEffect,
+                T Flags,
+                T Name,
+                T SCITDataTypeState)
+            {
+                this.Script = Script;
+                this.MagicSchool = MagicSchool;
+                this.VisualEffect = VisualEffect;
+                this.Flags = Flags;
+                this.Name = Name;
+                this.SCITDataTypeState = SCITDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Script;
+            public T MagicSchool;
+            public T VisualEffect;
+            public T Flags;
+            public T Name;
+            public T SCITDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.MagicSchool, rhs.MagicSchool)) return false;
+                if (!object.Equals(this.VisualEffect, rhs.VisualEffect)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.SCITDataTypeState, rhs.SCITDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.MagicSchool?.GetHashCode());
+                ret = ret.CombineHashCode(this.VisualEffect?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.SCITDataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Script)) return false;
+                if (!eval(this.MagicSchool)) return false;
+                if (!eval(this.VisualEffect)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.SCITDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ScriptEffect.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Script = eval(this.Script);
+                obj.MagicSchool = eval(this.MagicSchool);
+                obj.VisualEffect = eval(this.VisualEffect);
+                obj.Flags = eval(this.Flags);
+                obj.Name = eval(this.Name);
+                obj.SCITDataTypeState = eval(this.SCITDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ScriptEffect.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ScriptEffect.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ScriptEffect.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.MagicSchool ?? true)
+                    {
+                        fg.AppendLine($"MagicSchool => {MagicSchool}");
+                    }
+                    if (printMask?.VisualEffect ?? true)
+                    {
+                        fg.AppendLine($"VisualEffect => {VisualEffect}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.SCITDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Script;
+            public Exception? MagicSchool;
+            public Exception? VisualEffect;
+            public Exception? Flags;
+            public Exception? Name;
+            public Exception? SCITDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptEffect_FieldIndex.Script:
+                        return Script;
+                    case ScriptEffect_FieldIndex.MagicSchool:
+                        return MagicSchool;
+                    case ScriptEffect_FieldIndex.VisualEffect:
+                        return VisualEffect;
+                    case ScriptEffect_FieldIndex.Flags:
+                        return Flags;
+                    case ScriptEffect_FieldIndex.Name:
+                        return Name;
+                    case ScriptEffect_FieldIndex.SCITDataTypeState:
+                        return SCITDataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptEffect_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case ScriptEffect_FieldIndex.MagicSchool:
+                        this.MagicSchool = ex;
+                        break;
+                    case ScriptEffect_FieldIndex.VisualEffect:
+                        this.VisualEffect = ex;
+                        break;
+                    case ScriptEffect_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ScriptEffect_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ScriptEffect_FieldIndex.SCITDataTypeState:
+                        this.SCITDataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptEffect_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case ScriptEffect_FieldIndex.MagicSchool:
+                        this.MagicSchool = (Exception)obj;
+                        break;
+                    case ScriptEffect_FieldIndex.VisualEffect:
+                        this.VisualEffect = (Exception)obj;
+                        break;
+                    case ScriptEffect_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case ScriptEffect_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case ScriptEffect_FieldIndex.SCITDataTypeState:
+                        this.SCITDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Script != null) return true;
+                if (MagicSchool != null) return true;
+                if (VisualEffect != null) return true;
+                if (Flags != null) return true;
+                if (Name != null) return true;
+                if (SCITDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"MagicSchool => {MagicSchool}");
+                fg.AppendLine($"VisualEffect => {VisualEffect}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.MagicSchool = this.MagicSchool.Combine(rhs.MagicSchool);
+                ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.SCITDataTypeState = this.SCITDataTypeState.Combine(rhs.SCITDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Script;
+            public bool MagicSchool;
+            public bool VisualEffect;
+            public bool Flags;
+            public bool Name;
+            public bool SCITDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Script = defaultOn;
+                this.MagicSchool = defaultOn;
+                this.VisualEffect = defaultOn;
+                this.Flags = defaultOn;
+                this.Name = defaultOn;
+                this.SCITDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Script, null));
+                ret.Add((MagicSchool, null));
+                ret.Add((VisualEffect, null));
+                ret.Add((Flags, null));
+                ret.Add((Name, null));
+                ret.Add((SCITDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -387,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptEffectSetterCommon)((IScriptEffectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptEffect_Mask<bool> GetEqualsMask(
+        public static ScriptEffect.Mask<bool> GetEqualsMask(
             this IScriptEffectGetter item,
             IScriptEffectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -401,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IScriptEffectGetter item,
             string? name = null,
-            ScriptEffect_Mask<bool>? printMask = null)
+            ScriptEffect.Mask<bool>? printMask = null)
         {
             return ((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -413,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptEffectGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptEffect_Mask<bool>? printMask = null)
+            ScriptEffect.Mask<bool>? printMask = null)
         {
             ((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -424,16 +819,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IScriptEffectGetter item,
-            ScriptEffect_Mask<bool?> checkMask)
+            ScriptEffect.Mask<bool?> checkMask)
         {
             return ((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptEffect_Mask<bool> GetHasBeenSetMask(this IScriptEffectGetter item)
+        public static ScriptEffect.Mask<bool> GetHasBeenSetMask(this IScriptEffectGetter item)
         {
-            var ret = new ScriptEffect_Mask<bool>(false);
+            var ret = new ScriptEffect.Mask<bool>(false);
             ((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -452,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IScriptEffect lhs,
             IScriptEffectGetter rhs,
-            ScriptEffect_TranslationMask? copyMask = null)
+            ScriptEffect.TranslationMask? copyMask = null)
         {
             ((ScriptEffectSetterTranslationCommon)((IScriptEffectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -464,8 +859,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IScriptEffect lhs,
             IScriptEffectGetter rhs,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? copyMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptEffectSetterTranslationCommon)((IScriptEffectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -473,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -491,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect DeepCopy(
             this IScriptEffectGetter item,
-            ScriptEffect_TranslationMask? copyMask = null)
+            ScriptEffect.TranslationMask? copyMask = null)
         {
             return ((ScriptEffectSetterTranslationCommon)((IScriptEffectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -500,8 +895,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptEffect DeepCopy(
             this IScriptEffectGetter item,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? copyMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? copyMask = null)
         {
             return ((ScriptEffectSetterTranslationCommon)((IScriptEffectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -525,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptEffect item,
             XElement node,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -538,8 +933,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptEffect item,
             XElement node,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -547,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -566,7 +961,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptEffect item,
             string path,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -578,8 +973,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptEffect item,
             string path,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -593,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptEffect item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -606,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptEffect item,
             Stream stream,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -618,8 +1013,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptEffect item,
             Stream stream,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -633,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptEffect item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -711,9 +1106,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(ScriptEffect_Mask<>);
+        public static readonly Type MaskType = typeof(ScriptEffect.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptEffect_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ScriptEffect.ErrorMask);
 
         public static readonly Type ClassType = typeof(ScriptEffect);
 
@@ -1057,12 +1452,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ScriptEffectCommon Instance = new ScriptEffectCommon();
 
-        public ScriptEffect_Mask<bool> GetEqualsMask(
+        public ScriptEffect.Mask<bool> GetEqualsMask(
             IScriptEffectGetter item,
             IScriptEffectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptEffect_Mask<bool>(false);
+            var ret = new ScriptEffect.Mask<bool>(false);
             ((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1074,7 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IScriptEffectGetter item,
             IScriptEffectGetter rhs,
-            ScriptEffect_Mask<bool> ret,
+            ScriptEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1089,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IScriptEffectGetter item,
             string? name = null,
-            ScriptEffect_Mask<bool>? printMask = null)
+            ScriptEffect.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1104,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptEffect_Mask<bool>? printMask = null)
+            ScriptEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1128,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IScriptEffectGetter item,
             FileGeneration fg,
-            ScriptEffect_Mask<bool>? printMask = null)
+            ScriptEffect.Mask<bool>? printMask = null)
         {
             if (printMask?.Script ?? true)
             {
@@ -1158,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IScriptEffectGetter item,
-            ScriptEffect_Mask<bool?> checkMask)
+            ScriptEffect.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return true;
@@ -1166,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IScriptEffectGetter item,
-            ScriptEffect_Mask<bool> mask)
+            ScriptEffect.Mask<bool> mask)
         {
             mask.Script = true;
             mask.MagicSchool = true;
@@ -1267,7 +1662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptEffect DeepCopy(
             IScriptEffectGetter item,
-            ScriptEffect_TranslationMask? copyMask = null)
+            ScriptEffect.TranslationMask? copyMask = null)
         {
             ScriptEffect ret = (ScriptEffect)((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1278,8 +1673,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptEffect DeepCopy(
             IScriptEffectGetter item,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? copyMask = null)
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? copyMask = null)
         {
             ScriptEffect ret = (ScriptEffect)((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1653,8 +2048,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptEffectGetter item,
             XElement node,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null,
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1664,14 +2059,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IScriptEffectGetter item,
             string path,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null,
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1704,8 +2099,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptEffectGetter item,
             Stream stream,
-            out ScriptEffect_ErrorMask errorMask,
-            ScriptEffect_TranslationMask? translationMask = null,
+            out ScriptEffect.ErrorMask errorMask,
+            ScriptEffect.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1754,7 +2149,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptEffectGetter item,
             XElement node,
             string? name = null,
-            ScriptEffect_TranslationMask? translationMask = null)
+            ScriptEffect.TranslationMask? translationMask = null)
         {
             ((ScriptEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1798,402 +2193,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class ScriptEffect_Mask<T> :
-        IMask<T>,
-        IEquatable<ScriptEffect_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ScriptEffect_Mask(T initialValue)
-        {
-            this.Script = initialValue;
-            this.MagicSchool = initialValue;
-            this.VisualEffect = initialValue;
-            this.Flags = initialValue;
-            this.Name = initialValue;
-            this.SCITDataTypeState = initialValue;
-        }
-
-        public ScriptEffect_Mask(
-            T Script,
-            T MagicSchool,
-            T VisualEffect,
-            T Flags,
-            T Name,
-            T SCITDataTypeState)
-        {
-            this.Script = Script;
-            this.MagicSchool = MagicSchool;
-            this.VisualEffect = VisualEffect;
-            this.Flags = Flags;
-            this.Name = Name;
-            this.SCITDataTypeState = SCITDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected ScriptEffect_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Script;
-        public T MagicSchool;
-        public T VisualEffect;
-        public T Flags;
-        public T Name;
-        public T SCITDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ScriptEffect_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ScriptEffect_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.MagicSchool, rhs.MagicSchool)) return false;
-            if (!object.Equals(this.VisualEffect, rhs.VisualEffect)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.SCITDataTypeState, rhs.SCITDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.MagicSchool?.GetHashCode());
-            ret = ret.CombineHashCode(this.VisualEffect?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.SCITDataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Script)) return false;
-            if (!eval(this.MagicSchool)) return false;
-            if (!eval(this.VisualEffect)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.SCITDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ScriptEffect_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ScriptEffect_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ScriptEffect_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Script = eval(this.Script);
-            obj.MagicSchool = eval(this.MagicSchool);
-            obj.VisualEffect = eval(this.VisualEffect);
-            obj.Flags = eval(this.Flags);
-            obj.Name = eval(this.Name);
-            obj.SCITDataTypeState = eval(this.SCITDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ScriptEffect_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ScriptEffect_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ScriptEffect_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.MagicSchool ?? true)
-                {
-                    fg.AppendLine($"MagicSchool => {MagicSchool}");
-                }
-                if (printMask?.VisualEffect ?? true)
-                {
-                    fg.AppendLine($"VisualEffect => {VisualEffect}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.SCITDataTypeState ?? true)
-                {
-                    fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ScriptEffect_ErrorMask : IErrorMask, IErrorMask<ScriptEffect_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Script;
-        public Exception? MagicSchool;
-        public Exception? VisualEffect;
-        public Exception? Flags;
-        public Exception? Name;
-        public Exception? SCITDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    return Script;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    return MagicSchool;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    return VisualEffect;
-                case ScriptEffect_FieldIndex.Flags:
-                    return Flags;
-                case ScriptEffect_FieldIndex.Name:
-                    return Name;
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    return SCITDataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    this.MagicSchool = ex;
-                    break;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    this.VisualEffect = ex;
-                    break;
-                case ScriptEffect_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case ScriptEffect_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    this.SCITDataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptEffect_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    this.MagicSchool = (Exception)obj;
-                    break;
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    this.VisualEffect = (Exception)obj;
-                    break;
-                case ScriptEffect_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case ScriptEffect_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    this.SCITDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Script != null) return true;
-            if (MagicSchool != null) return true;
-            if (VisualEffect != null) return true;
-            if (Flags != null) return true;
-            if (Name != null) return true;
-            if (SCITDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ScriptEffect_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"MagicSchool => {MagicSchool}");
-            fg.AppendLine($"VisualEffect => {VisualEffect}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"SCITDataTypeState => {SCITDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public ScriptEffect_ErrorMask Combine(ScriptEffect_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ScriptEffect_ErrorMask();
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.MagicSchool = this.MagicSchool.Combine(rhs.MagicSchool);
-            ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.SCITDataTypeState = this.SCITDataTypeState.Combine(rhs.SCITDataTypeState);
-            return ret;
-        }
-        public static ScriptEffect_ErrorMask? Combine(ScriptEffect_ErrorMask? lhs, ScriptEffect_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ScriptEffect_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ScriptEffect_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ScriptEffect_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Script;
-        public bool MagicSchool;
-        public bool VisualEffect;
-        public bool Flags;
-        public bool Name;
-        public bool SCITDataTypeState;
-        #endregion
-
-        #region Ctors
-        public ScriptEffect_TranslationMask(bool defaultOn)
-        {
-            this.Script = defaultOn;
-            this.MagicSchool = defaultOn;
-            this.VisualEffect = defaultOn;
-            this.Flags = defaultOn;
-            this.Name = defaultOn;
-            this.SCITDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Script, null));
-            ret.Add((MagicSchool, null));
-            ret.Add((VisualEffect, null));
-            ret.Add((Flags, null));
-            ret.Add((Name, null));
-            ret.Add((SCITDataTypeState, null));
-        }
-    }
 }
 #endregion
 

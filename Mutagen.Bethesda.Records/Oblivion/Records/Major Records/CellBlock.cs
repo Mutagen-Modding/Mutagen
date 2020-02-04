@@ -15,15 +15,15 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBlock : IXmlFolderItem
     {
-        public static readonly CellBlock_TranslationMask XmlFolderTranslationMask = new CellBlock_TranslationMask(true)
+        public static readonly CellBlock.TranslationMask XmlFolderTranslationMask = new CellBlock.TranslationMask(true)
         {
-            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask?>(false, default)
+            SubBlocks = new MaskItem<bool, CellSubBlock.TranslationMask?>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
-        public static CellBlock_TranslationMask duplicateMask = new CellBlock_TranslationMask(true)
+        public static CellBlock.TranslationMask duplicateMask = new CellBlock.TranslationMask(true)
         {
-            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask?>(false, default)
+            SubBlocks = new MaskItem<bool, CellSubBlock.TranslationMask?>(false, default)
         };
 
         public async Task WriteToXmlFolder(

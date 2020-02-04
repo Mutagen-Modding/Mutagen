@@ -38,9 +38,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public static class GroupExt
     {
-        public static readonly Group_TranslationMask<OblivionMajorRecord_TranslationMask> XmlFolderTranslationMask = new Group_TranslationMask<OblivionMajorRecord_TranslationMask>(true)
+        public static readonly Group.TranslationMask<OblivionMajorRecord.TranslationMask> XmlFolderTranslationMask = new Group.TranslationMask<OblivionMajorRecord.TranslationMask>(true)
         {
-            RecordCache = new MaskItem<bool, OblivionMajorRecord_TranslationMask?>(false, default)
+            RecordCache = new MaskItem<bool, OblivionMajorRecord.TranslationMask?>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder? errorMask,
             int index)
             where T : OblivionMajorRecord, ILoquiObject<T>, IFormKey, IXmlItem, IBinaryItem
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_ErrMask : MajorRecord.ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (errorMask?.PushIndex(index))
             {

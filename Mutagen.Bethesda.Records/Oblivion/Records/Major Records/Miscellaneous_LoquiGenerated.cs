@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Miscellaneous CreateFromXml(
             XElement node,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -181,15 +181,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Miscellaneous CreateFromXml(
             XElement node,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Miscellaneous.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Miscellaneous CreateFromXml(
             string path,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -219,8 +219,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Miscellaneous CreateFromXml(
             string path,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Miscellaneous CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Miscellaneous CreateFromXml(
             Stream stream,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -253,8 +253,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Miscellaneous CreateFromXml(
             Stream stream,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Miscellaneous CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -277,6 +277,433 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ItemAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+                this.Script = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Icon,
+                T Script,
+                T Value,
+                T Weight,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+                this.Script = Script;
+                this.Value = Value;
+                this.Weight = Weight;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            public T Script;
+            public T Value;
+            public T Weight;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Miscellaneous.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+                obj.Script = eval(this.Script);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Miscellaneous.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Miscellaneous.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Miscellaneous.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ItemAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            public Exception? Script;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
+                switch (enu)
+                {
+                    case Miscellaneous_FieldIndex.Name:
+                        return Name;
+                    case Miscellaneous_FieldIndex.Model:
+                        return Model;
+                    case Miscellaneous_FieldIndex.Icon:
+                        return Icon;
+                    case Miscellaneous_FieldIndex.Script:
+                        return Script;
+                    case Miscellaneous_FieldIndex.Value:
+                        return Value;
+                    case Miscellaneous_FieldIndex.Weight:
+                        return Weight;
+                    case Miscellaneous_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
+                switch (enu)
+                {
+                    case Miscellaneous_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Miscellaneous_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Miscellaneous_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Miscellaneous_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Miscellaneous_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Miscellaneous_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Miscellaneous_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
+                switch (enu)
+                {
+                    case Miscellaneous_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Miscellaneous_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Miscellaneous_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Miscellaneous_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Miscellaneous_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case Miscellaneous_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case Miscellaneous_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                if (Script != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ItemAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            public bool Script;
+            public bool Value;
+            public bool Weight;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+                this.Script = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+                ret.Add((Script, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -411,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MiscellaneousSetterCommon)((IMiscellaneousGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Miscellaneous_Mask<bool> GetEqualsMask(
+        public static Miscellaneous.Mask<bool> GetEqualsMask(
             this IMiscellaneousGetter item,
             IMiscellaneousGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -425,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IMiscellaneousGetter item,
             string? name = null,
-            Miscellaneous_Mask<bool>? printMask = null)
+            Miscellaneous.Mask<bool>? printMask = null)
         {
             return ((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -437,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousGetter item,
             FileGeneration fg,
             string? name = null,
-            Miscellaneous_Mask<bool>? printMask = null)
+            Miscellaneous.Mask<bool>? printMask = null)
         {
             ((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -448,16 +875,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IMiscellaneousGetter item,
-            Miscellaneous_Mask<bool?> checkMask)
+            Miscellaneous.Mask<bool?> checkMask)
         {
             return ((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Miscellaneous_Mask<bool> GetHasBeenSetMask(this IMiscellaneousGetter item)
+        public static Miscellaneous.Mask<bool> GetHasBeenSetMask(this IMiscellaneousGetter item)
         {
-            var ret = new Miscellaneous_Mask<bool>(false);
+            var ret = new Miscellaneous.Mask<bool>(false);
             ((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -476,8 +903,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IMiscellaneousInternal lhs,
             IMiscellaneousGetter rhs,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? copyMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((MiscellaneousSetterTranslationCommon)((IMiscellaneousGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -485,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Miscellaneous.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -503,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Miscellaneous DeepCopy(
             this IMiscellaneousGetter item,
-            Miscellaneous_TranslationMask? copyMask = null)
+            Miscellaneous.TranslationMask? copyMask = null)
         {
             return ((MiscellaneousSetterTranslationCommon)((IMiscellaneousGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -512,8 +939,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Miscellaneous DeepCopy(
             this IMiscellaneousGetter item,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? copyMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? copyMask = null)
         {
             return ((MiscellaneousSetterTranslationCommon)((IMiscellaneousGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -537,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             XElement node,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -550,8 +977,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             XElement node,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -559,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Miscellaneous.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -578,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             string path,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -590,8 +1017,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             string path,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -605,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -618,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             Stream stream,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -630,8 +1057,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             Stream stream,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -645,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Miscellaneous_TranslationMask? translationMask = null)
+            Miscellaneous.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -729,9 +1156,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 12;
 
-        public static readonly Type MaskType = typeof(Miscellaneous_Mask<>);
+        public static readonly Type MaskType = typeof(Miscellaneous.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Miscellaneous_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Miscellaneous.ErrorMask);
 
         public static readonly Type ClassType = typeof(Miscellaneous);
 
@@ -1152,12 +1579,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly MiscellaneousCommon Instance = new MiscellaneousCommon();
 
-        public Miscellaneous_Mask<bool> GetEqualsMask(
+        public Miscellaneous.Mask<bool> GetEqualsMask(
             IMiscellaneousGetter item,
             IMiscellaneousGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Miscellaneous_Mask<bool>(false);
+            var ret = new Miscellaneous.Mask<bool>(false);
             ((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1169,7 +1596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IMiscellaneousGetter item,
             IMiscellaneousGetter rhs,
-            Miscellaneous_Mask<bool> ret,
+            Miscellaneous.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1190,7 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IMiscellaneousGetter item,
             string? name = null,
-            Miscellaneous_Mask<bool>? printMask = null)
+            Miscellaneous.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1205,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMiscellaneousGetter item,
             FileGeneration fg,
             string? name = null,
-            Miscellaneous_Mask<bool>? printMask = null)
+            Miscellaneous.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1229,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IMiscellaneousGetter item,
             FileGeneration fg,
-            Miscellaneous_Mask<bool>? printMask = null)
+            Miscellaneous.Mask<bool>? printMask = null)
         {
             ItemAbstractCommon.ToStringFields(
                 item: item,
@@ -1267,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IMiscellaneousGetter item,
-            Miscellaneous_Mask<bool?> checkMask)
+            Miscellaneous.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1281,11 +1708,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IMiscellaneousGetter item,
-            Miscellaneous_Mask<bool> mask)
+            Miscellaneous.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.Script = item.Script.HasBeenSet;
             mask.Value = true;
@@ -1633,7 +2060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Miscellaneous DeepCopy(
             IMiscellaneousGetter item,
-            Miscellaneous_TranslationMask? copyMask = null)
+            Miscellaneous.TranslationMask? copyMask = null)
         {
             Miscellaneous ret = (Miscellaneous)((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1644,8 +2071,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Miscellaneous DeepCopy(
             IMiscellaneousGetter item,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? copyMask = null)
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? copyMask = null)
         {
             Miscellaneous ret = (Miscellaneous)((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2062,8 +2489,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMiscellaneousGetter item,
             XElement node,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null,
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2073,14 +2500,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Miscellaneous.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IMiscellaneousGetter item,
             string path,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null,
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2096,8 +2523,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMiscellaneousGetter item,
             Stream stream,
-            out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask? translationMask = null,
+            out Miscellaneous.ErrorMask errorMask,
+            Miscellaneous.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2114,432 +2541,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Miscellaneous_Mask<T> :
-        ItemAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<Miscellaneous_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Miscellaneous_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Script = initialValue;
-            this.Value = initialValue;
-            this.Weight = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Miscellaneous_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Icon,
-            T Script,
-            T Value,
-            T Weight,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-            this.Script = Script;
-            this.Value = Value;
-            this.Weight = Weight;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Miscellaneous_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        public T Script;
-        public T Value;
-        public T Weight;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Miscellaneous_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Miscellaneous_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Miscellaneous_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Miscellaneous_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Miscellaneous_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-            obj.Script = eval(this.Script);
-            obj.Value = eval(this.Value);
-            obj.Weight = eval(this.Weight);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Miscellaneous_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Miscellaneous_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Miscellaneous_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Miscellaneous_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Miscellaneous_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        public Exception? Script;
-        public Exception? Value;
-        public Exception? Weight;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    return Name;
-                case Miscellaneous_FieldIndex.Model:
-                    return Model;
-                case Miscellaneous_FieldIndex.Icon:
-                    return Icon;
-                case Miscellaneous_FieldIndex.Script:
-                    return Script;
-                case Miscellaneous_FieldIndex.Value:
-                    return Value;
-                case Miscellaneous_FieldIndex.Weight:
-                    return Weight;
-                case Miscellaneous_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Miscellaneous_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
-            switch (enu)
-            {
-                case Miscellaneous_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Miscellaneous_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (Script != null) return true;
-            if (Value != null) return true;
-            if (Weight != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Miscellaneous_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Miscellaneous_ErrorMask Combine(Miscellaneous_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Miscellaneous_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Miscellaneous_ErrorMask? Combine(Miscellaneous_ErrorMask? lhs, Miscellaneous_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Miscellaneous_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Miscellaneous_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Miscellaneous_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Value;
-        public bool Weight;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Miscellaneous_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((Script, null));
-            ret.Add((Value, null));
-            ret.Add((Weight, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

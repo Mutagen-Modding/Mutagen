@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Road CreateFromXml(
             XElement node,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -123,15 +123,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Road CreateFromXml(
             XElement node,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Road CreateFromXml(
             string path,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Road CreateFromXml(
             string path,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Road CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Road CreateFromXml(
             Stream stream,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Road CreateFromXml(
             Stream stream,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Road CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,6 +219,340 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Points = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RoadPoint.Mask<T>?>>());
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Points)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Points = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint.Mask<T>?>>>(Points, Enumerable.Empty<MaskItemIndexed<T, RoadPoint.Mask<T>?>>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint.Mask<T>?>>>? Points;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Points, rhs.Points)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Points?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (this.Points != null)
+                {
+                    if (!eval(this.Points.Overall)) return false;
+                    if (this.Points.Specific != null)
+                    {
+                        foreach (var item in this.Points.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Road.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                if (Points != null)
+                {
+                    obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint.Mask<R>?>>>(eval(this.Points.Overall), Enumerable.Empty<MaskItemIndexed<R, RoadPoint.Mask<R>?>>());
+                    if (Points.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RoadPoint.Mask<R>?>>();
+                        obj.Points.Specific = l;
+                        foreach (var item in Points.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, RoadPoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RoadPoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Road.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Road.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Road.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Points?.Overall ?? true)
+                    {
+                        fg.AppendLine("Points =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Points != null)
+                            {
+                                if (Points.Overall != null)
+                                {
+                                    fg.AppendLine(Points.Overall.ToString());
+                                }
+                                if (Points.Specific != null)
+                                {
+                                    foreach (var subItem in Points.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint.ErrorMask?>>?>? Points;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Road_FieldIndex enu = (Road_FieldIndex)index;
+                switch (enu)
+                {
+                    case Road_FieldIndex.Points:
+                        return Points;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Road_FieldIndex enu = (Road_FieldIndex)index;
+                switch (enu)
+                {
+                    case Road_FieldIndex.Points:
+                        this.Points = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint.ErrorMask?>>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Road_FieldIndex enu = (Road_FieldIndex)index;
+                switch (enu)
+                {
+                    case Road_FieldIndex.Points:
+                        this.Points = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint.ErrorMask?>>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Points != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine("Points =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Points != null)
+                    {
+                        if (Points.Overall != null)
+                        {
+                            fg.AppendLine(Points.Overall.ToString());
+                        }
+                        if (Points.Specific != null)
+                        {
+                            foreach (var subItem in Points.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Points = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint.ErrorMask?>>?>(ExceptionExt.Combine(this.Points?.Overall, rhs.Points?.Overall), ExceptionExt.Combine(this.Points?.Specific, rhs.Points?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, RoadPoint.TranslationMask?> Points;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Points = new MaskItem<bool, RoadPoint.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Points?.Overall ?? true, Points?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -333,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Road_Mask<bool> GetEqualsMask(
+        public static Road.Mask<bool> GetEqualsMask(
             this IRoadGetter item,
             IRoadGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -347,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRoadGetter item,
             string? name = null,
-            Road_Mask<bool>? printMask = null)
+            Road.Mask<bool>? printMask = null)
         {
             return ((RoadCommon)((IRoadGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadGetter item,
             FileGeneration fg,
             string? name = null,
-            Road_Mask<bool>? printMask = null)
+            Road.Mask<bool>? printMask = null)
         {
             ((RoadCommon)((IRoadGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -370,16 +704,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRoadGetter item,
-            Road_Mask<bool?> checkMask)
+            Road.Mask<bool?> checkMask)
         {
             return ((RoadCommon)((IRoadGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Road_Mask<bool> GetHasBeenSetMask(this IRoadGetter item)
+        public static Road.Mask<bool> GetHasBeenSetMask(this IRoadGetter item)
         {
-            var ret = new Road_Mask<bool>(false);
+            var ret = new Road.Mask<bool>(false);
             ((RoadCommon)((IRoadGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -398,8 +732,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRoadInternal lhs,
             IRoadGetter rhs,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? copyMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RoadSetterTranslationCommon)((IRoadGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -407,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -425,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Road DeepCopy(
             this IRoadGetter item,
-            Road_TranslationMask? copyMask = null)
+            Road.TranslationMask? copyMask = null)
         {
             return ((RoadSetterTranslationCommon)((IRoadGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -434,8 +768,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Road DeepCopy(
             this IRoadGetter item,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? copyMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? copyMask = null)
         {
             return ((RoadSetterTranslationCommon)((IRoadGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -459,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadInternal item,
             XElement node,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -472,8 +806,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadInternal item,
             XElement node,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -481,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -500,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadInternal item,
             string path,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -512,8 +846,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadInternal item,
             string path,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -527,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -540,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadInternal item,
             Stream stream,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -552,8 +886,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRoadInternal item,
             Stream stream,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -567,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Road_TranslationMask? translationMask = null)
+            Road.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -645,9 +979,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Road_Mask<>);
+        public static readonly Type MaskType = typeof(Road.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Road_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Road.ErrorMask);
 
         public static readonly Type ClassType = typeof(Road);
 
@@ -946,12 +1280,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly RoadCommon Instance = new RoadCommon();
 
-        public Road_Mask<bool> GetEqualsMask(
+        public Road.Mask<bool> GetEqualsMask(
             IRoadGetter item,
             IRoadGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Road_Mask<bool>(false);
+            var ret = new Road.Mask<bool>(false);
             ((RoadCommon)((IRoadGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -963,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRoadGetter item,
             IRoadGetter rhs,
-            Road_Mask<bool> ret,
+            Road.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -977,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRoadGetter item,
             string? name = null,
-            Road_Mask<bool>? printMask = null)
+            Road.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -992,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter item,
             FileGeneration fg,
             string? name = null,
-            Road_Mask<bool>? printMask = null)
+            Road.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1016,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRoadGetter item,
             FileGeneration fg,
-            Road_Mask<bool>? printMask = null)
+            Road.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1044,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRoadGetter item,
-            Road_Mask<bool?> checkMask)
+            Road.Mask<bool?> checkMask)
         {
             if (checkMask.Points?.Overall.HasValue ?? false && checkMask.Points!.Overall.Value != item.Points.HasBeenSet) return false;
             return base.HasBeenSet(
@@ -1054,9 +1388,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IRoadGetter item,
-            Road_Mask<bool> mask)
+            Road.Mask<bool> mask)
         {
-            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint_Mask<bool>?>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint.Mask<bool>?>>>(item.Points.HasBeenSet, item.Points.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1296,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Road DeepCopy(
             IRoadGetter item,
-            Road_TranslationMask? copyMask = null)
+            Road.TranslationMask? copyMask = null)
         {
             Road ret = (Road)((RoadCommon)((IRoadGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1307,8 +1641,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Road DeepCopy(
             IRoadGetter item,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? copyMask = null)
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? copyMask = null)
         {
             Road ret = (Road)((RoadCommon)((IRoadGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1558,8 +1892,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadGetter item,
             XElement node,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null,
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1569,14 +1903,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRoadGetter item,
             string path,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null,
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1592,8 +1926,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRoadGetter item,
             Stream stream,
-            out Road_ErrorMask errorMask,
-            Road_TranslationMask? translationMask = null,
+            out Road.ErrorMask errorMask,
+            Road.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1610,339 +1944,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Road_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Road_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Road_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Points = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RoadPoint_Mask<T>?>>());
-        }
-
-        public Road_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Points)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Points = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint_Mask<T>?>>>(Points, Enumerable.Empty<MaskItemIndexed<T, RoadPoint_Mask<T>?>>());
-        }
-
-        #pragma warning disable CS8618
-        protected Road_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RoadPoint_Mask<T>?>>>? Points;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Road_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Road_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Points, rhs.Points)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Points?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (this.Points != null)
-            {
-                if (!eval(this.Points.Overall)) return false;
-                if (this.Points.Specific != null)
-                {
-                    foreach (var item in this.Points.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Road_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Road_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Road_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            if (Points != null)
-            {
-                obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint_Mask<R>?>>>(eval(this.Points.Overall), Enumerable.Empty<MaskItemIndexed<R, RoadPoint_Mask<R>?>>());
-                if (Points.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, RoadPoint_Mask<R>?>>();
-                    obj.Points.Specific = l;
-                    foreach (var item in Points.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, RoadPoint_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RoadPoint_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Road_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Road_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Road_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Points?.Overall ?? true)
-                {
-                    fg.AppendLine("Points =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Points != null)
-                        {
-                            if (Points.Overall != null)
-                            {
-                                fg.AppendLine(Points.Overall.ToString());
-                            }
-                            if (Points.Specific != null)
-                            {
-                                foreach (var subItem in Points.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Road_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Road_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint_ErrorMask?>>?>? Points;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    return Points;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    this.Points = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint_ErrorMask?>>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Road_FieldIndex enu = (Road_FieldIndex)index;
-            switch (enu)
-            {
-                case Road_FieldIndex.Points:
-                    this.Points = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint_ErrorMask?>>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Points != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Road_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine("Points =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Points != null)
-                {
-                    if (Points.Overall != null)
-                    {
-                        fg.AppendLine(Points.Overall.ToString());
-                    }
-                    if (Points.Specific != null)
-                    {
-                        foreach (var subItem in Points.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public Road_ErrorMask Combine(Road_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Road_ErrorMask();
-            ret.Points = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RoadPoint_ErrorMask?>>?>(ExceptionExt.Combine(this.Points?.Overall, rhs.Points?.Overall), ExceptionExt.Combine(this.Points?.Specific, rhs.Points?.Specific));
-            return ret;
-        }
-        public static Road_ErrorMask? Combine(Road_ErrorMask? lhs, Road_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Road_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Road_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Road_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, RoadPoint_TranslationMask?> Points;
-        #endregion
-
-        #region Ctors
-        public Road_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Points = new MaskItem<bool, RoadPoint_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Points?.Overall ?? true, Points?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

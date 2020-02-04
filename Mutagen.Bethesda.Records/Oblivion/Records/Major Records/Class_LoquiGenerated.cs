@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Class CreateFromXml(
             XElement node,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -222,15 +222,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Class CreateFromXml(
             XElement node,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Class.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Class CreateFromXml(
             string path,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -260,8 +260,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Class CreateFromXml(
             string path,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Class CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Class CreateFromXml(
             Stream stream,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -294,8 +294,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Class CreateFromXml(
             Stream stream,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Class CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -318,6 +318,656 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Icon = initialValue;
+                this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Specialization = initialValue;
+                this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Flags = initialValue;
+                this.ClassServices = initialValue;
+                this.Training = new MaskItem<T, ClassTraining.Mask<T>?>(initialValue, new ClassTraining.Mask<T>(initialValue));
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Description,
+                T Icon,
+                T PrimaryAttributes,
+                T Specialization,
+                T SecondaryAttributes,
+                T Flags,
+                T ClassServices,
+                T Training,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Description = Description;
+                this.Icon = Icon;
+                this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PrimaryAttributes, Enumerable.Empty<(int Index, T Value)>());
+                this.Specialization = Specialization;
+                this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(SecondaryAttributes, Enumerable.Empty<(int Index, T Value)>());
+                this.Flags = Flags;
+                this.ClassServices = ClassServices;
+                this.Training = new MaskItem<T, ClassTraining.Mask<T>?>(Training, new ClassTraining.Mask<T>(Training));
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public T Description;
+            public T Icon;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? PrimaryAttributes;
+            public T Specialization;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? SecondaryAttributes;
+            public T Flags;
+            public T ClassServices;
+            public MaskItem<T, ClassTraining.Mask<T>?>? Training { get; set; }
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.PrimaryAttributes, rhs.PrimaryAttributes)) return false;
+                if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
+                if (!object.Equals(this.SecondaryAttributes, rhs.SecondaryAttributes)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ClassServices, rhs.ClassServices)) return false;
+                if (!object.Equals(this.Training, rhs.Training)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Description?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.PrimaryAttributes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
+                ret = ret.CombineHashCode(this.SecondaryAttributes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.ClassServices?.GetHashCode());
+                ret = ret.CombineHashCode(this.Training?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Icon)) return false;
+                if (this.PrimaryAttributes != null)
+                {
+                    if (!eval(this.PrimaryAttributes.Overall)) return false;
+                    if (this.PrimaryAttributes.Specific != null)
+                    {
+                        foreach (var item in this.PrimaryAttributes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Specialization)) return false;
+                if (this.SecondaryAttributes != null)
+                {
+                    if (!eval(this.SecondaryAttributes.Overall)) return false;
+                    if (this.SecondaryAttributes.Specific != null)
+                    {
+                        foreach (var item in this.SecondaryAttributes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.ClassServices)) return false;
+                if (Training != null)
+                {
+                    if (!eval(this.Training.Overall)) return false;
+                    if (this.Training.Specific != null && !this.Training.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Class.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Icon = eval(this.Icon);
+                if (PrimaryAttributes != null)
+                {
+                    obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PrimaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (PrimaryAttributes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.PrimaryAttributes.Specific = l;
+                        foreach (var item in PrimaryAttributes.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Specialization = eval(this.Specialization);
+                if (SecondaryAttributes != null)
+                {
+                    obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SecondaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SecondaryAttributes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SecondaryAttributes.Specific = l;
+                        foreach (var item in SecondaryAttributes.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Flags = eval(this.Flags);
+                obj.ClassServices = eval(this.ClassServices);
+                obj.Training = this.Training == null ? null : new MaskItem<R, ClassTraining.Mask<R>?>(eval(this.Training.Overall), this.Training.Specific?.Translate(eval));
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Class.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Class.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Class.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendLine($"Description => {Description}");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.PrimaryAttributes?.Overall ?? true)
+                    {
+                        fg.AppendLine("PrimaryAttributes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (PrimaryAttributes != null)
+                            {
+                                if (PrimaryAttributes.Overall != null)
+                                {
+                                    fg.AppendLine(PrimaryAttributes.Overall.ToString());
+                                }
+                                if (PrimaryAttributes.Specific != null)
+                                {
+                                    foreach (var subItem in PrimaryAttributes.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Specialization ?? true)
+                    {
+                        fg.AppendLine($"Specialization => {Specialization}");
+                    }
+                    if (printMask?.SecondaryAttributes?.Overall ?? true)
+                    {
+                        fg.AppendLine("SecondaryAttributes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (SecondaryAttributes != null)
+                            {
+                                if (SecondaryAttributes.Overall != null)
+                                {
+                                    fg.AppendLine(SecondaryAttributes.Overall.ToString());
+                                }
+                                if (SecondaryAttributes.Specific != null)
+                                {
+                                    foreach (var subItem in SecondaryAttributes.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.ClassServices ?? true)
+                    {
+                        fg.AppendLine($"ClassServices => {ClassServices}");
+                    }
+                    if (printMask?.Training?.Overall ?? true)
+                    {
+                        Training?.ToString(fg);
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public Exception? Description;
+            public Exception? Icon;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PrimaryAttributes;
+            public Exception? Specialization;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SecondaryAttributes;
+            public Exception? Flags;
+            public Exception? ClassServices;
+            public MaskItem<Exception?, ClassTraining.ErrorMask?>? Training;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Class_FieldIndex enu = (Class_FieldIndex)index;
+                switch (enu)
+                {
+                    case Class_FieldIndex.Name:
+                        return Name;
+                    case Class_FieldIndex.Description:
+                        return Description;
+                    case Class_FieldIndex.Icon:
+                        return Icon;
+                    case Class_FieldIndex.PrimaryAttributes:
+                        return PrimaryAttributes;
+                    case Class_FieldIndex.Specialization:
+                        return Specialization;
+                    case Class_FieldIndex.SecondaryAttributes:
+                        return SecondaryAttributes;
+                    case Class_FieldIndex.Flags:
+                        return Flags;
+                    case Class_FieldIndex.ClassServices:
+                        return ClassServices;
+                    case Class_FieldIndex.Training:
+                        return Training;
+                    case Class_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Class_FieldIndex enu = (Class_FieldIndex)index;
+                switch (enu)
+                {
+                    case Class_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Class_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Class_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Class_FieldIndex.PrimaryAttributes:
+                        this.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Class_FieldIndex.Specialization:
+                        this.Specialization = ex;
+                        break;
+                    case Class_FieldIndex.SecondaryAttributes:
+                        this.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Class_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Class_FieldIndex.ClassServices:
+                        this.ClassServices = ex;
+                        break;
+                    case Class_FieldIndex.Training:
+                        this.Training = new MaskItem<Exception?, ClassTraining.ErrorMask?>(ex, null);
+                        break;
+                    case Class_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Class_FieldIndex enu = (Class_FieldIndex)index;
+                switch (enu)
+                {
+                    case Class_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Class_FieldIndex.Description:
+                        this.Description = (Exception)obj;
+                        break;
+                    case Class_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Class_FieldIndex.PrimaryAttributes:
+                        this.PrimaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Class_FieldIndex.Specialization:
+                        this.Specialization = (Exception)obj;
+                        break;
+                    case Class_FieldIndex.SecondaryAttributes:
+                        this.SecondaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Class_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Class_FieldIndex.ClassServices:
+                        this.ClassServices = (Exception)obj;
+                        break;
+                    case Class_FieldIndex.Training:
+                        this.Training = (MaskItem<Exception?, ClassTraining.ErrorMask?>?)obj;
+                        break;
+                    case Class_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Icon != null) return true;
+                if (PrimaryAttributes != null) return true;
+                if (Specialization != null) return true;
+                if (SecondaryAttributes != null) return true;
+                if (Flags != null) return true;
+                if (ClassServices != null) return true;
+                if (Training != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Description => {Description}");
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine("PrimaryAttributes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (PrimaryAttributes != null)
+                    {
+                        if (PrimaryAttributes.Overall != null)
+                        {
+                            fg.AppendLine(PrimaryAttributes.Overall.ToString());
+                        }
+                        if (PrimaryAttributes.Specific != null)
+                        {
+                            foreach (var subItem in PrimaryAttributes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Specialization => {Specialization}");
+                fg.AppendLine("SecondaryAttributes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (SecondaryAttributes != null)
+                    {
+                        if (SecondaryAttributes.Overall != null)
+                        {
+                            fg.AppendLine(SecondaryAttributes.Overall.ToString());
+                        }
+                        if (SecondaryAttributes.Specific != null)
+                        {
+                            foreach (var subItem in SecondaryAttributes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"ClassServices => {ClassServices}");
+                Training?.ToString(fg);
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
+                ret.Specialization = this.Specialization.Combine(rhs.Specialization);
+                ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
+                ret.Training = new MaskItem<Exception?, ClassTraining.ErrorMask?>(ExceptionExt.Combine(this.Training?.Overall, rhs.Training?.Overall), (this.Training?.Specific as IErrorMask<ClassTraining.ErrorMask>)?.Combine(rhs.Training?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public bool Description;
+            public bool Icon;
+            public bool PrimaryAttributes;
+            public bool Specialization;
+            public bool SecondaryAttributes;
+            public bool Flags;
+            public bool ClassServices;
+            public MaskItem<bool, ClassTraining.TranslationMask?> Training;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Icon = defaultOn;
+                this.PrimaryAttributes = defaultOn;
+                this.Specialization = defaultOn;
+                this.SecondaryAttributes = defaultOn;
+                this.Flags = defaultOn;
+                this.ClassServices = defaultOn;
+                this.Training = new MaskItem<bool, ClassTraining.TranslationMask?>(defaultOn, null);
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Icon, null));
+                ret.Add((PrimaryAttributes, null));
+                ret.Add((Specialization, null));
+                ret.Add((SecondaryAttributes, null));
+                ret.Add((Flags, null));
+                ret.Add((ClassServices, null));
+                ret.Add((Training?.Overall ?? true, Training?.Specific?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -456,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Class_Mask<bool> GetEqualsMask(
+        public static Class.Mask<bool> GetEqualsMask(
             this IClassGetter item,
             IClassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -470,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IClassGetter item,
             string? name = null,
-            Class_Mask<bool>? printMask = null)
+            Class.Mask<bool>? printMask = null)
         {
             return ((ClassCommon)((IClassGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -482,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassGetter item,
             FileGeneration fg,
             string? name = null,
-            Class_Mask<bool>? printMask = null)
+            Class.Mask<bool>? printMask = null)
         {
             ((ClassCommon)((IClassGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -493,16 +1143,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IClassGetter item,
-            Class_Mask<bool?> checkMask)
+            Class.Mask<bool?> checkMask)
         {
             return ((ClassCommon)((IClassGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Class_Mask<bool> GetHasBeenSetMask(this IClassGetter item)
+        public static Class.Mask<bool> GetHasBeenSetMask(this IClassGetter item)
         {
-            var ret = new Class_Mask<bool>(false);
+            var ret = new Class.Mask<bool>(false);
             ((ClassCommon)((IClassGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -521,8 +1171,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IClassInternal lhs,
             IClassGetter rhs,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? copyMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -530,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Class.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -548,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Class DeepCopy(
             this IClassGetter item,
-            Class_TranslationMask? copyMask = null)
+            Class.TranslationMask? copyMask = null)
         {
             return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -557,8 +1207,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Class DeepCopy(
             this IClassGetter item,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? copyMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? copyMask = null)
         {
             return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -582,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassInternal item,
             XElement node,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -595,8 +1245,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassInternal item,
             XElement node,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -604,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Class.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -623,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassInternal item,
             string path,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -635,8 +1285,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassInternal item,
             string path,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -650,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -663,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassInternal item,
             Stream stream,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -675,8 +1325,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassInternal item,
             Stream stream,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -690,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Class_TranslationMask? translationMask = null)
+            Class.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -777,9 +1427,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 15;
 
-        public static readonly Type MaskType = typeof(Class_Mask<>);
+        public static readonly Type MaskType = typeof(Class.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Class_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Class.ErrorMask);
 
         public static readonly Type ClassType = typeof(Class);
 
@@ -1253,12 +1903,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ClassCommon Instance = new ClassCommon();
 
-        public Class_Mask<bool> GetEqualsMask(
+        public Class.Mask<bool> GetEqualsMask(
             IClassGetter item,
             IClassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Class_Mask<bool>(false);
+            var ret = new Class.Mask<bool>(false);
             ((ClassCommon)((IClassGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1270,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IClassGetter item,
             IClassGetter rhs,
-            Class_Mask<bool> ret,
+            Class.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1296,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IClassGetter item,
             string? name = null,
-            Class_Mask<bool>? printMask = null)
+            Class.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1311,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassGetter item,
             FileGeneration fg,
             string? name = null,
-            Class_Mask<bool>? printMask = null)
+            Class.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1335,7 +1985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IClassGetter item,
             FileGeneration fg,
-            Class_Mask<bool>? printMask = null)
+            Class.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1413,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IClassGetter item,
-            Class_Mask<bool?> checkMask)
+            Class.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
@@ -1425,7 +2075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IClassGetter item,
-            Class_Mask<bool> mask)
+            Class.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Description = (item.Description != null);
@@ -1435,7 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
             mask.Flags = true;
             mask.ClassServices = true;
-            mask.Training = new MaskItem<bool, ClassTraining_Mask<bool>?>(true, item.Training?.GetHasBeenSetMask());
+            mask.Training = new MaskItem<bool, ClassTraining.Mask<bool>?>(true, item.Training?.GetHasBeenSetMask());
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1730,7 +2380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Class DeepCopy(
             IClassGetter item,
-            Class_TranslationMask? copyMask = null)
+            Class.TranslationMask? copyMask = null)
         {
             Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1741,8 +2391,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Class DeepCopy(
             IClassGetter item,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? copyMask = null)
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? copyMask = null)
         {
             Class ret = (Class)((ClassCommon)((IClassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2269,8 +2919,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IClassGetter item,
             XElement node,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null,
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2280,14 +2930,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Class.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IClassGetter item,
             string path,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null,
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2303,8 +2953,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IClassGetter item,
             Stream stream,
-            out Class_ErrorMask errorMask,
-            Class_TranslationMask? translationMask = null,
+            out Class.ErrorMask errorMask,
+            Class.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2321,655 +2971,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Class_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Class_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Class_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Description = initialValue;
-            this.Icon = initialValue;
-            this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Specialization = initialValue;
-            this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Flags = initialValue;
-            this.ClassServices = initialValue;
-            this.Training = new MaskItem<T, ClassTraining_Mask<T>?>(initialValue, new ClassTraining_Mask<T>(initialValue));
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Class_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Description,
-            T Icon,
-            T PrimaryAttributes,
-            T Specialization,
-            T SecondaryAttributes,
-            T Flags,
-            T ClassServices,
-            T Training,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Icon = Icon;
-            this.PrimaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PrimaryAttributes, Enumerable.Empty<(int Index, T Value)>());
-            this.Specialization = Specialization;
-            this.SecondaryAttributes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(SecondaryAttributes, Enumerable.Empty<(int Index, T Value)>());
-            this.Flags = Flags;
-            this.ClassServices = ClassServices;
-            this.Training = new MaskItem<T, ClassTraining_Mask<T>?>(Training, new ClassTraining_Mask<T>(Training));
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Class_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Description;
-        public T Icon;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? PrimaryAttributes;
-        public T Specialization;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? SecondaryAttributes;
-        public T Flags;
-        public T ClassServices;
-        public MaskItem<T, ClassTraining_Mask<T>?>? Training { get; set; }
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Class_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Class_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Description, rhs.Description)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.PrimaryAttributes, rhs.PrimaryAttributes)) return false;
-            if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
-            if (!object.Equals(this.SecondaryAttributes, rhs.SecondaryAttributes)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.ClassServices, rhs.ClassServices)) return false;
-            if (!object.Equals(this.Training, rhs.Training)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Description?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.PrimaryAttributes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
-            ret = ret.CombineHashCode(this.SecondaryAttributes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.ClassServices?.GetHashCode());
-            ret = ret.CombineHashCode(this.Training?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Description)) return false;
-            if (!eval(this.Icon)) return false;
-            if (this.PrimaryAttributes != null)
-            {
-                if (!eval(this.PrimaryAttributes.Overall)) return false;
-                if (this.PrimaryAttributes.Specific != null)
-                {
-                    foreach (var item in this.PrimaryAttributes.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Specialization)) return false;
-            if (this.SecondaryAttributes != null)
-            {
-                if (!eval(this.SecondaryAttributes.Overall)) return false;
-                if (this.SecondaryAttributes.Specific != null)
-                {
-                    foreach (var item in this.SecondaryAttributes.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.ClassServices)) return false;
-            if (Training != null)
-            {
-                if (!eval(this.Training.Overall)) return false;
-                if (this.Training.Specific != null && !this.Training.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Class_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Class_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Class_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Description = eval(this.Description);
-            obj.Icon = eval(this.Icon);
-            if (PrimaryAttributes != null)
-            {
-                obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PrimaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (PrimaryAttributes.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.PrimaryAttributes.Specific = l;
-                    foreach (var item in PrimaryAttributes.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.Specialization = eval(this.Specialization);
-            if (SecondaryAttributes != null)
-            {
-                obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SecondaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (SecondaryAttributes.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.SecondaryAttributes.Specific = l;
-                    foreach (var item in SecondaryAttributes.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.Flags = eval(this.Flags);
-            obj.ClassServices = eval(this.ClassServices);
-            obj.Training = this.Training == null ? null : new MaskItem<R, ClassTraining_Mask<R>?>(eval(this.Training.Overall), this.Training.Specific?.Translate(eval));
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Class_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Class_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Class_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {Description}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.PrimaryAttributes?.Overall ?? true)
-                {
-                    fg.AppendLine("PrimaryAttributes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (PrimaryAttributes != null)
-                        {
-                            if (PrimaryAttributes.Overall != null)
-                            {
-                                fg.AppendLine(PrimaryAttributes.Overall.ToString());
-                            }
-                            if (PrimaryAttributes.Specific != null)
-                            {
-                                foreach (var subItem in PrimaryAttributes.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Specialization ?? true)
-                {
-                    fg.AppendLine($"Specialization => {Specialization}");
-                }
-                if (printMask?.SecondaryAttributes?.Overall ?? true)
-                {
-                    fg.AppendLine("SecondaryAttributes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (SecondaryAttributes != null)
-                        {
-                            if (SecondaryAttributes.Overall != null)
-                            {
-                                fg.AppendLine(SecondaryAttributes.Overall.ToString());
-                            }
-                            if (SecondaryAttributes.Specific != null)
-                            {
-                                foreach (var subItem in SecondaryAttributes.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.ClassServices ?? true)
-                {
-                    fg.AppendLine($"ClassServices => {ClassServices}");
-                }
-                if (printMask?.Training?.Overall ?? true)
-                {
-                    Training?.ToString(fg);
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Class_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Class_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public Exception? Description;
-        public Exception? Icon;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PrimaryAttributes;
-        public Exception? Specialization;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SecondaryAttributes;
-        public Exception? Flags;
-        public Exception? ClassServices;
-        public MaskItem<Exception?, ClassTraining_ErrorMask?>? Training;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    return Name;
-                case Class_FieldIndex.Description:
-                    return Description;
-                case Class_FieldIndex.Icon:
-                    return Icon;
-                case Class_FieldIndex.PrimaryAttributes:
-                    return PrimaryAttributes;
-                case Class_FieldIndex.Specialization:
-                    return Specialization;
-                case Class_FieldIndex.SecondaryAttributes:
-                    return SecondaryAttributes;
-                case Class_FieldIndex.Flags:
-                    return Flags;
-                case Class_FieldIndex.ClassServices:
-                    return ClassServices;
-                case Class_FieldIndex.Training:
-                    return Training;
-                case Class_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Class_FieldIndex.Description:
-                    this.Description = ex;
-                    break;
-                case Class_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Class_FieldIndex.PrimaryAttributes:
-                    this.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Class_FieldIndex.Specialization:
-                    this.Specialization = ex;
-                    break;
-                case Class_FieldIndex.SecondaryAttributes:
-                    this.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Class_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Class_FieldIndex.ClassServices:
-                    this.ClassServices = ex;
-                    break;
-                case Class_FieldIndex.Training:
-                    this.Training = new MaskItem<Exception?, ClassTraining_ErrorMask?>(ex, null);
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Class_FieldIndex enu = (Class_FieldIndex)index;
-            switch (enu)
-            {
-                case Class_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Class_FieldIndex.Description:
-                    this.Description = (Exception)obj;
-                    break;
-                case Class_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Class_FieldIndex.PrimaryAttributes:
-                    this.PrimaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Class_FieldIndex.Specialization:
-                    this.Specialization = (Exception)obj;
-                    break;
-                case Class_FieldIndex.SecondaryAttributes:
-                    this.SecondaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Class_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Class_FieldIndex.ClassServices:
-                    this.ClassServices = (Exception)obj;
-                    break;
-                case Class_FieldIndex.Training:
-                    this.Training = (MaskItem<Exception?, ClassTraining_ErrorMask?>?)obj;
-                    break;
-                case Class_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Description != null) return true;
-            if (Icon != null) return true;
-            if (PrimaryAttributes != null) return true;
-            if (Specialization != null) return true;
-            if (SecondaryAttributes != null) return true;
-            if (Flags != null) return true;
-            if (ClassServices != null) return true;
-            if (Training != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Class_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Description => {Description}");
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine("PrimaryAttributes =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (PrimaryAttributes != null)
-                {
-                    if (PrimaryAttributes.Overall != null)
-                    {
-                        fg.AppendLine(PrimaryAttributes.Overall.ToString());
-                    }
-                    if (PrimaryAttributes.Specific != null)
-                    {
-                        foreach (var subItem in PrimaryAttributes.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Specialization => {Specialization}");
-            fg.AppendLine("SecondaryAttributes =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (SecondaryAttributes != null)
-                {
-                    if (SecondaryAttributes.Overall != null)
-                    {
-                        fg.AppendLine(SecondaryAttributes.Overall.ToString());
-                    }
-                    if (SecondaryAttributes.Specific != null)
-                    {
-                        foreach (var subItem in SecondaryAttributes.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"ClassServices => {ClassServices}");
-            Training?.ToString(fg);
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Class_ErrorMask Combine(Class_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Class_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Description = this.Description.Combine(rhs.Description);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
-            ret.Specialization = this.Specialization.Combine(rhs.Specialization);
-            ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
-            ret.Training = new MaskItem<Exception?, ClassTraining_ErrorMask?>(ExceptionExt.Combine(this.Training?.Overall, rhs.Training?.Overall), (this.Training?.Specific as IErrorMask<ClassTraining_ErrorMask>)?.Combine(rhs.Training?.Specific));
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Class_ErrorMask? Combine(Class_ErrorMask? lhs, Class_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Class_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Class_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Class_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Description;
-        public bool Icon;
-        public bool PrimaryAttributes;
-        public bool Specialization;
-        public bool SecondaryAttributes;
-        public bool Flags;
-        public bool ClassServices;
-        public MaskItem<bool, ClassTraining_TranslationMask?> Training;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Class_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.PrimaryAttributes = defaultOn;
-            this.Specialization = defaultOn;
-            this.SecondaryAttributes = defaultOn;
-            this.Flags = defaultOn;
-            this.ClassServices = defaultOn;
-            this.Training = new MaskItem<bool, ClassTraining_TranslationMask?>(defaultOn, null);
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Description, null));
-            ret.Add((Icon, null));
-            ret.Add((PrimaryAttributes, null));
-            ret.Add((Specialization, null));
-            ret.Add((SecondaryAttributes, null));
-            ret.Add((Flags, null));
-            ret.Add((ClassServices, null));
-            ret.Add((Training?.Overall ?? true, Training?.Specific?.GetCrystal()));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

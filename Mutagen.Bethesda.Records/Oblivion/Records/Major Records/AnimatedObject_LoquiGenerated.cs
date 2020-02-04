@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new AnimatedObject CreateFromXml(
             XElement node,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -129,15 +129,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AnimatedObject CreateFromXml(
             XElement node,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AnimatedObject CreateFromXml(
             string path,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,8 +167,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AnimatedObject CreateFromXml(
             string path,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AnimatedObject CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AnimatedObject CreateFromXml(
             Stream stream,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,8 +201,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AnimatedObject CreateFromXml(
             Stream stream,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AnimatedObject CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,6 +225,298 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.IdleAnimation = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Model,
+                T IdleAnimation)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.IdleAnimation = IdleAnimation;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T IdleAnimation;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.IdleAnimation, rhs.IdleAnimation)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.IdleAnimation?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.IdleAnimation)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AnimatedObject.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.IdleAnimation = eval(this.IdleAnimation);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AnimatedObject.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AnimatedObject.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AnimatedObject.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.IdleAnimation ?? true)
+                    {
+                        fg.AppendLine($"IdleAnimation => {IdleAnimation}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? IdleAnimation;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
+                switch (enu)
+                {
+                    case AnimatedObject_FieldIndex.Model:
+                        return Model;
+                    case AnimatedObject_FieldIndex.IdleAnimation:
+                        return IdleAnimation;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
+                switch (enu)
+                {
+                    case AnimatedObject_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case AnimatedObject_FieldIndex.IdleAnimation:
+                        this.IdleAnimation = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
+                switch (enu)
+                {
+                    case AnimatedObject_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case AnimatedObject_FieldIndex.IdleAnimation:
+                        this.IdleAnimation = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Model != null) return true;
+                if (IdleAnimation != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                Model?.ToString(fg);
+                fg.AppendLine($"IdleAnimation => {IdleAnimation}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.IdleAnimation = this.IdleAnimation.Combine(rhs.IdleAnimation);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool IdleAnimation;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.IdleAnimation = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((IdleAnimation, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -344,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AnimatedObject_Mask<bool> GetEqualsMask(
+        public static AnimatedObject.Mask<bool> GetEqualsMask(
             this IAnimatedObjectGetter item,
             IAnimatedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -358,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAnimatedObjectGetter item,
             string? name = null,
-            AnimatedObject_Mask<bool>? printMask = null)
+            AnimatedObject.Mask<bool>? printMask = null)
         {
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -370,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAnimatedObjectGetter item,
             FileGeneration fg,
             string? name = null,
-            AnimatedObject_Mask<bool>? printMask = null)
+            AnimatedObject.Mask<bool>? printMask = null)
         {
             ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -381,16 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAnimatedObjectGetter item,
-            AnimatedObject_Mask<bool?> checkMask)
+            AnimatedObject.Mask<bool?> checkMask)
         {
             return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AnimatedObject_Mask<bool> GetHasBeenSetMask(this IAnimatedObjectGetter item)
+        public static AnimatedObject.Mask<bool> GetHasBeenSetMask(this IAnimatedObjectGetter item)
         {
-            var ret = new AnimatedObject_Mask<bool>(false);
+            var ret = new AnimatedObject.Mask<bool>(false);
             ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -409,8 +701,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAnimatedObjectInternal lhs,
             IAnimatedObjectGetter rhs,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? copyMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -418,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -436,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AnimatedObject DeepCopy(
             this IAnimatedObjectGetter item,
-            AnimatedObject_TranslationMask? copyMask = null)
+            AnimatedObject.TranslationMask? copyMask = null)
         {
             return ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -445,8 +737,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AnimatedObject DeepCopy(
             this IAnimatedObjectGetter item,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? copyMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? copyMask = null)
         {
             return ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -470,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAnimatedObjectInternal item,
             XElement node,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -483,8 +775,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAnimatedObjectInternal item,
             XElement node,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -492,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -511,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAnimatedObjectInternal item,
             string path,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -523,8 +815,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAnimatedObjectInternal item,
             string path,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -538,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAnimatedObjectInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -551,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAnimatedObjectInternal item,
             Stream stream,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -563,8 +855,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAnimatedObjectInternal item,
             Stream stream,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -578,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAnimatedObjectInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AnimatedObject_TranslationMask? translationMask = null)
+            AnimatedObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -657,9 +949,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(AnimatedObject_Mask<>);
+        public static readonly Type MaskType = typeof(AnimatedObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AnimatedObject_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AnimatedObject.ErrorMask);
 
         public static readonly Type ClassType = typeof(AnimatedObject);
 
@@ -981,12 +1273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly AnimatedObjectCommon Instance = new AnimatedObjectCommon();
 
-        public AnimatedObject_Mask<bool> GetEqualsMask(
+        public AnimatedObject.Mask<bool> GetEqualsMask(
             IAnimatedObjectGetter item,
             IAnimatedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AnimatedObject_Mask<bool>(false);
+            var ret = new AnimatedObject.Mask<bool>(false);
             ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -998,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAnimatedObjectGetter item,
             IAnimatedObjectGetter rhs,
-            AnimatedObject_Mask<bool> ret,
+            AnimatedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1014,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAnimatedObjectGetter item,
             string? name = null,
-            AnimatedObject_Mask<bool>? printMask = null)
+            AnimatedObject.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1029,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAnimatedObjectGetter item,
             FileGeneration fg,
             string? name = null,
-            AnimatedObject_Mask<bool>? printMask = null)
+            AnimatedObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1053,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAnimatedObjectGetter item,
             FileGeneration fg,
-            AnimatedObject_Mask<bool>? printMask = null)
+            AnimatedObject.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1071,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAnimatedObjectGetter item,
-            AnimatedObject_Mask<bool?> checkMask)
+            AnimatedObject.Mask<bool?> checkMask)
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
@@ -1083,10 +1375,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IAnimatedObjectGetter item,
-            AnimatedObject_Mask<bool> mask)
+            AnimatedObject.Mask<bool> mask)
         {
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.IdleAnimation = item.IdleAnimation.HasBeenSet;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1335,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AnimatedObject DeepCopy(
             IAnimatedObjectGetter item,
-            AnimatedObject_TranslationMask? copyMask = null)
+            AnimatedObject.TranslationMask? copyMask = null)
         {
             AnimatedObject ret = (AnimatedObject)((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1346,8 +1638,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AnimatedObject DeepCopy(
             IAnimatedObjectGetter item,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? copyMask = null)
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? copyMask = null)
         {
             AnimatedObject ret = (AnimatedObject)((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1608,8 +1900,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAnimatedObjectGetter item,
             XElement node,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null,
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1619,14 +1911,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAnimatedObjectGetter item,
             string path,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null,
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1642,8 +1934,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAnimatedObjectGetter item,
             Stream stream,
-            out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask? translationMask = null,
+            out AnimatedObject.ErrorMask errorMask,
+            AnimatedObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1660,297 +1952,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AnimatedObject_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<AnimatedObject_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AnimatedObject_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.IdleAnimation = initialValue;
-        }
-
-        public AnimatedObject_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Model,
-            T IdleAnimation)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.IdleAnimation = IdleAnimation;
-        }
-
-        #pragma warning disable CS8618
-        protected AnimatedObject_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T IdleAnimation;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AnimatedObject_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AnimatedObject_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.IdleAnimation, rhs.IdleAnimation)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.IdleAnimation?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.IdleAnimation)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new AnimatedObject_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AnimatedObject_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AnimatedObject_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.IdleAnimation = eval(this.IdleAnimation);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AnimatedObject_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AnimatedObject_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AnimatedObject_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.IdleAnimation ?? true)
-                {
-                    fg.AppendLine($"IdleAnimation => {IdleAnimation}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AnimatedObject_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<AnimatedObject_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? IdleAnimation;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimatedObject_FieldIndex.Model:
-                    return Model;
-                case AnimatedObject_FieldIndex.IdleAnimation:
-                    return IdleAnimation;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimatedObject_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case AnimatedObject_FieldIndex.IdleAnimation:
-                    this.IdleAnimation = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
-            switch (enu)
-            {
-                case AnimatedObject_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case AnimatedObject_FieldIndex.IdleAnimation:
-                    this.IdleAnimation = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Model != null) return true;
-            if (IdleAnimation != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AnimatedObject_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            Model?.ToString(fg);
-            fg.AppendLine($"IdleAnimation => {IdleAnimation}");
-        }
-        #endregion
-
-        #region Combine
-        public AnimatedObject_ErrorMask Combine(AnimatedObject_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AnimatedObject_ErrorMask();
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.IdleAnimation = this.IdleAnimation.Combine(rhs.IdleAnimation);
-            return ret;
-        }
-        public static AnimatedObject_ErrorMask? Combine(AnimatedObject_ErrorMask? lhs, AnimatedObject_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new AnimatedObject_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AnimatedObject_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AnimatedObject_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool IdleAnimation;
-        #endregion
-
-        #region Ctors
-        public AnimatedObject_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.IdleAnimation = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((IdleAnimation, null));
-        }
-    }
 }
 #endregion
 

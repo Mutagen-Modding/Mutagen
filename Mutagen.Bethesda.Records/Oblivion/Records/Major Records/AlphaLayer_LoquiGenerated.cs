@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new AlphaLayer CreateFromXml(
             XElement node,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlphaLayer CreateFromXml(
             XElement node,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlphaLayer.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlphaLayer CreateFromXml(
             string path,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlphaLayer CreateFromXml(
             string path,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AlphaLayer CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlphaLayer CreateFromXml(
             Stream stream,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlphaLayer CreateFromXml(
             Stream stream,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AlphaLayer CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,6 +218,265 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            BaseLayer.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.AlphaLayerData = initialValue;
+            }
+
+            public Mask(
+                T Texture,
+                T Quadrant,
+                T LayerNumber,
+                T BTXTDataTypeState,
+                T AlphaLayerData)
+            : base(
+                Texture: Texture,
+                Quadrant: Quadrant,
+                LayerNumber: LayerNumber,
+                BTXTDataTypeState: BTXTDataTypeState)
+            {
+                this.AlphaLayerData = AlphaLayerData;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T AlphaLayerData;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.AlphaLayerData, rhs.AlphaLayerData)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.AlphaLayerData?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.AlphaLayerData)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AlphaLayer.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.AlphaLayerData = eval(this.AlphaLayerData);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AlphaLayer.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AlphaLayer.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AlphaLayer.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.AlphaLayerData ?? true)
+                    {
+                        fg.AppendLine($"AlphaLayerData => {AlphaLayerData}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            BaseLayer.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? AlphaLayerData;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
+                switch (enu)
+                {
+                    case AlphaLayer_FieldIndex.AlphaLayerData:
+                        return AlphaLayerData;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
+                switch (enu)
+                {
+                    case AlphaLayer_FieldIndex.AlphaLayerData:
+                        this.AlphaLayerData = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
+                switch (enu)
+                {
+                    case AlphaLayer_FieldIndex.AlphaLayerData:
+                        this.AlphaLayerData = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (AlphaLayerData != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"AlphaLayerData => {AlphaLayerData}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.AlphaLayerData = this.AlphaLayerData.Combine(rhs.AlphaLayerData);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            BaseLayer.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool AlphaLayerData;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.AlphaLayerData = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((AlphaLayerData, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -324,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AlphaLayer_Mask<bool> GetEqualsMask(
+        public static AlphaLayer.Mask<bool> GetEqualsMask(
             this IAlphaLayerGetter item,
             IAlphaLayerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -338,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAlphaLayerGetter item,
             string? name = null,
-            AlphaLayer_Mask<bool>? printMask = null)
+            AlphaLayer.Mask<bool>? printMask = null)
         {
             return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerGetter item,
             FileGeneration fg,
             string? name = null,
-            AlphaLayer_Mask<bool>? printMask = null)
+            AlphaLayer.Mask<bool>? printMask = null)
         {
             ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -361,16 +620,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAlphaLayerGetter item,
-            AlphaLayer_Mask<bool?> checkMask)
+            AlphaLayer.Mask<bool?> checkMask)
         {
             return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AlphaLayer_Mask<bool> GetHasBeenSetMask(this IAlphaLayerGetter item)
+        public static AlphaLayer.Mask<bool> GetHasBeenSetMask(this IAlphaLayerGetter item)
         {
-            var ret = new AlphaLayer_Mask<bool>(false);
+            var ret = new AlphaLayer.Mask<bool>(false);
             ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -389,8 +648,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAlphaLayerInternal lhs,
             IAlphaLayerGetter rhs,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? copyMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -398,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlphaLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -416,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlphaLayer DeepCopy(
             this IAlphaLayerGetter item,
-            AlphaLayer_TranslationMask? copyMask = null)
+            AlphaLayer.TranslationMask? copyMask = null)
         {
             return ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -425,8 +684,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlphaLayer DeepCopy(
             this IAlphaLayerGetter item,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? copyMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? copyMask = null)
         {
             return ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -450,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             XElement node,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -463,8 +722,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             XElement node,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -472,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlphaLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -491,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             string path,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -503,8 +762,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             string path,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -518,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -531,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             Stream stream,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -543,8 +802,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             Stream stream,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -558,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AlphaLayer_TranslationMask? translationMask = null)
+            AlphaLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -635,9 +894,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(AlphaLayer_Mask<>);
+        public static readonly Type MaskType = typeof(AlphaLayer.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AlphaLayer_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AlphaLayer.ErrorMask);
 
         public static readonly Type ClassType = typeof(AlphaLayer);
 
@@ -923,12 +1182,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly AlphaLayerCommon Instance = new AlphaLayerCommon();
 
-        public AlphaLayer_Mask<bool> GetEqualsMask(
+        public AlphaLayer.Mask<bool> GetEqualsMask(
             IAlphaLayerGetter item,
             IAlphaLayerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AlphaLayer_Mask<bool>(false);
+            var ret = new AlphaLayer.Mask<bool>(false);
             ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -940,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAlphaLayerGetter item,
             IAlphaLayerGetter rhs,
-            AlphaLayer_Mask<bool> ret,
+            AlphaLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -951,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAlphaLayerGetter item,
             string? name = null,
-            AlphaLayer_Mask<bool>? printMask = null)
+            AlphaLayer.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -966,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter item,
             FileGeneration fg,
             string? name = null,
-            AlphaLayer_Mask<bool>? printMask = null)
+            AlphaLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -990,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAlphaLayerGetter item,
             FileGeneration fg,
-            AlphaLayer_Mask<bool>? printMask = null)
+            AlphaLayer.Mask<bool>? printMask = null)
         {
             BaseLayerCommon.ToStringFields(
                 item: item,
@@ -1004,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAlphaLayerGetter item,
-            AlphaLayer_Mask<bool?> checkMask)
+            AlphaLayer.Mask<bool?> checkMask)
         {
             if (checkMask.AlphaLayerData.HasValue && checkMask.AlphaLayerData.Value != item.AlphaLayerData_IsSet) return false;
             return base.HasBeenSet(
@@ -1014,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IAlphaLayerGetter item,
-            AlphaLayer_Mask<bool> mask)
+            AlphaLayer.Mask<bool> mask)
         {
             mask.AlphaLayerData = item.AlphaLayerData_IsSet;
             base.FillHasBeenSetMask(
@@ -1169,7 +1428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AlphaLayer DeepCopy(
             IAlphaLayerGetter item,
-            AlphaLayer_TranslationMask? copyMask = null)
+            AlphaLayer.TranslationMask? copyMask = null)
         {
             AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1180,8 +1439,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AlphaLayer DeepCopy(
             IAlphaLayerGetter item,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? copyMask = null)
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? copyMask = null)
         {
             AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1395,8 +1654,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAlphaLayerGetter item,
             XElement node,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null,
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1406,14 +1665,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlphaLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAlphaLayerGetter item,
             string path,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null,
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1429,8 +1688,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAlphaLayerGetter item,
             Stream stream,
-            out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask? translationMask = null,
+            out AlphaLayer.ErrorMask errorMask,
+            AlphaLayer.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1447,264 +1706,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AlphaLayer_Mask<T> :
-        BaseLayer_Mask<T>,
-        IMask<T>,
-        IEquatable<AlphaLayer_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AlphaLayer_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.AlphaLayerData = initialValue;
-        }
-
-        public AlphaLayer_Mask(
-            T Texture,
-            T Quadrant,
-            T LayerNumber,
-            T BTXTDataTypeState,
-            T AlphaLayerData)
-        : base(
-            Texture: Texture,
-            Quadrant: Quadrant,
-            LayerNumber: LayerNumber,
-            BTXTDataTypeState: BTXTDataTypeState)
-        {
-            this.AlphaLayerData = AlphaLayerData;
-        }
-
-        #pragma warning disable CS8618
-        protected AlphaLayer_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T AlphaLayerData;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AlphaLayer_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AlphaLayer_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.AlphaLayerData, rhs.AlphaLayerData)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.AlphaLayerData?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.AlphaLayerData)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new AlphaLayer_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AlphaLayer_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AlphaLayer_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.AlphaLayerData = eval(this.AlphaLayerData);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AlphaLayer_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AlphaLayer_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AlphaLayer_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.AlphaLayerData ?? true)
-                {
-                    fg.AppendLine($"AlphaLayerData => {AlphaLayerData}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AlphaLayer_ErrorMask : BaseLayer_ErrorMask, IErrorMask<AlphaLayer_ErrorMask>
-    {
-        #region Members
-        public Exception? AlphaLayerData;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    return AlphaLayerData;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    this.AlphaLayerData = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            AlphaLayer_FieldIndex enu = (AlphaLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case AlphaLayer_FieldIndex.AlphaLayerData:
-                    this.AlphaLayerData = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (AlphaLayerData != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AlphaLayer_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"AlphaLayerData => {AlphaLayerData}");
-        }
-        #endregion
-
-        #region Combine
-        public AlphaLayer_ErrorMask Combine(AlphaLayer_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AlphaLayer_ErrorMask();
-            ret.AlphaLayerData = this.AlphaLayerData.Combine(rhs.AlphaLayerData);
-            return ret;
-        }
-        public static AlphaLayer_ErrorMask? Combine(AlphaLayer_ErrorMask? lhs, AlphaLayer_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new AlphaLayer_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AlphaLayer_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AlphaLayer_TranslationMask : BaseLayer_TranslationMask
-    {
-        #region Members
-        public bool AlphaLayerData;
-        #endregion
-
-        #region Ctors
-        public AlphaLayer_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.AlphaLayerData = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((AlphaLayerData, null));
-        }
-    }
 }
 #endregion
 

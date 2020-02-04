@@ -27,23 +27,23 @@ namespace Mutagen.Bethesda.Oblivion
             NoLODWater = 0x10,
         }
 
-        private static readonly Worldspace_TranslationMask XmlFolderTranslation = new Worldspace_TranslationMask(true)
+        private static readonly Worldspace.TranslationMask XmlFolderTranslation = new Worldspace.TranslationMask(true)
         {
-            SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask?>(false, null),
-            Road = new MaskItem<bool, Road_TranslationMask?>(false, null),
-            TopCell = new MaskItem<bool, Cell_TranslationMask?>(false, null),
+            SubCells = new MaskItem<bool, WorldspaceBlock.TranslationMask?>(false, null),
+            Road = new MaskItem<bool, Road.TranslationMask?>(false, null),
+            TopCell = new MaskItem<bool, Cell.TranslationMask?>(false, null),
         };
         private static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslation.GetCrystal();
 
-        private static readonly WorldspaceBlock_TranslationMask BlockXmlFolderTranslation = new WorldspaceBlock_TranslationMask(true)
+        private static readonly WorldspaceBlock.TranslationMask BlockXmlFolderTranslation = new WorldspaceBlock.TranslationMask(true)
         {
-            Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask?>(false, null),
+            Items = new MaskItem<bool, WorldspaceSubBlock.TranslationMask?>(false, null),
             BlockNumberX = false,
             BlockNumberY = false,
         };
         private static readonly TranslationCrystal BlockXmlFolderTranslationCrystal = BlockXmlFolderTranslation.GetCrystal();
 
-        private static readonly WorldspaceSubBlock_TranslationMask SubBlockXmlFolderTranslation = new WorldspaceSubBlock_TranslationMask(true)
+        private static readonly WorldspaceSubBlock.TranslationMask SubBlockXmlFolderTranslation = new WorldspaceSubBlock.TranslationMask(true)
         {
             BlockNumberX = false,
             BlockNumberY = false,
@@ -232,14 +232,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class WorldspaceCommon
         {
-            private static WorldspaceBlock_TranslationMask duplicateBlockCopyMask = new WorldspaceBlock_TranslationMask(true)
+            private static WorldspaceBlock.TranslationMask duplicateBlockCopyMask = new WorldspaceBlock.TranslationMask(true)
             {
-                Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask?>(false, default)
+                Items = new MaskItem<bool, WorldspaceSubBlock.TranslationMask?>(false, default)
             };
 
-            private static WorldspaceSubBlock_TranslationMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_TranslationMask(true)
+            private static WorldspaceSubBlock.TranslationMask duplicateSubBlockCopyMask = new WorldspaceSubBlock.TranslationMask(true)
             {
-                Items = new MaskItem<bool, Cell_TranslationMask?>(false, default)
+                Items = new MaskItem<bool, Cell.TranslationMask?>(false, default)
             };
 
             partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)

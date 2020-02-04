@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static HavokData CreateFromXml(
             XElement node,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -119,15 +119,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static HavokData CreateFromXml(
             XElement node,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = HavokData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static HavokData CreateFromXml(
             string path,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static HavokData CreateFromXml(
             string path,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static HavokData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static HavokData CreateFromXml(
             Stream stream,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static HavokData CreateFromXml(
             Stream stream,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static HavokData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,6 +215,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Material = initialValue;
+                this.Friction = initialValue;
+                this.Restitution = initialValue;
+            }
+
+            public Mask(
+                T Material,
+                T Friction,
+                T Restitution)
+            {
+                this.Material = Material;
+                this.Friction = Friction;
+                this.Restitution = Restitution;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Material;
+            public T Friction;
+            public T Restitution;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.Friction, rhs.Friction)) return false;
+                if (!object.Equals(this.Restitution, rhs.Restitution)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Material?.GetHashCode());
+                ret = ret.CombineHashCode(this.Friction?.GetHashCode());
+                ret = ret.CombineHashCode(this.Restitution?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Material)) return false;
+                if (!eval(this.Friction)) return false;
+                if (!eval(this.Restitution)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new HavokData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Material = eval(this.Material);
+                obj.Friction = eval(this.Friction);
+                obj.Restitution = eval(this.Restitution);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(HavokData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, HavokData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(HavokData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Material ?? true)
+                    {
+                        fg.AppendLine($"Material => {Material}");
+                    }
+                    if (printMask?.Friction ?? true)
+                    {
+                        fg.AppendLine($"Friction => {Friction}");
+                    }
+                    if (printMask?.Restitution ?? true)
+                    {
+                        fg.AppendLine($"Restitution => {Restitution}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Material;
+            public Exception? Friction;
+            public Exception? Restitution;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
+                switch (enu)
+                {
+                    case HavokData_FieldIndex.Material:
+                        return Material;
+                    case HavokData_FieldIndex.Friction:
+                        return Friction;
+                    case HavokData_FieldIndex.Restitution:
+                        return Restitution;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
+                switch (enu)
+                {
+                    case HavokData_FieldIndex.Material:
+                        this.Material = ex;
+                        break;
+                    case HavokData_FieldIndex.Friction:
+                        this.Friction = ex;
+                        break;
+                    case HavokData_FieldIndex.Restitution:
+                        this.Restitution = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
+                switch (enu)
+                {
+                    case HavokData_FieldIndex.Material:
+                        this.Material = (Exception)obj;
+                        break;
+                    case HavokData_FieldIndex.Friction:
+                        this.Friction = (Exception)obj;
+                        break;
+                    case HavokData_FieldIndex.Restitution:
+                        this.Restitution = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Material != null) return true;
+                if (Friction != null) return true;
+                if (Restitution != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Material => {Material}");
+                fg.AppendLine($"Friction => {Friction}");
+                fg.AppendLine($"Restitution => {Restitution}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Material = this.Material.Combine(rhs.Material);
+                ret.Friction = this.Friction.Combine(rhs.Friction);
+                ret.Restitution = this.Restitution.Combine(rhs.Restitution);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Material;
+            public bool Friction;
+            public bool Restitution;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Material = defaultOn;
+                this.Friction = defaultOn;
+                this.Restitution = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Material, null));
+                ret.Add((Friction, null));
+                ret.Add((Restitution, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -322,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static HavokData_Mask<bool> GetEqualsMask(
+        public static HavokData.Mask<bool> GetEqualsMask(
             this IHavokDataGetter item,
             IHavokDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -336,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IHavokDataGetter item,
             string? name = null,
-            HavokData_Mask<bool>? printMask = null)
+            HavokData.Mask<bool>? printMask = null)
         {
             return ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -348,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokDataGetter item,
             FileGeneration fg,
             string? name = null,
-            HavokData_Mask<bool>? printMask = null)
+            HavokData.Mask<bool>? printMask = null)
         {
             ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,16 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IHavokDataGetter item,
-            HavokData_Mask<bool?> checkMask)
+            HavokData.Mask<bool?> checkMask)
         {
             return ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static HavokData_Mask<bool> GetHasBeenSetMask(this IHavokDataGetter item)
+        public static HavokData.Mask<bool> GetHasBeenSetMask(this IHavokDataGetter item)
         {
-            var ret = new HavokData_Mask<bool>(false);
+            var ret = new HavokData.Mask<bool>(false);
             ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -387,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IHavokData lhs,
             IHavokDataGetter rhs,
-            HavokData_TranslationMask? copyMask = null)
+            HavokData.TranslationMask? copyMask = null)
         {
             ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -399,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IHavokData lhs,
             IHavokDataGetter rhs,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? copyMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -408,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = HavokData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -426,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static HavokData DeepCopy(
             this IHavokDataGetter item,
-            HavokData_TranslationMask? copyMask = null)
+            HavokData.TranslationMask? copyMask = null)
         {
             return ((HavokDataSetterTranslationCommon)((IHavokDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -435,8 +749,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static HavokData DeepCopy(
             this IHavokDataGetter item,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? copyMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? copyMask = null)
         {
             return ((HavokDataSetterTranslationCommon)((IHavokDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -460,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IHavokData item,
             XElement node,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -473,8 +787,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IHavokData item,
             XElement node,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -482,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = HavokData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -501,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IHavokData item,
             string path,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,8 +827,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IHavokData item,
             string path,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -541,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IHavokData item,
             Stream stream,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,8 +867,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IHavokData item,
             Stream stream,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,9 +957,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(HavokData_Mask<>);
+        public static readonly Type MaskType = typeof(HavokData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(HavokData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(HavokData.ErrorMask);
 
         public static readonly Type ClassType = typeof(HavokData);
 
@@ -900,12 +1214,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly HavokDataCommon Instance = new HavokDataCommon();
 
-        public HavokData_Mask<bool> GetEqualsMask(
+        public HavokData.Mask<bool> GetEqualsMask(
             IHavokDataGetter item,
             IHavokDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new HavokData_Mask<bool>(false);
+            var ret = new HavokData.Mask<bool>(false);
             ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IHavokDataGetter item,
             IHavokDataGetter rhs,
-            HavokData_Mask<bool> ret,
+            HavokData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -929,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IHavokDataGetter item,
             string? name = null,
-            HavokData_Mask<bool>? printMask = null)
+            HavokData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -944,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter item,
             FileGeneration fg,
             string? name = null,
-            HavokData_Mask<bool>? printMask = null)
+            HavokData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IHavokDataGetter item,
             FileGeneration fg,
-            HavokData_Mask<bool>? printMask = null)
+            HavokData.Mask<bool>? printMask = null)
         {
             if (printMask?.Material ?? true)
             {
@@ -986,14 +1300,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IHavokDataGetter item,
-            HavokData_Mask<bool?> checkMask)
+            HavokData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IHavokDataGetter item,
-            HavokData_Mask<bool> mask)
+            HavokData.Mask<bool> mask)
         {
             mask.Material = true;
             mask.Friction = true;
@@ -1068,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public HavokData DeepCopy(
             IHavokDataGetter item,
-            HavokData_TranslationMask? copyMask = null)
+            HavokData.TranslationMask? copyMask = null)
         {
             HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1079,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public HavokData DeepCopy(
             IHavokDataGetter item,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? copyMask = null)
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? copyMask = null)
         {
             HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1354,8 +1668,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IHavokDataGetter item,
             XElement node,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null,
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1365,14 +1679,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = HavokData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IHavokDataGetter item,
             string path,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null,
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1405,8 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IHavokDataGetter item,
             Stream stream,
-            out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask? translationMask = null,
+            out HavokData.ErrorMask errorMask,
+            HavokData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1455,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokDataGetter item,
             XElement node,
             string? name = null,
-            HavokData_TranslationMask? translationMask = null)
+            HavokData.TranslationMask? translationMask = null)
         {
             ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1499,321 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class HavokData_Mask<T> :
-        IMask<T>,
-        IEquatable<HavokData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public HavokData_Mask(T initialValue)
-        {
-            this.Material = initialValue;
-            this.Friction = initialValue;
-            this.Restitution = initialValue;
-        }
-
-        public HavokData_Mask(
-            T Material,
-            T Friction,
-            T Restitution)
-        {
-            this.Material = Material;
-            this.Friction = Friction;
-            this.Restitution = Restitution;
-        }
-
-        #pragma warning disable CS8618
-        protected HavokData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Material;
-        public T Friction;
-        public T Restitution;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is HavokData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(HavokData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Material, rhs.Material)) return false;
-            if (!object.Equals(this.Friction, rhs.Friction)) return false;
-            if (!object.Equals(this.Restitution, rhs.Restitution)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Material?.GetHashCode());
-            ret = ret.CombineHashCode(this.Friction?.GetHashCode());
-            ret = ret.CombineHashCode(this.Restitution?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Material)) return false;
-            if (!eval(this.Friction)) return false;
-            if (!eval(this.Restitution)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public HavokData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new HavokData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(HavokData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Material = eval(this.Material);
-            obj.Friction = eval(this.Friction);
-            obj.Restitution = eval(this.Restitution);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(HavokData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, HavokData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(HavokData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Material ?? true)
-                {
-                    fg.AppendLine($"Material => {Material}");
-                }
-                if (printMask?.Friction ?? true)
-                {
-                    fg.AppendLine($"Friction => {Friction}");
-                }
-                if (printMask?.Restitution ?? true)
-                {
-                    fg.AppendLine($"Restitution => {Restitution}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class HavokData_ErrorMask : IErrorMask, IErrorMask<HavokData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Material;
-        public Exception? Friction;
-        public Exception? Restitution;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    return Material;
-                case HavokData_FieldIndex.Friction:
-                    return Friction;
-                case HavokData_FieldIndex.Restitution:
-                    return Restitution;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    this.Material = ex;
-                    break;
-                case HavokData_FieldIndex.Friction:
-                    this.Friction = ex;
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    this.Restitution = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            HavokData_FieldIndex enu = (HavokData_FieldIndex)index;
-            switch (enu)
-            {
-                case HavokData_FieldIndex.Material:
-                    this.Material = (Exception)obj;
-                    break;
-                case HavokData_FieldIndex.Friction:
-                    this.Friction = (Exception)obj;
-                    break;
-                case HavokData_FieldIndex.Restitution:
-                    this.Restitution = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Material != null) return true;
-            if (Friction != null) return true;
-            if (Restitution != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("HavokData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Material => {Material}");
-            fg.AppendLine($"Friction => {Friction}");
-            fg.AppendLine($"Restitution => {Restitution}");
-        }
-        #endregion
-
-        #region Combine
-        public HavokData_ErrorMask Combine(HavokData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new HavokData_ErrorMask();
-            ret.Material = this.Material.Combine(rhs.Material);
-            ret.Friction = this.Friction.Combine(rhs.Friction);
-            ret.Restitution = this.Restitution.Combine(rhs.Restitution);
-            return ret;
-        }
-        public static HavokData_ErrorMask? Combine(HavokData_ErrorMask? lhs, HavokData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static HavokData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new HavokData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class HavokData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Material;
-        public bool Friction;
-        public bool Restitution;
-        #endregion
-
-        #region Ctors
-        public HavokData_TranslationMask(bool defaultOn)
-        {
-            this.Material = defaultOn;
-            this.Friction = defaultOn;
-            this.Restitution = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Material, null));
-            ret.Add((Friction, null));
-            ret.Add((Restitution, null));
-        }
-    }
 }
 #endregion
 

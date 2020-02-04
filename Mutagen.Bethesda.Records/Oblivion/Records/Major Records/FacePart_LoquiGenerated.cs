@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static FacePart CreateFromXml(
             XElement node,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -144,15 +144,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static FacePart CreateFromXml(
             XElement node,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FacePart.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FacePart CreateFromXml(
             string path,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -182,8 +182,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FacePart CreateFromXml(
             string path,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FacePart CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FacePart CreateFromXml(
             Stream stream,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,8 +216,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FacePart CreateFromXml(
             Stream stream,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FacePart CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -240,6 +240,324 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Index = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+            }
+
+            public Mask(
+                T Index,
+                T Model,
+                T Icon)
+            {
+                this.Index = Index;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Index;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Index?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Index)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new FacePart.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Index = eval(this.Index);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(FacePart.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, FacePart.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(FacePart.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Index ?? true)
+                    {
+                        fg.AppendLine($"Index => {Index}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Index;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
+                switch (enu)
+                {
+                    case FacePart_FieldIndex.Index:
+                        return Index;
+                    case FacePart_FieldIndex.Model:
+                        return Model;
+                    case FacePart_FieldIndex.Icon:
+                        return Icon;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
+                switch (enu)
+                {
+                    case FacePart_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case FacePart_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case FacePart_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
+                switch (enu)
+                {
+                    case FacePart_FieldIndex.Index:
+                        this.Index = (Exception)obj;
+                        break;
+                    case FacePart_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case FacePart_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Index != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Index => {Index}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Index = this.Index.Combine(rhs.Index);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Index;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Index = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Index, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -343,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FacePartSetterCommon)((IFacePartGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FacePart_Mask<bool> GetEqualsMask(
+        public static FacePart.Mask<bool> GetEqualsMask(
             this IFacePartGetter item,
             IFacePartGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -357,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IFacePartGetter item,
             string? name = null,
-            FacePart_Mask<bool>? printMask = null)
+            FacePart.Mask<bool>? printMask = null)
         {
             return ((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePartGetter item,
             FileGeneration fg,
             string? name = null,
-            FacePart_Mask<bool>? printMask = null)
+            FacePart.Mask<bool>? printMask = null)
         {
             ((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -380,16 +698,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IFacePartGetter item,
-            FacePart_Mask<bool?> checkMask)
+            FacePart.Mask<bool?> checkMask)
         {
             return ((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static FacePart_Mask<bool> GetHasBeenSetMask(this IFacePartGetter item)
+        public static FacePart.Mask<bool> GetHasBeenSetMask(this IFacePartGetter item)
         {
-            var ret = new FacePart_Mask<bool>(false);
+            var ret = new FacePart.Mask<bool>(false);
             ((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -408,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IFacePart lhs,
             IFacePartGetter rhs,
-            FacePart_TranslationMask? copyMask = null)
+            FacePart.TranslationMask? copyMask = null)
         {
             ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -420,8 +738,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IFacePart lhs,
             IFacePartGetter rhs,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? copyMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -429,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FacePart.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -447,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FacePart DeepCopy(
             this IFacePartGetter item,
-            FacePart_TranslationMask? copyMask = null)
+            FacePart.TranslationMask? copyMask = null)
         {
             return ((FacePartSetterTranslationCommon)((IFacePartGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -456,8 +774,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FacePart DeepCopy(
             this IFacePartGetter item,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? copyMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? copyMask = null)
         {
             return ((FacePartSetterTranslationCommon)((IFacePartGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -481,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFacePart item,
             XElement node,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -494,8 +812,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFacePart item,
             XElement node,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -503,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FacePart.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -522,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFacePart item,
             string path,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -534,8 +852,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFacePart item,
             string path,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -549,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePart item,
             string path,
             ErrorMaskBuilder? errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -562,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFacePart item,
             Stream stream,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -574,8 +892,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFacePart item,
             Stream stream,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -589,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePart item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -664,9 +982,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(FacePart_Mask<>);
+        public static readonly Type MaskType = typeof(FacePart.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FacePart_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FacePart.ErrorMask);
 
         public static readonly Type ClassType = typeof(FacePart);
 
@@ -973,12 +1291,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly FacePartCommon Instance = new FacePartCommon();
 
-        public FacePart_Mask<bool> GetEqualsMask(
+        public FacePart.Mask<bool> GetEqualsMask(
             IFacePartGetter item,
             IFacePartGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FacePart_Mask<bool>(false);
+            var ret = new FacePart.Mask<bool>(false);
             ((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -990,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IFacePartGetter item,
             IFacePartGetter rhs,
-            FacePart_Mask<bool> ret,
+            FacePart.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1006,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IFacePartGetter item,
             string? name = null,
-            FacePart_Mask<bool>? printMask = null)
+            FacePart.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1021,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFacePartGetter item,
             FileGeneration fg,
             string? name = null,
-            FacePart_Mask<bool>? printMask = null)
+            FacePart.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1045,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IFacePartGetter item,
             FileGeneration fg,
-            FacePart_Mask<bool>? printMask = null)
+            FacePart.Mask<bool>? printMask = null)
         {
             if (printMask?.Index ?? true)
             {
@@ -1063,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IFacePartGetter item,
-            FacePart_Mask<bool?> checkMask)
+            FacePart.Mask<bool?> checkMask)
         {
             if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1074,11 +1392,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IFacePartGetter item,
-            FacePart_Mask<bool> mask)
+            FacePart.Mask<bool> mask)
         {
             mask.Index = (item.Index != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
         }
         
@@ -1181,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public FacePart DeepCopy(
             IFacePartGetter item,
-            FacePart_TranslationMask? copyMask = null)
+            FacePart.TranslationMask? copyMask = null)
         {
             FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1192,8 +1510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public FacePart DeepCopy(
             IFacePartGetter item,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? copyMask = null)
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? copyMask = null)
         {
             FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1473,8 +1791,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFacePartGetter item,
             XElement node,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null,
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1484,14 +1802,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FacePart.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFacePartGetter item,
             string path,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null,
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1524,8 +1842,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFacePartGetter item,
             Stream stream,
-            out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask? translationMask = null,
+            out FacePart.ErrorMask errorMask,
+            FacePart.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1574,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePartGetter item,
             XElement node,
             string? name = null,
-            FacePart_TranslationMask? translationMask = null)
+            FacePart.TranslationMask? translationMask = null)
         {
             ((FacePartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1618,325 +1936,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class FacePart_Mask<T> :
-        IMask<T>,
-        IEquatable<FacePart_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public FacePart_Mask(T initialValue)
-        {
-            this.Index = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-        }
-
-        public FacePart_Mask(
-            T Index,
-            T Model,
-            T Icon)
-        {
-            this.Index = Index;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-        }
-
-        #pragma warning disable CS8618
-        protected FacePart_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Index;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is FacePart_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(FacePart_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Index, rhs.Index)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Index?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Index)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public FacePart_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new FacePart_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(FacePart_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Index = eval(this.Index);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(FacePart_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, FacePart_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(FacePart_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Index ?? true)
-                {
-                    fg.AppendLine($"Index => {Index}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class FacePart_ErrorMask : IErrorMask, IErrorMask<FacePart_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Index;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    return Index;
-                case FacePart_FieldIndex.Model:
-                    return Model;
-                case FacePart_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    this.Index = ex;
-                    break;
-                case FacePart_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
-            switch (enu)
-            {
-                case FacePart_FieldIndex.Index:
-                    this.Index = (Exception)obj;
-                    break;
-                case FacePart_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case FacePart_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Index != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("FacePart_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Index => {Index}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-        }
-        #endregion
-
-        #region Combine
-        public FacePart_ErrorMask Combine(FacePart_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new FacePart_ErrorMask();
-            ret.Index = this.Index.Combine(rhs.Index);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            return ret;
-        }
-        public static FacePart_ErrorMask? Combine(FacePart_ErrorMask? lhs, FacePart_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static FacePart_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new FacePart_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class FacePart_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Index;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        #endregion
-
-        #region Ctors
-        public FacePart_TranslationMask(bool defaultOn)
-        {
-            this.Index = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Index, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-        }
-    }
 }
 #endregion
 

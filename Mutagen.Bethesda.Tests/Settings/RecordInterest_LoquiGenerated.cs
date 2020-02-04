@@ -99,6 +99,435 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T InterestingTypes,
+                T UninterestingTypes)
+            {
+                this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(InterestingTypes, Enumerable.Empty<(int Index, T Value)>());
+                this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(UninterestingTypes, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? InterestingTypes;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? UninterestingTypes;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.InterestingTypes, rhs.InterestingTypes)) return false;
+                if (!object.Equals(this.UninterestingTypes, rhs.UninterestingTypes)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.InterestingTypes?.GetHashCode());
+                ret = ret.CombineHashCode(this.UninterestingTypes?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (this.InterestingTypes != null)
+                {
+                    if (!eval(this.InterestingTypes.Overall)) return false;
+                    if (this.InterestingTypes.Specific != null)
+                    {
+                        foreach (var item in this.InterestingTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.UninterestingTypes != null)
+                {
+                    if (!eval(this.UninterestingTypes.Overall)) return false;
+                    if (this.UninterestingTypes.Specific != null)
+                    {
+                        foreach (var item in this.UninterestingTypes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RecordInterest.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                if (InterestingTypes != null)
+                {
+                    obj.InterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.InterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (InterestingTypes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.InterestingTypes.Specific = l;
+                        foreach (var item in InterestingTypes.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (UninterestingTypes != null)
+                {
+                    obj.UninterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.UninterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (UninterestingTypes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.UninterestingTypes.Specific = l;
+                        foreach (var item in UninterestingTypes.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RecordInterest.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RecordInterest.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RecordInterest.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.InterestingTypes?.Overall ?? true)
+                    {
+                        fg.AppendLine("InterestingTypes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (InterestingTypes != null)
+                            {
+                                if (InterestingTypes.Overall != null)
+                                {
+                                    fg.AppendLine(InterestingTypes.Overall.ToString());
+                                }
+                                if (InterestingTypes.Specific != null)
+                                {
+                                    foreach (var subItem in InterestingTypes.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.UninterestingTypes?.Overall ?? true)
+                    {
+                        fg.AppendLine("UninterestingTypes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (UninterestingTypes != null)
+                            {
+                                if (UninterestingTypes.Overall != null)
+                                {
+                                    fg.AppendLine(UninterestingTypes.Overall.ToString());
+                                }
+                                if (UninterestingTypes.Specific != null)
+                                {
+                                    foreach (var subItem in UninterestingTypes.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? InterestingTypes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UninterestingTypes;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
+                switch (enu)
+                {
+                    case RecordInterest_FieldIndex.InterestingTypes:
+                        return InterestingTypes;
+                    case RecordInterest_FieldIndex.UninterestingTypes:
+                        return UninterestingTypes;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
+                switch (enu)
+                {
+                    case RecordInterest_FieldIndex.InterestingTypes:
+                        this.InterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case RecordInterest_FieldIndex.UninterestingTypes:
+                        this.UninterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
+                switch (enu)
+                {
+                    case RecordInterest_FieldIndex.InterestingTypes:
+                        this.InterestingTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case RecordInterest_FieldIndex.UninterestingTypes:
+                        this.UninterestingTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (InterestingTypes != null) return true;
+                if (UninterestingTypes != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine("InterestingTypes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (InterestingTypes != null)
+                    {
+                        if (InterestingTypes.Overall != null)
+                        {
+                            fg.AppendLine(InterestingTypes.Overall.ToString());
+                        }
+                        if (InterestingTypes.Specific != null)
+                        {
+                            foreach (var subItem in InterestingTypes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("UninterestingTypes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (UninterestingTypes != null)
+                    {
+                        if (UninterestingTypes.Overall != null)
+                        {
+                            fg.AppendLine(UninterestingTypes.Overall.ToString());
+                        }
+                        if (UninterestingTypes.Specific != null)
+                        {
+                            foreach (var subItem in UninterestingTypes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.InterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.InterestingTypes?.Overall, rhs.InterestingTypes?.Overall), ExceptionExt.Combine(this.InterestingTypes?.Specific, rhs.InterestingTypes?.Specific));
+                ret.UninterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.UninterestingTypes?.Overall, rhs.UninterestingTypes?.Overall), ExceptionExt.Combine(this.UninterestingTypes?.Specific, rhs.UninterestingTypes?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool InterestingTypes;
+            public bool UninterestingTypes;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.InterestingTypes = defaultOn;
+                this.UninterestingTypes = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((InterestingTypes, null));
+                ret.Add((UninterestingTypes, null));
+            }
+        }
+        #endregion
+
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RecordInterestXmlWriteTranslation.Instance;
@@ -121,7 +550,7 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static RecordInterest CreateFromXml(
             XElement node,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -132,15 +561,15 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerStepThrough]
         public static RecordInterest CreateFromXml(
             XElement node,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RecordInterest.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -160,7 +589,7 @@ namespace Mutagen.Bethesda.Tests
 
         public static RecordInterest CreateFromXml(
             string path,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,8 +599,8 @@ namespace Mutagen.Bethesda.Tests
 
         public static RecordInterest CreateFromXml(
             string path,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -183,7 +612,7 @@ namespace Mutagen.Bethesda.Tests
         public static RecordInterest CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -194,7 +623,7 @@ namespace Mutagen.Bethesda.Tests
 
         public static RecordInterest CreateFromXml(
             Stream stream,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,8 +633,8 @@ namespace Mutagen.Bethesda.Tests
 
         public static RecordInterest CreateFromXml(
             Stream stream,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -217,7 +646,7 @@ namespace Mutagen.Bethesda.Tests
         public static RecordInterest CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -282,7 +711,7 @@ namespace Mutagen.Bethesda.Tests
             ((RecordInterestSetterCommon)((IRecordInterestGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RecordInterest_Mask<bool> GetEqualsMask(
+        public static RecordInterest.Mask<bool> GetEqualsMask(
             this IRecordInterestGetter item,
             IRecordInterestGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -296,7 +725,7 @@ namespace Mutagen.Bethesda.Tests
         public static string ToString(
             this IRecordInterestGetter item,
             string? name = null,
-            RecordInterest_Mask<bool>? printMask = null)
+            RecordInterest.Mask<bool>? printMask = null)
         {
             return ((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -308,7 +737,7 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterestGetter item,
             FileGeneration fg,
             string? name = null,
-            RecordInterest_Mask<bool>? printMask = null)
+            RecordInterest.Mask<bool>? printMask = null)
         {
             ((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -319,16 +748,16 @@ namespace Mutagen.Bethesda.Tests
 
         public static bool HasBeenSet(
             this IRecordInterestGetter item,
-            RecordInterest_Mask<bool?> checkMask)
+            RecordInterest.Mask<bool?> checkMask)
         {
             return ((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RecordInterest_Mask<bool> GetHasBeenSetMask(this IRecordInterestGetter item)
+        public static RecordInterest.Mask<bool> GetHasBeenSetMask(this IRecordInterestGetter item)
         {
-            var ret = new RecordInterest_Mask<bool>(false);
+            var ret = new RecordInterest.Mask<bool>(false);
             ((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -347,7 +776,7 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyIn(
             this IRecordInterest lhs,
             IRecordInterestGetter rhs,
-            RecordInterest_TranslationMask? copyMask = null)
+            RecordInterest.TranslationMask? copyMask = null)
         {
             ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -359,8 +788,8 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyIn(
             this IRecordInterest lhs,
             IRecordInterestGetter rhs,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? copyMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -368,7 +797,7 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RecordInterest.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -386,7 +815,7 @@ namespace Mutagen.Bethesda.Tests
 
         public static RecordInterest DeepCopy(
             this IRecordInterestGetter item,
-            RecordInterest_TranslationMask? copyMask = null)
+            RecordInterest.TranslationMask? copyMask = null)
         {
             return ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -395,8 +824,8 @@ namespace Mutagen.Bethesda.Tests
 
         public static RecordInterest DeepCopy(
             this IRecordInterestGetter item,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? copyMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? copyMask = null)
         {
             return ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -420,7 +849,7 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IRecordInterest item,
             XElement node,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -433,8 +862,8 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IRecordInterest item,
             XElement node,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -442,7 +871,7 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RecordInterest.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -461,7 +890,7 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IRecordInterest item,
             string path,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -473,8 +902,8 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IRecordInterest item,
             string path,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -488,7 +917,7 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterest item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -501,7 +930,7 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IRecordInterest item,
             Stream stream,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -513,8 +942,8 @@ namespace Mutagen.Bethesda.Tests
         public static void CopyInFromXml(
             this IRecordInterest item,
             Stream stream,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -528,7 +957,7 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterest item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -573,9 +1002,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(RecordInterest_Mask<>);
+        public static readonly Type MaskType = typeof(RecordInterest.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RecordInterest_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RecordInterest.ErrorMask);
 
         public static readonly Type ClassType = typeof(RecordInterest);
 
@@ -782,12 +1211,12 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         public static readonly RecordInterestCommon Instance = new RecordInterestCommon();
 
-        public RecordInterest_Mask<bool> GetEqualsMask(
+        public RecordInterest.Mask<bool> GetEqualsMask(
             IRecordInterestGetter item,
             IRecordInterestGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RecordInterest_Mask<bool>(false);
+            var ret = new RecordInterest.Mask<bool>(false);
             ((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -799,7 +1228,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void FillEqualsMask(
             IRecordInterestGetter item,
             IRecordInterestGetter rhs,
-            RecordInterest_Mask<bool> ret,
+            RecordInterest.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -816,7 +1245,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public string ToString(
             IRecordInterestGetter item,
             string? name = null,
-            RecordInterest_Mask<bool>? printMask = null)
+            RecordInterest.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -831,7 +1260,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInterestGetter item,
             FileGeneration fg,
             string? name = null,
-            RecordInterest_Mask<bool>? printMask = null)
+            RecordInterest.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -855,7 +1284,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         protected static void ToStringFields(
             IRecordInterestGetter item,
             FileGeneration fg,
-            RecordInterest_Mask<bool>? printMask = null)
+            RecordInterest.Mask<bool>? printMask = null)
         {
             if (printMask?.InterestingTypes?.Overall ?? true)
             {
@@ -897,14 +1326,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public bool HasBeenSet(
             IRecordInterestGetter item,
-            RecordInterest_Mask<bool?> checkMask)
+            RecordInterest.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRecordInterestGetter item,
-            RecordInterest_Mask<bool> mask)
+            RecordInterest.Mask<bool> mask)
         {
             mask.InterestingTypes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
             mask.UninterestingTypes = new MaskItem<bool, IEnumerable<(int, bool)>>(true, Enumerable.Empty<(int, bool)>());
@@ -990,7 +1419,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public RecordInterest DeepCopy(
             IRecordInterestGetter item,
-            RecordInterest_TranslationMask? copyMask = null)
+            RecordInterest.TranslationMask? copyMask = null)
         {
             RecordInterest ret = (RecordInterest)((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1001,8 +1430,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public RecordInterest DeepCopy(
             IRecordInterestGetter item,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? copyMask = null)
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? copyMask = null)
         {
             RecordInterest ret = (RecordInterest)((RecordInterestCommon)((IRecordInterestGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1060,436 +1489,6 @@ namespace Mutagen.Bethesda.Tests
 }
 
 #region Modules
-#region Mask
-namespace Mutagen.Bethesda.Tests.Internals
-{
-    public class RecordInterest_Mask<T> :
-        IMask<T>,
-        IEquatable<RecordInterest_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RecordInterest_Mask(T initialValue)
-        {
-            this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public RecordInterest_Mask(
-            T InterestingTypes,
-            T UninterestingTypes)
-        {
-            this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(InterestingTypes, Enumerable.Empty<(int Index, T Value)>());
-            this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(UninterestingTypes, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected RecordInterest_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? InterestingTypes;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? UninterestingTypes;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RecordInterest_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RecordInterest_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.InterestingTypes, rhs.InterestingTypes)) return false;
-            if (!object.Equals(this.UninterestingTypes, rhs.UninterestingTypes)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.InterestingTypes?.GetHashCode());
-            ret = ret.CombineHashCode(this.UninterestingTypes?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (this.InterestingTypes != null)
-            {
-                if (!eval(this.InterestingTypes.Overall)) return false;
-                if (this.InterestingTypes.Specific != null)
-                {
-                    foreach (var item in this.InterestingTypes.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (this.UninterestingTypes != null)
-            {
-                if (!eval(this.UninterestingTypes.Overall)) return false;
-                if (this.UninterestingTypes.Specific != null)
-                {
-                    foreach (var item in this.UninterestingTypes.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RecordInterest_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RecordInterest_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RecordInterest_Mask<R> obj, Func<T, R> eval)
-        {
-            if (InterestingTypes != null)
-            {
-                obj.InterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.InterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (InterestingTypes.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.InterestingTypes.Specific = l;
-                    foreach (var item in InterestingTypes.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            if (UninterestingTypes != null)
-            {
-                obj.UninterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.UninterestingTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (UninterestingTypes.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.UninterestingTypes.Specific = l;
-                    foreach (var item in UninterestingTypes.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RecordInterest_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RecordInterest_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RecordInterest_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.InterestingTypes?.Overall ?? true)
-                {
-                    fg.AppendLine("InterestingTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (InterestingTypes != null)
-                        {
-                            if (InterestingTypes.Overall != null)
-                            {
-                                fg.AppendLine(InterestingTypes.Overall.ToString());
-                            }
-                            if (InterestingTypes.Specific != null)
-                            {
-                                foreach (var subItem in InterestingTypes.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.UninterestingTypes?.Overall ?? true)
-                {
-                    fg.AppendLine("UninterestingTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (UninterestingTypes != null)
-                        {
-                            if (UninterestingTypes.Overall != null)
-                            {
-                                fg.AppendLine(UninterestingTypes.Overall.ToString());
-                            }
-                            if (UninterestingTypes.Specific != null)
-                            {
-                                foreach (var subItem in UninterestingTypes.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RecordInterest_ErrorMask : IErrorMask, IErrorMask<RecordInterest_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? InterestingTypes;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UninterestingTypes;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
-            switch (enu)
-            {
-                case RecordInterest_FieldIndex.InterestingTypes:
-                    return InterestingTypes;
-                case RecordInterest_FieldIndex.UninterestingTypes:
-                    return UninterestingTypes;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
-            switch (enu)
-            {
-                case RecordInterest_FieldIndex.InterestingTypes:
-                    this.InterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case RecordInterest_FieldIndex.UninterestingTypes:
-                    this.UninterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RecordInterest_FieldIndex enu = (RecordInterest_FieldIndex)index;
-            switch (enu)
-            {
-                case RecordInterest_FieldIndex.InterestingTypes:
-                    this.InterestingTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case RecordInterest_FieldIndex.UninterestingTypes:
-                    this.UninterestingTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (InterestingTypes != null) return true;
-            if (UninterestingTypes != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RecordInterest_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine("InterestingTypes =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (InterestingTypes != null)
-                {
-                    if (InterestingTypes.Overall != null)
-                    {
-                        fg.AppendLine(InterestingTypes.Overall.ToString());
-                    }
-                    if (InterestingTypes.Specific != null)
-                    {
-                        foreach (var subItem in InterestingTypes.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("UninterestingTypes =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (UninterestingTypes != null)
-                {
-                    if (UninterestingTypes.Overall != null)
-                    {
-                        fg.AppendLine(UninterestingTypes.Overall.ToString());
-                    }
-                    if (UninterestingTypes.Specific != null)
-                    {
-                        foreach (var subItem in UninterestingTypes.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public RecordInterest_ErrorMask Combine(RecordInterest_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RecordInterest_ErrorMask();
-            ret.InterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.InterestingTypes?.Overall, rhs.InterestingTypes?.Overall), ExceptionExt.Combine(this.InterestingTypes?.Specific, rhs.InterestingTypes?.Specific));
-            ret.UninterestingTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.UninterestingTypes?.Overall, rhs.UninterestingTypes?.Overall), ExceptionExt.Combine(this.UninterestingTypes?.Specific, rhs.UninterestingTypes?.Specific));
-            return ret;
-        }
-        public static RecordInterest_ErrorMask? Combine(RecordInterest_ErrorMask? lhs, RecordInterest_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RecordInterest_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RecordInterest_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RecordInterest_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool InterestingTypes;
-        public bool UninterestingTypes;
-        #endregion
-
-        #region Ctors
-        public RecordInterest_TranslationMask(bool defaultOn)
-        {
-            this.InterestingTypes = defaultOn;
-            this.UninterestingTypes = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((InterestingTypes, null));
-            ret.Add((UninterestingTypes, null));
-        }
-    }
-}
-#endregion
-
 #region Xml Translation
 namespace Mutagen.Bethesda.Tests.Internals
 {
@@ -1723,8 +1722,8 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IRecordInterestGetter item,
             XElement node,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null,
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1734,14 +1733,14 @@ namespace Mutagen.Bethesda.Tests
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RecordInterest.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRecordInterestGetter item,
             string path,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null,
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1774,8 +1773,8 @@ namespace Mutagen.Bethesda.Tests
         public static void WriteToXml(
             this IRecordInterestGetter item,
             Stream stream,
-            out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask? translationMask = null,
+            out RecordInterest.ErrorMask errorMask,
+            RecordInterest.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1824,7 +1823,7 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterestGetter item,
             XElement node,
             string? name = null,
-            RecordInterest_TranslationMask? translationMask = null)
+            RecordInterest.TranslationMask? translationMask = null)
         {
             ((RecordInterestXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,

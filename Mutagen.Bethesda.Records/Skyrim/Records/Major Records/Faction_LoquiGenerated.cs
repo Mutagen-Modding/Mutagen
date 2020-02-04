@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new Faction CreateFromXml(
             XElement node,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -386,15 +386,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Faction CreateFromXml(
             XElement node,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             string path,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -424,8 +424,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             string path,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             Stream stream,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -458,8 +458,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction CreateFromXml(
             Stream stream,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -482,6 +482,1173 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            SkyrimMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Relation.Mask<T>?>>());
+                this.Flags = initialValue;
+                this.PrisonMarker = initialValue;
+                this.FollowerWaitMarker = initialValue;
+                this.EvidenceChest = initialValue;
+                this.PlayerBelongingsChest = initialValue;
+                this.CrimeGroup = initialValue;
+                this.JailOutfit = initialValue;
+                this.ArrestCrimeValue = initialValue;
+                this.AttackOnSightCrimeValue = initialValue;
+                this.MurderCrimeValue = initialValue;
+                this.AssaultCrimeValue = initialValue;
+                this.TrespassCrimeValue = initialValue;
+                this.PickpocketCrimeValue = initialValue;
+                this.UnknownCrimeValue = initialValue;
+                this.StealMultCrimeValue = initialValue;
+                this.EscapeCrimeValue = initialValue;
+                this.WerewolfCrimeValue = initialValue;
+                this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Rank.Mask<T>?>>());
+                this.VendorList = initialValue;
+                this.VendorChest = initialValue;
+                this.VendorValues = new MaskItem<T, VendorValues.Mask<T>?>(initialValue, new VendorValues.Mask<T>(initialValue));
+                this.VendorLocation = new MaskItem<T, VendorLocation.Mask<T>?>(initialValue, new VendorLocation.Mask<T>(initialValue));
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.CRVADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T SkyrimMajorRecordFlags,
+                T FormVersion,
+                T Version2,
+                T Name,
+                T Relations,
+                T Flags,
+                T PrisonMarker,
+                T FollowerWaitMarker,
+                T EvidenceChest,
+                T PlayerBelongingsChest,
+                T CrimeGroup,
+                T JailOutfit,
+                T ArrestCrimeValue,
+                T AttackOnSightCrimeValue,
+                T MurderCrimeValue,
+                T AssaultCrimeValue,
+                T TrespassCrimeValue,
+                T PickpocketCrimeValue,
+                T UnknownCrimeValue,
+                T StealMultCrimeValue,
+                T EscapeCrimeValue,
+                T WerewolfCrimeValue,
+                T Ranks,
+                T VendorList,
+                T VendorChest,
+                T VendorValues,
+                T VendorLocation,
+                T Conditions,
+                T CRVADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+                FormVersion: FormVersion,
+                Version2: Version2)
+            {
+                this.Name = Name;
+                this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<T, Relation.Mask<T>?>>());
+                this.Flags = Flags;
+                this.PrisonMarker = PrisonMarker;
+                this.FollowerWaitMarker = FollowerWaitMarker;
+                this.EvidenceChest = EvidenceChest;
+                this.PlayerBelongingsChest = PlayerBelongingsChest;
+                this.CrimeGroup = CrimeGroup;
+                this.JailOutfit = JailOutfit;
+                this.ArrestCrimeValue = ArrestCrimeValue;
+                this.AttackOnSightCrimeValue = AttackOnSightCrimeValue;
+                this.MurderCrimeValue = MurderCrimeValue;
+                this.AssaultCrimeValue = AssaultCrimeValue;
+                this.TrespassCrimeValue = TrespassCrimeValue;
+                this.PickpocketCrimeValue = PickpocketCrimeValue;
+                this.UnknownCrimeValue = UnknownCrimeValue;
+                this.StealMultCrimeValue = StealMultCrimeValue;
+                this.EscapeCrimeValue = EscapeCrimeValue;
+                this.WerewolfCrimeValue = WerewolfCrimeValue;
+                this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<T, Rank.Mask<T>?>>());
+                this.VendorList = VendorList;
+                this.VendorChest = VendorChest;
+                this.VendorValues = new MaskItem<T, VendorValues.Mask<T>?>(VendorValues, new VendorValues.Mask<T>(VendorValues));
+                this.VendorLocation = new MaskItem<T, VendorLocation.Mask<T>?>(VendorLocation, new VendorLocation.Mask<T>(VendorLocation));
+                this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition.Mask<T>?>>());
+                this.CRVADataTypeState = CRVADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation.Mask<T>?>>>? Relations;
+            public T Flags;
+            public T PrisonMarker;
+            public T FollowerWaitMarker;
+            public T EvidenceChest;
+            public T PlayerBelongingsChest;
+            public T CrimeGroup;
+            public T JailOutfit;
+            public T ArrestCrimeValue;
+            public T AttackOnSightCrimeValue;
+            public T MurderCrimeValue;
+            public T AssaultCrimeValue;
+            public T TrespassCrimeValue;
+            public T PickpocketCrimeValue;
+            public T UnknownCrimeValue;
+            public T StealMultCrimeValue;
+            public T EscapeCrimeValue;
+            public T WerewolfCrimeValue;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank.Mask<T>?>>>? Ranks;
+            public T VendorList;
+            public T VendorChest;
+            public MaskItem<T, VendorValues.Mask<T>?>? VendorValues { get; set; }
+            public MaskItem<T, VendorLocation.Mask<T>?>? VendorLocation { get; set; }
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition.Mask<T>?>>>? Conditions;
+            public T CRVADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Relations, rhs.Relations)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.PrisonMarker, rhs.PrisonMarker)) return false;
+                if (!object.Equals(this.FollowerWaitMarker, rhs.FollowerWaitMarker)) return false;
+                if (!object.Equals(this.EvidenceChest, rhs.EvidenceChest)) return false;
+                if (!object.Equals(this.PlayerBelongingsChest, rhs.PlayerBelongingsChest)) return false;
+                if (!object.Equals(this.CrimeGroup, rhs.CrimeGroup)) return false;
+                if (!object.Equals(this.JailOutfit, rhs.JailOutfit)) return false;
+                if (!object.Equals(this.ArrestCrimeValue, rhs.ArrestCrimeValue)) return false;
+                if (!object.Equals(this.AttackOnSightCrimeValue, rhs.AttackOnSightCrimeValue)) return false;
+                if (!object.Equals(this.MurderCrimeValue, rhs.MurderCrimeValue)) return false;
+                if (!object.Equals(this.AssaultCrimeValue, rhs.AssaultCrimeValue)) return false;
+                if (!object.Equals(this.TrespassCrimeValue, rhs.TrespassCrimeValue)) return false;
+                if (!object.Equals(this.PickpocketCrimeValue, rhs.PickpocketCrimeValue)) return false;
+                if (!object.Equals(this.UnknownCrimeValue, rhs.UnknownCrimeValue)) return false;
+                if (!object.Equals(this.StealMultCrimeValue, rhs.StealMultCrimeValue)) return false;
+                if (!object.Equals(this.EscapeCrimeValue, rhs.EscapeCrimeValue)) return false;
+                if (!object.Equals(this.WerewolfCrimeValue, rhs.WerewolfCrimeValue)) return false;
+                if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
+                if (!object.Equals(this.VendorList, rhs.VendorList)) return false;
+                if (!object.Equals(this.VendorChest, rhs.VendorChest)) return false;
+                if (!object.Equals(this.VendorValues, rhs.VendorValues)) return false;
+                if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.CRVADataTypeState, rhs.CRVADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Relations?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.PrisonMarker?.GetHashCode());
+                ret = ret.CombineHashCode(this.FollowerWaitMarker?.GetHashCode());
+                ret = ret.CombineHashCode(this.EvidenceChest?.GetHashCode());
+                ret = ret.CombineHashCode(this.PlayerBelongingsChest?.GetHashCode());
+                ret = ret.CombineHashCode(this.CrimeGroup?.GetHashCode());
+                ret = ret.CombineHashCode(this.JailOutfit?.GetHashCode());
+                ret = ret.CombineHashCode(this.ArrestCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackOnSightCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.MurderCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.AssaultCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.TrespassCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.PickpocketCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.UnknownCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.StealMultCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.EscapeCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.WerewolfCrimeValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.Ranks?.GetHashCode());
+                ret = ret.CombineHashCode(this.VendorList?.GetHashCode());
+                ret = ret.CombineHashCode(this.VendorChest?.GetHashCode());
+                ret = ret.CombineHashCode(this.VendorValues?.GetHashCode());
+                ret = ret.CombineHashCode(this.VendorLocation?.GetHashCode());
+                ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
+                ret = ret.CombineHashCode(this.CRVADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.Relations != null)
+                {
+                    if (!eval(this.Relations.Overall)) return false;
+                    if (this.Relations.Specific != null)
+                    {
+                        foreach (var item in this.Relations.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.PrisonMarker)) return false;
+                if (!eval(this.FollowerWaitMarker)) return false;
+                if (!eval(this.EvidenceChest)) return false;
+                if (!eval(this.PlayerBelongingsChest)) return false;
+                if (!eval(this.CrimeGroup)) return false;
+                if (!eval(this.JailOutfit)) return false;
+                if (!eval(this.ArrestCrimeValue)) return false;
+                if (!eval(this.AttackOnSightCrimeValue)) return false;
+                if (!eval(this.MurderCrimeValue)) return false;
+                if (!eval(this.AssaultCrimeValue)) return false;
+                if (!eval(this.TrespassCrimeValue)) return false;
+                if (!eval(this.PickpocketCrimeValue)) return false;
+                if (!eval(this.UnknownCrimeValue)) return false;
+                if (!eval(this.StealMultCrimeValue)) return false;
+                if (!eval(this.EscapeCrimeValue)) return false;
+                if (!eval(this.WerewolfCrimeValue)) return false;
+                if (this.Ranks != null)
+                {
+                    if (!eval(this.Ranks.Overall)) return false;
+                    if (this.Ranks.Specific != null)
+                    {
+                        foreach (var item in this.Ranks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.VendorList)) return false;
+                if (!eval(this.VendorChest)) return false;
+                if (VendorValues != null)
+                {
+                    if (!eval(this.VendorValues.Overall)) return false;
+                    if (this.VendorValues.Specific != null && !this.VendorValues.Specific.AllEqual(eval)) return false;
+                }
+                if (VendorLocation != null)
+                {
+                    if (!eval(this.VendorLocation.Overall)) return false;
+                    if (this.VendorLocation.Specific != null && !this.VendorLocation.Specific.AllEqual(eval)) return false;
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.CRVADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Faction.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                if (Relations != null)
+                {
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation.Mask<R>?>>());
+                    if (Relations.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
+                        obj.Relations.Specific = l;
+                        foreach (var item in Relations.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Relation.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Relation.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Flags = eval(this.Flags);
+                obj.PrisonMarker = eval(this.PrisonMarker);
+                obj.FollowerWaitMarker = eval(this.FollowerWaitMarker);
+                obj.EvidenceChest = eval(this.EvidenceChest);
+                obj.PlayerBelongingsChest = eval(this.PlayerBelongingsChest);
+                obj.CrimeGroup = eval(this.CrimeGroup);
+                obj.JailOutfit = eval(this.JailOutfit);
+                obj.ArrestCrimeValue = eval(this.ArrestCrimeValue);
+                obj.AttackOnSightCrimeValue = eval(this.AttackOnSightCrimeValue);
+                obj.MurderCrimeValue = eval(this.MurderCrimeValue);
+                obj.AssaultCrimeValue = eval(this.AssaultCrimeValue);
+                obj.TrespassCrimeValue = eval(this.TrespassCrimeValue);
+                obj.PickpocketCrimeValue = eval(this.PickpocketCrimeValue);
+                obj.UnknownCrimeValue = eval(this.UnknownCrimeValue);
+                obj.StealMultCrimeValue = eval(this.StealMultCrimeValue);
+                obj.EscapeCrimeValue = eval(this.EscapeCrimeValue);
+                obj.WerewolfCrimeValue = eval(this.WerewolfCrimeValue);
+                if (Ranks != null)
+                {
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
+                    if (Ranks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
+                        obj.Ranks.Specific = l;
+                        foreach (var item in Ranks.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Rank.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Rank.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.VendorList = eval(this.VendorList);
+                obj.VendorChest = eval(this.VendorChest);
+                obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues.Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
+                obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, VendorLocation.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.CRVADataTypeState = eval(this.CRVADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Faction.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Faction.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Faction.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Relations?.Overall ?? true)
+                    {
+                        fg.AppendLine("Relations =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Relations != null)
+                            {
+                                if (Relations.Overall != null)
+                                {
+                                    fg.AppendLine(Relations.Overall.ToString());
+                                }
+                                if (Relations.Specific != null)
+                                {
+                                    foreach (var subItem in Relations.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.PrisonMarker ?? true)
+                    {
+                        fg.AppendLine($"PrisonMarker => {PrisonMarker}");
+                    }
+                    if (printMask?.FollowerWaitMarker ?? true)
+                    {
+                        fg.AppendLine($"FollowerWaitMarker => {FollowerWaitMarker}");
+                    }
+                    if (printMask?.EvidenceChest ?? true)
+                    {
+                        fg.AppendLine($"EvidenceChest => {EvidenceChest}");
+                    }
+                    if (printMask?.PlayerBelongingsChest ?? true)
+                    {
+                        fg.AppendLine($"PlayerBelongingsChest => {PlayerBelongingsChest}");
+                    }
+                    if (printMask?.CrimeGroup ?? true)
+                    {
+                        fg.AppendLine($"CrimeGroup => {CrimeGroup}");
+                    }
+                    if (printMask?.JailOutfit ?? true)
+                    {
+                        fg.AppendLine($"JailOutfit => {JailOutfit}");
+                    }
+                    if (printMask?.ArrestCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"ArrestCrimeValue => {ArrestCrimeValue}");
+                    }
+                    if (printMask?.AttackOnSightCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"AttackOnSightCrimeValue => {AttackOnSightCrimeValue}");
+                    }
+                    if (printMask?.MurderCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"MurderCrimeValue => {MurderCrimeValue}");
+                    }
+                    if (printMask?.AssaultCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"AssaultCrimeValue => {AssaultCrimeValue}");
+                    }
+                    if (printMask?.TrespassCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"TrespassCrimeValue => {TrespassCrimeValue}");
+                    }
+                    if (printMask?.PickpocketCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"PickpocketCrimeValue => {PickpocketCrimeValue}");
+                    }
+                    if (printMask?.UnknownCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"UnknownCrimeValue => {UnknownCrimeValue}");
+                    }
+                    if (printMask?.StealMultCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"StealMultCrimeValue => {StealMultCrimeValue}");
+                    }
+                    if (printMask?.EscapeCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"EscapeCrimeValue => {EscapeCrimeValue}");
+                    }
+                    if (printMask?.WerewolfCrimeValue ?? true)
+                    {
+                        fg.AppendLine($"WerewolfCrimeValue => {WerewolfCrimeValue}");
+                    }
+                    if (printMask?.Ranks?.Overall ?? true)
+                    {
+                        fg.AppendLine("Ranks =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Ranks != null)
+                            {
+                                if (Ranks.Overall != null)
+                                {
+                                    fg.AppendLine(Ranks.Overall.ToString());
+                                }
+                                if (Ranks.Specific != null)
+                                {
+                                    foreach (var subItem in Ranks.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.VendorList ?? true)
+                    {
+                        fg.AppendLine($"VendorList => {VendorList}");
+                    }
+                    if (printMask?.VendorChest ?? true)
+                    {
+                        fg.AppendLine($"VendorChest => {VendorChest}");
+                    }
+                    if (printMask?.VendorValues?.Overall ?? true)
+                    {
+                        VendorValues?.ToString(fg);
+                    }
+                    if (printMask?.VendorLocation?.Overall ?? true)
+                    {
+                        VendorLocation?.ToString(fg);
+                    }
+                    if (printMask?.Conditions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Conditions != null)
+                            {
+                                if (Conditions.Overall != null)
+                                {
+                                    fg.AppendLine(Conditions.Overall.ToString());
+                                }
+                                if (Conditions.Specific != null)
+                                {
+                                    foreach (var subItem in Conditions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.CRVADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"CRVADataTypeState => {CRVADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            SkyrimMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>? Relations;
+            public Exception? Flags;
+            public Exception? PrisonMarker;
+            public Exception? FollowerWaitMarker;
+            public Exception? EvidenceChest;
+            public Exception? PlayerBelongingsChest;
+            public Exception? CrimeGroup;
+            public Exception? JailOutfit;
+            public Exception? ArrestCrimeValue;
+            public Exception? AttackOnSightCrimeValue;
+            public Exception? MurderCrimeValue;
+            public Exception? AssaultCrimeValue;
+            public Exception? TrespassCrimeValue;
+            public Exception? PickpocketCrimeValue;
+            public Exception? UnknownCrimeValue;
+            public Exception? StealMultCrimeValue;
+            public Exception? EscapeCrimeValue;
+            public Exception? WerewolfCrimeValue;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
+            public Exception? VendorList;
+            public Exception? VendorChest;
+            public MaskItem<Exception?, VendorValues.ErrorMask?>? VendorValues;
+            public MaskItem<Exception?, VendorLocation.ErrorMask?>? VendorLocation;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? CRVADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Faction_FieldIndex enu = (Faction_FieldIndex)index;
+                switch (enu)
+                {
+                    case Faction_FieldIndex.Name:
+                        return Name;
+                    case Faction_FieldIndex.Relations:
+                        return Relations;
+                    case Faction_FieldIndex.Flags:
+                        return Flags;
+                    case Faction_FieldIndex.PrisonMarker:
+                        return PrisonMarker;
+                    case Faction_FieldIndex.FollowerWaitMarker:
+                        return FollowerWaitMarker;
+                    case Faction_FieldIndex.EvidenceChest:
+                        return EvidenceChest;
+                    case Faction_FieldIndex.PlayerBelongingsChest:
+                        return PlayerBelongingsChest;
+                    case Faction_FieldIndex.CrimeGroup:
+                        return CrimeGroup;
+                    case Faction_FieldIndex.JailOutfit:
+                        return JailOutfit;
+                    case Faction_FieldIndex.ArrestCrimeValue:
+                        return ArrestCrimeValue;
+                    case Faction_FieldIndex.AttackOnSightCrimeValue:
+                        return AttackOnSightCrimeValue;
+                    case Faction_FieldIndex.MurderCrimeValue:
+                        return MurderCrimeValue;
+                    case Faction_FieldIndex.AssaultCrimeValue:
+                        return AssaultCrimeValue;
+                    case Faction_FieldIndex.TrespassCrimeValue:
+                        return TrespassCrimeValue;
+                    case Faction_FieldIndex.PickpocketCrimeValue:
+                        return PickpocketCrimeValue;
+                    case Faction_FieldIndex.UnknownCrimeValue:
+                        return UnknownCrimeValue;
+                    case Faction_FieldIndex.StealMultCrimeValue:
+                        return StealMultCrimeValue;
+                    case Faction_FieldIndex.EscapeCrimeValue:
+                        return EscapeCrimeValue;
+                    case Faction_FieldIndex.WerewolfCrimeValue:
+                        return WerewolfCrimeValue;
+                    case Faction_FieldIndex.Ranks:
+                        return Ranks;
+                    case Faction_FieldIndex.VendorList:
+                        return VendorList;
+                    case Faction_FieldIndex.VendorChest:
+                        return VendorChest;
+                    case Faction_FieldIndex.VendorValues:
+                        return VendorValues;
+                    case Faction_FieldIndex.VendorLocation:
+                        return VendorLocation;
+                    case Faction_FieldIndex.Conditions:
+                        return Conditions;
+                    case Faction_FieldIndex.CRVADataTypeState:
+                        return CRVADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Faction_FieldIndex enu = (Faction_FieldIndex)index;
+                switch (enu)
+                {
+                    case Faction_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Faction_FieldIndex.Relations:
+                        this.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Faction_FieldIndex.PrisonMarker:
+                        this.PrisonMarker = ex;
+                        break;
+                    case Faction_FieldIndex.FollowerWaitMarker:
+                        this.FollowerWaitMarker = ex;
+                        break;
+                    case Faction_FieldIndex.EvidenceChest:
+                        this.EvidenceChest = ex;
+                        break;
+                    case Faction_FieldIndex.PlayerBelongingsChest:
+                        this.PlayerBelongingsChest = ex;
+                        break;
+                    case Faction_FieldIndex.CrimeGroup:
+                        this.CrimeGroup = ex;
+                        break;
+                    case Faction_FieldIndex.JailOutfit:
+                        this.JailOutfit = ex;
+                        break;
+                    case Faction_FieldIndex.ArrestCrimeValue:
+                        this.ArrestCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.AttackOnSightCrimeValue:
+                        this.AttackOnSightCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.MurderCrimeValue:
+                        this.MurderCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.AssaultCrimeValue:
+                        this.AssaultCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.TrespassCrimeValue:
+                        this.TrespassCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.PickpocketCrimeValue:
+                        this.PickpocketCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.UnknownCrimeValue:
+                        this.UnknownCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.StealMultCrimeValue:
+                        this.StealMultCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.EscapeCrimeValue:
+                        this.EscapeCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.WerewolfCrimeValue:
+                        this.WerewolfCrimeValue = ex;
+                        break;
+                    case Faction_FieldIndex.Ranks:
+                        this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.VendorList:
+                        this.VendorList = ex;
+                        break;
+                    case Faction_FieldIndex.VendorChest:
+                        this.VendorChest = ex;
+                        break;
+                    case Faction_FieldIndex.VendorValues:
+                        this.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.VendorLocation:
+                        this.VendorLocation = new MaskItem<Exception?, VendorLocation.ErrorMask?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.CRVADataTypeState:
+                        this.CRVADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Faction_FieldIndex enu = (Faction_FieldIndex)index;
+                switch (enu)
+                {
+                    case Faction_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.Relations:
+                        this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>)obj;
+                        break;
+                    case Faction_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.PrisonMarker:
+                        this.PrisonMarker = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.FollowerWaitMarker:
+                        this.FollowerWaitMarker = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.EvidenceChest:
+                        this.EvidenceChest = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.PlayerBelongingsChest:
+                        this.PlayerBelongingsChest = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.CrimeGroup:
+                        this.CrimeGroup = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.JailOutfit:
+                        this.JailOutfit = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.ArrestCrimeValue:
+                        this.ArrestCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.AttackOnSightCrimeValue:
+                        this.AttackOnSightCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.MurderCrimeValue:
+                        this.MurderCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.AssaultCrimeValue:
+                        this.AssaultCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.TrespassCrimeValue:
+                        this.TrespassCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.PickpocketCrimeValue:
+                        this.PickpocketCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.UnknownCrimeValue:
+                        this.UnknownCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.StealMultCrimeValue:
+                        this.StealMultCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.EscapeCrimeValue:
+                        this.EscapeCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.WerewolfCrimeValue:
+                        this.WerewolfCrimeValue = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.Ranks:
+                        this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
+                        break;
+                    case Faction_FieldIndex.VendorList:
+                        this.VendorList = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.VendorChest:
+                        this.VendorChest = (Exception)obj;
+                        break;
+                    case Faction_FieldIndex.VendorValues:
+                        this.VendorValues = (MaskItem<Exception?, VendorValues.ErrorMask?>?)obj;
+                        break;
+                    case Faction_FieldIndex.VendorLocation:
+                        this.VendorLocation = (MaskItem<Exception?, VendorLocation.ErrorMask?>?)obj;
+                        break;
+                    case Faction_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Faction_FieldIndex.CRVADataTypeState:
+                        this.CRVADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Relations != null) return true;
+                if (Flags != null) return true;
+                if (PrisonMarker != null) return true;
+                if (FollowerWaitMarker != null) return true;
+                if (EvidenceChest != null) return true;
+                if (PlayerBelongingsChest != null) return true;
+                if (CrimeGroup != null) return true;
+                if (JailOutfit != null) return true;
+                if (ArrestCrimeValue != null) return true;
+                if (AttackOnSightCrimeValue != null) return true;
+                if (MurderCrimeValue != null) return true;
+                if (AssaultCrimeValue != null) return true;
+                if (TrespassCrimeValue != null) return true;
+                if (PickpocketCrimeValue != null) return true;
+                if (UnknownCrimeValue != null) return true;
+                if (StealMultCrimeValue != null) return true;
+                if (EscapeCrimeValue != null) return true;
+                if (WerewolfCrimeValue != null) return true;
+                if (Ranks != null) return true;
+                if (VendorList != null) return true;
+                if (VendorChest != null) return true;
+                if (VendorValues != null) return true;
+                if (VendorLocation != null) return true;
+                if (Conditions != null) return true;
+                if (CRVADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine("Relations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Relations != null)
+                    {
+                        if (Relations.Overall != null)
+                        {
+                            fg.AppendLine(Relations.Overall.ToString());
+                        }
+                        if (Relations.Specific != null)
+                        {
+                            foreach (var subItem in Relations.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"PrisonMarker => {PrisonMarker}");
+                fg.AppendLine($"FollowerWaitMarker => {FollowerWaitMarker}");
+                fg.AppendLine($"EvidenceChest => {EvidenceChest}");
+                fg.AppendLine($"PlayerBelongingsChest => {PlayerBelongingsChest}");
+                fg.AppendLine($"CrimeGroup => {CrimeGroup}");
+                fg.AppendLine($"JailOutfit => {JailOutfit}");
+                fg.AppendLine($"ArrestCrimeValue => {ArrestCrimeValue}");
+                fg.AppendLine($"AttackOnSightCrimeValue => {AttackOnSightCrimeValue}");
+                fg.AppendLine($"MurderCrimeValue => {MurderCrimeValue}");
+                fg.AppendLine($"AssaultCrimeValue => {AssaultCrimeValue}");
+                fg.AppendLine($"TrespassCrimeValue => {TrespassCrimeValue}");
+                fg.AppendLine($"PickpocketCrimeValue => {PickpocketCrimeValue}");
+                fg.AppendLine($"UnknownCrimeValue => {UnknownCrimeValue}");
+                fg.AppendLine($"StealMultCrimeValue => {StealMultCrimeValue}");
+                fg.AppendLine($"EscapeCrimeValue => {EscapeCrimeValue}");
+                fg.AppendLine($"WerewolfCrimeValue => {WerewolfCrimeValue}");
+                fg.AppendLine("Ranks =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Ranks != null)
+                    {
+                        if (Ranks.Overall != null)
+                        {
+                            fg.AppendLine(Ranks.Overall.ToString());
+                        }
+                        if (Ranks.Specific != null)
+                        {
+                            foreach (var subItem in Ranks.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"VendorList => {VendorList}");
+                fg.AppendLine($"VendorChest => {VendorChest}");
+                VendorValues?.ToString(fg);
+                VendorLocation?.ToString(fg);
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Conditions != null)
+                    {
+                        if (Conditions.Overall != null)
+                        {
+                            fg.AppendLine(Conditions.Overall.ToString());
+                        }
+                        if (Conditions.Specific != null)
+                        {
+                            foreach (var subItem in Conditions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"CRVADataTypeState => {CRVADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.PrisonMarker = this.PrisonMarker.Combine(rhs.PrisonMarker);
+                ret.FollowerWaitMarker = this.FollowerWaitMarker.Combine(rhs.FollowerWaitMarker);
+                ret.EvidenceChest = this.EvidenceChest.Combine(rhs.EvidenceChest);
+                ret.PlayerBelongingsChest = this.PlayerBelongingsChest.Combine(rhs.PlayerBelongingsChest);
+                ret.CrimeGroup = this.CrimeGroup.Combine(rhs.CrimeGroup);
+                ret.JailOutfit = this.JailOutfit.Combine(rhs.JailOutfit);
+                ret.ArrestCrimeValue = this.ArrestCrimeValue.Combine(rhs.ArrestCrimeValue);
+                ret.AttackOnSightCrimeValue = this.AttackOnSightCrimeValue.Combine(rhs.AttackOnSightCrimeValue);
+                ret.MurderCrimeValue = this.MurderCrimeValue.Combine(rhs.MurderCrimeValue);
+                ret.AssaultCrimeValue = this.AssaultCrimeValue.Combine(rhs.AssaultCrimeValue);
+                ret.TrespassCrimeValue = this.TrespassCrimeValue.Combine(rhs.TrespassCrimeValue);
+                ret.PickpocketCrimeValue = this.PickpocketCrimeValue.Combine(rhs.PickpocketCrimeValue);
+                ret.UnknownCrimeValue = this.UnknownCrimeValue.Combine(rhs.UnknownCrimeValue);
+                ret.StealMultCrimeValue = this.StealMultCrimeValue.Combine(rhs.StealMultCrimeValue);
+                ret.EscapeCrimeValue = this.EscapeCrimeValue.Combine(rhs.EscapeCrimeValue);
+                ret.WerewolfCrimeValue = this.WerewolfCrimeValue.Combine(rhs.WerewolfCrimeValue);
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
+                ret.VendorList = this.VendorList.Combine(rhs.VendorList);
+                ret.VendorChest = this.VendorChest.Combine(rhs.VendorChest);
+                ret.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ExceptionExt.Combine(this.VendorValues?.Overall, rhs.VendorValues?.Overall), (this.VendorValues?.Specific as IErrorMask<VendorValues.ErrorMask>)?.Combine(rhs.VendorValues?.Specific));
+                ret.VendorLocation = new MaskItem<Exception?, VendorLocation.ErrorMask?>(ExceptionExt.Combine(this.VendorLocation?.Overall, rhs.VendorLocation?.Overall), (this.VendorLocation?.Specific as IErrorMask<VendorLocation.ErrorMask>)?.Combine(rhs.VendorLocation?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.CRVADataTypeState = this.CRVADataTypeState.Combine(rhs.CRVADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            SkyrimMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Relation.TranslationMask?> Relations;
+            public bool Flags;
+            public bool PrisonMarker;
+            public bool FollowerWaitMarker;
+            public bool EvidenceChest;
+            public bool PlayerBelongingsChest;
+            public bool CrimeGroup;
+            public bool JailOutfit;
+            public bool ArrestCrimeValue;
+            public bool AttackOnSightCrimeValue;
+            public bool MurderCrimeValue;
+            public bool AssaultCrimeValue;
+            public bool TrespassCrimeValue;
+            public bool PickpocketCrimeValue;
+            public bool UnknownCrimeValue;
+            public bool StealMultCrimeValue;
+            public bool EscapeCrimeValue;
+            public bool WerewolfCrimeValue;
+            public MaskItem<bool, Rank.TranslationMask?> Ranks;
+            public bool VendorList;
+            public bool VendorChest;
+            public MaskItem<bool, VendorValues.TranslationMask?> VendorValues;
+            public MaskItem<bool, VendorLocation.TranslationMask?> VendorLocation;
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool CRVADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Relations = new MaskItem<bool, Relation.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.PrisonMarker = defaultOn;
+                this.FollowerWaitMarker = defaultOn;
+                this.EvidenceChest = defaultOn;
+                this.PlayerBelongingsChest = defaultOn;
+                this.CrimeGroup = defaultOn;
+                this.JailOutfit = defaultOn;
+                this.ArrestCrimeValue = defaultOn;
+                this.AttackOnSightCrimeValue = defaultOn;
+                this.MurderCrimeValue = defaultOn;
+                this.AssaultCrimeValue = defaultOn;
+                this.TrespassCrimeValue = defaultOn;
+                this.PickpocketCrimeValue = defaultOn;
+                this.UnknownCrimeValue = defaultOn;
+                this.StealMultCrimeValue = defaultOn;
+                this.EscapeCrimeValue = defaultOn;
+                this.WerewolfCrimeValue = defaultOn;
+                this.Ranks = new MaskItem<bool, Rank.TranslationMask?>(defaultOn, null);
+                this.VendorList = defaultOn;
+                this.VendorChest = defaultOn;
+                this.VendorValues = new MaskItem<bool, VendorValues.TranslationMask?>(defaultOn, null);
+                this.VendorLocation = new MaskItem<bool, VendorLocation.TranslationMask?>(defaultOn, null);
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.CRVADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((PrisonMarker, null));
+                ret.Add((FollowerWaitMarker, null));
+                ret.Add((EvidenceChest, null));
+                ret.Add((PlayerBelongingsChest, null));
+                ret.Add((CrimeGroup, null));
+                ret.Add((JailOutfit, null));
+                ret.Add((ArrestCrimeValue, null));
+                ret.Add((AttackOnSightCrimeValue, null));
+                ret.Add((MurderCrimeValue, null));
+                ret.Add((AssaultCrimeValue, null));
+                ret.Add((TrespassCrimeValue, null));
+                ret.Add((PickpocketCrimeValue, null));
+                ret.Add((UnknownCrimeValue, null));
+                ret.Add((StealMultCrimeValue, null));
+                ret.Add((EscapeCrimeValue, null));
+                ret.Add((WerewolfCrimeValue, null));
+                ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
+                ret.Add((VendorList, null));
+                ret.Add((VendorChest, null));
+                ret.Add((VendorValues?.Overall ?? true, VendorValues?.Specific?.GetCrystal()));
+                ret.Add((VendorLocation?.Overall ?? true, VendorLocation?.Specific?.GetCrystal()));
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((CRVADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -656,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Faction_Mask<bool> GetEqualsMask(
+        public static Faction.Mask<bool> GetEqualsMask(
             this IFactionGetter item,
             IFactionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -670,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IFactionGetter item,
             string? name = null,
-            Faction_Mask<bool>? printMask = null)
+            Faction.Mask<bool>? printMask = null)
         {
             return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -682,7 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             FileGeneration fg,
             string? name = null,
-            Faction_Mask<bool>? printMask = null)
+            Faction.Mask<bool>? printMask = null)
         {
             ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -693,16 +1860,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IFactionGetter item,
-            Faction_Mask<bool?> checkMask)
+            Faction.Mask<bool?> checkMask)
         {
             return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Faction_Mask<bool> GetHasBeenSetMask(this IFactionGetter item)
+        public static Faction.Mask<bool> GetHasBeenSetMask(this IFactionGetter item)
         {
-            var ret = new Faction_Mask<bool>(false);
+            var ret = new Faction.Mask<bool>(false);
             ((FactionCommon)((IFactionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -721,8 +1888,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IFactionInternal lhs,
             IFactionGetter rhs,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? copyMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -730,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -748,7 +1915,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction DeepCopy(
             this IFactionGetter item,
-            Faction_TranslationMask? copyMask = null)
+            Faction.TranslationMask? copyMask = null)
         {
             return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -757,8 +1924,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Faction DeepCopy(
             this IFactionGetter item,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? copyMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? copyMask = null)
         {
             return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -782,7 +1949,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             XElement node,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -795,8 +1962,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             XElement node,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -804,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -823,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             string path,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -835,8 +2002,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             string path,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -850,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -863,7 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             Stream stream,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -875,8 +2042,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFactionInternal item,
             Stream stream,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -890,7 +2057,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Faction_TranslationMask? translationMask = null)
+            Faction.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -995,9 +2162,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 33;
 
-        public static readonly Type MaskType = typeof(Faction_Mask<>);
+        public static readonly Type MaskType = typeof(Faction.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Faction_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Faction.ErrorMask);
 
         public static readonly Type ClassType = typeof(Faction);
 
@@ -1787,12 +2954,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly FactionCommon Instance = new FactionCommon();
 
-        public Faction_Mask<bool> GetEqualsMask(
+        public Faction.Mask<bool> GetEqualsMask(
             IFactionGetter item,
             IFactionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Faction_Mask<bool>(false);
+            var ret = new Faction.Mask<bool>(false);
             ((FactionCommon)((IFactionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1804,7 +2971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IFactionGetter item,
             IFactionGetter rhs,
-            Faction_Mask<bool> ret,
+            Faction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1857,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IFactionGetter item,
             string? name = null,
-            Faction_Mask<bool>? printMask = null)
+            Faction.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1872,7 +3039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionGetter item,
             FileGeneration fg,
             string? name = null,
-            Faction_Mask<bool>? printMask = null)
+            Faction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1896,7 +3063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IFactionGetter item,
             FileGeneration fg,
-            Faction_Mask<bool>? printMask = null)
+            Faction.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -2052,7 +3219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IFactionGetter item,
-            Faction_Mask<bool?> checkMask)
+            Faction.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Relations?.Overall.HasValue ?? false && checkMask.Relations!.Overall.Value != item.Relations.HasBeenSet) return false;
@@ -2078,10 +3245,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IFactionGetter item,
-            Faction_Mask<bool> mask)
+            Faction.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation_Mask<bool>?>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>>(item.Relations.HasBeenSet, item.Relations.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Flags = (item.Flags != null);
             mask.PrisonMarker = item.PrisonMarker.HasBeenSet;
             mask.FollowerWaitMarker = item.FollowerWaitMarker.HasBeenSet;
@@ -2099,14 +3266,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.StealMultCrimeValue = true;
             mask.EscapeCrimeValue = true;
             mask.WerewolfCrimeValue = true;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank_Mask<bool>?>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>>(item.Ranks.HasBeenSet, item.Ranks.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.VendorList = item.VendorList.HasBeenSet;
             mask.VendorChest = item.VendorChest.HasBeenSet;
             var itemVendorValues = item.VendorValues;
-            mask.VendorValues = new MaskItem<bool, VendorValues_Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
+            mask.VendorValues = new MaskItem<bool, VendorValues.Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
             var itemVendorLocation = item.VendorLocation;
-            mask.VendorLocation = new MaskItem<bool, VendorLocation_Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.VendorLocation = new MaskItem<bool, VendorLocation.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.CRVADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2659,7 +3826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Faction DeepCopy(
             IFactionGetter item,
-            Faction_TranslationMask? copyMask = null)
+            Faction.TranslationMask? copyMask = null)
         {
             Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2670,8 +3837,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Faction DeepCopy(
             IFactionGetter item,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? copyMask = null)
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? copyMask = null)
         {
             Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -3682,8 +4849,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IFactionGetter item,
             XElement node,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null,
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -3693,14 +4860,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFactionGetter item,
             string path,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null,
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3716,8 +4883,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IFactionGetter item,
             Stream stream,
-            out Faction_ErrorMask errorMask,
-            Faction_TranslationMask? translationMask = null,
+            out Faction.ErrorMask errorMask,
+            Faction.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3734,1172 +4901,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class Faction_Mask<T> :
-        SkyrimMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Faction_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Faction_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Relation_Mask<T>?>>());
-            this.Flags = initialValue;
-            this.PrisonMarker = initialValue;
-            this.FollowerWaitMarker = initialValue;
-            this.EvidenceChest = initialValue;
-            this.PlayerBelongingsChest = initialValue;
-            this.CrimeGroup = initialValue;
-            this.JailOutfit = initialValue;
-            this.ArrestCrimeValue = initialValue;
-            this.AttackOnSightCrimeValue = initialValue;
-            this.MurderCrimeValue = initialValue;
-            this.AssaultCrimeValue = initialValue;
-            this.TrespassCrimeValue = initialValue;
-            this.PickpocketCrimeValue = initialValue;
-            this.UnknownCrimeValue = initialValue;
-            this.StealMultCrimeValue = initialValue;
-            this.EscapeCrimeValue = initialValue;
-            this.WerewolfCrimeValue = initialValue;
-            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Rank_Mask<T>?>>());
-            this.VendorList = initialValue;
-            this.VendorChest = initialValue;
-            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>?>(initialValue, new VendorValues_Mask<T>(initialValue));
-            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>?>(initialValue, new VendorLocation_Mask<T>(initialValue));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.CRVADataTypeState = initialValue;
-        }
-
-        public Faction_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T SkyrimMajorRecordFlags,
-            T FormVersion,
-            T Version2,
-            T Name,
-            T Relations,
-            T Flags,
-            T PrisonMarker,
-            T FollowerWaitMarker,
-            T EvidenceChest,
-            T PlayerBelongingsChest,
-            T CrimeGroup,
-            T JailOutfit,
-            T ArrestCrimeValue,
-            T AttackOnSightCrimeValue,
-            T MurderCrimeValue,
-            T AssaultCrimeValue,
-            T TrespassCrimeValue,
-            T PickpocketCrimeValue,
-            T UnknownCrimeValue,
-            T StealMultCrimeValue,
-            T EscapeCrimeValue,
-            T WerewolfCrimeValue,
-            T Ranks,
-            T VendorList,
-            T VendorChest,
-            T VendorValues,
-            T VendorLocation,
-            T Conditions,
-            T CRVADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
-            FormVersion: FormVersion,
-            Version2: Version2)
-        {
-            this.Name = Name;
-            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>?>>>(Relations, Enumerable.Empty<MaskItemIndexed<T, Relation_Mask<T>?>>());
-            this.Flags = Flags;
-            this.PrisonMarker = PrisonMarker;
-            this.FollowerWaitMarker = FollowerWaitMarker;
-            this.EvidenceChest = EvidenceChest;
-            this.PlayerBelongingsChest = PlayerBelongingsChest;
-            this.CrimeGroup = CrimeGroup;
-            this.JailOutfit = JailOutfit;
-            this.ArrestCrimeValue = ArrestCrimeValue;
-            this.AttackOnSightCrimeValue = AttackOnSightCrimeValue;
-            this.MurderCrimeValue = MurderCrimeValue;
-            this.AssaultCrimeValue = AssaultCrimeValue;
-            this.TrespassCrimeValue = TrespassCrimeValue;
-            this.PickpocketCrimeValue = PickpocketCrimeValue;
-            this.UnknownCrimeValue = UnknownCrimeValue;
-            this.StealMultCrimeValue = StealMultCrimeValue;
-            this.EscapeCrimeValue = EscapeCrimeValue;
-            this.WerewolfCrimeValue = WerewolfCrimeValue;
-            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>?>>>(Ranks, Enumerable.Empty<MaskItemIndexed<T, Rank_Mask<T>?>>());
-            this.VendorList = VendorList;
-            this.VendorChest = VendorChest;
-            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>?>(VendorValues, new VendorValues_Mask<T>(VendorValues));
-            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>?>(VendorLocation, new VendorLocation_Mask<T>(VendorLocation));
-            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>(Conditions, Enumerable.Empty<MaskItemIndexed<T, Condition_Mask<T>?>>());
-            this.CRVADataTypeState = CRVADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Faction_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>?>>>? Relations;
-        public T Flags;
-        public T PrisonMarker;
-        public T FollowerWaitMarker;
-        public T EvidenceChest;
-        public T PlayerBelongingsChest;
-        public T CrimeGroup;
-        public T JailOutfit;
-        public T ArrestCrimeValue;
-        public T AttackOnSightCrimeValue;
-        public T MurderCrimeValue;
-        public T AssaultCrimeValue;
-        public T TrespassCrimeValue;
-        public T PickpocketCrimeValue;
-        public T UnknownCrimeValue;
-        public T StealMultCrimeValue;
-        public T EscapeCrimeValue;
-        public T WerewolfCrimeValue;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>?>>>? Ranks;
-        public T VendorList;
-        public T VendorChest;
-        public MaskItem<T, VendorValues_Mask<T>?>? VendorValues { get; set; }
-        public MaskItem<T, VendorLocation_Mask<T>?>? VendorLocation { get; set; }
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>?>>>? Conditions;
-        public T CRVADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Faction_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Faction_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Relations, rhs.Relations)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.PrisonMarker, rhs.PrisonMarker)) return false;
-            if (!object.Equals(this.FollowerWaitMarker, rhs.FollowerWaitMarker)) return false;
-            if (!object.Equals(this.EvidenceChest, rhs.EvidenceChest)) return false;
-            if (!object.Equals(this.PlayerBelongingsChest, rhs.PlayerBelongingsChest)) return false;
-            if (!object.Equals(this.CrimeGroup, rhs.CrimeGroup)) return false;
-            if (!object.Equals(this.JailOutfit, rhs.JailOutfit)) return false;
-            if (!object.Equals(this.ArrestCrimeValue, rhs.ArrestCrimeValue)) return false;
-            if (!object.Equals(this.AttackOnSightCrimeValue, rhs.AttackOnSightCrimeValue)) return false;
-            if (!object.Equals(this.MurderCrimeValue, rhs.MurderCrimeValue)) return false;
-            if (!object.Equals(this.AssaultCrimeValue, rhs.AssaultCrimeValue)) return false;
-            if (!object.Equals(this.TrespassCrimeValue, rhs.TrespassCrimeValue)) return false;
-            if (!object.Equals(this.PickpocketCrimeValue, rhs.PickpocketCrimeValue)) return false;
-            if (!object.Equals(this.UnknownCrimeValue, rhs.UnknownCrimeValue)) return false;
-            if (!object.Equals(this.StealMultCrimeValue, rhs.StealMultCrimeValue)) return false;
-            if (!object.Equals(this.EscapeCrimeValue, rhs.EscapeCrimeValue)) return false;
-            if (!object.Equals(this.WerewolfCrimeValue, rhs.WerewolfCrimeValue)) return false;
-            if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
-            if (!object.Equals(this.VendorList, rhs.VendorList)) return false;
-            if (!object.Equals(this.VendorChest, rhs.VendorChest)) return false;
-            if (!object.Equals(this.VendorValues, rhs.VendorValues)) return false;
-            if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
-            if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-            if (!object.Equals(this.CRVADataTypeState, rhs.CRVADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Relations?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.PrisonMarker?.GetHashCode());
-            ret = ret.CombineHashCode(this.FollowerWaitMarker?.GetHashCode());
-            ret = ret.CombineHashCode(this.EvidenceChest?.GetHashCode());
-            ret = ret.CombineHashCode(this.PlayerBelongingsChest?.GetHashCode());
-            ret = ret.CombineHashCode(this.CrimeGroup?.GetHashCode());
-            ret = ret.CombineHashCode(this.JailOutfit?.GetHashCode());
-            ret = ret.CombineHashCode(this.ArrestCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackOnSightCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.MurderCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.AssaultCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.TrespassCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.PickpocketCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.UnknownCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.StealMultCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.EscapeCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.WerewolfCrimeValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.Ranks?.GetHashCode());
-            ret = ret.CombineHashCode(this.VendorList?.GetHashCode());
-            ret = ret.CombineHashCode(this.VendorChest?.GetHashCode());
-            ret = ret.CombineHashCode(this.VendorValues?.GetHashCode());
-            ret = ret.CombineHashCode(this.VendorLocation?.GetHashCode());
-            ret = ret.CombineHashCode(this.Conditions?.GetHashCode());
-            ret = ret.CombineHashCode(this.CRVADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (this.Relations != null)
-            {
-                if (!eval(this.Relations.Overall)) return false;
-                if (this.Relations.Specific != null)
-                {
-                    foreach (var item in this.Relations.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.PrisonMarker)) return false;
-            if (!eval(this.FollowerWaitMarker)) return false;
-            if (!eval(this.EvidenceChest)) return false;
-            if (!eval(this.PlayerBelongingsChest)) return false;
-            if (!eval(this.CrimeGroup)) return false;
-            if (!eval(this.JailOutfit)) return false;
-            if (!eval(this.ArrestCrimeValue)) return false;
-            if (!eval(this.AttackOnSightCrimeValue)) return false;
-            if (!eval(this.MurderCrimeValue)) return false;
-            if (!eval(this.AssaultCrimeValue)) return false;
-            if (!eval(this.TrespassCrimeValue)) return false;
-            if (!eval(this.PickpocketCrimeValue)) return false;
-            if (!eval(this.UnknownCrimeValue)) return false;
-            if (!eval(this.StealMultCrimeValue)) return false;
-            if (!eval(this.EscapeCrimeValue)) return false;
-            if (!eval(this.WerewolfCrimeValue)) return false;
-            if (this.Ranks != null)
-            {
-                if (!eval(this.Ranks.Overall)) return false;
-                if (this.Ranks.Specific != null)
-                {
-                    foreach (var item in this.Ranks.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.VendorList)) return false;
-            if (!eval(this.VendorChest)) return false;
-            if (VendorValues != null)
-            {
-                if (!eval(this.VendorValues.Overall)) return false;
-                if (this.VendorValues.Specific != null && !this.VendorValues.Specific.AllEqual(eval)) return false;
-            }
-            if (VendorLocation != null)
-            {
-                if (!eval(this.VendorLocation.Overall)) return false;
-                if (this.VendorLocation.Specific != null && !this.VendorLocation.Specific.AllEqual(eval)) return false;
-            }
-            if (this.Conditions != null)
-            {
-                if (!eval(this.Conditions.Overall)) return false;
-                if (this.Conditions.Specific != null)
-                {
-                    foreach (var item in this.Conditions.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.CRVADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Faction_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Faction_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Faction_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            if (Relations != null)
-            {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation_Mask<R>?>>>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation_Mask<R>?>>());
-                if (Relations.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Relation_Mask<R>?>>();
-                    obj.Relations.Specific = l;
-                    foreach (var item in Relations.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Relation_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Relation_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Flags = eval(this.Flags);
-            obj.PrisonMarker = eval(this.PrisonMarker);
-            obj.FollowerWaitMarker = eval(this.FollowerWaitMarker);
-            obj.EvidenceChest = eval(this.EvidenceChest);
-            obj.PlayerBelongingsChest = eval(this.PlayerBelongingsChest);
-            obj.CrimeGroup = eval(this.CrimeGroup);
-            obj.JailOutfit = eval(this.JailOutfit);
-            obj.ArrestCrimeValue = eval(this.ArrestCrimeValue);
-            obj.AttackOnSightCrimeValue = eval(this.AttackOnSightCrimeValue);
-            obj.MurderCrimeValue = eval(this.MurderCrimeValue);
-            obj.AssaultCrimeValue = eval(this.AssaultCrimeValue);
-            obj.TrespassCrimeValue = eval(this.TrespassCrimeValue);
-            obj.PickpocketCrimeValue = eval(this.PickpocketCrimeValue);
-            obj.UnknownCrimeValue = eval(this.UnknownCrimeValue);
-            obj.StealMultCrimeValue = eval(this.StealMultCrimeValue);
-            obj.EscapeCrimeValue = eval(this.EscapeCrimeValue);
-            obj.WerewolfCrimeValue = eval(this.WerewolfCrimeValue);
-            if (Ranks != null)
-            {
-                obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank_Mask<R>?>>>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank_Mask<R>?>>());
-                if (Ranks.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Rank_Mask<R>?>>();
-                    obj.Ranks.Specific = l;
-                    foreach (var item in Ranks.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Rank_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Rank_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.VendorList = eval(this.VendorList);
-            obj.VendorChest = eval(this.VendorChest);
-            obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues_Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
-            obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, VendorLocation_Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
-            if (Conditions != null)
-            {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>?>>>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition_Mask<R>?>>());
-                if (Conditions.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Condition_Mask<R>?>>();
-                    obj.Conditions.Specific = l;
-                    foreach (var item in Conditions.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Condition_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.CRVADataTypeState = eval(this.CRVADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Faction_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Faction_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Faction_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Relations?.Overall ?? true)
-                {
-                    fg.AppendLine("Relations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Relations != null)
-                        {
-                            if (Relations.Overall != null)
-                            {
-                                fg.AppendLine(Relations.Overall.ToString());
-                            }
-                            if (Relations.Specific != null)
-                            {
-                                foreach (var subItem in Relations.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.PrisonMarker ?? true)
-                {
-                    fg.AppendLine($"PrisonMarker => {PrisonMarker}");
-                }
-                if (printMask?.FollowerWaitMarker ?? true)
-                {
-                    fg.AppendLine($"FollowerWaitMarker => {FollowerWaitMarker}");
-                }
-                if (printMask?.EvidenceChest ?? true)
-                {
-                    fg.AppendLine($"EvidenceChest => {EvidenceChest}");
-                }
-                if (printMask?.PlayerBelongingsChest ?? true)
-                {
-                    fg.AppendLine($"PlayerBelongingsChest => {PlayerBelongingsChest}");
-                }
-                if (printMask?.CrimeGroup ?? true)
-                {
-                    fg.AppendLine($"CrimeGroup => {CrimeGroup}");
-                }
-                if (printMask?.JailOutfit ?? true)
-                {
-                    fg.AppendLine($"JailOutfit => {JailOutfit}");
-                }
-                if (printMask?.ArrestCrimeValue ?? true)
-                {
-                    fg.AppendLine($"ArrestCrimeValue => {ArrestCrimeValue}");
-                }
-                if (printMask?.AttackOnSightCrimeValue ?? true)
-                {
-                    fg.AppendLine($"AttackOnSightCrimeValue => {AttackOnSightCrimeValue}");
-                }
-                if (printMask?.MurderCrimeValue ?? true)
-                {
-                    fg.AppendLine($"MurderCrimeValue => {MurderCrimeValue}");
-                }
-                if (printMask?.AssaultCrimeValue ?? true)
-                {
-                    fg.AppendLine($"AssaultCrimeValue => {AssaultCrimeValue}");
-                }
-                if (printMask?.TrespassCrimeValue ?? true)
-                {
-                    fg.AppendLine($"TrespassCrimeValue => {TrespassCrimeValue}");
-                }
-                if (printMask?.PickpocketCrimeValue ?? true)
-                {
-                    fg.AppendLine($"PickpocketCrimeValue => {PickpocketCrimeValue}");
-                }
-                if (printMask?.UnknownCrimeValue ?? true)
-                {
-                    fg.AppendLine($"UnknownCrimeValue => {UnknownCrimeValue}");
-                }
-                if (printMask?.StealMultCrimeValue ?? true)
-                {
-                    fg.AppendLine($"StealMultCrimeValue => {StealMultCrimeValue}");
-                }
-                if (printMask?.EscapeCrimeValue ?? true)
-                {
-                    fg.AppendLine($"EscapeCrimeValue => {EscapeCrimeValue}");
-                }
-                if (printMask?.WerewolfCrimeValue ?? true)
-                {
-                    fg.AppendLine($"WerewolfCrimeValue => {WerewolfCrimeValue}");
-                }
-                if (printMask?.Ranks?.Overall ?? true)
-                {
-                    fg.AppendLine("Ranks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Ranks != null)
-                        {
-                            if (Ranks.Overall != null)
-                            {
-                                fg.AppendLine(Ranks.Overall.ToString());
-                            }
-                            if (Ranks.Specific != null)
-                            {
-                                foreach (var subItem in Ranks.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.VendorList ?? true)
-                {
-                    fg.AppendLine($"VendorList => {VendorList}");
-                }
-                if (printMask?.VendorChest ?? true)
-                {
-                    fg.AppendLine($"VendorChest => {VendorChest}");
-                }
-                if (printMask?.VendorValues?.Overall ?? true)
-                {
-                    VendorValues?.ToString(fg);
-                }
-                if (printMask?.VendorLocation?.Overall ?? true)
-                {
-                    VendorLocation?.ToString(fg);
-                }
-                if (printMask?.Conditions?.Overall ?? true)
-                {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Conditions != null)
-                        {
-                            if (Conditions.Overall != null)
-                            {
-                                fg.AppendLine(Conditions.Overall.ToString());
-                            }
-                            if (Conditions.Specific != null)
-                            {
-                                foreach (var subItem in Conditions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.CRVADataTypeState ?? true)
-                {
-                    fg.AppendLine($"CRVADataTypeState => {CRVADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Faction_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<Faction_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>? Relations;
-        public Exception? Flags;
-        public Exception? PrisonMarker;
-        public Exception? FollowerWaitMarker;
-        public Exception? EvidenceChest;
-        public Exception? PlayerBelongingsChest;
-        public Exception? CrimeGroup;
-        public Exception? JailOutfit;
-        public Exception? ArrestCrimeValue;
-        public Exception? AttackOnSightCrimeValue;
-        public Exception? MurderCrimeValue;
-        public Exception? AssaultCrimeValue;
-        public Exception? TrespassCrimeValue;
-        public Exception? PickpocketCrimeValue;
-        public Exception? UnknownCrimeValue;
-        public Exception? StealMultCrimeValue;
-        public Exception? EscapeCrimeValue;
-        public Exception? WerewolfCrimeValue;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>? Ranks;
-        public Exception? VendorList;
-        public Exception? VendorChest;
-        public MaskItem<Exception?, VendorValues_ErrorMask?>? VendorValues;
-        public MaskItem<Exception?, VendorLocation_ErrorMask?>? VendorLocation;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>? Conditions;
-        public Exception? CRVADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    return Name;
-                case Faction_FieldIndex.Relations:
-                    return Relations;
-                case Faction_FieldIndex.Flags:
-                    return Flags;
-                case Faction_FieldIndex.PrisonMarker:
-                    return PrisonMarker;
-                case Faction_FieldIndex.FollowerWaitMarker:
-                    return FollowerWaitMarker;
-                case Faction_FieldIndex.EvidenceChest:
-                    return EvidenceChest;
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                    return PlayerBelongingsChest;
-                case Faction_FieldIndex.CrimeGroup:
-                    return CrimeGroup;
-                case Faction_FieldIndex.JailOutfit:
-                    return JailOutfit;
-                case Faction_FieldIndex.ArrestCrimeValue:
-                    return ArrestCrimeValue;
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                    return AttackOnSightCrimeValue;
-                case Faction_FieldIndex.MurderCrimeValue:
-                    return MurderCrimeValue;
-                case Faction_FieldIndex.AssaultCrimeValue:
-                    return AssaultCrimeValue;
-                case Faction_FieldIndex.TrespassCrimeValue:
-                    return TrespassCrimeValue;
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                    return PickpocketCrimeValue;
-                case Faction_FieldIndex.UnknownCrimeValue:
-                    return UnknownCrimeValue;
-                case Faction_FieldIndex.StealMultCrimeValue:
-                    return StealMultCrimeValue;
-                case Faction_FieldIndex.EscapeCrimeValue:
-                    return EscapeCrimeValue;
-                case Faction_FieldIndex.WerewolfCrimeValue:
-                    return WerewolfCrimeValue;
-                case Faction_FieldIndex.Ranks:
-                    return Ranks;
-                case Faction_FieldIndex.VendorList:
-                    return VendorList;
-                case Faction_FieldIndex.VendorChest:
-                    return VendorChest;
-                case Faction_FieldIndex.VendorValues:
-                    return VendorValues;
-                case Faction_FieldIndex.VendorLocation:
-                    return VendorLocation;
-                case Faction_FieldIndex.Conditions:
-                    return Conditions;
-                case Faction_FieldIndex.CRVADataTypeState:
-                    return CRVADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Faction_FieldIndex.Relations:
-                    this.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>(ex, null);
-                    break;
-                case Faction_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Faction_FieldIndex.PrisonMarker:
-                    this.PrisonMarker = ex;
-                    break;
-                case Faction_FieldIndex.FollowerWaitMarker:
-                    this.FollowerWaitMarker = ex;
-                    break;
-                case Faction_FieldIndex.EvidenceChest:
-                    this.EvidenceChest = ex;
-                    break;
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                    this.PlayerBelongingsChest = ex;
-                    break;
-                case Faction_FieldIndex.CrimeGroup:
-                    this.CrimeGroup = ex;
-                    break;
-                case Faction_FieldIndex.JailOutfit:
-                    this.JailOutfit = ex;
-                    break;
-                case Faction_FieldIndex.ArrestCrimeValue:
-                    this.ArrestCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                    this.AttackOnSightCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.MurderCrimeValue:
-                    this.MurderCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.AssaultCrimeValue:
-                    this.AssaultCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.TrespassCrimeValue:
-                    this.TrespassCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                    this.PickpocketCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.UnknownCrimeValue:
-                    this.UnknownCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.StealMultCrimeValue:
-                    this.StealMultCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.EscapeCrimeValue:
-                    this.EscapeCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.WerewolfCrimeValue:
-                    this.WerewolfCrimeValue = ex;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>(ex, null);
-                    break;
-                case Faction_FieldIndex.VendorList:
-                    this.VendorList = ex;
-                    break;
-                case Faction_FieldIndex.VendorChest:
-                    this.VendorChest = ex;
-                    break;
-                case Faction_FieldIndex.VendorValues:
-                    this.VendorValues = new MaskItem<Exception?, VendorValues_ErrorMask?>(ex, null);
-                    break;
-                case Faction_FieldIndex.VendorLocation:
-                    this.VendorLocation = new MaskItem<Exception?, VendorLocation_ErrorMask?>(ex, null);
-                    break;
-                case Faction_FieldIndex.Conditions:
-                    this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ex, null);
-                    break;
-                case Faction_FieldIndex.CRVADataTypeState:
-                    this.CRVADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Faction_FieldIndex enu = (Faction_FieldIndex)index;
-            switch (enu)
-            {
-                case Faction_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.Relations:
-                    this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>)obj;
-                    break;
-                case Faction_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.PrisonMarker:
-                    this.PrisonMarker = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.FollowerWaitMarker:
-                    this.FollowerWaitMarker = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.EvidenceChest:
-                    this.EvidenceChest = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                    this.PlayerBelongingsChest = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.CrimeGroup:
-                    this.CrimeGroup = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.JailOutfit:
-                    this.JailOutfit = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.ArrestCrimeValue:
-                    this.ArrestCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                    this.AttackOnSightCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.MurderCrimeValue:
-                    this.MurderCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.AssaultCrimeValue:
-                    this.AssaultCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.TrespassCrimeValue:
-                    this.TrespassCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                    this.PickpocketCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.UnknownCrimeValue:
-                    this.UnknownCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.StealMultCrimeValue:
-                    this.StealMultCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.EscapeCrimeValue:
-                    this.EscapeCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.WerewolfCrimeValue:
-                    this.WerewolfCrimeValue = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>)obj;
-                    break;
-                case Faction_FieldIndex.VendorList:
-                    this.VendorList = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.VendorChest:
-                    this.VendorChest = (Exception)obj;
-                    break;
-                case Faction_FieldIndex.VendorValues:
-                    this.VendorValues = (MaskItem<Exception?, VendorValues_ErrorMask?>?)obj;
-                    break;
-                case Faction_FieldIndex.VendorLocation:
-                    this.VendorLocation = (MaskItem<Exception?, VendorLocation_ErrorMask?>?)obj;
-                    break;
-                case Faction_FieldIndex.Conditions:
-                    this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>)obj;
-                    break;
-                case Faction_FieldIndex.CRVADataTypeState:
-                    this.CRVADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Relations != null) return true;
-            if (Flags != null) return true;
-            if (PrisonMarker != null) return true;
-            if (FollowerWaitMarker != null) return true;
-            if (EvidenceChest != null) return true;
-            if (PlayerBelongingsChest != null) return true;
-            if (CrimeGroup != null) return true;
-            if (JailOutfit != null) return true;
-            if (ArrestCrimeValue != null) return true;
-            if (AttackOnSightCrimeValue != null) return true;
-            if (MurderCrimeValue != null) return true;
-            if (AssaultCrimeValue != null) return true;
-            if (TrespassCrimeValue != null) return true;
-            if (PickpocketCrimeValue != null) return true;
-            if (UnknownCrimeValue != null) return true;
-            if (StealMultCrimeValue != null) return true;
-            if (EscapeCrimeValue != null) return true;
-            if (WerewolfCrimeValue != null) return true;
-            if (Ranks != null) return true;
-            if (VendorList != null) return true;
-            if (VendorChest != null) return true;
-            if (VendorValues != null) return true;
-            if (VendorLocation != null) return true;
-            if (Conditions != null) return true;
-            if (CRVADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Faction_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine("Relations =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Relations != null)
-                {
-                    if (Relations.Overall != null)
-                    {
-                        fg.AppendLine(Relations.Overall.ToString());
-                    }
-                    if (Relations.Specific != null)
-                    {
-                        foreach (var subItem in Relations.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"PrisonMarker => {PrisonMarker}");
-            fg.AppendLine($"FollowerWaitMarker => {FollowerWaitMarker}");
-            fg.AppendLine($"EvidenceChest => {EvidenceChest}");
-            fg.AppendLine($"PlayerBelongingsChest => {PlayerBelongingsChest}");
-            fg.AppendLine($"CrimeGroup => {CrimeGroup}");
-            fg.AppendLine($"JailOutfit => {JailOutfit}");
-            fg.AppendLine($"ArrestCrimeValue => {ArrestCrimeValue}");
-            fg.AppendLine($"AttackOnSightCrimeValue => {AttackOnSightCrimeValue}");
-            fg.AppendLine($"MurderCrimeValue => {MurderCrimeValue}");
-            fg.AppendLine($"AssaultCrimeValue => {AssaultCrimeValue}");
-            fg.AppendLine($"TrespassCrimeValue => {TrespassCrimeValue}");
-            fg.AppendLine($"PickpocketCrimeValue => {PickpocketCrimeValue}");
-            fg.AppendLine($"UnknownCrimeValue => {UnknownCrimeValue}");
-            fg.AppendLine($"StealMultCrimeValue => {StealMultCrimeValue}");
-            fg.AppendLine($"EscapeCrimeValue => {EscapeCrimeValue}");
-            fg.AppendLine($"WerewolfCrimeValue => {WerewolfCrimeValue}");
-            fg.AppendLine("Ranks =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Ranks != null)
-                {
-                    if (Ranks.Overall != null)
-                    {
-                        fg.AppendLine(Ranks.Overall.ToString());
-                    }
-                    if (Ranks.Specific != null)
-                    {
-                        foreach (var subItem in Ranks.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"VendorList => {VendorList}");
-            fg.AppendLine($"VendorChest => {VendorChest}");
-            VendorValues?.ToString(fg);
-            VendorLocation?.ToString(fg);
-            fg.AppendLine("Conditions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Conditions != null)
-                {
-                    if (Conditions.Overall != null)
-                    {
-                        fg.AppendLine(Conditions.Overall.ToString());
-                    }
-                    if (Conditions.Specific != null)
-                    {
-                        foreach (var subItem in Conditions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"CRVADataTypeState => {CRVADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Faction_ErrorMask Combine(Faction_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Faction_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation_ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.PrisonMarker = this.PrisonMarker.Combine(rhs.PrisonMarker);
-            ret.FollowerWaitMarker = this.FollowerWaitMarker.Combine(rhs.FollowerWaitMarker);
-            ret.EvidenceChest = this.EvidenceChest.Combine(rhs.EvidenceChest);
-            ret.PlayerBelongingsChest = this.PlayerBelongingsChest.Combine(rhs.PlayerBelongingsChest);
-            ret.CrimeGroup = this.CrimeGroup.Combine(rhs.CrimeGroup);
-            ret.JailOutfit = this.JailOutfit.Combine(rhs.JailOutfit);
-            ret.ArrestCrimeValue = this.ArrestCrimeValue.Combine(rhs.ArrestCrimeValue);
-            ret.AttackOnSightCrimeValue = this.AttackOnSightCrimeValue.Combine(rhs.AttackOnSightCrimeValue);
-            ret.MurderCrimeValue = this.MurderCrimeValue.Combine(rhs.MurderCrimeValue);
-            ret.AssaultCrimeValue = this.AssaultCrimeValue.Combine(rhs.AssaultCrimeValue);
-            ret.TrespassCrimeValue = this.TrespassCrimeValue.Combine(rhs.TrespassCrimeValue);
-            ret.PickpocketCrimeValue = this.PickpocketCrimeValue.Combine(rhs.PickpocketCrimeValue);
-            ret.UnknownCrimeValue = this.UnknownCrimeValue.Combine(rhs.UnknownCrimeValue);
-            ret.StealMultCrimeValue = this.StealMultCrimeValue.Combine(rhs.StealMultCrimeValue);
-            ret.EscapeCrimeValue = this.EscapeCrimeValue.Combine(rhs.EscapeCrimeValue);
-            ret.WerewolfCrimeValue = this.WerewolfCrimeValue.Combine(rhs.WerewolfCrimeValue);
-            ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank_ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
-            ret.VendorList = this.VendorList.Combine(rhs.VendorList);
-            ret.VendorChest = this.VendorChest.Combine(rhs.VendorChest);
-            ret.VendorValues = new MaskItem<Exception?, VendorValues_ErrorMask?>(ExceptionExt.Combine(this.VendorValues?.Overall, rhs.VendorValues?.Overall), (this.VendorValues?.Specific as IErrorMask<VendorValues_ErrorMask>)?.Combine(rhs.VendorValues?.Specific));
-            ret.VendorLocation = new MaskItem<Exception?, VendorLocation_ErrorMask?>(ExceptionExt.Combine(this.VendorLocation?.Overall, rhs.VendorLocation?.Overall), (this.VendorLocation?.Specific as IErrorMask<VendorLocation_ErrorMask>)?.Combine(rhs.VendorLocation?.Specific));
-            ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition_ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-            ret.CRVADataTypeState = this.CRVADataTypeState.Combine(rhs.CRVADataTypeState);
-            return ret;
-        }
-        public static Faction_ErrorMask? Combine(Faction_ErrorMask? lhs, Faction_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Faction_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Faction_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Faction_TranslationMask : SkyrimMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Relation_TranslationMask?> Relations;
-        public bool Flags;
-        public bool PrisonMarker;
-        public bool FollowerWaitMarker;
-        public bool EvidenceChest;
-        public bool PlayerBelongingsChest;
-        public bool CrimeGroup;
-        public bool JailOutfit;
-        public bool ArrestCrimeValue;
-        public bool AttackOnSightCrimeValue;
-        public bool MurderCrimeValue;
-        public bool AssaultCrimeValue;
-        public bool TrespassCrimeValue;
-        public bool PickpocketCrimeValue;
-        public bool UnknownCrimeValue;
-        public bool StealMultCrimeValue;
-        public bool EscapeCrimeValue;
-        public bool WerewolfCrimeValue;
-        public MaskItem<bool, Rank_TranslationMask?> Ranks;
-        public bool VendorList;
-        public bool VendorChest;
-        public MaskItem<bool, VendorValues_TranslationMask?> VendorValues;
-        public MaskItem<bool, VendorLocation_TranslationMask?> VendorLocation;
-        public MaskItem<bool, Condition_TranslationMask?> Conditions;
-        public bool CRVADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Faction_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Relations = new MaskItem<bool, Relation_TranslationMask?>(defaultOn, null);
-            this.Flags = defaultOn;
-            this.PrisonMarker = defaultOn;
-            this.FollowerWaitMarker = defaultOn;
-            this.EvidenceChest = defaultOn;
-            this.PlayerBelongingsChest = defaultOn;
-            this.CrimeGroup = defaultOn;
-            this.JailOutfit = defaultOn;
-            this.ArrestCrimeValue = defaultOn;
-            this.AttackOnSightCrimeValue = defaultOn;
-            this.MurderCrimeValue = defaultOn;
-            this.AssaultCrimeValue = defaultOn;
-            this.TrespassCrimeValue = defaultOn;
-            this.PickpocketCrimeValue = defaultOn;
-            this.UnknownCrimeValue = defaultOn;
-            this.StealMultCrimeValue = defaultOn;
-            this.EscapeCrimeValue = defaultOn;
-            this.WerewolfCrimeValue = defaultOn;
-            this.Ranks = new MaskItem<bool, Rank_TranslationMask?>(defaultOn, null);
-            this.VendorList = defaultOn;
-            this.VendorChest = defaultOn;
-            this.VendorValues = new MaskItem<bool, VendorValues_TranslationMask?>(defaultOn, null);
-            this.VendorLocation = new MaskItem<bool, VendorLocation_TranslationMask?>(defaultOn, null);
-            this.Conditions = new MaskItem<bool, Condition_TranslationMask?>(defaultOn, null);
-            this.CRVADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
-            ret.Add((Flags, null));
-            ret.Add((PrisonMarker, null));
-            ret.Add((FollowerWaitMarker, null));
-            ret.Add((EvidenceChest, null));
-            ret.Add((PlayerBelongingsChest, null));
-            ret.Add((CrimeGroup, null));
-            ret.Add((JailOutfit, null));
-            ret.Add((ArrestCrimeValue, null));
-            ret.Add((AttackOnSightCrimeValue, null));
-            ret.Add((MurderCrimeValue, null));
-            ret.Add((AssaultCrimeValue, null));
-            ret.Add((TrespassCrimeValue, null));
-            ret.Add((PickpocketCrimeValue, null));
-            ret.Add((UnknownCrimeValue, null));
-            ret.Add((StealMultCrimeValue, null));
-            ret.Add((EscapeCrimeValue, null));
-            ret.Add((WerewolfCrimeValue, null));
-            ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
-            ret.Add((VendorList, null));
-            ret.Add((VendorChest, null));
-            ret.Add((VendorValues?.Overall ?? true, VendorValues?.Specific?.GetCrystal()));
-            ret.Add((VendorLocation?.Overall ?? true, VendorLocation?.Specific?.GetCrystal()));
-            ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-            ret.Add((CRVADataTypeState, null));
-        }
-    }
 }
 #endregion
 

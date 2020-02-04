@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Creature CreateFromXml(
             XElement node,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -710,15 +710,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Creature CreateFromXml(
             XElement node,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Creature.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Creature CreateFromXml(
             string path,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -748,8 +748,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Creature CreateFromXml(
             string path,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Creature CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Creature CreateFromXml(
             Stream stream,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -782,8 +782,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Creature CreateFromXml(
             Stream stream,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Creature CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -806,6 +806,2151 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            NPCAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ItemEntry.Mask<T>?>>());
+                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Models = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.NIFT = initialValue;
+                this.Flags = initialValue;
+                this.BaseSpellPoints = initialValue;
+                this.Fatigue = initialValue;
+                this.BarterGold = initialValue;
+                this.LevelOffset = initialValue;
+                this.CalcMin = initialValue;
+                this.CalcMax = initialValue;
+                this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RankPlacement.Mask<T>?>>());
+                this.DeathItem = initialValue;
+                this.Script = initialValue;
+                this.Aggression = initialValue;
+                this.Confidence = initialValue;
+                this.EnergyLevel = initialValue;
+                this.Responsibility = initialValue;
+                this.BuySellServices = initialValue;
+                this.Teaches = initialValue;
+                this.MaximumTrainingLevel = initialValue;
+                this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.CreatureType = initialValue;
+                this.CombatSkill = initialValue;
+                this.MagicSkill = initialValue;
+                this.StealthSkill = initialValue;
+                this.SoulLevel = initialValue;
+                this.Health = initialValue;
+                this.AttackDamage = initialValue;
+                this.Strength = initialValue;
+                this.Intelligence = initialValue;
+                this.Willpower = initialValue;
+                this.Agility = initialValue;
+                this.Speed = initialValue;
+                this.Endurance = initialValue;
+                this.Personality = initialValue;
+                this.Luck = initialValue;
+                this.AttackReach = initialValue;
+                this.CombatStyle = initialValue;
+                this.TurningSpeed = initialValue;
+                this.BaseScale = initialValue;
+                this.FootWeight = initialValue;
+                this.BloodSpray = initialValue;
+                this.BloodDecal = initialValue;
+                this.InheritsSoundFrom = initialValue;
+                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, CreatureSound.Mask<T>?>>());
+                this.ACBSDataTypeState = initialValue;
+                this.AIDTDataTypeState = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Items,
+                T Spells,
+                T Models,
+                T NIFT,
+                T Flags,
+                T BaseSpellPoints,
+                T Fatigue,
+                T BarterGold,
+                T LevelOffset,
+                T CalcMin,
+                T CalcMax,
+                T Factions,
+                T DeathItem,
+                T Script,
+                T Aggression,
+                T Confidence,
+                T EnergyLevel,
+                T Responsibility,
+                T BuySellServices,
+                T Teaches,
+                T MaximumTrainingLevel,
+                T AIPackages,
+                T Animations,
+                T CreatureType,
+                T CombatSkill,
+                T MagicSkill,
+                T StealthSkill,
+                T SoulLevel,
+                T Health,
+                T AttackDamage,
+                T Strength,
+                T Intelligence,
+                T Willpower,
+                T Agility,
+                T Speed,
+                T Endurance,
+                T Personality,
+                T Luck,
+                T AttackReach,
+                T CombatStyle,
+                T TurningSpeed,
+                T BaseScale,
+                T FootWeight,
+                T BloodSpray,
+                T BloodDecal,
+                T InheritsSoundFrom,
+                T Sounds,
+                T ACBSDataTypeState,
+                T AIDTDataTypeState,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ItemEntry.Mask<T>?>>());
+                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
+                this.Models = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Models, Enumerable.Empty<(int Index, T Value)>());
+                this.NIFT = NIFT;
+                this.Flags = Flags;
+                this.BaseSpellPoints = BaseSpellPoints;
+                this.Fatigue = Fatigue;
+                this.BarterGold = BarterGold;
+                this.LevelOffset = LevelOffset;
+                this.CalcMin = CalcMin;
+                this.CalcMax = CalcMax;
+                this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>(Factions, Enumerable.Empty<MaskItemIndexed<T, RankPlacement.Mask<T>?>>());
+                this.DeathItem = DeathItem;
+                this.Script = Script;
+                this.Aggression = Aggression;
+                this.Confidence = Confidence;
+                this.EnergyLevel = EnergyLevel;
+                this.Responsibility = Responsibility;
+                this.BuySellServices = BuySellServices;
+                this.Teaches = Teaches;
+                this.MaximumTrainingLevel = MaximumTrainingLevel;
+                this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(AIPackages, Enumerable.Empty<(int Index, T Value)>());
+                this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Animations, Enumerable.Empty<(int Index, T Value)>());
+                this.CreatureType = CreatureType;
+                this.CombatSkill = CombatSkill;
+                this.MagicSkill = MagicSkill;
+                this.StealthSkill = StealthSkill;
+                this.SoulLevel = SoulLevel;
+                this.Health = Health;
+                this.AttackDamage = AttackDamage;
+                this.Strength = Strength;
+                this.Intelligence = Intelligence;
+                this.Willpower = Willpower;
+                this.Agility = Agility;
+                this.Speed = Speed;
+                this.Endurance = Endurance;
+                this.Personality = Personality;
+                this.Luck = Luck;
+                this.AttackReach = AttackReach;
+                this.CombatStyle = CombatStyle;
+                this.TurningSpeed = TurningSpeed;
+                this.BaseScale = BaseScale;
+                this.FootWeight = FootWeight;
+                this.BloodSpray = BloodSpray;
+                this.BloodDecal = BloodDecal;
+                this.InheritsSoundFrom = InheritsSoundFrom;
+                this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound.Mask<T>?>>>(Sounds, Enumerable.Empty<MaskItemIndexed<T, CreatureSound.Mask<T>?>>());
+                this.ACBSDataTypeState = ACBSDataTypeState;
+                this.AIDTDataTypeState = AIDTDataTypeState;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>? Items;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Models;
+            public T NIFT;
+            public T Flags;
+            public T BaseSpellPoints;
+            public T Fatigue;
+            public T BarterGold;
+            public T LevelOffset;
+            public T CalcMin;
+            public T CalcMax;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>? Factions;
+            public T DeathItem;
+            public T Script;
+            public T Aggression;
+            public T Confidence;
+            public T EnergyLevel;
+            public T Responsibility;
+            public T BuySellServices;
+            public T Teaches;
+            public T MaximumTrainingLevel;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? AIPackages;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Animations;
+            public T CreatureType;
+            public T CombatSkill;
+            public T MagicSkill;
+            public T StealthSkill;
+            public T SoulLevel;
+            public T Health;
+            public T AttackDamage;
+            public T Strength;
+            public T Intelligence;
+            public T Willpower;
+            public T Agility;
+            public T Speed;
+            public T Endurance;
+            public T Personality;
+            public T Luck;
+            public T AttackReach;
+            public T CombatStyle;
+            public T TurningSpeed;
+            public T BaseScale;
+            public T FootWeight;
+            public T BloodSpray;
+            public T BloodDecal;
+            public T InheritsSoundFrom;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound.Mask<T>?>>>? Sounds;
+            public T ACBSDataTypeState;
+            public T AIDTDataTypeState;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
+                if (!object.Equals(this.Spells, rhs.Spells)) return false;
+                if (!object.Equals(this.Models, rhs.Models)) return false;
+                if (!object.Equals(this.NIFT, rhs.NIFT)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
+                if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
+                if (!object.Equals(this.BarterGold, rhs.BarterGold)) return false;
+                if (!object.Equals(this.LevelOffset, rhs.LevelOffset)) return false;
+                if (!object.Equals(this.CalcMin, rhs.CalcMin)) return false;
+                if (!object.Equals(this.CalcMax, rhs.CalcMax)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
+                if (!object.Equals(this.DeathItem, rhs.DeathItem)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Aggression, rhs.Aggression)) return false;
+                if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
+                if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
+                if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
+                if (!object.Equals(this.BuySellServices, rhs.BuySellServices)) return false;
+                if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
+                if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
+                if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
+                if (!object.Equals(this.Animations, rhs.Animations)) return false;
+                if (!object.Equals(this.CreatureType, rhs.CreatureType)) return false;
+                if (!object.Equals(this.CombatSkill, rhs.CombatSkill)) return false;
+                if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
+                if (!object.Equals(this.StealthSkill, rhs.StealthSkill)) return false;
+                if (!object.Equals(this.SoulLevel, rhs.SoulLevel)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.AttackDamage, rhs.AttackDamage)) return false;
+                if (!object.Equals(this.Strength, rhs.Strength)) return false;
+                if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
+                if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
+                if (!object.Equals(this.Agility, rhs.Agility)) return false;
+                if (!object.Equals(this.Speed, rhs.Speed)) return false;
+                if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
+                if (!object.Equals(this.Personality, rhs.Personality)) return false;
+                if (!object.Equals(this.Luck, rhs.Luck)) return false;
+                if (!object.Equals(this.AttackReach, rhs.AttackReach)) return false;
+                if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
+                if (!object.Equals(this.TurningSpeed, rhs.TurningSpeed)) return false;
+                if (!object.Equals(this.BaseScale, rhs.BaseScale)) return false;
+                if (!object.Equals(this.FootWeight, rhs.FootWeight)) return false;
+                if (!object.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
+                if (!object.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
+                if (!object.Equals(this.InheritsSoundFrom, rhs.InheritsSoundFrom)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
+                if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Items?.GetHashCode());
+                ret = ret.CombineHashCode(this.Spells?.GetHashCode());
+                ret = ret.CombineHashCode(this.Models?.GetHashCode());
+                ret = ret.CombineHashCode(this.NIFT?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
+                ret = ret.CombineHashCode(this.BarterGold?.GetHashCode());
+                ret = ret.CombineHashCode(this.LevelOffset?.GetHashCode());
+                ret = ret.CombineHashCode(this.CalcMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.CalcMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.Factions?.GetHashCode());
+                ret = ret.CombineHashCode(this.DeathItem?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Aggression?.GetHashCode());
+                ret = ret.CombineHashCode(this.Confidence?.GetHashCode());
+                ret = ret.CombineHashCode(this.EnergyLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.Responsibility?.GetHashCode());
+                ret = ret.CombineHashCode(this.BuySellServices?.GetHashCode());
+                ret = ret.CombineHashCode(this.Teaches?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
+                ret = ret.CombineHashCode(this.Animations?.GetHashCode());
+                ret = ret.CombineHashCode(this.CreatureType?.GetHashCode());
+                ret = ret.CombineHashCode(this.CombatSkill?.GetHashCode());
+                ret = ret.CombineHashCode(this.MagicSkill?.GetHashCode());
+                ret = ret.CombineHashCode(this.StealthSkill?.GetHashCode());
+                ret = ret.CombineHashCode(this.SoulLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.Health?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackDamage?.GetHashCode());
+                ret = ret.CombineHashCode(this.Strength?.GetHashCode());
+                ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
+                ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
+                ret = ret.CombineHashCode(this.Agility?.GetHashCode());
+                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
+                ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
+                ret = ret.CombineHashCode(this.Personality?.GetHashCode());
+                ret = ret.CombineHashCode(this.Luck?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackReach?.GetHashCode());
+                ret = ret.CombineHashCode(this.CombatStyle?.GetHashCode());
+                ret = ret.CombineHashCode(this.TurningSpeed?.GetHashCode());
+                ret = ret.CombineHashCode(this.BaseScale?.GetHashCode());
+                ret = ret.CombineHashCode(this.FootWeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.BloodSpray?.GetHashCode());
+                ret = ret.CombineHashCode(this.BloodDecal?.GetHashCode());
+                ret = ret.CombineHashCode(this.InheritsSoundFrom?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
+                ret = ret.CombineHashCode(this.ACBSDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(this.AIDTDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Spells != null)
+                {
+                    if (!eval(this.Spells.Overall)) return false;
+                    if (this.Spells.Specific != null)
+                    {
+                        foreach (var item in this.Spells.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Models != null)
+                {
+                    if (!eval(this.Models.Overall)) return false;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.NIFT)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.BaseSpellPoints)) return false;
+                if (!eval(this.Fatigue)) return false;
+                if (!eval(this.BarterGold)) return false;
+                if (!eval(this.LevelOffset)) return false;
+                if (!eval(this.CalcMin)) return false;
+                if (!eval(this.CalcMax)) return false;
+                if (this.Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null)
+                    {
+                        foreach (var item in this.Factions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DeathItem)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Aggression)) return false;
+                if (!eval(this.Confidence)) return false;
+                if (!eval(this.EnergyLevel)) return false;
+                if (!eval(this.Responsibility)) return false;
+                if (!eval(this.BuySellServices)) return false;
+                if (!eval(this.Teaches)) return false;
+                if (!eval(this.MaximumTrainingLevel)) return false;
+                if (this.AIPackages != null)
+                {
+                    if (!eval(this.AIPackages.Overall)) return false;
+                    if (this.AIPackages.Specific != null)
+                    {
+                        foreach (var item in this.AIPackages.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Animations != null)
+                {
+                    if (!eval(this.Animations.Overall)) return false;
+                    if (this.Animations.Specific != null)
+                    {
+                        foreach (var item in this.Animations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.CreatureType)) return false;
+                if (!eval(this.CombatSkill)) return false;
+                if (!eval(this.MagicSkill)) return false;
+                if (!eval(this.StealthSkill)) return false;
+                if (!eval(this.SoulLevel)) return false;
+                if (!eval(this.Health)) return false;
+                if (!eval(this.AttackDamage)) return false;
+                if (!eval(this.Strength)) return false;
+                if (!eval(this.Intelligence)) return false;
+                if (!eval(this.Willpower)) return false;
+                if (!eval(this.Agility)) return false;
+                if (!eval(this.Speed)) return false;
+                if (!eval(this.Endurance)) return false;
+                if (!eval(this.Personality)) return false;
+                if (!eval(this.Luck)) return false;
+                if (!eval(this.AttackReach)) return false;
+                if (!eval(this.CombatStyle)) return false;
+                if (!eval(this.TurningSpeed)) return false;
+                if (!eval(this.BaseScale)) return false;
+                if (!eval(this.FootWeight)) return false;
+                if (!eval(this.BloodSpray)) return false;
+                if (!eval(this.BloodDecal)) return false;
+                if (!eval(this.InheritsSoundFrom)) return false;
+                if (this.Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null)
+                    {
+                        foreach (var item in this.Sounds.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ACBSDataTypeState)) return false;
+                if (!eval(this.AIDTDataTypeState)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Creature.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry.Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemEntry.Mask<R>?>>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ItemEntry.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ItemEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ItemEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Spells != null)
+                {
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Spells.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Spells.Specific = l;
+                        foreach (var item in Spells.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Models != null)
+                {
+                    obj.Models = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Models.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Models.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Models.Specific = l;
+                        foreach (var item in Models.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.NIFT = eval(this.NIFT);
+                obj.Flags = eval(this.Flags);
+                obj.BaseSpellPoints = eval(this.BaseSpellPoints);
+                obj.Fatigue = eval(this.Fatigue);
+                obj.BarterGold = eval(this.BarterGold);
+                obj.LevelOffset = eval(this.LevelOffset);
+                obj.CalcMin = eval(this.CalcMin);
+                obj.CalcMax = eval(this.CalcMax);
+                if (Factions != null)
+                {
+                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement.Mask<R>?>>());
+                    if (Factions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
+                        obj.Factions.Specific = l;
+                        foreach (var item in Factions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DeathItem = eval(this.DeathItem);
+                obj.Script = eval(this.Script);
+                obj.Aggression = eval(this.Aggression);
+                obj.Confidence = eval(this.Confidence);
+                obj.EnergyLevel = eval(this.EnergyLevel);
+                obj.Responsibility = eval(this.Responsibility);
+                obj.BuySellServices = eval(this.BuySellServices);
+                obj.Teaches = eval(this.Teaches);
+                obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
+                if (AIPackages != null)
+                {
+                    obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.AIPackages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AIPackages.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AIPackages.Specific = l;
+                        foreach (var item in AIPackages.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Animations != null)
+                {
+                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Animations.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Animations.Specific = l;
+                        foreach (var item in Animations.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.CreatureType = eval(this.CreatureType);
+                obj.CombatSkill = eval(this.CombatSkill);
+                obj.MagicSkill = eval(this.MagicSkill);
+                obj.StealthSkill = eval(this.StealthSkill);
+                obj.SoulLevel = eval(this.SoulLevel);
+                obj.Health = eval(this.Health);
+                obj.AttackDamage = eval(this.AttackDamage);
+                obj.Strength = eval(this.Strength);
+                obj.Intelligence = eval(this.Intelligence);
+                obj.Willpower = eval(this.Willpower);
+                obj.Agility = eval(this.Agility);
+                obj.Speed = eval(this.Speed);
+                obj.Endurance = eval(this.Endurance);
+                obj.Personality = eval(this.Personality);
+                obj.Luck = eval(this.Luck);
+                obj.AttackReach = eval(this.AttackReach);
+                obj.CombatStyle = eval(this.CombatStyle);
+                obj.TurningSpeed = eval(this.TurningSpeed);
+                obj.BaseScale = eval(this.BaseScale);
+                obj.FootWeight = eval(this.FootWeight);
+                obj.BloodSpray = eval(this.BloodSpray);
+                obj.BloodDecal = eval(this.BloodDecal);
+                obj.InheritsSoundFrom = eval(this.InheritsSoundFrom);
+                if (Sounds != null)
+                {
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CreatureSound.Mask<R>?>>>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, CreatureSound.Mask<R>?>>());
+                    if (Sounds.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, CreatureSound.Mask<R>?>>();
+                        obj.Sounds.Specific = l;
+                        foreach (var item in Sounds.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, CreatureSound.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CreatureSound.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
+                obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Creature.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Creature.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Creature.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Items?.Overall ?? true)
+                    {
+                        fg.AppendLine("Items =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Items != null)
+                            {
+                                if (Items.Overall != null)
+                                {
+                                    fg.AppendLine(Items.Overall.ToString());
+                                }
+                                if (Items.Specific != null)
+                                {
+                                    foreach (var subItem in Items.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Spells?.Overall ?? true)
+                    {
+                        fg.AppendLine("Spells =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Spells != null)
+                            {
+                                if (Spells.Overall != null)
+                                {
+                                    fg.AppendLine(Spells.Overall.ToString());
+                                }
+                                if (Spells.Specific != null)
+                                {
+                                    foreach (var subItem in Spells.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Models?.Overall ?? true)
+                    {
+                        fg.AppendLine("Models =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Models != null)
+                            {
+                                if (Models.Overall != null)
+                                {
+                                    fg.AppendLine(Models.Overall.ToString());
+                                }
+                                if (Models.Specific != null)
+                                {
+                                    foreach (var subItem in Models.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.NIFT ?? true)
+                    {
+                        fg.AppendLine($"NIFT => {NIFT}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.BaseSpellPoints ?? true)
+                    {
+                        fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
+                    }
+                    if (printMask?.Fatigue ?? true)
+                    {
+                        fg.AppendLine($"Fatigue => {Fatigue}");
+                    }
+                    if (printMask?.BarterGold ?? true)
+                    {
+                        fg.AppendLine($"BarterGold => {BarterGold}");
+                    }
+                    if (printMask?.LevelOffset ?? true)
+                    {
+                        fg.AppendLine($"LevelOffset => {LevelOffset}");
+                    }
+                    if (printMask?.CalcMin ?? true)
+                    {
+                        fg.AppendLine($"CalcMin => {CalcMin}");
+                    }
+                    if (printMask?.CalcMax ?? true)
+                    {
+                        fg.AppendLine($"CalcMax => {CalcMax}");
+                    }
+                    if (printMask?.Factions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Factions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Factions != null)
+                            {
+                                if (Factions.Overall != null)
+                                {
+                                    fg.AppendLine(Factions.Overall.ToString());
+                                }
+                                if (Factions.Specific != null)
+                                {
+                                    foreach (var subItem in Factions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DeathItem ?? true)
+                    {
+                        fg.AppendLine($"DeathItem => {DeathItem}");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Aggression ?? true)
+                    {
+                        fg.AppendLine($"Aggression => {Aggression}");
+                    }
+                    if (printMask?.Confidence ?? true)
+                    {
+                        fg.AppendLine($"Confidence => {Confidence}");
+                    }
+                    if (printMask?.EnergyLevel ?? true)
+                    {
+                        fg.AppendLine($"EnergyLevel => {EnergyLevel}");
+                    }
+                    if (printMask?.Responsibility ?? true)
+                    {
+                        fg.AppendLine($"Responsibility => {Responsibility}");
+                    }
+                    if (printMask?.BuySellServices ?? true)
+                    {
+                        fg.AppendLine($"BuySellServices => {BuySellServices}");
+                    }
+                    if (printMask?.Teaches ?? true)
+                    {
+                        fg.AppendLine($"Teaches => {Teaches}");
+                    }
+                    if (printMask?.MaximumTrainingLevel ?? true)
+                    {
+                        fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+                    }
+                    if (printMask?.AIPackages?.Overall ?? true)
+                    {
+                        fg.AppendLine("AIPackages =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (AIPackages != null)
+                            {
+                                if (AIPackages.Overall != null)
+                                {
+                                    fg.AppendLine(AIPackages.Overall.ToString());
+                                }
+                                if (AIPackages.Specific != null)
+                                {
+                                    foreach (var subItem in AIPackages.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Animations?.Overall ?? true)
+                    {
+                        fg.AppendLine("Animations =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Animations != null)
+                            {
+                                if (Animations.Overall != null)
+                                {
+                                    fg.AppendLine(Animations.Overall.ToString());
+                                }
+                                if (Animations.Specific != null)
+                                {
+                                    foreach (var subItem in Animations.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.CreatureType ?? true)
+                    {
+                        fg.AppendLine($"CreatureType => {CreatureType}");
+                    }
+                    if (printMask?.CombatSkill ?? true)
+                    {
+                        fg.AppendLine($"CombatSkill => {CombatSkill}");
+                    }
+                    if (printMask?.MagicSkill ?? true)
+                    {
+                        fg.AppendLine($"MagicSkill => {MagicSkill}");
+                    }
+                    if (printMask?.StealthSkill ?? true)
+                    {
+                        fg.AppendLine($"StealthSkill => {StealthSkill}");
+                    }
+                    if (printMask?.SoulLevel ?? true)
+                    {
+                        fg.AppendLine($"SoulLevel => {SoulLevel}");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        fg.AppendLine($"Health => {Health}");
+                    }
+                    if (printMask?.AttackDamage ?? true)
+                    {
+                        fg.AppendLine($"AttackDamage => {AttackDamage}");
+                    }
+                    if (printMask?.Strength ?? true)
+                    {
+                        fg.AppendLine($"Strength => {Strength}");
+                    }
+                    if (printMask?.Intelligence ?? true)
+                    {
+                        fg.AppendLine($"Intelligence => {Intelligence}");
+                    }
+                    if (printMask?.Willpower ?? true)
+                    {
+                        fg.AppendLine($"Willpower => {Willpower}");
+                    }
+                    if (printMask?.Agility ?? true)
+                    {
+                        fg.AppendLine($"Agility => {Agility}");
+                    }
+                    if (printMask?.Speed ?? true)
+                    {
+                        fg.AppendLine($"Speed => {Speed}");
+                    }
+                    if (printMask?.Endurance ?? true)
+                    {
+                        fg.AppendLine($"Endurance => {Endurance}");
+                    }
+                    if (printMask?.Personality ?? true)
+                    {
+                        fg.AppendLine($"Personality => {Personality}");
+                    }
+                    if (printMask?.Luck ?? true)
+                    {
+                        fg.AppendLine($"Luck => {Luck}");
+                    }
+                    if (printMask?.AttackReach ?? true)
+                    {
+                        fg.AppendLine($"AttackReach => {AttackReach}");
+                    }
+                    if (printMask?.CombatStyle ?? true)
+                    {
+                        fg.AppendLine($"CombatStyle => {CombatStyle}");
+                    }
+                    if (printMask?.TurningSpeed ?? true)
+                    {
+                        fg.AppendLine($"TurningSpeed => {TurningSpeed}");
+                    }
+                    if (printMask?.BaseScale ?? true)
+                    {
+                        fg.AppendLine($"BaseScale => {BaseScale}");
+                    }
+                    if (printMask?.FootWeight ?? true)
+                    {
+                        fg.AppendLine($"FootWeight => {FootWeight}");
+                    }
+                    if (printMask?.BloodSpray ?? true)
+                    {
+                        fg.AppendLine($"BloodSpray => {BloodSpray}");
+                    }
+                    if (printMask?.BloodDecal ?? true)
+                    {
+                        fg.AppendLine($"BloodDecal => {BloodDecal}");
+                    }
+                    if (printMask?.InheritsSoundFrom ?? true)
+                    {
+                        fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
+                    }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        fg.AppendLine("Sounds =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Sounds != null)
+                            {
+                                if (Sounds.Overall != null)
+                                {
+                                    fg.AppendLine(Sounds.Overall.ToString());
+                                }
+                                if (Sounds.Specific != null)
+                                {
+                                    foreach (var subItem in Sounds.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.ACBSDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
+                    }
+                    if (printMask?.AIDTDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            NPCAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>? Items;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Models;
+            public Exception? NIFT;
+            public Exception? Flags;
+            public Exception? BaseSpellPoints;
+            public Exception? Fatigue;
+            public Exception? BarterGold;
+            public Exception? LevelOffset;
+            public Exception? CalcMin;
+            public Exception? CalcMax;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>? Factions;
+            public Exception? DeathItem;
+            public Exception? Script;
+            public Exception? Aggression;
+            public Exception? Confidence;
+            public Exception? EnergyLevel;
+            public Exception? Responsibility;
+            public Exception? BuySellServices;
+            public Exception? Teaches;
+            public Exception? MaximumTrainingLevel;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AIPackages;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
+            public Exception? CreatureType;
+            public Exception? CombatSkill;
+            public Exception? MagicSkill;
+            public Exception? StealthSkill;
+            public Exception? SoulLevel;
+            public Exception? Health;
+            public Exception? AttackDamage;
+            public Exception? Strength;
+            public Exception? Intelligence;
+            public Exception? Willpower;
+            public Exception? Agility;
+            public Exception? Speed;
+            public Exception? Endurance;
+            public Exception? Personality;
+            public Exception? Luck;
+            public Exception? AttackReach;
+            public Exception? CombatStyle;
+            public Exception? TurningSpeed;
+            public Exception? BaseScale;
+            public Exception? FootWeight;
+            public Exception? BloodSpray;
+            public Exception? BloodDecal;
+            public Exception? InheritsSoundFrom;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>? Sounds;
+            public Exception? ACBSDataTypeState;
+            public Exception? AIDTDataTypeState;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Creature_FieldIndex enu = (Creature_FieldIndex)index;
+                switch (enu)
+                {
+                    case Creature_FieldIndex.Name:
+                        return Name;
+                    case Creature_FieldIndex.Model:
+                        return Model;
+                    case Creature_FieldIndex.Items:
+                        return Items;
+                    case Creature_FieldIndex.Spells:
+                        return Spells;
+                    case Creature_FieldIndex.Models:
+                        return Models;
+                    case Creature_FieldIndex.NIFT:
+                        return NIFT;
+                    case Creature_FieldIndex.Flags:
+                        return Flags;
+                    case Creature_FieldIndex.BaseSpellPoints:
+                        return BaseSpellPoints;
+                    case Creature_FieldIndex.Fatigue:
+                        return Fatigue;
+                    case Creature_FieldIndex.BarterGold:
+                        return BarterGold;
+                    case Creature_FieldIndex.LevelOffset:
+                        return LevelOffset;
+                    case Creature_FieldIndex.CalcMin:
+                        return CalcMin;
+                    case Creature_FieldIndex.CalcMax:
+                        return CalcMax;
+                    case Creature_FieldIndex.Factions:
+                        return Factions;
+                    case Creature_FieldIndex.DeathItem:
+                        return DeathItem;
+                    case Creature_FieldIndex.Script:
+                        return Script;
+                    case Creature_FieldIndex.Aggression:
+                        return Aggression;
+                    case Creature_FieldIndex.Confidence:
+                        return Confidence;
+                    case Creature_FieldIndex.EnergyLevel:
+                        return EnergyLevel;
+                    case Creature_FieldIndex.Responsibility:
+                        return Responsibility;
+                    case Creature_FieldIndex.BuySellServices:
+                        return BuySellServices;
+                    case Creature_FieldIndex.Teaches:
+                        return Teaches;
+                    case Creature_FieldIndex.MaximumTrainingLevel:
+                        return MaximumTrainingLevel;
+                    case Creature_FieldIndex.AIPackages:
+                        return AIPackages;
+                    case Creature_FieldIndex.Animations:
+                        return Animations;
+                    case Creature_FieldIndex.CreatureType:
+                        return CreatureType;
+                    case Creature_FieldIndex.CombatSkill:
+                        return CombatSkill;
+                    case Creature_FieldIndex.MagicSkill:
+                        return MagicSkill;
+                    case Creature_FieldIndex.StealthSkill:
+                        return StealthSkill;
+                    case Creature_FieldIndex.SoulLevel:
+                        return SoulLevel;
+                    case Creature_FieldIndex.Health:
+                        return Health;
+                    case Creature_FieldIndex.AttackDamage:
+                        return AttackDamage;
+                    case Creature_FieldIndex.Strength:
+                        return Strength;
+                    case Creature_FieldIndex.Intelligence:
+                        return Intelligence;
+                    case Creature_FieldIndex.Willpower:
+                        return Willpower;
+                    case Creature_FieldIndex.Agility:
+                        return Agility;
+                    case Creature_FieldIndex.Speed:
+                        return Speed;
+                    case Creature_FieldIndex.Endurance:
+                        return Endurance;
+                    case Creature_FieldIndex.Personality:
+                        return Personality;
+                    case Creature_FieldIndex.Luck:
+                        return Luck;
+                    case Creature_FieldIndex.AttackReach:
+                        return AttackReach;
+                    case Creature_FieldIndex.CombatStyle:
+                        return CombatStyle;
+                    case Creature_FieldIndex.TurningSpeed:
+                        return TurningSpeed;
+                    case Creature_FieldIndex.BaseScale:
+                        return BaseScale;
+                    case Creature_FieldIndex.FootWeight:
+                        return FootWeight;
+                    case Creature_FieldIndex.BloodSpray:
+                        return BloodSpray;
+                    case Creature_FieldIndex.BloodDecal:
+                        return BloodDecal;
+                    case Creature_FieldIndex.InheritsSoundFrom:
+                        return InheritsSoundFrom;
+                    case Creature_FieldIndex.Sounds:
+                        return Sounds;
+                    case Creature_FieldIndex.ACBSDataTypeState:
+                        return ACBSDataTypeState;
+                    case Creature_FieldIndex.AIDTDataTypeState:
+                        return AIDTDataTypeState;
+                    case Creature_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Creature_FieldIndex enu = (Creature_FieldIndex)index;
+                switch (enu)
+                {
+                    case Creature_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Creature_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.Spells:
+                        this.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.Models:
+                        this.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.NIFT:
+                        this.NIFT = ex;
+                        break;
+                    case Creature_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Creature_FieldIndex.BaseSpellPoints:
+                        this.BaseSpellPoints = ex;
+                        break;
+                    case Creature_FieldIndex.Fatigue:
+                        this.Fatigue = ex;
+                        break;
+                    case Creature_FieldIndex.BarterGold:
+                        this.BarterGold = ex;
+                        break;
+                    case Creature_FieldIndex.LevelOffset:
+                        this.LevelOffset = ex;
+                        break;
+                    case Creature_FieldIndex.CalcMin:
+                        this.CalcMin = ex;
+                        break;
+                    case Creature_FieldIndex.CalcMax:
+                        this.CalcMax = ex;
+                        break;
+                    case Creature_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.DeathItem:
+                        this.DeathItem = ex;
+                        break;
+                    case Creature_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Creature_FieldIndex.Aggression:
+                        this.Aggression = ex;
+                        break;
+                    case Creature_FieldIndex.Confidence:
+                        this.Confidence = ex;
+                        break;
+                    case Creature_FieldIndex.EnergyLevel:
+                        this.EnergyLevel = ex;
+                        break;
+                    case Creature_FieldIndex.Responsibility:
+                        this.Responsibility = ex;
+                        break;
+                    case Creature_FieldIndex.BuySellServices:
+                        this.BuySellServices = ex;
+                        break;
+                    case Creature_FieldIndex.Teaches:
+                        this.Teaches = ex;
+                        break;
+                    case Creature_FieldIndex.MaximumTrainingLevel:
+                        this.MaximumTrainingLevel = ex;
+                        break;
+                    case Creature_FieldIndex.AIPackages:
+                        this.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.Animations:
+                        this.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.CreatureType:
+                        this.CreatureType = ex;
+                        break;
+                    case Creature_FieldIndex.CombatSkill:
+                        this.CombatSkill = ex;
+                        break;
+                    case Creature_FieldIndex.MagicSkill:
+                        this.MagicSkill = ex;
+                        break;
+                    case Creature_FieldIndex.StealthSkill:
+                        this.StealthSkill = ex;
+                        break;
+                    case Creature_FieldIndex.SoulLevel:
+                        this.SoulLevel = ex;
+                        break;
+                    case Creature_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case Creature_FieldIndex.AttackDamage:
+                        this.AttackDamage = ex;
+                        break;
+                    case Creature_FieldIndex.Strength:
+                        this.Strength = ex;
+                        break;
+                    case Creature_FieldIndex.Intelligence:
+                        this.Intelligence = ex;
+                        break;
+                    case Creature_FieldIndex.Willpower:
+                        this.Willpower = ex;
+                        break;
+                    case Creature_FieldIndex.Agility:
+                        this.Agility = ex;
+                        break;
+                    case Creature_FieldIndex.Speed:
+                        this.Speed = ex;
+                        break;
+                    case Creature_FieldIndex.Endurance:
+                        this.Endurance = ex;
+                        break;
+                    case Creature_FieldIndex.Personality:
+                        this.Personality = ex;
+                        break;
+                    case Creature_FieldIndex.Luck:
+                        this.Luck = ex;
+                        break;
+                    case Creature_FieldIndex.AttackReach:
+                        this.AttackReach = ex;
+                        break;
+                    case Creature_FieldIndex.CombatStyle:
+                        this.CombatStyle = ex;
+                        break;
+                    case Creature_FieldIndex.TurningSpeed:
+                        this.TurningSpeed = ex;
+                        break;
+                    case Creature_FieldIndex.BaseScale:
+                        this.BaseScale = ex;
+                        break;
+                    case Creature_FieldIndex.FootWeight:
+                        this.FootWeight = ex;
+                        break;
+                    case Creature_FieldIndex.BloodSpray:
+                        this.BloodSpray = ex;
+                        break;
+                    case Creature_FieldIndex.BloodDecal:
+                        this.BloodDecal = ex;
+                        break;
+                    case Creature_FieldIndex.InheritsSoundFrom:
+                        this.InheritsSoundFrom = ex;
+                        break;
+                    case Creature_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Creature_FieldIndex.ACBSDataTypeState:
+                        this.ACBSDataTypeState = ex;
+                        break;
+                    case Creature_FieldIndex.AIDTDataTypeState:
+                        this.AIDTDataTypeState = ex;
+                        break;
+                    case Creature_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Creature_FieldIndex enu = (Creature_FieldIndex)index;
+                switch (enu)
+                {
+                    case Creature_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Creature_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>)obj;
+                        break;
+                    case Creature_FieldIndex.Spells:
+                        this.Spells = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Creature_FieldIndex.Models:
+                        this.Models = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Creature_FieldIndex.NIFT:
+                        this.NIFT = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.BaseSpellPoints:
+                        this.BaseSpellPoints = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Fatigue:
+                        this.Fatigue = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.BarterGold:
+                        this.BarterGold = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.LevelOffset:
+                        this.LevelOffset = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.CalcMin:
+                        this.CalcMin = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.CalcMax:
+                        this.CalcMax = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>)obj;
+                        break;
+                    case Creature_FieldIndex.DeathItem:
+                        this.DeathItem = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Aggression:
+                        this.Aggression = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Confidence:
+                        this.Confidence = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.EnergyLevel:
+                        this.EnergyLevel = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Responsibility:
+                        this.Responsibility = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.BuySellServices:
+                        this.BuySellServices = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Teaches:
+                        this.Teaches = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.MaximumTrainingLevel:
+                        this.MaximumTrainingLevel = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.AIPackages:
+                        this.AIPackages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Creature_FieldIndex.Animations:
+                        this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Creature_FieldIndex.CreatureType:
+                        this.CreatureType = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.CombatSkill:
+                        this.CombatSkill = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.MagicSkill:
+                        this.MagicSkill = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.StealthSkill:
+                        this.StealthSkill = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.SoulLevel:
+                        this.SoulLevel = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Health:
+                        this.Health = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.AttackDamage:
+                        this.AttackDamage = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Strength:
+                        this.Strength = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Intelligence:
+                        this.Intelligence = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Willpower:
+                        this.Willpower = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Agility:
+                        this.Agility = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Speed:
+                        this.Speed = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Endurance:
+                        this.Endurance = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Personality:
+                        this.Personality = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Luck:
+                        this.Luck = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.AttackReach:
+                        this.AttackReach = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.CombatStyle:
+                        this.CombatStyle = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.TurningSpeed:
+                        this.TurningSpeed = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.BaseScale:
+                        this.BaseScale = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.FootWeight:
+                        this.FootWeight = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.BloodSpray:
+                        this.BloodSpray = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.BloodDecal:
+                        this.BloodDecal = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.InheritsSoundFrom:
+                        this.InheritsSoundFrom = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>)obj;
+                        break;
+                    case Creature_FieldIndex.ACBSDataTypeState:
+                        this.ACBSDataTypeState = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.AIDTDataTypeState:
+                        this.AIDTDataTypeState = (Exception)obj;
+                        break;
+                    case Creature_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Items != null) return true;
+                if (Spells != null) return true;
+                if (Models != null) return true;
+                if (NIFT != null) return true;
+                if (Flags != null) return true;
+                if (BaseSpellPoints != null) return true;
+                if (Fatigue != null) return true;
+                if (BarterGold != null) return true;
+                if (LevelOffset != null) return true;
+                if (CalcMin != null) return true;
+                if (CalcMax != null) return true;
+                if (Factions != null) return true;
+                if (DeathItem != null) return true;
+                if (Script != null) return true;
+                if (Aggression != null) return true;
+                if (Confidence != null) return true;
+                if (EnergyLevel != null) return true;
+                if (Responsibility != null) return true;
+                if (BuySellServices != null) return true;
+                if (Teaches != null) return true;
+                if (MaximumTrainingLevel != null) return true;
+                if (AIPackages != null) return true;
+                if (Animations != null) return true;
+                if (CreatureType != null) return true;
+                if (CombatSkill != null) return true;
+                if (MagicSkill != null) return true;
+                if (StealthSkill != null) return true;
+                if (SoulLevel != null) return true;
+                if (Health != null) return true;
+                if (AttackDamage != null) return true;
+                if (Strength != null) return true;
+                if (Intelligence != null) return true;
+                if (Willpower != null) return true;
+                if (Agility != null) return true;
+                if (Speed != null) return true;
+                if (Endurance != null) return true;
+                if (Personality != null) return true;
+                if (Luck != null) return true;
+                if (AttackReach != null) return true;
+                if (CombatStyle != null) return true;
+                if (TurningSpeed != null) return true;
+                if (BaseScale != null) return true;
+                if (FootWeight != null) return true;
+                if (BloodSpray != null) return true;
+                if (BloodDecal != null) return true;
+                if (InheritsSoundFrom != null) return true;
+                if (Sounds != null) return true;
+                if (ACBSDataTypeState != null) return true;
+                if (AIDTDataTypeState != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Items != null)
+                    {
+                        if (Items.Overall != null)
+                        {
+                            fg.AppendLine(Items.Overall.ToString());
+                        }
+                        if (Items.Specific != null)
+                        {
+                            foreach (var subItem in Items.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Spells != null)
+                    {
+                        if (Spells.Overall != null)
+                        {
+                            fg.AppendLine(Spells.Overall.ToString());
+                        }
+                        if (Spells.Specific != null)
+                        {
+                            foreach (var subItem in Spells.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("Models =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Models != null)
+                    {
+                        if (Models.Overall != null)
+                        {
+                            fg.AppendLine(Models.Overall.ToString());
+                        }
+                        if (Models.Specific != null)
+                        {
+                            foreach (var subItem in Models.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"NIFT => {NIFT}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
+                fg.AppendLine($"Fatigue => {Fatigue}");
+                fg.AppendLine($"BarterGold => {BarterGold}");
+                fg.AppendLine($"LevelOffset => {LevelOffset}");
+                fg.AppendLine($"CalcMin => {CalcMin}");
+                fg.AppendLine($"CalcMax => {CalcMax}");
+                fg.AppendLine("Factions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Factions != null)
+                    {
+                        if (Factions.Overall != null)
+                        {
+                            fg.AppendLine(Factions.Overall.ToString());
+                        }
+                        if (Factions.Specific != null)
+                        {
+                            foreach (var subItem in Factions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"DeathItem => {DeathItem}");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Aggression => {Aggression}");
+                fg.AppendLine($"Confidence => {Confidence}");
+                fg.AppendLine($"EnergyLevel => {EnergyLevel}");
+                fg.AppendLine($"Responsibility => {Responsibility}");
+                fg.AppendLine($"BuySellServices => {BuySellServices}");
+                fg.AppendLine($"Teaches => {Teaches}");
+                fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+                fg.AppendLine("AIPackages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (AIPackages != null)
+                    {
+                        if (AIPackages.Overall != null)
+                        {
+                            fg.AppendLine(AIPackages.Overall.ToString());
+                        }
+                        if (AIPackages.Specific != null)
+                        {
+                            foreach (var subItem in AIPackages.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("Animations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Animations != null)
+                    {
+                        if (Animations.Overall != null)
+                        {
+                            fg.AppendLine(Animations.Overall.ToString());
+                        }
+                        if (Animations.Specific != null)
+                        {
+                            foreach (var subItem in Animations.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"CreatureType => {CreatureType}");
+                fg.AppendLine($"CombatSkill => {CombatSkill}");
+                fg.AppendLine($"MagicSkill => {MagicSkill}");
+                fg.AppendLine($"StealthSkill => {StealthSkill}");
+                fg.AppendLine($"SoulLevel => {SoulLevel}");
+                fg.AppendLine($"Health => {Health}");
+                fg.AppendLine($"AttackDamage => {AttackDamage}");
+                fg.AppendLine($"Strength => {Strength}");
+                fg.AppendLine($"Intelligence => {Intelligence}");
+                fg.AppendLine($"Willpower => {Willpower}");
+                fg.AppendLine($"Agility => {Agility}");
+                fg.AppendLine($"Speed => {Speed}");
+                fg.AppendLine($"Endurance => {Endurance}");
+                fg.AppendLine($"Personality => {Personality}");
+                fg.AppendLine($"Luck => {Luck}");
+                fg.AppendLine($"AttackReach => {AttackReach}");
+                fg.AppendLine($"CombatStyle => {CombatStyle}");
+                fg.AppendLine($"TurningSpeed => {TurningSpeed}");
+                fg.AppendLine($"BaseScale => {BaseScale}");
+                fg.AppendLine($"FootWeight => {FootWeight}");
+                fg.AppendLine($"BloodSpray => {BloodSpray}");
+                fg.AppendLine($"BloodDecal => {BloodDecal}");
+                fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
+                fg.AppendLine("Sounds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Sounds != null)
+                    {
+                        if (Sounds.Overall != null)
+                        {
+                            fg.AppendLine(Sounds.Overall.ToString());
+                        }
+                        if (Sounds.Specific != null)
+                        {
+                            foreach (var subItem in Sounds.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
+                fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
+                ret.NIFT = this.NIFT.Combine(rhs.NIFT);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
+                ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
+                ret.BarterGold = this.BarterGold.Combine(rhs.BarterGold);
+                ret.LevelOffset = this.LevelOffset.Combine(rhs.LevelOffset);
+                ret.CalcMin = this.CalcMin.Combine(rhs.CalcMin);
+                ret.CalcMax = this.CalcMax.Combine(rhs.CalcMax);
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Aggression = this.Aggression.Combine(rhs.Aggression);
+                ret.Confidence = this.Confidence.Combine(rhs.Confidence);
+                ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
+                ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
+                ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
+                ret.Teaches = this.Teaches.Combine(rhs.Teaches);
+                ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
+                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.CreatureType = this.CreatureType.Combine(rhs.CreatureType);
+                ret.CombatSkill = this.CombatSkill.Combine(rhs.CombatSkill);
+                ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
+                ret.StealthSkill = this.StealthSkill.Combine(rhs.StealthSkill);
+                ret.SoulLevel = this.SoulLevel.Combine(rhs.SoulLevel);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.AttackDamage = this.AttackDamage.Combine(rhs.AttackDamage);
+                ret.Strength = this.Strength.Combine(rhs.Strength);
+                ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
+                ret.Willpower = this.Willpower.Combine(rhs.Willpower);
+                ret.Agility = this.Agility.Combine(rhs.Agility);
+                ret.Speed = this.Speed.Combine(rhs.Speed);
+                ret.Endurance = this.Endurance.Combine(rhs.Endurance);
+                ret.Personality = this.Personality.Combine(rhs.Personality);
+                ret.Luck = this.Luck.Combine(rhs.Luck);
+                ret.AttackReach = this.AttackReach.Combine(rhs.AttackReach);
+                ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
+                ret.TurningSpeed = this.TurningSpeed.Combine(rhs.TurningSpeed);
+                ret.BaseScale = this.BaseScale.Combine(rhs.BaseScale);
+                ret.FootWeight = this.FootWeight.Combine(rhs.FootWeight);
+                ret.BloodSpray = this.BloodSpray.Combine(rhs.BloodSpray);
+                ret.BloodDecal = this.BloodDecal.Combine(rhs.BloodDecal);
+                ret.InheritsSoundFrom = this.InheritsSoundFrom.Combine(rhs.InheritsSoundFrom);
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
+                ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            NPCAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, ItemEntry.TranslationMask?> Items;
+            public bool Spells;
+            public bool Models;
+            public bool NIFT;
+            public bool Flags;
+            public bool BaseSpellPoints;
+            public bool Fatigue;
+            public bool BarterGold;
+            public bool LevelOffset;
+            public bool CalcMin;
+            public bool CalcMax;
+            public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
+            public bool DeathItem;
+            public bool Script;
+            public bool Aggression;
+            public bool Confidence;
+            public bool EnergyLevel;
+            public bool Responsibility;
+            public bool BuySellServices;
+            public bool Teaches;
+            public bool MaximumTrainingLevel;
+            public bool AIPackages;
+            public bool Animations;
+            public bool CreatureType;
+            public bool CombatSkill;
+            public bool MagicSkill;
+            public bool StealthSkill;
+            public bool SoulLevel;
+            public bool Health;
+            public bool AttackDamage;
+            public bool Strength;
+            public bool Intelligence;
+            public bool Willpower;
+            public bool Agility;
+            public bool Speed;
+            public bool Endurance;
+            public bool Personality;
+            public bool Luck;
+            public bool AttackReach;
+            public bool CombatStyle;
+            public bool TurningSpeed;
+            public bool BaseScale;
+            public bool FootWeight;
+            public bool BloodSpray;
+            public bool BloodDecal;
+            public bool InheritsSoundFrom;
+            public MaskItem<bool, CreatureSound.TranslationMask?> Sounds;
+            public bool ACBSDataTypeState;
+            public bool AIDTDataTypeState;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
+                this.Spells = defaultOn;
+                this.Models = defaultOn;
+                this.NIFT = defaultOn;
+                this.Flags = defaultOn;
+                this.BaseSpellPoints = defaultOn;
+                this.Fatigue = defaultOn;
+                this.BarterGold = defaultOn;
+                this.LevelOffset = defaultOn;
+                this.CalcMin = defaultOn;
+                this.CalcMax = defaultOn;
+                this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
+                this.DeathItem = defaultOn;
+                this.Script = defaultOn;
+                this.Aggression = defaultOn;
+                this.Confidence = defaultOn;
+                this.EnergyLevel = defaultOn;
+                this.Responsibility = defaultOn;
+                this.BuySellServices = defaultOn;
+                this.Teaches = defaultOn;
+                this.MaximumTrainingLevel = defaultOn;
+                this.AIPackages = defaultOn;
+                this.Animations = defaultOn;
+                this.CreatureType = defaultOn;
+                this.CombatSkill = defaultOn;
+                this.MagicSkill = defaultOn;
+                this.StealthSkill = defaultOn;
+                this.SoulLevel = defaultOn;
+                this.Health = defaultOn;
+                this.AttackDamage = defaultOn;
+                this.Strength = defaultOn;
+                this.Intelligence = defaultOn;
+                this.Willpower = defaultOn;
+                this.Agility = defaultOn;
+                this.Speed = defaultOn;
+                this.Endurance = defaultOn;
+                this.Personality = defaultOn;
+                this.Luck = defaultOn;
+                this.AttackReach = defaultOn;
+                this.CombatStyle = defaultOn;
+                this.TurningSpeed = defaultOn;
+                this.BaseScale = defaultOn;
+                this.FootWeight = defaultOn;
+                this.BloodSpray = defaultOn;
+                this.BloodDecal = defaultOn;
+                this.InheritsSoundFrom = defaultOn;
+                this.Sounds = new MaskItem<bool, CreatureSound.TranslationMask?>(defaultOn, null);
+                this.ACBSDataTypeState = defaultOn;
+                this.AIDTDataTypeState = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Spells, null));
+                ret.Add((Models, null));
+                ret.Add((NIFT, null));
+                ret.Add((Flags, null));
+                ret.Add((BaseSpellPoints, null));
+                ret.Add((Fatigue, null));
+                ret.Add((BarterGold, null));
+                ret.Add((LevelOffset, null));
+                ret.Add((CalcMin, null));
+                ret.Add((CalcMax, null));
+                ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+                ret.Add((DeathItem, null));
+                ret.Add((Script, null));
+                ret.Add((Aggression, null));
+                ret.Add((Confidence, null));
+                ret.Add((EnergyLevel, null));
+                ret.Add((Responsibility, null));
+                ret.Add((BuySellServices, null));
+                ret.Add((Teaches, null));
+                ret.Add((MaximumTrainingLevel, null));
+                ret.Add((AIPackages, null));
+                ret.Add((Animations, null));
+                ret.Add((CreatureType, null));
+                ret.Add((CombatSkill, null));
+                ret.Add((MagicSkill, null));
+                ret.Add((StealthSkill, null));
+                ret.Add((SoulLevel, null));
+                ret.Add((Health, null));
+                ret.Add((AttackDamage, null));
+                ret.Add((Strength, null));
+                ret.Add((Intelligence, null));
+                ret.Add((Willpower, null));
+                ret.Add((Agility, null));
+                ret.Add((Speed, null));
+                ret.Add((Endurance, null));
+                ret.Add((Personality, null));
+                ret.Add((Luck, null));
+                ret.Add((AttackReach, null));
+                ret.Add((CombatStyle, null));
+                ret.Add((TurningSpeed, null));
+                ret.Add((BaseScale, null));
+                ret.Add((FootWeight, null));
+                ret.Add((BloodSpray, null));
+                ret.Add((BloodDecal, null));
+                ret.Add((InheritsSoundFrom, null));
+                ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
+                ret.Add((ACBSDataTypeState, null));
+                ret.Add((AIDTDataTypeState, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -1043,7 +3188,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CreatureSetterCommon)((ICreatureGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Creature_Mask<bool> GetEqualsMask(
+        public static Creature.Mask<bool> GetEqualsMask(
             this ICreatureGetter item,
             ICreatureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -1057,7 +3202,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ICreatureGetter item,
             string? name = null,
-            Creature_Mask<bool>? printMask = null)
+            Creature.Mask<bool>? printMask = null)
         {
             return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -1069,7 +3214,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureGetter item,
             FileGeneration fg,
             string? name = null,
-            Creature_Mask<bool>? printMask = null)
+            Creature.Mask<bool>? printMask = null)
         {
             ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -1080,16 +3225,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ICreatureGetter item,
-            Creature_Mask<bool?> checkMask)
+            Creature.Mask<bool?> checkMask)
         {
             return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Creature_Mask<bool> GetHasBeenSetMask(this ICreatureGetter item)
+        public static Creature.Mask<bool> GetHasBeenSetMask(this ICreatureGetter item)
         {
-            var ret = new Creature_Mask<bool>(false);
+            var ret = new Creature.Mask<bool>(false);
             ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -1108,8 +3253,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICreatureInternal lhs,
             ICreatureGetter rhs,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? copyMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((CreatureSetterTranslationCommon)((ICreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -1117,7 +3262,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Creature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -1135,7 +3280,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Creature DeepCopy(
             this ICreatureGetter item,
-            Creature_TranslationMask? copyMask = null)
+            Creature.TranslationMask? copyMask = null)
         {
             return ((CreatureSetterTranslationCommon)((ICreatureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1144,8 +3289,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Creature DeepCopy(
             this ICreatureGetter item,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? copyMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? copyMask = null)
         {
             return ((CreatureSetterTranslationCommon)((ICreatureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1169,7 +3314,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICreatureInternal item,
             XElement node,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -1182,8 +3327,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICreatureInternal item,
             XElement node,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1191,7 +3336,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Creature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -1210,7 +3355,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICreatureInternal item,
             string path,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1222,8 +3367,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICreatureInternal item,
             string path,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1237,7 +3382,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1250,7 +3395,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICreatureInternal item,
             Stream stream,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1262,8 +3407,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICreatureInternal item,
             Stream stream,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1277,7 +3422,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICreatureInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Creature_TranslationMask? translationMask = null)
+            Creature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1406,9 +3551,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 57;
 
-        public static readonly Type MaskType = typeof(Creature_Mask<>);
+        public static readonly Type MaskType = typeof(Creature.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Creature_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Creature.ErrorMask);
 
         public static readonly Type ClassType = typeof(Creature);
 
@@ -2616,12 +4761,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly CreatureCommon Instance = new CreatureCommon();
 
-        public Creature_Mask<bool> GetEqualsMask(
+        public Creature.Mask<bool> GetEqualsMask(
             ICreatureGetter item,
             ICreatureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Creature_Mask<bool>(false);
+            var ret = new Creature.Mask<bool>(false);
             ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -2633,7 +4778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ICreatureGetter item,
             ICreatureGetter rhs,
-            Creature_Mask<bool> ret,
+            Creature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -2720,7 +4865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ICreatureGetter item,
             string? name = null,
-            Creature_Mask<bool>? printMask = null)
+            Creature.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2735,7 +4880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureGetter item,
             FileGeneration fg,
             string? name = null,
-            Creature_Mask<bool>? printMask = null)
+            Creature.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2759,7 +4904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICreatureGetter item,
             FileGeneration fg,
-            Creature_Mask<bool>? printMask = null)
+            Creature.Mask<bool>? printMask = null)
         {
             NPCAbstractCommon.ToStringFields(
                 item: item,
@@ -3075,7 +5220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ICreatureGetter item,
-            Creature_Mask<bool?> checkMask)
+            Creature.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -3105,12 +5250,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ICreatureGetter item,
-            Creature_Mask<bool> mask)
+            Creature.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.Models = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Models.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.NIFT = item.NIFT_IsSet;
@@ -3121,7 +5266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LevelOffset = true;
             mask.CalcMin = true;
             mask.CalcMax = true;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>?>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DeathItem = item.DeathItem.HasBeenSet;
             mask.Script = item.Script.HasBeenSet;
             mask.Aggression = true;
@@ -3156,7 +5301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.BloodSpray = (item.BloodSpray != null);
             mask.BloodDecal = (item.BloodDecal != null);
             mask.InheritsSoundFrom = item.InheritsSoundFrom.HasBeenSet;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound_Mask<bool>?>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound.Mask<bool>?>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ACBSDataTypeState = true;
             mask.AIDTDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -4053,7 +6198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Creature DeepCopy(
             ICreatureGetter item,
-            Creature_TranslationMask? copyMask = null)
+            Creature.TranslationMask? copyMask = null)
         {
             Creature ret = (Creature)((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -4064,8 +6209,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Creature DeepCopy(
             ICreatureGetter item,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? copyMask = null)
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? copyMask = null)
         {
             Creature ret = (Creature)((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -5878,8 +8023,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICreatureGetter item,
             XElement node,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null,
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -5889,14 +8034,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Creature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ICreatureGetter item,
             string path,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null,
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -5912,8 +8057,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICreatureGetter item,
             Stream stream,
-            out Creature_ErrorMask errorMask,
-            Creature_TranslationMask? translationMask = null,
+            out Creature.ErrorMask errorMask,
+            Creature.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -5930,2150 +8075,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Creature_Mask<T> :
-        NPCAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<Creature_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Creature_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ItemEntry_Mask<T>?>>());
-            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Models = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.NIFT = initialValue;
-            this.Flags = initialValue;
-            this.BaseSpellPoints = initialValue;
-            this.Fatigue = initialValue;
-            this.BarterGold = initialValue;
-            this.LevelOffset = initialValue;
-            this.CalcMin = initialValue;
-            this.CalcMax = initialValue;
-            this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RankPlacement_Mask<T>?>>());
-            this.DeathItem = initialValue;
-            this.Script = initialValue;
-            this.Aggression = initialValue;
-            this.Confidence = initialValue;
-            this.EnergyLevel = initialValue;
-            this.Responsibility = initialValue;
-            this.BuySellServices = initialValue;
-            this.Teaches = initialValue;
-            this.MaximumTrainingLevel = initialValue;
-            this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.CreatureType = initialValue;
-            this.CombatSkill = initialValue;
-            this.MagicSkill = initialValue;
-            this.StealthSkill = initialValue;
-            this.SoulLevel = initialValue;
-            this.Health = initialValue;
-            this.AttackDamage = initialValue;
-            this.Strength = initialValue;
-            this.Intelligence = initialValue;
-            this.Willpower = initialValue;
-            this.Agility = initialValue;
-            this.Speed = initialValue;
-            this.Endurance = initialValue;
-            this.Personality = initialValue;
-            this.Luck = initialValue;
-            this.AttackReach = initialValue;
-            this.CombatStyle = initialValue;
-            this.TurningSpeed = initialValue;
-            this.BaseScale = initialValue;
-            this.FootWeight = initialValue;
-            this.BloodSpray = initialValue;
-            this.BloodDecal = initialValue;
-            this.InheritsSoundFrom = initialValue;
-            this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, CreatureSound_Mask<T>?>>());
-            this.ACBSDataTypeState = initialValue;
-            this.AIDTDataTypeState = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Creature_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Items,
-            T Spells,
-            T Models,
-            T NIFT,
-            T Flags,
-            T BaseSpellPoints,
-            T Fatigue,
-            T BarterGold,
-            T LevelOffset,
-            T CalcMin,
-            T CalcMax,
-            T Factions,
-            T DeathItem,
-            T Script,
-            T Aggression,
-            T Confidence,
-            T EnergyLevel,
-            T Responsibility,
-            T BuySellServices,
-            T Teaches,
-            T MaximumTrainingLevel,
-            T AIPackages,
-            T Animations,
-            T CreatureType,
-            T CombatSkill,
-            T MagicSkill,
-            T StealthSkill,
-            T SoulLevel,
-            T Health,
-            T AttackDamage,
-            T Strength,
-            T Intelligence,
-            T Willpower,
-            T Agility,
-            T Speed,
-            T Endurance,
-            T Personality,
-            T Luck,
-            T AttackReach,
-            T CombatStyle,
-            T TurningSpeed,
-            T BaseScale,
-            T FootWeight,
-            T BloodSpray,
-            T BloodDecal,
-            T InheritsSoundFrom,
-            T Sounds,
-            T ACBSDataTypeState,
-            T AIDTDataTypeState,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ItemEntry_Mask<T>?>>());
-            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
-            this.Models = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Models, Enumerable.Empty<(int Index, T Value)>());
-            this.NIFT = NIFT;
-            this.Flags = Flags;
-            this.BaseSpellPoints = BaseSpellPoints;
-            this.Fatigue = Fatigue;
-            this.BarterGold = BarterGold;
-            this.LevelOffset = LevelOffset;
-            this.CalcMin = CalcMin;
-            this.CalcMax = CalcMax;
-            this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>?>>>(Factions, Enumerable.Empty<MaskItemIndexed<T, RankPlacement_Mask<T>?>>());
-            this.DeathItem = DeathItem;
-            this.Script = Script;
-            this.Aggression = Aggression;
-            this.Confidence = Confidence;
-            this.EnergyLevel = EnergyLevel;
-            this.Responsibility = Responsibility;
-            this.BuySellServices = BuySellServices;
-            this.Teaches = Teaches;
-            this.MaximumTrainingLevel = MaximumTrainingLevel;
-            this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(AIPackages, Enumerable.Empty<(int Index, T Value)>());
-            this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Animations, Enumerable.Empty<(int Index, T Value)>());
-            this.CreatureType = CreatureType;
-            this.CombatSkill = CombatSkill;
-            this.MagicSkill = MagicSkill;
-            this.StealthSkill = StealthSkill;
-            this.SoulLevel = SoulLevel;
-            this.Health = Health;
-            this.AttackDamage = AttackDamage;
-            this.Strength = Strength;
-            this.Intelligence = Intelligence;
-            this.Willpower = Willpower;
-            this.Agility = Agility;
-            this.Speed = Speed;
-            this.Endurance = Endurance;
-            this.Personality = Personality;
-            this.Luck = Luck;
-            this.AttackReach = AttackReach;
-            this.CombatStyle = CombatStyle;
-            this.TurningSpeed = TurningSpeed;
-            this.BaseScale = BaseScale;
-            this.FootWeight = FootWeight;
-            this.BloodSpray = BloodSpray;
-            this.BloodDecal = BloodDecal;
-            this.InheritsSoundFrom = InheritsSoundFrom;
-            this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound_Mask<T>?>>>(Sounds, Enumerable.Empty<MaskItemIndexed<T, CreatureSound_Mask<T>?>>());
-            this.ACBSDataTypeState = ACBSDataTypeState;
-            this.AIDTDataTypeState = AIDTDataTypeState;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Creature_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>?>>>? Items;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Models;
-        public T NIFT;
-        public T Flags;
-        public T BaseSpellPoints;
-        public T Fatigue;
-        public T BarterGold;
-        public T LevelOffset;
-        public T CalcMin;
-        public T CalcMax;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>?>>>? Factions;
-        public T DeathItem;
-        public T Script;
-        public T Aggression;
-        public T Confidence;
-        public T EnergyLevel;
-        public T Responsibility;
-        public T BuySellServices;
-        public T Teaches;
-        public T MaximumTrainingLevel;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? AIPackages;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Animations;
-        public T CreatureType;
-        public T CombatSkill;
-        public T MagicSkill;
-        public T StealthSkill;
-        public T SoulLevel;
-        public T Health;
-        public T AttackDamage;
-        public T Strength;
-        public T Intelligence;
-        public T Willpower;
-        public T Agility;
-        public T Speed;
-        public T Endurance;
-        public T Personality;
-        public T Luck;
-        public T AttackReach;
-        public T CombatStyle;
-        public T TurningSpeed;
-        public T BaseScale;
-        public T FootWeight;
-        public T BloodSpray;
-        public T BloodDecal;
-        public T InheritsSoundFrom;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, CreatureSound_Mask<T>?>>>? Sounds;
-        public T ACBSDataTypeState;
-        public T AIDTDataTypeState;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Creature_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Creature_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Items, rhs.Items)) return false;
-            if (!object.Equals(this.Spells, rhs.Spells)) return false;
-            if (!object.Equals(this.Models, rhs.Models)) return false;
-            if (!object.Equals(this.NIFT, rhs.NIFT)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
-            if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
-            if (!object.Equals(this.BarterGold, rhs.BarterGold)) return false;
-            if (!object.Equals(this.LevelOffset, rhs.LevelOffset)) return false;
-            if (!object.Equals(this.CalcMin, rhs.CalcMin)) return false;
-            if (!object.Equals(this.CalcMax, rhs.CalcMax)) return false;
-            if (!object.Equals(this.Factions, rhs.Factions)) return false;
-            if (!object.Equals(this.DeathItem, rhs.DeathItem)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Aggression, rhs.Aggression)) return false;
-            if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
-            if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
-            if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
-            if (!object.Equals(this.BuySellServices, rhs.BuySellServices)) return false;
-            if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
-            if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
-            if (!object.Equals(this.Animations, rhs.Animations)) return false;
-            if (!object.Equals(this.CreatureType, rhs.CreatureType)) return false;
-            if (!object.Equals(this.CombatSkill, rhs.CombatSkill)) return false;
-            if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
-            if (!object.Equals(this.StealthSkill, rhs.StealthSkill)) return false;
-            if (!object.Equals(this.SoulLevel, rhs.SoulLevel)) return false;
-            if (!object.Equals(this.Health, rhs.Health)) return false;
-            if (!object.Equals(this.AttackDamage, rhs.AttackDamage)) return false;
-            if (!object.Equals(this.Strength, rhs.Strength)) return false;
-            if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
-            if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
-            if (!object.Equals(this.Agility, rhs.Agility)) return false;
-            if (!object.Equals(this.Speed, rhs.Speed)) return false;
-            if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
-            if (!object.Equals(this.Personality, rhs.Personality)) return false;
-            if (!object.Equals(this.Luck, rhs.Luck)) return false;
-            if (!object.Equals(this.AttackReach, rhs.AttackReach)) return false;
-            if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
-            if (!object.Equals(this.TurningSpeed, rhs.TurningSpeed)) return false;
-            if (!object.Equals(this.BaseScale, rhs.BaseScale)) return false;
-            if (!object.Equals(this.FootWeight, rhs.FootWeight)) return false;
-            if (!object.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
-            if (!object.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
-            if (!object.Equals(this.InheritsSoundFrom, rhs.InheritsSoundFrom)) return false;
-            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-            if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
-            if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Items?.GetHashCode());
-            ret = ret.CombineHashCode(this.Spells?.GetHashCode());
-            ret = ret.CombineHashCode(this.Models?.GetHashCode());
-            ret = ret.CombineHashCode(this.NIFT?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
-            ret = ret.CombineHashCode(this.BarterGold?.GetHashCode());
-            ret = ret.CombineHashCode(this.LevelOffset?.GetHashCode());
-            ret = ret.CombineHashCode(this.CalcMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.CalcMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.Factions?.GetHashCode());
-            ret = ret.CombineHashCode(this.DeathItem?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Aggression?.GetHashCode());
-            ret = ret.CombineHashCode(this.Confidence?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnergyLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Responsibility?.GetHashCode());
-            ret = ret.CombineHashCode(this.BuySellServices?.GetHashCode());
-            ret = ret.CombineHashCode(this.Teaches?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
-            ret = ret.CombineHashCode(this.Animations?.GetHashCode());
-            ret = ret.CombineHashCode(this.CreatureType?.GetHashCode());
-            ret = ret.CombineHashCode(this.CombatSkill?.GetHashCode());
-            ret = ret.CombineHashCode(this.MagicSkill?.GetHashCode());
-            ret = ret.CombineHashCode(this.StealthSkill?.GetHashCode());
-            ret = ret.CombineHashCode(this.SoulLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Health?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackDamage?.GetHashCode());
-            ret = ret.CombineHashCode(this.Strength?.GetHashCode());
-            ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
-            ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
-            ret = ret.CombineHashCode(this.Agility?.GetHashCode());
-            ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-            ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
-            ret = ret.CombineHashCode(this.Personality?.GetHashCode());
-            ret = ret.CombineHashCode(this.Luck?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackReach?.GetHashCode());
-            ret = ret.CombineHashCode(this.CombatStyle?.GetHashCode());
-            ret = ret.CombineHashCode(this.TurningSpeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.BaseScale?.GetHashCode());
-            ret = ret.CombineHashCode(this.FootWeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.BloodSpray?.GetHashCode());
-            ret = ret.CombineHashCode(this.BloodDecal?.GetHashCode());
-            ret = ret.CombineHashCode(this.InheritsSoundFrom?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
-            ret = ret.CombineHashCode(this.ACBSDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(this.AIDTDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (this.Items != null)
-            {
-                if (!eval(this.Items.Overall)) return false;
-                if (this.Items.Specific != null)
-                {
-                    foreach (var item in this.Items.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (this.Spells != null)
-            {
-                if (!eval(this.Spells.Overall)) return false;
-                if (this.Spells.Specific != null)
-                {
-                    foreach (var item in this.Spells.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (this.Models != null)
-            {
-                if (!eval(this.Models.Overall)) return false;
-                if (this.Models.Specific != null)
-                {
-                    foreach (var item in this.Models.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.NIFT)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.BaseSpellPoints)) return false;
-            if (!eval(this.Fatigue)) return false;
-            if (!eval(this.BarterGold)) return false;
-            if (!eval(this.LevelOffset)) return false;
-            if (!eval(this.CalcMin)) return false;
-            if (!eval(this.CalcMax)) return false;
-            if (this.Factions != null)
-            {
-                if (!eval(this.Factions.Overall)) return false;
-                if (this.Factions.Specific != null)
-                {
-                    foreach (var item in this.Factions.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.DeathItem)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Aggression)) return false;
-            if (!eval(this.Confidence)) return false;
-            if (!eval(this.EnergyLevel)) return false;
-            if (!eval(this.Responsibility)) return false;
-            if (!eval(this.BuySellServices)) return false;
-            if (!eval(this.Teaches)) return false;
-            if (!eval(this.MaximumTrainingLevel)) return false;
-            if (this.AIPackages != null)
-            {
-                if (!eval(this.AIPackages.Overall)) return false;
-                if (this.AIPackages.Specific != null)
-                {
-                    foreach (var item in this.AIPackages.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (this.Animations != null)
-            {
-                if (!eval(this.Animations.Overall)) return false;
-                if (this.Animations.Specific != null)
-                {
-                    foreach (var item in this.Animations.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.CreatureType)) return false;
-            if (!eval(this.CombatSkill)) return false;
-            if (!eval(this.MagicSkill)) return false;
-            if (!eval(this.StealthSkill)) return false;
-            if (!eval(this.SoulLevel)) return false;
-            if (!eval(this.Health)) return false;
-            if (!eval(this.AttackDamage)) return false;
-            if (!eval(this.Strength)) return false;
-            if (!eval(this.Intelligence)) return false;
-            if (!eval(this.Willpower)) return false;
-            if (!eval(this.Agility)) return false;
-            if (!eval(this.Speed)) return false;
-            if (!eval(this.Endurance)) return false;
-            if (!eval(this.Personality)) return false;
-            if (!eval(this.Luck)) return false;
-            if (!eval(this.AttackReach)) return false;
-            if (!eval(this.CombatStyle)) return false;
-            if (!eval(this.TurningSpeed)) return false;
-            if (!eval(this.BaseScale)) return false;
-            if (!eval(this.FootWeight)) return false;
-            if (!eval(this.BloodSpray)) return false;
-            if (!eval(this.BloodDecal)) return false;
-            if (!eval(this.InheritsSoundFrom)) return false;
-            if (this.Sounds != null)
-            {
-                if (!eval(this.Sounds.Overall)) return false;
-                if (this.Sounds.Specific != null)
-                {
-                    foreach (var item in this.Sounds.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.ACBSDataTypeState)) return false;
-            if (!eval(this.AIDTDataTypeState)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Creature_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Creature_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Creature_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            if (Items != null)
-            {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry_Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemEntry_Mask<R>?>>());
-                if (Items.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, ItemEntry_Mask<R>?>>();
-                    obj.Items.Specific = l;
-                    foreach (var item in Items.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, ItemEntry_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ItemEntry_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            if (Spells != null)
-            {
-                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Spells.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Spells.Specific = l;
-                    foreach (var item in Spells.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            if (Models != null)
-            {
-                obj.Models = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Models.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Models.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Models.Specific = l;
-                    foreach (var item in Models.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.NIFT = eval(this.NIFT);
-            obj.Flags = eval(this.Flags);
-            obj.BaseSpellPoints = eval(this.BaseSpellPoints);
-            obj.Fatigue = eval(this.Fatigue);
-            obj.BarterGold = eval(this.BarterGold);
-            obj.LevelOffset = eval(this.LevelOffset);
-            obj.CalcMin = eval(this.CalcMin);
-            obj.CalcMax = eval(this.CalcMax);
-            if (Factions != null)
-            {
-                obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement_Mask<R>?>>>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement_Mask<R>?>>());
-                if (Factions.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, RankPlacement_Mask<R>?>>();
-                    obj.Factions.Specific = l;
-                    foreach (var item in Factions.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, RankPlacement_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RankPlacement_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.DeathItem = eval(this.DeathItem);
-            obj.Script = eval(this.Script);
-            obj.Aggression = eval(this.Aggression);
-            obj.Confidence = eval(this.Confidence);
-            obj.EnergyLevel = eval(this.EnergyLevel);
-            obj.Responsibility = eval(this.Responsibility);
-            obj.BuySellServices = eval(this.BuySellServices);
-            obj.Teaches = eval(this.Teaches);
-            obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-            if (AIPackages != null)
-            {
-                obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.AIPackages.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (AIPackages.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.AIPackages.Specific = l;
-                    foreach (var item in AIPackages.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            if (Animations != null)
-            {
-                obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Animations.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Animations.Specific = l;
-                    foreach (var item in Animations.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.CreatureType = eval(this.CreatureType);
-            obj.CombatSkill = eval(this.CombatSkill);
-            obj.MagicSkill = eval(this.MagicSkill);
-            obj.StealthSkill = eval(this.StealthSkill);
-            obj.SoulLevel = eval(this.SoulLevel);
-            obj.Health = eval(this.Health);
-            obj.AttackDamage = eval(this.AttackDamage);
-            obj.Strength = eval(this.Strength);
-            obj.Intelligence = eval(this.Intelligence);
-            obj.Willpower = eval(this.Willpower);
-            obj.Agility = eval(this.Agility);
-            obj.Speed = eval(this.Speed);
-            obj.Endurance = eval(this.Endurance);
-            obj.Personality = eval(this.Personality);
-            obj.Luck = eval(this.Luck);
-            obj.AttackReach = eval(this.AttackReach);
-            obj.CombatStyle = eval(this.CombatStyle);
-            obj.TurningSpeed = eval(this.TurningSpeed);
-            obj.BaseScale = eval(this.BaseScale);
-            obj.FootWeight = eval(this.FootWeight);
-            obj.BloodSpray = eval(this.BloodSpray);
-            obj.BloodDecal = eval(this.BloodDecal);
-            obj.InheritsSoundFrom = eval(this.InheritsSoundFrom);
-            if (Sounds != null)
-            {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CreatureSound_Mask<R>?>>>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, CreatureSound_Mask<R>?>>());
-                if (Sounds.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, CreatureSound_Mask<R>?>>();
-                    obj.Sounds.Specific = l;
-                    foreach (var item in Sounds.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, CreatureSound_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CreatureSound_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
-            obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Creature_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Creature_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Creature_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Items?.Overall ?? true)
-                {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Items != null)
-                        {
-                            if (Items.Overall != null)
-                            {
-                                fg.AppendLine(Items.Overall.ToString());
-                            }
-                            if (Items.Specific != null)
-                            {
-                                foreach (var subItem in Items.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Spells != null)
-                        {
-                            if (Spells.Overall != null)
-                            {
-                                fg.AppendLine(Spells.Overall.ToString());
-                            }
-                            if (Spells.Specific != null)
-                            {
-                                foreach (var subItem in Spells.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Models?.Overall ?? true)
-                {
-                    fg.AppendLine("Models =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Models != null)
-                        {
-                            if (Models.Overall != null)
-                            {
-                                fg.AppendLine(Models.Overall.ToString());
-                            }
-                            if (Models.Specific != null)
-                            {
-                                foreach (var subItem in Models.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.NIFT ?? true)
-                {
-                    fg.AppendLine($"NIFT => {NIFT}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.BaseSpellPoints ?? true)
-                {
-                    fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
-                }
-                if (printMask?.Fatigue ?? true)
-                {
-                    fg.AppendLine($"Fatigue => {Fatigue}");
-                }
-                if (printMask?.BarterGold ?? true)
-                {
-                    fg.AppendLine($"BarterGold => {BarterGold}");
-                }
-                if (printMask?.LevelOffset ?? true)
-                {
-                    fg.AppendLine($"LevelOffset => {LevelOffset}");
-                }
-                if (printMask?.CalcMin ?? true)
-                {
-                    fg.AppendLine($"CalcMin => {CalcMin}");
-                }
-                if (printMask?.CalcMax ?? true)
-                {
-                    fg.AppendLine($"CalcMax => {CalcMax}");
-                }
-                if (printMask?.Factions?.Overall ?? true)
-                {
-                    fg.AppendLine("Factions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Factions != null)
-                        {
-                            if (Factions.Overall != null)
-                            {
-                                fg.AppendLine(Factions.Overall.ToString());
-                            }
-                            if (Factions.Specific != null)
-                            {
-                                foreach (var subItem in Factions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.DeathItem ?? true)
-                {
-                    fg.AppendLine($"DeathItem => {DeathItem}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Aggression ?? true)
-                {
-                    fg.AppendLine($"Aggression => {Aggression}");
-                }
-                if (printMask?.Confidence ?? true)
-                {
-                    fg.AppendLine($"Confidence => {Confidence}");
-                }
-                if (printMask?.EnergyLevel ?? true)
-                {
-                    fg.AppendLine($"EnergyLevel => {EnergyLevel}");
-                }
-                if (printMask?.Responsibility ?? true)
-                {
-                    fg.AppendLine($"Responsibility => {Responsibility}");
-                }
-                if (printMask?.BuySellServices ?? true)
-                {
-                    fg.AppendLine($"BuySellServices => {BuySellServices}");
-                }
-                if (printMask?.Teaches ?? true)
-                {
-                    fg.AppendLine($"Teaches => {Teaches}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
-                }
-                if (printMask?.AIPackages?.Overall ?? true)
-                {
-                    fg.AppendLine("AIPackages =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (AIPackages != null)
-                        {
-                            if (AIPackages.Overall != null)
-                            {
-                                fg.AppendLine(AIPackages.Overall.ToString());
-                            }
-                            if (AIPackages.Specific != null)
-                            {
-                                foreach (var subItem in AIPackages.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Animations?.Overall ?? true)
-                {
-                    fg.AppendLine("Animations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Animations != null)
-                        {
-                            if (Animations.Overall != null)
-                            {
-                                fg.AppendLine(Animations.Overall.ToString());
-                            }
-                            if (Animations.Specific != null)
-                            {
-                                foreach (var subItem in Animations.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.CreatureType ?? true)
-                {
-                    fg.AppendLine($"CreatureType => {CreatureType}");
-                }
-                if (printMask?.CombatSkill ?? true)
-                {
-                    fg.AppendLine($"CombatSkill => {CombatSkill}");
-                }
-                if (printMask?.MagicSkill ?? true)
-                {
-                    fg.AppendLine($"MagicSkill => {MagicSkill}");
-                }
-                if (printMask?.StealthSkill ?? true)
-                {
-                    fg.AppendLine($"StealthSkill => {StealthSkill}");
-                }
-                if (printMask?.SoulLevel ?? true)
-                {
-                    fg.AppendLine($"SoulLevel => {SoulLevel}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {Health}");
-                }
-                if (printMask?.AttackDamage ?? true)
-                {
-                    fg.AppendLine($"AttackDamage => {AttackDamage}");
-                }
-                if (printMask?.Strength ?? true)
-                {
-                    fg.AppendLine($"Strength => {Strength}");
-                }
-                if (printMask?.Intelligence ?? true)
-                {
-                    fg.AppendLine($"Intelligence => {Intelligence}");
-                }
-                if (printMask?.Willpower ?? true)
-                {
-                    fg.AppendLine($"Willpower => {Willpower}");
-                }
-                if (printMask?.Agility ?? true)
-                {
-                    fg.AppendLine($"Agility => {Agility}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {Speed}");
-                }
-                if (printMask?.Endurance ?? true)
-                {
-                    fg.AppendLine($"Endurance => {Endurance}");
-                }
-                if (printMask?.Personality ?? true)
-                {
-                    fg.AppendLine($"Personality => {Personality}");
-                }
-                if (printMask?.Luck ?? true)
-                {
-                    fg.AppendLine($"Luck => {Luck}");
-                }
-                if (printMask?.AttackReach ?? true)
-                {
-                    fg.AppendLine($"AttackReach => {AttackReach}");
-                }
-                if (printMask?.CombatStyle ?? true)
-                {
-                    fg.AppendLine($"CombatStyle => {CombatStyle}");
-                }
-                if (printMask?.TurningSpeed ?? true)
-                {
-                    fg.AppendLine($"TurningSpeed => {TurningSpeed}");
-                }
-                if (printMask?.BaseScale ?? true)
-                {
-                    fg.AppendLine($"BaseScale => {BaseScale}");
-                }
-                if (printMask?.FootWeight ?? true)
-                {
-                    fg.AppendLine($"FootWeight => {FootWeight}");
-                }
-                if (printMask?.BloodSpray ?? true)
-                {
-                    fg.AppendLine($"BloodSpray => {BloodSpray}");
-                }
-                if (printMask?.BloodDecal ?? true)
-                {
-                    fg.AppendLine($"BloodDecal => {BloodDecal}");
-                }
-                if (printMask?.InheritsSoundFrom ?? true)
-                {
-                    fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
-                }
-                if (printMask?.Sounds?.Overall ?? true)
-                {
-                    fg.AppendLine("Sounds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Sounds != null)
-                        {
-                            if (Sounds.Overall != null)
-                            {
-                                fg.AppendLine(Sounds.Overall.ToString());
-                            }
-                            if (Sounds.Specific != null)
-                            {
-                                foreach (var subItem in Sounds.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.ACBSDataTypeState ?? true)
-                {
-                    fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
-                }
-                if (printMask?.AIDTDataTypeState ?? true)
-                {
-                    fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Creature_ErrorMask : NPCAbstract_ErrorMask, IErrorMask<Creature_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>? Items;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Models;
-        public Exception? NIFT;
-        public Exception? Flags;
-        public Exception? BaseSpellPoints;
-        public Exception? Fatigue;
-        public Exception? BarterGold;
-        public Exception? LevelOffset;
-        public Exception? CalcMin;
-        public Exception? CalcMax;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>? Factions;
-        public Exception? DeathItem;
-        public Exception? Script;
-        public Exception? Aggression;
-        public Exception? Confidence;
-        public Exception? EnergyLevel;
-        public Exception? Responsibility;
-        public Exception? BuySellServices;
-        public Exception? Teaches;
-        public Exception? MaximumTrainingLevel;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AIPackages;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
-        public Exception? CreatureType;
-        public Exception? CombatSkill;
-        public Exception? MagicSkill;
-        public Exception? StealthSkill;
-        public Exception? SoulLevel;
-        public Exception? Health;
-        public Exception? AttackDamage;
-        public Exception? Strength;
-        public Exception? Intelligence;
-        public Exception? Willpower;
-        public Exception? Agility;
-        public Exception? Speed;
-        public Exception? Endurance;
-        public Exception? Personality;
-        public Exception? Luck;
-        public Exception? AttackReach;
-        public Exception? CombatStyle;
-        public Exception? TurningSpeed;
-        public Exception? BaseScale;
-        public Exception? FootWeight;
-        public Exception? BloodSpray;
-        public Exception? BloodDecal;
-        public Exception? InheritsSoundFrom;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound_ErrorMask?>>?>? Sounds;
-        public Exception? ACBSDataTypeState;
-        public Exception? AIDTDataTypeState;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    return Name;
-                case Creature_FieldIndex.Model:
-                    return Model;
-                case Creature_FieldIndex.Items:
-                    return Items;
-                case Creature_FieldIndex.Spells:
-                    return Spells;
-                case Creature_FieldIndex.Models:
-                    return Models;
-                case Creature_FieldIndex.NIFT:
-                    return NIFT;
-                case Creature_FieldIndex.Flags:
-                    return Flags;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    return BaseSpellPoints;
-                case Creature_FieldIndex.Fatigue:
-                    return Fatigue;
-                case Creature_FieldIndex.BarterGold:
-                    return BarterGold;
-                case Creature_FieldIndex.LevelOffset:
-                    return LevelOffset;
-                case Creature_FieldIndex.CalcMin:
-                    return CalcMin;
-                case Creature_FieldIndex.CalcMax:
-                    return CalcMax;
-                case Creature_FieldIndex.Factions:
-                    return Factions;
-                case Creature_FieldIndex.DeathItem:
-                    return DeathItem;
-                case Creature_FieldIndex.Script:
-                    return Script;
-                case Creature_FieldIndex.Aggression:
-                    return Aggression;
-                case Creature_FieldIndex.Confidence:
-                    return Confidence;
-                case Creature_FieldIndex.EnergyLevel:
-                    return EnergyLevel;
-                case Creature_FieldIndex.Responsibility:
-                    return Responsibility;
-                case Creature_FieldIndex.BuySellServices:
-                    return BuySellServices;
-                case Creature_FieldIndex.Teaches:
-                    return Teaches;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    return MaximumTrainingLevel;
-                case Creature_FieldIndex.AIPackages:
-                    return AIPackages;
-                case Creature_FieldIndex.Animations:
-                    return Animations;
-                case Creature_FieldIndex.CreatureType:
-                    return CreatureType;
-                case Creature_FieldIndex.CombatSkill:
-                    return CombatSkill;
-                case Creature_FieldIndex.MagicSkill:
-                    return MagicSkill;
-                case Creature_FieldIndex.StealthSkill:
-                    return StealthSkill;
-                case Creature_FieldIndex.SoulLevel:
-                    return SoulLevel;
-                case Creature_FieldIndex.Health:
-                    return Health;
-                case Creature_FieldIndex.AttackDamage:
-                    return AttackDamage;
-                case Creature_FieldIndex.Strength:
-                    return Strength;
-                case Creature_FieldIndex.Intelligence:
-                    return Intelligence;
-                case Creature_FieldIndex.Willpower:
-                    return Willpower;
-                case Creature_FieldIndex.Agility:
-                    return Agility;
-                case Creature_FieldIndex.Speed:
-                    return Speed;
-                case Creature_FieldIndex.Endurance:
-                    return Endurance;
-                case Creature_FieldIndex.Personality:
-                    return Personality;
-                case Creature_FieldIndex.Luck:
-                    return Luck;
-                case Creature_FieldIndex.AttackReach:
-                    return AttackReach;
-                case Creature_FieldIndex.CombatStyle:
-                    return CombatStyle;
-                case Creature_FieldIndex.TurningSpeed:
-                    return TurningSpeed;
-                case Creature_FieldIndex.BaseScale:
-                    return BaseScale;
-                case Creature_FieldIndex.FootWeight:
-                    return FootWeight;
-                case Creature_FieldIndex.BloodSpray:
-                    return BloodSpray;
-                case Creature_FieldIndex.BloodDecal:
-                    return BloodDecal;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return InheritsSoundFrom;
-                case Creature_FieldIndex.Sounds:
-                    return Sounds;
-                case Creature_FieldIndex.ACBSDataTypeState:
-                    return ACBSDataTypeState;
-                case Creature_FieldIndex.AIDTDataTypeState:
-                    return AIDTDataTypeState;
-                case Creature_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Creature_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Creature_FieldIndex.Items:
-                    this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.Models:
-                    this.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.NIFT:
-                    this.NIFT = ex;
-                    break;
-                case Creature_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    this.BaseSpellPoints = ex;
-                    break;
-                case Creature_FieldIndex.Fatigue:
-                    this.Fatigue = ex;
-                    break;
-                case Creature_FieldIndex.BarterGold:
-                    this.BarterGold = ex;
-                    break;
-                case Creature_FieldIndex.LevelOffset:
-                    this.LevelOffset = ex;
-                    break;
-                case Creature_FieldIndex.CalcMin:
-                    this.CalcMin = ex;
-                    break;
-                case Creature_FieldIndex.CalcMax:
-                    this.CalcMax = ex;
-                    break;
-                case Creature_FieldIndex.Factions:
-                    this.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.DeathItem:
-                    this.DeathItem = ex;
-                    break;
-                case Creature_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Creature_FieldIndex.Aggression:
-                    this.Aggression = ex;
-                    break;
-                case Creature_FieldIndex.Confidence:
-                    this.Confidence = ex;
-                    break;
-                case Creature_FieldIndex.EnergyLevel:
-                    this.EnergyLevel = ex;
-                    break;
-                case Creature_FieldIndex.Responsibility:
-                    this.Responsibility = ex;
-                    break;
-                case Creature_FieldIndex.BuySellServices:
-                    this.BuySellServices = ex;
-                    break;
-                case Creature_FieldIndex.Teaches:
-                    this.Teaches = ex;
-                    break;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = ex;
-                    break;
-                case Creature_FieldIndex.AIPackages:
-                    this.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.Animations:
-                    this.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.CreatureType:
-                    this.CreatureType = ex;
-                    break;
-                case Creature_FieldIndex.CombatSkill:
-                    this.CombatSkill = ex;
-                    break;
-                case Creature_FieldIndex.MagicSkill:
-                    this.MagicSkill = ex;
-                    break;
-                case Creature_FieldIndex.StealthSkill:
-                    this.StealthSkill = ex;
-                    break;
-                case Creature_FieldIndex.SoulLevel:
-                    this.SoulLevel = ex;
-                    break;
-                case Creature_FieldIndex.Health:
-                    this.Health = ex;
-                    break;
-                case Creature_FieldIndex.AttackDamage:
-                    this.AttackDamage = ex;
-                    break;
-                case Creature_FieldIndex.Strength:
-                    this.Strength = ex;
-                    break;
-                case Creature_FieldIndex.Intelligence:
-                    this.Intelligence = ex;
-                    break;
-                case Creature_FieldIndex.Willpower:
-                    this.Willpower = ex;
-                    break;
-                case Creature_FieldIndex.Agility:
-                    this.Agility = ex;
-                    break;
-                case Creature_FieldIndex.Speed:
-                    this.Speed = ex;
-                    break;
-                case Creature_FieldIndex.Endurance:
-                    this.Endurance = ex;
-                    break;
-                case Creature_FieldIndex.Personality:
-                    this.Personality = ex;
-                    break;
-                case Creature_FieldIndex.Luck:
-                    this.Luck = ex;
-                    break;
-                case Creature_FieldIndex.AttackReach:
-                    this.AttackReach = ex;
-                    break;
-                case Creature_FieldIndex.CombatStyle:
-                    this.CombatStyle = ex;
-                    break;
-                case Creature_FieldIndex.TurningSpeed:
-                    this.TurningSpeed = ex;
-                    break;
-                case Creature_FieldIndex.BaseScale:
-                    this.BaseScale = ex;
-                    break;
-                case Creature_FieldIndex.FootWeight:
-                    this.FootWeight = ex;
-                    break;
-                case Creature_FieldIndex.BloodSpray:
-                    this.BloodSpray = ex;
-                    break;
-                case Creature_FieldIndex.BloodDecal:
-                    this.BloodDecal = ex;
-                    break;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    this.InheritsSoundFrom = ex;
-                    break;
-                case Creature_FieldIndex.Sounds:
-                    this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound_ErrorMask?>>?>(ex, null);
-                    break;
-                case Creature_FieldIndex.ACBSDataTypeState:
-                    this.ACBSDataTypeState = ex;
-                    break;
-                case Creature_FieldIndex.AIDTDataTypeState:
-                    this.AIDTDataTypeState = ex;
-                    break;
-                case Creature_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Creature_FieldIndex enu = (Creature_FieldIndex)index;
-            switch (enu)
-            {
-                case Creature_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Creature_FieldIndex.Items:
-                    this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>)obj;
-                    break;
-                case Creature_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Creature_FieldIndex.Models:
-                    this.Models = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Creature_FieldIndex.NIFT:
-                    this.NIFT = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.BaseSpellPoints:
-                    this.BaseSpellPoints = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Fatigue:
-                    this.Fatigue = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.BarterGold:
-                    this.BarterGold = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.LevelOffset:
-                    this.LevelOffset = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.CalcMin:
-                    this.CalcMin = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.CalcMax:
-                    this.CalcMax = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Factions:
-                    this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>)obj;
-                    break;
-                case Creature_FieldIndex.DeathItem:
-                    this.DeathItem = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Aggression:
-                    this.Aggression = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Confidence:
-                    this.Confidence = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.EnergyLevel:
-                    this.EnergyLevel = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Responsibility:
-                    this.Responsibility = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.BuySellServices:
-                    this.BuySellServices = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Teaches:
-                    this.Teaches = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.AIPackages:
-                    this.AIPackages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Creature_FieldIndex.Animations:
-                    this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Creature_FieldIndex.CreatureType:
-                    this.CreatureType = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.CombatSkill:
-                    this.CombatSkill = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.MagicSkill:
-                    this.MagicSkill = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.StealthSkill:
-                    this.StealthSkill = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.SoulLevel:
-                    this.SoulLevel = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Health:
-                    this.Health = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.AttackDamage:
-                    this.AttackDamage = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Strength:
-                    this.Strength = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Intelligence:
-                    this.Intelligence = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Willpower:
-                    this.Willpower = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Agility:
-                    this.Agility = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Speed:
-                    this.Speed = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Endurance:
-                    this.Endurance = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Personality:
-                    this.Personality = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Luck:
-                    this.Luck = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.AttackReach:
-                    this.AttackReach = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.CombatStyle:
-                    this.CombatStyle = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.TurningSpeed:
-                    this.TurningSpeed = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.BaseScale:
-                    this.BaseScale = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.FootWeight:
-                    this.FootWeight = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.BloodSpray:
-                    this.BloodSpray = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.BloodDecal:
-                    this.BloodDecal = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    this.InheritsSoundFrom = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.Sounds:
-                    this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound_ErrorMask?>>?>)obj;
-                    break;
-                case Creature_FieldIndex.ACBSDataTypeState:
-                    this.ACBSDataTypeState = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.AIDTDataTypeState:
-                    this.AIDTDataTypeState = (Exception)obj;
-                    break;
-                case Creature_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Items != null) return true;
-            if (Spells != null) return true;
-            if (Models != null) return true;
-            if (NIFT != null) return true;
-            if (Flags != null) return true;
-            if (BaseSpellPoints != null) return true;
-            if (Fatigue != null) return true;
-            if (BarterGold != null) return true;
-            if (LevelOffset != null) return true;
-            if (CalcMin != null) return true;
-            if (CalcMax != null) return true;
-            if (Factions != null) return true;
-            if (DeathItem != null) return true;
-            if (Script != null) return true;
-            if (Aggression != null) return true;
-            if (Confidence != null) return true;
-            if (EnergyLevel != null) return true;
-            if (Responsibility != null) return true;
-            if (BuySellServices != null) return true;
-            if (Teaches != null) return true;
-            if (MaximumTrainingLevel != null) return true;
-            if (AIPackages != null) return true;
-            if (Animations != null) return true;
-            if (CreatureType != null) return true;
-            if (CombatSkill != null) return true;
-            if (MagicSkill != null) return true;
-            if (StealthSkill != null) return true;
-            if (SoulLevel != null) return true;
-            if (Health != null) return true;
-            if (AttackDamage != null) return true;
-            if (Strength != null) return true;
-            if (Intelligence != null) return true;
-            if (Willpower != null) return true;
-            if (Agility != null) return true;
-            if (Speed != null) return true;
-            if (Endurance != null) return true;
-            if (Personality != null) return true;
-            if (Luck != null) return true;
-            if (AttackReach != null) return true;
-            if (CombatStyle != null) return true;
-            if (TurningSpeed != null) return true;
-            if (BaseScale != null) return true;
-            if (FootWeight != null) return true;
-            if (BloodSpray != null) return true;
-            if (BloodDecal != null) return true;
-            if (InheritsSoundFrom != null) return true;
-            if (Sounds != null) return true;
-            if (ACBSDataTypeState != null) return true;
-            if (AIDTDataTypeState != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Creature_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine("Items =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Items != null)
-                {
-                    if (Items.Overall != null)
-                    {
-                        fg.AppendLine(Items.Overall.ToString());
-                    }
-                    if (Items.Specific != null)
-                    {
-                        foreach (var subItem in Items.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("Spells =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Spells != null)
-                {
-                    if (Spells.Overall != null)
-                    {
-                        fg.AppendLine(Spells.Overall.ToString());
-                    }
-                    if (Spells.Specific != null)
-                    {
-                        foreach (var subItem in Spells.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("Models =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Models != null)
-                {
-                    if (Models.Overall != null)
-                    {
-                        fg.AppendLine(Models.Overall.ToString());
-                    }
-                    if (Models.Specific != null)
-                    {
-                        foreach (var subItem in Models.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"NIFT => {NIFT}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
-            fg.AppendLine($"Fatigue => {Fatigue}");
-            fg.AppendLine($"BarterGold => {BarterGold}");
-            fg.AppendLine($"LevelOffset => {LevelOffset}");
-            fg.AppendLine($"CalcMin => {CalcMin}");
-            fg.AppendLine($"CalcMax => {CalcMax}");
-            fg.AppendLine("Factions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Factions != null)
-                {
-                    if (Factions.Overall != null)
-                    {
-                        fg.AppendLine(Factions.Overall.ToString());
-                    }
-                    if (Factions.Specific != null)
-                    {
-                        foreach (var subItem in Factions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"DeathItem => {DeathItem}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Aggression => {Aggression}");
-            fg.AppendLine($"Confidence => {Confidence}");
-            fg.AppendLine($"EnergyLevel => {EnergyLevel}");
-            fg.AppendLine($"Responsibility => {Responsibility}");
-            fg.AppendLine($"BuySellServices => {BuySellServices}");
-            fg.AppendLine($"Teaches => {Teaches}");
-            fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
-            fg.AppendLine("AIPackages =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (AIPackages != null)
-                {
-                    if (AIPackages.Overall != null)
-                    {
-                        fg.AppendLine(AIPackages.Overall.ToString());
-                    }
-                    if (AIPackages.Specific != null)
-                    {
-                        foreach (var subItem in AIPackages.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("Animations =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Animations != null)
-                {
-                    if (Animations.Overall != null)
-                    {
-                        fg.AppendLine(Animations.Overall.ToString());
-                    }
-                    if (Animations.Specific != null)
-                    {
-                        foreach (var subItem in Animations.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"CreatureType => {CreatureType}");
-            fg.AppendLine($"CombatSkill => {CombatSkill}");
-            fg.AppendLine($"MagicSkill => {MagicSkill}");
-            fg.AppendLine($"StealthSkill => {StealthSkill}");
-            fg.AppendLine($"SoulLevel => {SoulLevel}");
-            fg.AppendLine($"Health => {Health}");
-            fg.AppendLine($"AttackDamage => {AttackDamage}");
-            fg.AppendLine($"Strength => {Strength}");
-            fg.AppendLine($"Intelligence => {Intelligence}");
-            fg.AppendLine($"Willpower => {Willpower}");
-            fg.AppendLine($"Agility => {Agility}");
-            fg.AppendLine($"Speed => {Speed}");
-            fg.AppendLine($"Endurance => {Endurance}");
-            fg.AppendLine($"Personality => {Personality}");
-            fg.AppendLine($"Luck => {Luck}");
-            fg.AppendLine($"AttackReach => {AttackReach}");
-            fg.AppendLine($"CombatStyle => {CombatStyle}");
-            fg.AppendLine($"TurningSpeed => {TurningSpeed}");
-            fg.AppendLine($"BaseScale => {BaseScale}");
-            fg.AppendLine($"FootWeight => {FootWeight}");
-            fg.AppendLine($"BloodSpray => {BloodSpray}");
-            fg.AppendLine($"BloodDecal => {BloodDecal}");
-            fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
-            fg.AppendLine("Sounds =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Sounds != null)
-                {
-                    if (Sounds.Overall != null)
-                    {
-                        fg.AppendLine(Sounds.Overall.ToString());
-                    }
-                    if (Sounds.Specific != null)
-                    {
-                        foreach (var subItem in Sounds.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
-            fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Creature_ErrorMask Combine(Creature_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Creature_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-            ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
-            ret.Models = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
-            ret.NIFT = this.NIFT.Combine(rhs.NIFT);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
-            ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
-            ret.BarterGold = this.BarterGold.Combine(rhs.BarterGold);
-            ret.LevelOffset = this.LevelOffset.Combine(rhs.LevelOffset);
-            ret.CalcMin = this.CalcMin.Combine(rhs.CalcMin);
-            ret.CalcMax = this.CalcMax.Combine(rhs.CalcMax);
-            ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
-            ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Aggression = this.Aggression.Combine(rhs.Aggression);
-            ret.Confidence = this.Confidence.Combine(rhs.Confidence);
-            ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
-            ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
-            ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
-            ret.Teaches = this.Teaches.Combine(rhs.Teaches);
-            ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-            ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
-            ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
-            ret.CreatureType = this.CreatureType.Combine(rhs.CreatureType);
-            ret.CombatSkill = this.CombatSkill.Combine(rhs.CombatSkill);
-            ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
-            ret.StealthSkill = this.StealthSkill.Combine(rhs.StealthSkill);
-            ret.SoulLevel = this.SoulLevel.Combine(rhs.SoulLevel);
-            ret.Health = this.Health.Combine(rhs.Health);
-            ret.AttackDamage = this.AttackDamage.Combine(rhs.AttackDamage);
-            ret.Strength = this.Strength.Combine(rhs.Strength);
-            ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
-            ret.Willpower = this.Willpower.Combine(rhs.Willpower);
-            ret.Agility = this.Agility.Combine(rhs.Agility);
-            ret.Speed = this.Speed.Combine(rhs.Speed);
-            ret.Endurance = this.Endurance.Combine(rhs.Endurance);
-            ret.Personality = this.Personality.Combine(rhs.Personality);
-            ret.Luck = this.Luck.Combine(rhs.Luck);
-            ret.AttackReach = this.AttackReach.Combine(rhs.AttackReach);
-            ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
-            ret.TurningSpeed = this.TurningSpeed.Combine(rhs.TurningSpeed);
-            ret.BaseScale = this.BaseScale.Combine(rhs.BaseScale);
-            ret.FootWeight = this.FootWeight.Combine(rhs.FootWeight);
-            ret.BloodSpray = this.BloodSpray.Combine(rhs.BloodSpray);
-            ret.BloodDecal = this.BloodDecal.Combine(rhs.BloodDecal);
-            ret.InheritsSoundFrom = this.InheritsSoundFrom.Combine(rhs.InheritsSoundFrom);
-            ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CreatureSound_ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-            ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
-            ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Creature_ErrorMask? Combine(Creature_ErrorMask? lhs, Creature_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Creature_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Creature_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Creature_TranslationMask : NPCAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public MaskItem<bool, ItemEntry_TranslationMask?> Items;
-        public bool Spells;
-        public bool Models;
-        public bool NIFT;
-        public bool Flags;
-        public bool BaseSpellPoints;
-        public bool Fatigue;
-        public bool BarterGold;
-        public bool LevelOffset;
-        public bool CalcMin;
-        public bool CalcMax;
-        public MaskItem<bool, RankPlacement_TranslationMask?> Factions;
-        public bool DeathItem;
-        public bool Script;
-        public bool Aggression;
-        public bool Confidence;
-        public bool EnergyLevel;
-        public bool Responsibility;
-        public bool BuySellServices;
-        public bool Teaches;
-        public bool MaximumTrainingLevel;
-        public bool AIPackages;
-        public bool Animations;
-        public bool CreatureType;
-        public bool CombatSkill;
-        public bool MagicSkill;
-        public bool StealthSkill;
-        public bool SoulLevel;
-        public bool Health;
-        public bool AttackDamage;
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        public bool AttackReach;
-        public bool CombatStyle;
-        public bool TurningSpeed;
-        public bool BaseScale;
-        public bool FootWeight;
-        public bool BloodSpray;
-        public bool BloodDecal;
-        public bool InheritsSoundFrom;
-        public MaskItem<bool, CreatureSound_TranslationMask?> Sounds;
-        public bool ACBSDataTypeState;
-        public bool AIDTDataTypeState;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Creature_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Items = new MaskItem<bool, ItemEntry_TranslationMask?>(defaultOn, null);
-            this.Spells = defaultOn;
-            this.Models = defaultOn;
-            this.NIFT = defaultOn;
-            this.Flags = defaultOn;
-            this.BaseSpellPoints = defaultOn;
-            this.Fatigue = defaultOn;
-            this.BarterGold = defaultOn;
-            this.LevelOffset = defaultOn;
-            this.CalcMin = defaultOn;
-            this.CalcMax = defaultOn;
-            this.Factions = new MaskItem<bool, RankPlacement_TranslationMask?>(defaultOn, null);
-            this.DeathItem = defaultOn;
-            this.Script = defaultOn;
-            this.Aggression = defaultOn;
-            this.Confidence = defaultOn;
-            this.EnergyLevel = defaultOn;
-            this.Responsibility = defaultOn;
-            this.BuySellServices = defaultOn;
-            this.Teaches = defaultOn;
-            this.MaximumTrainingLevel = defaultOn;
-            this.AIPackages = defaultOn;
-            this.Animations = defaultOn;
-            this.CreatureType = defaultOn;
-            this.CombatSkill = defaultOn;
-            this.MagicSkill = defaultOn;
-            this.StealthSkill = defaultOn;
-            this.SoulLevel = defaultOn;
-            this.Health = defaultOn;
-            this.AttackDamage = defaultOn;
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-            this.AttackReach = defaultOn;
-            this.CombatStyle = defaultOn;
-            this.TurningSpeed = defaultOn;
-            this.BaseScale = defaultOn;
-            this.FootWeight = defaultOn;
-            this.BloodSpray = defaultOn;
-            this.BloodDecal = defaultOn;
-            this.InheritsSoundFrom = defaultOn;
-            this.Sounds = new MaskItem<bool, CreatureSound_TranslationMask?>(defaultOn, null);
-            this.ACBSDataTypeState = defaultOn;
-            this.AIDTDataTypeState = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-            ret.Add((Spells, null));
-            ret.Add((Models, null));
-            ret.Add((NIFT, null));
-            ret.Add((Flags, null));
-            ret.Add((BaseSpellPoints, null));
-            ret.Add((Fatigue, null));
-            ret.Add((BarterGold, null));
-            ret.Add((LevelOffset, null));
-            ret.Add((CalcMin, null));
-            ret.Add((CalcMax, null));
-            ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
-            ret.Add((DeathItem, null));
-            ret.Add((Script, null));
-            ret.Add((Aggression, null));
-            ret.Add((Confidence, null));
-            ret.Add((EnergyLevel, null));
-            ret.Add((Responsibility, null));
-            ret.Add((BuySellServices, null));
-            ret.Add((Teaches, null));
-            ret.Add((MaximumTrainingLevel, null));
-            ret.Add((AIPackages, null));
-            ret.Add((Animations, null));
-            ret.Add((CreatureType, null));
-            ret.Add((CombatSkill, null));
-            ret.Add((MagicSkill, null));
-            ret.Add((StealthSkill, null));
-            ret.Add((SoulLevel, null));
-            ret.Add((Health, null));
-            ret.Add((AttackDamage, null));
-            ret.Add((Strength, null));
-            ret.Add((Intelligence, null));
-            ret.Add((Willpower, null));
-            ret.Add((Agility, null));
-            ret.Add((Speed, null));
-            ret.Add((Endurance, null));
-            ret.Add((Personality, null));
-            ret.Add((Luck, null));
-            ret.Add((AttackReach, null));
-            ret.Add((CombatStyle, null));
-            ret.Add((TurningSpeed, null));
-            ret.Add((BaseScale, null));
-            ret.Add((FootWeight, null));
-            ret.Add((BloodSpray, null));
-            ret.Add((BloodDecal, null));
-            ret.Add((InheritsSoundFrom, null));
-            ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
-            ret.Add((ACBSDataTypeState, null));
-            ret.Add((AIDTDataTypeState, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

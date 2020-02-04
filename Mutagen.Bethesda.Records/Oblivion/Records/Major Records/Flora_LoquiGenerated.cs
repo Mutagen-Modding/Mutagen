@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Flora CreateFromXml(
             XElement node,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -203,15 +203,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Flora CreateFromXml(
             XElement node,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Flora.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             string path,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -241,8 +241,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             string path,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             Stream stream,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -275,8 +275,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora CreateFromXml(
             Stream stream,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -299,6 +299,487 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Script = initialValue;
+                this.Ingredient = initialValue;
+                this.Spring = initialValue;
+                this.Summer = initialValue;
+                this.Fall = initialValue;
+                this.Winter = initialValue;
+                this.PFPCDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Script,
+                T Ingredient,
+                T Spring,
+                T Summer,
+                T Fall,
+                T Winter,
+                T PFPCDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Script = Script;
+                this.Ingredient = Ingredient;
+                this.Spring = Spring;
+                this.Summer = Summer;
+                this.Fall = Fall;
+                this.Winter = Winter;
+                this.PFPCDataTypeState = PFPCDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Script;
+            public T Ingredient;
+            public T Spring;
+            public T Summer;
+            public T Fall;
+            public T Winter;
+            public T PFPCDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
+                if (!object.Equals(this.Spring, rhs.Spring)) return false;
+                if (!object.Equals(this.Summer, rhs.Summer)) return false;
+                if (!object.Equals(this.Fall, rhs.Fall)) return false;
+                if (!object.Equals(this.Winter, rhs.Winter)) return false;
+                if (!object.Equals(this.PFPCDataTypeState, rhs.PFPCDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Ingredient?.GetHashCode());
+                ret = ret.CombineHashCode(this.Spring?.GetHashCode());
+                ret = ret.CombineHashCode(this.Summer?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fall?.GetHashCode());
+                ret = ret.CombineHashCode(this.Winter?.GetHashCode());
+                ret = ret.CombineHashCode(this.PFPCDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Ingredient)) return false;
+                if (!eval(this.Spring)) return false;
+                if (!eval(this.Summer)) return false;
+                if (!eval(this.Fall)) return false;
+                if (!eval(this.Winter)) return false;
+                if (!eval(this.PFPCDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Flora.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.Ingredient = eval(this.Ingredient);
+                obj.Spring = eval(this.Spring);
+                obj.Summer = eval(this.Summer);
+                obj.Fall = eval(this.Fall);
+                obj.Winter = eval(this.Winter);
+                obj.PFPCDataTypeState = eval(this.PFPCDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Flora.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Flora.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Flora.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Ingredient ?? true)
+                    {
+                        fg.AppendLine($"Ingredient => {Ingredient}");
+                    }
+                    if (printMask?.Spring ?? true)
+                    {
+                        fg.AppendLine($"Spring => {Spring}");
+                    }
+                    if (printMask?.Summer ?? true)
+                    {
+                        fg.AppendLine($"Summer => {Summer}");
+                    }
+                    if (printMask?.Fall ?? true)
+                    {
+                        fg.AppendLine($"Fall => {Fall}");
+                    }
+                    if (printMask?.Winter ?? true)
+                    {
+                        fg.AppendLine($"Winter => {Winter}");
+                    }
+                    if (printMask?.PFPCDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Script;
+            public Exception? Ingredient;
+            public Exception? Spring;
+            public Exception? Summer;
+            public Exception? Fall;
+            public Exception? Winter;
+            public Exception? PFPCDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Flora_FieldIndex enu = (Flora_FieldIndex)index;
+                switch (enu)
+                {
+                    case Flora_FieldIndex.Name:
+                        return Name;
+                    case Flora_FieldIndex.Model:
+                        return Model;
+                    case Flora_FieldIndex.Script:
+                        return Script;
+                    case Flora_FieldIndex.Ingredient:
+                        return Ingredient;
+                    case Flora_FieldIndex.Spring:
+                        return Spring;
+                    case Flora_FieldIndex.Summer:
+                        return Summer;
+                    case Flora_FieldIndex.Fall:
+                        return Fall;
+                    case Flora_FieldIndex.Winter:
+                        return Winter;
+                    case Flora_FieldIndex.PFPCDataTypeState:
+                        return PFPCDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Flora_FieldIndex enu = (Flora_FieldIndex)index;
+                switch (enu)
+                {
+                    case Flora_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Flora_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Flora_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Flora_FieldIndex.Ingredient:
+                        this.Ingredient = ex;
+                        break;
+                    case Flora_FieldIndex.Spring:
+                        this.Spring = ex;
+                        break;
+                    case Flora_FieldIndex.Summer:
+                        this.Summer = ex;
+                        break;
+                    case Flora_FieldIndex.Fall:
+                        this.Fall = ex;
+                        break;
+                    case Flora_FieldIndex.Winter:
+                        this.Winter = ex;
+                        break;
+                    case Flora_FieldIndex.PFPCDataTypeState:
+                        this.PFPCDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Flora_FieldIndex enu = (Flora_FieldIndex)index;
+                switch (enu)
+                {
+                    case Flora_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Flora_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.Ingredient:
+                        this.Ingredient = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.Spring:
+                        this.Spring = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.Summer:
+                        this.Summer = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.Fall:
+                        this.Fall = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.Winter:
+                        this.Winter = (Exception)obj;
+                        break;
+                    case Flora_FieldIndex.PFPCDataTypeState:
+                        this.PFPCDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Script != null) return true;
+                if (Ingredient != null) return true;
+                if (Spring != null) return true;
+                if (Summer != null) return true;
+                if (Fall != null) return true;
+                if (Winter != null) return true;
+                if (PFPCDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Ingredient => {Ingredient}");
+                fg.AppendLine($"Spring => {Spring}");
+                fg.AppendLine($"Summer => {Summer}");
+                fg.AppendLine($"Fall => {Fall}");
+                fg.AppendLine($"Winter => {Winter}");
+                fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
+                ret.Spring = this.Spring.Combine(rhs.Spring);
+                ret.Summer = this.Summer.Combine(rhs.Summer);
+                ret.Fall = this.Fall.Combine(rhs.Fall);
+                ret.Winter = this.Winter.Combine(rhs.Winter);
+                ret.PFPCDataTypeState = this.PFPCDataTypeState.Combine(rhs.PFPCDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Script;
+            public bool Ingredient;
+            public bool Spring;
+            public bool Summer;
+            public bool Fall;
+            public bool Winter;
+            public bool PFPCDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.Ingredient = defaultOn;
+                this.Spring = defaultOn;
+                this.Summer = defaultOn;
+                this.Fall = defaultOn;
+                this.Winter = defaultOn;
+                this.PFPCDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Ingredient, null));
+                ret.Add((Spring, null));
+                ret.Add((Summer, null));
+                ret.Add((Fall, null));
+                ret.Add((Winter, null));
+                ret.Add((PFPCDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -437,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Flora_Mask<bool> GetEqualsMask(
+        public static Flora.Mask<bool> GetEqualsMask(
             this IFloraGetter item,
             IFloraGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -451,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IFloraGetter item,
             string? name = null,
-            Flora_Mask<bool>? printMask = null)
+            Flora.Mask<bool>? printMask = null)
         {
             return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -463,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             FileGeneration fg,
             string? name = null,
-            Flora_Mask<bool>? printMask = null)
+            Flora.Mask<bool>? printMask = null)
         {
             ((FloraCommon)((IFloraGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -474,16 +955,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IFloraGetter item,
-            Flora_Mask<bool?> checkMask)
+            Flora.Mask<bool?> checkMask)
         {
             return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Flora_Mask<bool> GetHasBeenSetMask(this IFloraGetter item)
+        public static Flora.Mask<bool> GetHasBeenSetMask(this IFloraGetter item)
         {
-            var ret = new Flora_Mask<bool>(false);
+            var ret = new Flora.Mask<bool>(false);
             ((FloraCommon)((IFloraGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -502,8 +983,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IFloraInternal lhs,
             IFloraGetter rhs,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? copyMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -511,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Flora.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -529,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora DeepCopy(
             this IFloraGetter item,
-            Flora_TranslationMask? copyMask = null)
+            Flora.TranslationMask? copyMask = null)
         {
             return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -538,8 +1019,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Flora DeepCopy(
             this IFloraGetter item,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? copyMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? copyMask = null)
         {
             return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -563,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             XElement node,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -576,8 +1057,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             XElement node,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -585,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Flora.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -604,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             string path,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -616,8 +1097,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             string path,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -631,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -644,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             Stream stream,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -656,8 +1137,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFloraInternal item,
             Stream stream,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -671,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Flora_TranslationMask? translationMask = null)
+            Flora.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -757,9 +1238,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(Flora_Mask<>);
+        public static readonly Type MaskType = typeof(Flora.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Flora_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Flora.ErrorMask);
 
         public static readonly Type ClassType = typeof(Flora);
 
@@ -1202,12 +1683,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly FloraCommon Instance = new FloraCommon();
 
-        public Flora_Mask<bool> GetEqualsMask(
+        public Flora.Mask<bool> GetEqualsMask(
             IFloraGetter item,
             IFloraGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Flora_Mask<bool>(false);
+            var ret = new Flora.Mask<bool>(false);
             ((FloraCommon)((IFloraGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1219,7 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IFloraGetter item,
             IFloraGetter rhs,
-            Flora_Mask<bool> ret,
+            Flora.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1242,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IFloraGetter item,
             string? name = null,
-            Flora_Mask<bool>? printMask = null)
+            Flora.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1257,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraGetter item,
             FileGeneration fg,
             string? name = null,
-            Flora_Mask<bool>? printMask = null)
+            Flora.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1281,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IFloraGetter item,
             FileGeneration fg,
-            Flora_Mask<bool>? printMask = null)
+            Flora.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1327,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IFloraGetter item,
-            Flora_Mask<bool?> checkMask)
+            Flora.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1341,11 +1822,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IFloraGetter item,
-            Flora_Mask<bool> mask)
+            Flora.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
             mask.Ingredient = item.Ingredient.HasBeenSet;
             mask.Spring = true;
@@ -1649,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Flora DeepCopy(
             IFloraGetter item,
-            Flora_TranslationMask? copyMask = null)
+            Flora.TranslationMask? copyMask = null)
         {
             Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1660,8 +2141,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Flora DeepCopy(
             IFloraGetter item,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? copyMask = null)
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? copyMask = null)
         {
             Flora ret = (Flora)((FloraCommon)((IFloraGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2118,8 +2599,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFloraGetter item,
             XElement node,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null,
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2129,14 +2610,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Flora.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFloraGetter item,
             string path,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null,
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2152,8 +2633,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFloraGetter item,
             Stream stream,
-            out Flora_ErrorMask errorMask,
-            Flora_TranslationMask? translationMask = null,
+            out Flora.ErrorMask errorMask,
+            Flora.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2170,486 +2651,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Flora_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Flora_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Flora_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Script = initialValue;
-            this.Ingredient = initialValue;
-            this.Spring = initialValue;
-            this.Summer = initialValue;
-            this.Fall = initialValue;
-            this.Winter = initialValue;
-            this.PFPCDataTypeState = initialValue;
-        }
-
-        public Flora_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Script,
-            T Ingredient,
-            T Spring,
-            T Summer,
-            T Fall,
-            T Winter,
-            T PFPCDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Script = Script;
-            this.Ingredient = Ingredient;
-            this.Spring = Spring;
-            this.Summer = Summer;
-            this.Fall = Fall;
-            this.Winter = Winter;
-            this.PFPCDataTypeState = PFPCDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Flora_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Script;
-        public T Ingredient;
-        public T Spring;
-        public T Summer;
-        public T Fall;
-        public T Winter;
-        public T PFPCDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Flora_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Flora_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
-            if (!object.Equals(this.Spring, rhs.Spring)) return false;
-            if (!object.Equals(this.Summer, rhs.Summer)) return false;
-            if (!object.Equals(this.Fall, rhs.Fall)) return false;
-            if (!object.Equals(this.Winter, rhs.Winter)) return false;
-            if (!object.Equals(this.PFPCDataTypeState, rhs.PFPCDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Ingredient?.GetHashCode());
-            ret = ret.CombineHashCode(this.Spring?.GetHashCode());
-            ret = ret.CombineHashCode(this.Summer?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fall?.GetHashCode());
-            ret = ret.CombineHashCode(this.Winter?.GetHashCode());
-            ret = ret.CombineHashCode(this.PFPCDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Ingredient)) return false;
-            if (!eval(this.Spring)) return false;
-            if (!eval(this.Summer)) return false;
-            if (!eval(this.Fall)) return false;
-            if (!eval(this.Winter)) return false;
-            if (!eval(this.PFPCDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Flora_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Flora_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Flora_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Script = eval(this.Script);
-            obj.Ingredient = eval(this.Ingredient);
-            obj.Spring = eval(this.Spring);
-            obj.Summer = eval(this.Summer);
-            obj.Fall = eval(this.Fall);
-            obj.Winter = eval(this.Winter);
-            obj.PFPCDataTypeState = eval(this.PFPCDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Flora_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Flora_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Flora_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Ingredient ?? true)
-                {
-                    fg.AppendLine($"Ingredient => {Ingredient}");
-                }
-                if (printMask?.Spring ?? true)
-                {
-                    fg.AppendLine($"Spring => {Spring}");
-                }
-                if (printMask?.Summer ?? true)
-                {
-                    fg.AppendLine($"Summer => {Summer}");
-                }
-                if (printMask?.Fall ?? true)
-                {
-                    fg.AppendLine($"Fall => {Fall}");
-                }
-                if (printMask?.Winter ?? true)
-                {
-                    fg.AppendLine($"Winter => {Winter}");
-                }
-                if (printMask?.PFPCDataTypeState ?? true)
-                {
-                    fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Flora_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Flora_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Script;
-        public Exception? Ingredient;
-        public Exception? Spring;
-        public Exception? Summer;
-        public Exception? Fall;
-        public Exception? Winter;
-        public Exception? PFPCDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    return Name;
-                case Flora_FieldIndex.Model:
-                    return Model;
-                case Flora_FieldIndex.Script:
-                    return Script;
-                case Flora_FieldIndex.Ingredient:
-                    return Ingredient;
-                case Flora_FieldIndex.Spring:
-                    return Spring;
-                case Flora_FieldIndex.Summer:
-                    return Summer;
-                case Flora_FieldIndex.Fall:
-                    return Fall;
-                case Flora_FieldIndex.Winter:
-                    return Winter;
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    return PFPCDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Flora_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Flora_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    this.Ingredient = ex;
-                    break;
-                case Flora_FieldIndex.Spring:
-                    this.Spring = ex;
-                    break;
-                case Flora_FieldIndex.Summer:
-                    this.Summer = ex;
-                    break;
-                case Flora_FieldIndex.Fall:
-                    this.Fall = ex;
-                    break;
-                case Flora_FieldIndex.Winter:
-                    this.Winter = ex;
-                    break;
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    this.PFPCDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Flora_FieldIndex enu = (Flora_FieldIndex)index;
-            switch (enu)
-            {
-                case Flora_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Flora_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.Ingredient:
-                    this.Ingredient = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.Spring:
-                    this.Spring = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.Summer:
-                    this.Summer = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.Fall:
-                    this.Fall = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.Winter:
-                    this.Winter = (Exception)obj;
-                    break;
-                case Flora_FieldIndex.PFPCDataTypeState:
-                    this.PFPCDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Script != null) return true;
-            if (Ingredient != null) return true;
-            if (Spring != null) return true;
-            if (Summer != null) return true;
-            if (Fall != null) return true;
-            if (Winter != null) return true;
-            if (PFPCDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Flora_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Ingredient => {Ingredient}");
-            fg.AppendLine($"Spring => {Spring}");
-            fg.AppendLine($"Summer => {Summer}");
-            fg.AppendLine($"Fall => {Fall}");
-            fg.AppendLine($"Winter => {Winter}");
-            fg.AppendLine($"PFPCDataTypeState => {PFPCDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Flora_ErrorMask Combine(Flora_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Flora_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
-            ret.Spring = this.Spring.Combine(rhs.Spring);
-            ret.Summer = this.Summer.Combine(rhs.Summer);
-            ret.Fall = this.Fall.Combine(rhs.Fall);
-            ret.Winter = this.Winter.Combine(rhs.Winter);
-            ret.PFPCDataTypeState = this.PFPCDataTypeState.Combine(rhs.PFPCDataTypeState);
-            return ret;
-        }
-        public static Flora_ErrorMask? Combine(Flora_ErrorMask? lhs, Flora_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Flora_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Flora_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Flora_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Script;
-        public bool Ingredient;
-        public bool Spring;
-        public bool Summer;
-        public bool Fall;
-        public bool Winter;
-        public bool PFPCDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Flora_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.Ingredient = defaultOn;
-            this.Spring = defaultOn;
-            this.Summer = defaultOn;
-            this.Fall = defaultOn;
-            this.Winter = defaultOn;
-            this.PFPCDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((Ingredient, null));
-            ret.Add((Spring, null));
-            ret.Add((Summer, null));
-            ret.Add((Fall, null));
-            ret.Add((Winter, null));
-            ret.Add((PFPCDataTypeState, null));
-        }
-    }
 }
 #endregion
 

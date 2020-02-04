@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ClassTraining CreateFromXml(
             XElement node,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ClassTraining CreateFromXml(
             XElement node,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ClassTraining.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ClassTraining CreateFromXml(
             string path,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ClassTraining CreateFromXml(
             string path,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ClassTraining CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ClassTraining CreateFromXml(
             Stream stream,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,8 +200,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ClassTraining CreateFromXml(
             Stream stream,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ClassTraining CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,6 +224,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.TrainedSkill = initialValue;
+                this.MaximumTrainingLevel = initialValue;
+                this.Fluff = initialValue;
+            }
+
+            public Mask(
+                T TrainedSkill,
+                T MaximumTrainingLevel,
+                T Fluff)
+            {
+                this.TrainedSkill = TrainedSkill;
+                this.MaximumTrainingLevel = MaximumTrainingLevel;
+                this.Fluff = Fluff;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T TrainedSkill;
+            public T MaximumTrainingLevel;
+            public T Fluff;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.TrainedSkill, rhs.TrainedSkill)) return false;
+                if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
+                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.TrainedSkill?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.TrainedSkill)) return false;
+                if (!eval(this.MaximumTrainingLevel)) return false;
+                if (!eval(this.Fluff)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ClassTraining.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.TrainedSkill = eval(this.TrainedSkill);
+                obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
+                obj.Fluff = eval(this.Fluff);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ClassTraining.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ClassTraining.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ClassTraining.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.TrainedSkill ?? true)
+                    {
+                        fg.AppendLine($"TrainedSkill => {TrainedSkill}");
+                    }
+                    if (printMask?.MaximumTrainingLevel ?? true)
+                    {
+                        fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+                    }
+                    if (printMask?.Fluff ?? true)
+                    {
+                        fg.AppendLine($"Fluff => {Fluff}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? TrainedSkill;
+            public Exception? MaximumTrainingLevel;
+            public Exception? Fluff;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
+                switch (enu)
+                {
+                    case ClassTraining_FieldIndex.TrainedSkill:
+                        return TrainedSkill;
+                    case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                        return MaximumTrainingLevel;
+                    case ClassTraining_FieldIndex.Fluff:
+                        return Fluff;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
+                switch (enu)
+                {
+                    case ClassTraining_FieldIndex.TrainedSkill:
+                        this.TrainedSkill = ex;
+                        break;
+                    case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                        this.MaximumTrainingLevel = ex;
+                        break;
+                    case ClassTraining_FieldIndex.Fluff:
+                        this.Fluff = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
+                switch (enu)
+                {
+                    case ClassTraining_FieldIndex.TrainedSkill:
+                        this.TrainedSkill = (Exception)obj;
+                        break;
+                    case ClassTraining_FieldIndex.MaximumTrainingLevel:
+                        this.MaximumTrainingLevel = (Exception)obj;
+                        break;
+                    case ClassTraining_FieldIndex.Fluff:
+                        this.Fluff = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (TrainedSkill != null) return true;
+                if (MaximumTrainingLevel != null) return true;
+                if (Fluff != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"TrainedSkill => {TrainedSkill}");
+                fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+                fg.AppendLine($"Fluff => {Fluff}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.TrainedSkill = this.TrainedSkill.Combine(rhs.TrainedSkill);
+                ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
+                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool TrainedSkill;
+            public bool MaximumTrainingLevel;
+            public bool Fluff;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.TrainedSkill = defaultOn;
+                this.MaximumTrainingLevel = defaultOn;
+                this.Fluff = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((TrainedSkill, null));
+                ret.Add((MaximumTrainingLevel, null));
+                ret.Add((Fluff, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -327,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClassTrainingSetterCommon)((IClassTrainingGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ClassTraining_Mask<bool> GetEqualsMask(
+        public static ClassTraining.Mask<bool> GetEqualsMask(
             this IClassTrainingGetter item,
             IClassTrainingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -341,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IClassTrainingGetter item,
             string? name = null,
-            ClassTraining_Mask<bool>? printMask = null)
+            ClassTraining.Mask<bool>? printMask = null)
         {
             return ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -353,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTrainingGetter item,
             FileGeneration fg,
             string? name = null,
-            ClassTraining_Mask<bool>? printMask = null)
+            ClassTraining.Mask<bool>? printMask = null)
         {
             ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -364,16 +678,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IClassTrainingGetter item,
-            ClassTraining_Mask<bool?> checkMask)
+            ClassTraining.Mask<bool?> checkMask)
         {
             return ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ClassTraining_Mask<bool> GetHasBeenSetMask(this IClassTrainingGetter item)
+        public static ClassTraining.Mask<bool> GetHasBeenSetMask(this IClassTrainingGetter item)
         {
-            var ret = new ClassTraining_Mask<bool>(false);
+            var ret = new ClassTraining.Mask<bool>(false);
             ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -392,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IClassTraining lhs,
             IClassTrainingGetter rhs,
-            ClassTraining_TranslationMask? copyMask = null)
+            ClassTraining.TranslationMask? copyMask = null)
         {
             ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -404,8 +718,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IClassTraining lhs,
             IClassTrainingGetter rhs,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? copyMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -413,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ClassTraining.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -431,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ClassTraining DeepCopy(
             this IClassTrainingGetter item,
-            ClassTraining_TranslationMask? copyMask = null)
+            ClassTraining.TranslationMask? copyMask = null)
         {
             return ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -440,8 +754,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ClassTraining DeepCopy(
             this IClassTrainingGetter item,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? copyMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? copyMask = null)
         {
             return ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -465,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassTraining item,
             XElement node,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -478,8 +792,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassTraining item,
             XElement node,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -487,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ClassTraining.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -506,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassTraining item,
             string path,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -518,8 +832,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassTraining item,
             string path,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -533,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTraining item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -546,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassTraining item,
             Stream stream,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -558,8 +872,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClassTraining item,
             Stream stream,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -573,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTraining item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -648,9 +962,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ClassTraining_Mask<>);
+        public static readonly Type MaskType = typeof(ClassTraining.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ClassTraining_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ClassTraining.ErrorMask);
 
         public static readonly Type ClassType = typeof(ClassTraining);
 
@@ -900,12 +1214,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ClassTrainingCommon Instance = new ClassTrainingCommon();
 
-        public ClassTraining_Mask<bool> GetEqualsMask(
+        public ClassTraining.Mask<bool> GetEqualsMask(
             IClassTrainingGetter item,
             IClassTrainingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ClassTraining_Mask<bool>(false);
+            var ret = new ClassTraining.Mask<bool>(false);
             ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IClassTrainingGetter item,
             IClassTrainingGetter rhs,
-            ClassTraining_Mask<bool> ret,
+            ClassTraining.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -929,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IClassTrainingGetter item,
             string? name = null,
-            ClassTraining_Mask<bool>? printMask = null)
+            ClassTraining.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -944,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassTrainingGetter item,
             FileGeneration fg,
             string? name = null,
-            ClassTraining_Mask<bool>? printMask = null)
+            ClassTraining.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IClassTrainingGetter item,
             FileGeneration fg,
-            ClassTraining_Mask<bool>? printMask = null)
+            ClassTraining.Mask<bool>? printMask = null)
         {
             if (printMask?.TrainedSkill ?? true)
             {
@@ -986,14 +1300,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IClassTrainingGetter item,
-            ClassTraining_Mask<bool?> checkMask)
+            ClassTraining.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IClassTrainingGetter item,
-            ClassTraining_Mask<bool> mask)
+            ClassTraining.Mask<bool> mask)
         {
             mask.TrainedSkill = true;
             mask.MaximumTrainingLevel = true;
@@ -1068,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ClassTraining DeepCopy(
             IClassTrainingGetter item,
-            ClassTraining_TranslationMask? copyMask = null)
+            ClassTraining.TranslationMask? copyMask = null)
         {
             ClassTraining ret = (ClassTraining)((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1079,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ClassTraining DeepCopy(
             IClassTrainingGetter item,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? copyMask = null)
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? copyMask = null)
         {
             ClassTraining ret = (ClassTraining)((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1355,8 +1669,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IClassTrainingGetter item,
             XElement node,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null,
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1366,14 +1680,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ClassTraining.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IClassTrainingGetter item,
             string path,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null,
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1406,8 +1720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IClassTrainingGetter item,
             Stream stream,
-            out ClassTraining_ErrorMask errorMask,
-            ClassTraining_TranslationMask? translationMask = null,
+            out ClassTraining.ErrorMask errorMask,
+            ClassTraining.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1456,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTrainingGetter item,
             XElement node,
             string? name = null,
-            ClassTraining_TranslationMask? translationMask = null)
+            ClassTraining.TranslationMask? translationMask = null)
         {
             ((ClassTrainingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1500,321 +1814,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class ClassTraining_Mask<T> :
-        IMask<T>,
-        IEquatable<ClassTraining_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ClassTraining_Mask(T initialValue)
-        {
-            this.TrainedSkill = initialValue;
-            this.MaximumTrainingLevel = initialValue;
-            this.Fluff = initialValue;
-        }
-
-        public ClassTraining_Mask(
-            T TrainedSkill,
-            T MaximumTrainingLevel,
-            T Fluff)
-        {
-            this.TrainedSkill = TrainedSkill;
-            this.MaximumTrainingLevel = MaximumTrainingLevel;
-            this.Fluff = Fluff;
-        }
-
-        #pragma warning disable CS8618
-        protected ClassTraining_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T TrainedSkill;
-        public T MaximumTrainingLevel;
-        public T Fluff;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ClassTraining_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ClassTraining_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.TrainedSkill, rhs.TrainedSkill)) return false;
-            if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.TrainedSkill?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.TrainedSkill)) return false;
-            if (!eval(this.MaximumTrainingLevel)) return false;
-            if (!eval(this.Fluff)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ClassTraining_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ClassTraining_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ClassTraining_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.TrainedSkill = eval(this.TrainedSkill);
-            obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-            obj.Fluff = eval(this.Fluff);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ClassTraining_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ClassTraining_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ClassTraining_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.TrainedSkill ?? true)
-                {
-                    fg.AppendLine($"TrainedSkill => {TrainedSkill}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ClassTraining_ErrorMask : IErrorMask, IErrorMask<ClassTraining_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? TrainedSkill;
-        public Exception? MaximumTrainingLevel;
-        public Exception? Fluff;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
-            switch (enu)
-            {
-                case ClassTraining_FieldIndex.TrainedSkill:
-                    return TrainedSkill;
-                case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    return MaximumTrainingLevel;
-                case ClassTraining_FieldIndex.Fluff:
-                    return Fluff;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
-            switch (enu)
-            {
-                case ClassTraining_FieldIndex.TrainedSkill:
-                    this.TrainedSkill = ex;
-                    break;
-                case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = ex;
-                    break;
-                case ClassTraining_FieldIndex.Fluff:
-                    this.Fluff = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ClassTraining_FieldIndex enu = (ClassTraining_FieldIndex)index;
-            switch (enu)
-            {
-                case ClassTraining_FieldIndex.TrainedSkill:
-                    this.TrainedSkill = (Exception)obj;
-                    break;
-                case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Exception)obj;
-                    break;
-                case ClassTraining_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (TrainedSkill != null) return true;
-            if (MaximumTrainingLevel != null) return true;
-            if (Fluff != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ClassTraining_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"TrainedSkill => {TrainedSkill}");
-            fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
-            fg.AppendLine($"Fluff => {Fluff}");
-        }
-        #endregion
-
-        #region Combine
-        public ClassTraining_ErrorMask Combine(ClassTraining_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ClassTraining_ErrorMask();
-            ret.TrainedSkill = this.TrainedSkill.Combine(rhs.TrainedSkill);
-            ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            return ret;
-        }
-        public static ClassTraining_ErrorMask? Combine(ClassTraining_ErrorMask? lhs, ClassTraining_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ClassTraining_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ClassTraining_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ClassTraining_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool TrainedSkill;
-        public bool MaximumTrainingLevel;
-        public bool Fluff;
-        #endregion
-
-        #region Ctors
-        public ClassTraining_TranslationMask(bool defaultOn)
-        {
-            this.TrainedSkill = defaultOn;
-            this.MaximumTrainingLevel = defaultOn;
-            this.Fluff = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((TrainedSkill, null));
-            ret.Add((MaximumTrainingLevel, null));
-            ret.Add((Fluff, null));
-        }
-    }
 }
 #endregion
 

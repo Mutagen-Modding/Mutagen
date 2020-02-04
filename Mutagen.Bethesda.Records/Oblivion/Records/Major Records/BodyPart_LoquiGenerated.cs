@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BodyPart CreateFromXml(
             XElement node,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -132,15 +132,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BodyPart CreateFromXml(
             XElement node,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BodyPart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BodyPart.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BodyPart CreateFromXml(
             string path,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,8 +170,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BodyPart CreateFromXml(
             string path,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BodyPart CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BodyPart CreateFromXml(
             Stream stream,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BodyPart CreateFromXml(
             Stream stream,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BodyPart CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -228,6 +228,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Index = initialValue;
+                this.Icon = initialValue;
+            }
+
+            public Mask(
+                T Index,
+                T Icon)
+            {
+                this.Index = Index;
+                this.Icon = Icon;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Index;
+            public T Icon;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Index?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Index)) return false;
+                if (!eval(this.Icon)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new BodyPart.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Index = eval(this.Index);
+                obj.Icon = eval(this.Icon);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(BodyPart.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, BodyPart.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(BodyPart.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Index ?? true)
+                    {
+                        fg.AppendLine($"Index => {Index}");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Index;
+            public Exception? Icon;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
+                switch (enu)
+                {
+                    case BodyPart_FieldIndex.Index:
+                        return Index;
+                    case BodyPart_FieldIndex.Icon:
+                        return Icon;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
+                switch (enu)
+                {
+                    case BodyPart_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case BodyPart_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
+                switch (enu)
+                {
+                    case BodyPart_FieldIndex.Index:
+                        this.Index = (Exception)obj;
+                        break;
+                    case BodyPart_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Index != null) return true;
+                if (Icon != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Index => {Index}");
+                fg.AppendLine($"Icon => {Icon}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Index = this.Index.Combine(rhs.Index);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Index;
+            public bool Icon;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Index = defaultOn;
+                this.Icon = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Index, null));
+                ret.Add((Icon, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -329,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((BodyPartSetterCommon)((IBodyPartGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BodyPart_Mask<bool> GetEqualsMask(
+        public static BodyPart.Mask<bool> GetEqualsMask(
             this IBodyPartGetter item,
             IBodyPartGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -343,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IBodyPartGetter item,
             string? name = null,
-            BodyPart_Mask<bool>? printMask = null)
+            BodyPart.Mask<bool>? printMask = null)
         {
             return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -355,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyPartGetter item,
             FileGeneration fg,
             string? name = null,
-            BodyPart_Mask<bool>? printMask = null)
+            BodyPart.Mask<bool>? printMask = null)
         {
             ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -366,16 +653,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IBodyPartGetter item,
-            BodyPart_Mask<bool?> checkMask)
+            BodyPart.Mask<bool?> checkMask)
         {
             return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static BodyPart_Mask<bool> GetHasBeenSetMask(this IBodyPartGetter item)
+        public static BodyPart.Mask<bool> GetHasBeenSetMask(this IBodyPartGetter item)
         {
-            var ret = new BodyPart_Mask<bool>(false);
+            var ret = new BodyPart.Mask<bool>(false);
             ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -394,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IBodyPart lhs,
             IBodyPartGetter rhs,
-            BodyPart_TranslationMask? copyMask = null)
+            BodyPart.TranslationMask? copyMask = null)
         {
             ((BodyPartSetterTranslationCommon)((IBodyPartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -406,8 +693,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IBodyPart lhs,
             IBodyPartGetter rhs,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? copyMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((BodyPartSetterTranslationCommon)((IBodyPartGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -415,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = BodyPart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BodyPart.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -433,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BodyPart DeepCopy(
             this IBodyPartGetter item,
-            BodyPart_TranslationMask? copyMask = null)
+            BodyPart.TranslationMask? copyMask = null)
         {
             return ((BodyPartSetterTranslationCommon)((IBodyPartGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -442,8 +729,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BodyPart DeepCopy(
             this IBodyPartGetter item,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? copyMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? copyMask = null)
         {
             return ((BodyPartSetterTranslationCommon)((IBodyPartGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBodyPart item,
             XElement node,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -480,8 +767,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBodyPart item,
             XElement node,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -489,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BodyPart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BodyPart.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -508,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBodyPart item,
             string path,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -520,8 +807,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBodyPart item,
             string path,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -535,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyPart item,
             string path,
             ErrorMaskBuilder? errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -548,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBodyPart item,
             Stream stream,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -560,8 +847,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBodyPart item,
             Stream stream,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -575,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyPart item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -649,9 +936,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BodyPart_Mask<>);
+        public static readonly Type MaskType = typeof(BodyPart.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BodyPart_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(BodyPart.ErrorMask);
 
         public static readonly Type ClassType = typeof(BodyPart);
 
@@ -934,12 +1221,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly BodyPartCommon Instance = new BodyPartCommon();
 
-        public BodyPart_Mask<bool> GetEqualsMask(
+        public BodyPart.Mask<bool> GetEqualsMask(
             IBodyPartGetter item,
             IBodyPartGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BodyPart_Mask<bool>(false);
+            var ret = new BodyPart.Mask<bool>(false);
             ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -951,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IBodyPartGetter item,
             IBodyPartGetter rhs,
-            BodyPart_Mask<bool> ret,
+            BodyPart.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -962,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IBodyPartGetter item,
             string? name = null,
-            BodyPart_Mask<bool>? printMask = null)
+            BodyPart.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -977,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBodyPartGetter item,
             FileGeneration fg,
             string? name = null,
-            BodyPart_Mask<bool>? printMask = null)
+            BodyPart.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1001,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IBodyPartGetter item,
             FileGeneration fg,
-            BodyPart_Mask<bool>? printMask = null)
+            BodyPart.Mask<bool>? printMask = null)
         {
             if (printMask?.Index ?? true)
             {
@@ -1015,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IBodyPartGetter item,
-            BodyPart_Mask<bool?> checkMask)
+            BodyPart.Mask<bool?> checkMask)
         {
             if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
@@ -1024,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IBodyPartGetter item,
-            BodyPart_Mask<bool> mask)
+            BodyPart.Mask<bool> mask)
         {
             mask.Index = (item.Index != null);
             mask.Icon = (item.Icon != null);
@@ -1098,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public BodyPart DeepCopy(
             IBodyPartGetter item,
-            BodyPart_TranslationMask? copyMask = null)
+            BodyPart.TranslationMask? copyMask = null)
         {
             BodyPart ret = (BodyPart)((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1109,8 +1396,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public BodyPart DeepCopy(
             IBodyPartGetter item,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? copyMask = null)
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? copyMask = null)
         {
             BodyPart ret = (BodyPart)((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1359,8 +1646,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IBodyPartGetter item,
             XElement node,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null,
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1370,14 +1657,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BodyPart_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BodyPart.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IBodyPartGetter item,
             string path,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null,
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1410,8 +1697,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IBodyPartGetter item,
             Stream stream,
-            out BodyPart_ErrorMask errorMask,
-            BodyPart_TranslationMask? translationMask = null,
+            out BodyPart.ErrorMask errorMask,
+            BodyPart.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1460,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyPartGetter item,
             XElement node,
             string? name = null,
-            BodyPart_TranslationMask? translationMask = null)
+            BodyPart.TranslationMask? translationMask = null)
         {
             ((BodyPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1504,294 +1791,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class BodyPart_Mask<T> :
-        IMask<T>,
-        IEquatable<BodyPart_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public BodyPart_Mask(T initialValue)
-        {
-            this.Index = initialValue;
-            this.Icon = initialValue;
-        }
-
-        public BodyPart_Mask(
-            T Index,
-            T Icon)
-        {
-            this.Index = Index;
-            this.Icon = Icon;
-        }
-
-        #pragma warning disable CS8618
-        protected BodyPart_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Index;
-        public T Icon;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is BodyPart_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(BodyPart_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Index, rhs.Index)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Index?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Index)) return false;
-            if (!eval(this.Icon)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public BodyPart_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new BodyPart_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(BodyPart_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Index = eval(this.Index);
-            obj.Icon = eval(this.Icon);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(BodyPart_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, BodyPart_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(BodyPart_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Index ?? true)
-                {
-                    fg.AppendLine($"Index => {Index}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class BodyPart_ErrorMask : IErrorMask, IErrorMask<BodyPart_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Index;
-        public Exception? Icon;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    return Index;
-                case BodyPart_FieldIndex.Icon:
-                    return Icon;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    this.Index = ex;
-                    break;
-                case BodyPart_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            BodyPart_FieldIndex enu = (BodyPart_FieldIndex)index;
-            switch (enu)
-            {
-                case BodyPart_FieldIndex.Index:
-                    this.Index = (Exception)obj;
-                    break;
-                case BodyPart_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Index != null) return true;
-            if (Icon != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("BodyPart_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Index => {Index}");
-            fg.AppendLine($"Icon => {Icon}");
-        }
-        #endregion
-
-        #region Combine
-        public BodyPart_ErrorMask Combine(BodyPart_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new BodyPart_ErrorMask();
-            ret.Index = this.Index.Combine(rhs.Index);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            return ret;
-        }
-        public static BodyPart_ErrorMask? Combine(BodyPart_ErrorMask? lhs, BodyPart_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static BodyPart_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new BodyPart_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class BodyPart_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Index;
-        public bool Icon;
-        #endregion
-
-        #region Ctors
-        public BodyPart_TranslationMask(bool defaultOn)
-        {
-            this.Index = defaultOn;
-            this.Icon = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Index, null));
-            ret.Add((Icon, null));
-        }
-    }
 }
 #endregion
 

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static DistantLODData CreateFromXml(
             XElement node,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -119,15 +119,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static DistantLODData CreateFromXml(
             XElement node,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DistantLODData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             string path,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             string path,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             Stream stream,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData CreateFromXml(
             Stream stream,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DistantLODData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,6 +215,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Unknown0 = initialValue;
+                this.Unknown1 = initialValue;
+                this.Unknown2 = initialValue;
+            }
+
+            public Mask(
+                T Unknown0,
+                T Unknown1,
+                T Unknown2)
+            {
+                this.Unknown0 = Unknown0;
+                this.Unknown1 = Unknown1;
+                this.Unknown2 = Unknown2;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Unknown0;
+            public T Unknown1;
+            public T Unknown2;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Unknown0, rhs.Unknown0)) return false;
+                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Unknown0?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Unknown0)) return false;
+                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.Unknown2)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new DistantLODData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Unknown0 = eval(this.Unknown0);
+                obj.Unknown1 = eval(this.Unknown1);
+                obj.Unknown2 = eval(this.Unknown2);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(DistantLODData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, DistantLODData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(DistantLODData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Unknown0 ?? true)
+                    {
+                        fg.AppendLine($"Unknown0 => {Unknown0}");
+                    }
+                    if (printMask?.Unknown1 ?? true)
+                    {
+                        fg.AppendLine($"Unknown1 => {Unknown1}");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Unknown0;
+            public Exception? Unknown1;
+            public Exception? Unknown2;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
+                switch (enu)
+                {
+                    case DistantLODData_FieldIndex.Unknown0:
+                        return Unknown0;
+                    case DistantLODData_FieldIndex.Unknown1:
+                        return Unknown1;
+                    case DistantLODData_FieldIndex.Unknown2:
+                        return Unknown2;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
+                switch (enu)
+                {
+                    case DistantLODData_FieldIndex.Unknown0:
+                        this.Unknown0 = ex;
+                        break;
+                    case DistantLODData_FieldIndex.Unknown1:
+                        this.Unknown1 = ex;
+                        break;
+                    case DistantLODData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
+                switch (enu)
+                {
+                    case DistantLODData_FieldIndex.Unknown0:
+                        this.Unknown0 = (Exception)obj;
+                        break;
+                    case DistantLODData_FieldIndex.Unknown1:
+                        this.Unknown1 = (Exception)obj;
+                        break;
+                    case DistantLODData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Unknown0 != null) return true;
+                if (Unknown1 != null) return true;
+                if (Unknown2 != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Unknown0 => {Unknown0}");
+                fg.AppendLine($"Unknown1 => {Unknown1}");
+                fg.AppendLine($"Unknown2 => {Unknown2}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Unknown0 = this.Unknown0.Combine(rhs.Unknown0);
+                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Unknown0;
+            public bool Unknown1;
+            public bool Unknown2;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Unknown0 = defaultOn;
+                this.Unknown1 = defaultOn;
+                this.Unknown2 = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Unknown0, null));
+                ret.Add((Unknown1, null));
+                ret.Add((Unknown2, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -322,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static DistantLODData_Mask<bool> GetEqualsMask(
+        public static DistantLODData.Mask<bool> GetEqualsMask(
             this IDistantLODDataGetter item,
             IDistantLODDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -336,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IDistantLODDataGetter item,
             string? name = null,
-            DistantLODData_Mask<bool>? printMask = null)
+            DistantLODData.Mask<bool>? printMask = null)
         {
             return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -348,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             FileGeneration fg,
             string? name = null,
-            DistantLODData_Mask<bool>? printMask = null)
+            DistantLODData.Mask<bool>? printMask = null)
         {
             ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,16 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IDistantLODDataGetter item,
-            DistantLODData_Mask<bool?> checkMask)
+            DistantLODData.Mask<bool?> checkMask)
         {
             return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DistantLODData_Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
+        public static DistantLODData.Mask<bool> GetHasBeenSetMask(this IDistantLODDataGetter item)
         {
-            var ret = new DistantLODData_Mask<bool>(false);
+            var ret = new DistantLODData.Mask<bool>(false);
             ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -387,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IDistantLODData lhs,
             IDistantLODDataGetter rhs,
-            DistantLODData_TranslationMask? copyMask = null)
+            DistantLODData.TranslationMask? copyMask = null)
         {
             ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -399,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IDistantLODData lhs,
             IDistantLODDataGetter rhs,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? copyMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -408,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DistantLODData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -426,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData DeepCopy(
             this IDistantLODDataGetter item,
-            DistantLODData_TranslationMask? copyMask = null)
+            DistantLODData.TranslationMask? copyMask = null)
         {
             return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -435,8 +749,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DistantLODData DeepCopy(
             this IDistantLODDataGetter item,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? copyMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? copyMask = null)
         {
             return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -460,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             XElement node,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -473,8 +787,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             XElement node,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -482,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DistantLODData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -501,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             string path,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,8 +827,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             string path,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -541,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             Stream stream,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,8 +867,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDistantLODData item,
             Stream stream,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,9 +957,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(DistantLODData_Mask<>);
+        public static readonly Type MaskType = typeof(DistantLODData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DistantLODData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(DistantLODData.ErrorMask);
 
         public static readonly Type ClassType = typeof(DistantLODData);
 
@@ -900,12 +1214,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly DistantLODDataCommon Instance = new DistantLODDataCommon();
 
-        public DistantLODData_Mask<bool> GetEqualsMask(
+        public DistantLODData.Mask<bool> GetEqualsMask(
             IDistantLODDataGetter item,
             IDistantLODDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DistantLODData_Mask<bool>(false);
+            var ret = new DistantLODData.Mask<bool>(false);
             ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IDistantLODDataGetter item,
             IDistantLODDataGetter rhs,
-            DistantLODData_Mask<bool> ret,
+            DistantLODData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -929,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IDistantLODDataGetter item,
             string? name = null,
-            DistantLODData_Mask<bool>? printMask = null)
+            DistantLODData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -944,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter item,
             FileGeneration fg,
             string? name = null,
-            DistantLODData_Mask<bool>? printMask = null)
+            DistantLODData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IDistantLODDataGetter item,
             FileGeneration fg,
-            DistantLODData_Mask<bool>? printMask = null)
+            DistantLODData.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown0 ?? true)
             {
@@ -986,14 +1300,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IDistantLODDataGetter item,
-            DistantLODData_Mask<bool?> checkMask)
+            DistantLODData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IDistantLODDataGetter item,
-            DistantLODData_Mask<bool> mask)
+            DistantLODData.Mask<bool> mask)
         {
             mask.Unknown0 = true;
             mask.Unknown1 = true;
@@ -1068,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DistantLODData DeepCopy(
             IDistantLODDataGetter item,
-            DistantLODData_TranslationMask? copyMask = null)
+            DistantLODData.TranslationMask? copyMask = null)
         {
             DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1079,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DistantLODData DeepCopy(
             IDistantLODDataGetter item,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? copyMask = null)
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? copyMask = null)
         {
             DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1354,8 +1668,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             XElement node,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null,
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1365,14 +1679,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DistantLODData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             string path,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null,
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1405,8 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDistantLODDataGetter item,
             Stream stream,
-            out DistantLODData_ErrorMask errorMask,
-            DistantLODData_TranslationMask? translationMask = null,
+            out DistantLODData.ErrorMask errorMask,
+            DistantLODData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1455,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODDataGetter item,
             XElement node,
             string? name = null,
-            DistantLODData_TranslationMask? translationMask = null)
+            DistantLODData.TranslationMask? translationMask = null)
         {
             ((DistantLODDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1499,321 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class DistantLODData_Mask<T> :
-        IMask<T>,
-        IEquatable<DistantLODData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public DistantLODData_Mask(T initialValue)
-        {
-            this.Unknown0 = initialValue;
-            this.Unknown1 = initialValue;
-            this.Unknown2 = initialValue;
-        }
-
-        public DistantLODData_Mask(
-            T Unknown0,
-            T Unknown1,
-            T Unknown2)
-        {
-            this.Unknown0 = Unknown0;
-            this.Unknown1 = Unknown1;
-            this.Unknown2 = Unknown2;
-        }
-
-        #pragma warning disable CS8618
-        protected DistantLODData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Unknown0;
-        public T Unknown1;
-        public T Unknown2;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is DistantLODData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(DistantLODData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Unknown0, rhs.Unknown0)) return false;
-            if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-            if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Unknown0?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Unknown0)) return false;
-            if (!eval(this.Unknown1)) return false;
-            if (!eval(this.Unknown2)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public DistantLODData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new DistantLODData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(DistantLODData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Unknown0 = eval(this.Unknown0);
-            obj.Unknown1 = eval(this.Unknown1);
-            obj.Unknown2 = eval(this.Unknown2);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(DistantLODData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, DistantLODData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(DistantLODData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Unknown0 ?? true)
-                {
-                    fg.AppendLine($"Unknown0 => {Unknown0}");
-                }
-                if (printMask?.Unknown1 ?? true)
-                {
-                    fg.AppendLine($"Unknown1 => {Unknown1}");
-                }
-                if (printMask?.Unknown2 ?? true)
-                {
-                    fg.AppendLine($"Unknown2 => {Unknown2}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class DistantLODData_ErrorMask : IErrorMask, IErrorMask<DistantLODData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Unknown0;
-        public Exception? Unknown1;
-        public Exception? Unknown2;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
-            switch (enu)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                    return Unknown0;
-                case DistantLODData_FieldIndex.Unknown1:
-                    return Unknown1;
-                case DistantLODData_FieldIndex.Unknown2:
-                    return Unknown2;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
-            switch (enu)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                    this.Unknown0 = ex;
-                    break;
-                case DistantLODData_FieldIndex.Unknown1:
-                    this.Unknown1 = ex;
-                    break;
-                case DistantLODData_FieldIndex.Unknown2:
-                    this.Unknown2 = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            DistantLODData_FieldIndex enu = (DistantLODData_FieldIndex)index;
-            switch (enu)
-            {
-                case DistantLODData_FieldIndex.Unknown0:
-                    this.Unknown0 = (Exception)obj;
-                    break;
-                case DistantLODData_FieldIndex.Unknown1:
-                    this.Unknown1 = (Exception)obj;
-                    break;
-                case DistantLODData_FieldIndex.Unknown2:
-                    this.Unknown2 = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Unknown0 != null) return true;
-            if (Unknown1 != null) return true;
-            if (Unknown2 != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("DistantLODData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Unknown0 => {Unknown0}");
-            fg.AppendLine($"Unknown1 => {Unknown1}");
-            fg.AppendLine($"Unknown2 => {Unknown2}");
-        }
-        #endregion
-
-        #region Combine
-        public DistantLODData_ErrorMask Combine(DistantLODData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new DistantLODData_ErrorMask();
-            ret.Unknown0 = this.Unknown0.Combine(rhs.Unknown0);
-            ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-            ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-            return ret;
-        }
-        public static DistantLODData_ErrorMask? Combine(DistantLODData_ErrorMask? lhs, DistantLODData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static DistantLODData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new DistantLODData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class DistantLODData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Unknown0;
-        public bool Unknown1;
-        public bool Unknown2;
-        #endregion
-
-        #region Ctors
-        public DistantLODData_TranslationMask(bool defaultOn)
-        {
-            this.Unknown0 = defaultOn;
-            this.Unknown1 = defaultOn;
-            this.Unknown2 = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Unknown0, null));
-            ret.Add((Unknown1, null));
-            ret.Add((Unknown2, null));
-        }
-    }
 }
 #endregion
 

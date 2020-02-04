@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Relation CreateFromXml(
             XElement node,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -120,15 +120,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Relation CreateFromXml(
             XElement node,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relation.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             string path,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -158,8 +158,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             string path,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             Stream stream,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation CreateFromXml(
             Stream stream,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Relation CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,6 +216,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Faction = initialValue;
+                this.Modifier = initialValue;
+            }
+
+            public Mask(
+                T Faction,
+                T Modifier)
+            {
+                this.Faction = Faction;
+                this.Modifier = Modifier;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Faction;
+            public T Modifier;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Faction, rhs.Faction)) return false;
+                if (!object.Equals(this.Modifier, rhs.Modifier)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Faction?.GetHashCode());
+                ret = ret.CombineHashCode(this.Modifier?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Faction)) return false;
+                if (!eval(this.Modifier)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Relation.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Faction = eval(this.Faction);
+                obj.Modifier = eval(this.Modifier);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Relation.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Relation.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Relation.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Faction ?? true)
+                    {
+                        fg.AppendLine($"Faction => {Faction}");
+                    }
+                    if (printMask?.Modifier ?? true)
+                    {
+                        fg.AppendLine($"Modifier => {Modifier}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Faction;
+            public Exception? Modifier;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Relation_FieldIndex enu = (Relation_FieldIndex)index;
+                switch (enu)
+                {
+                    case Relation_FieldIndex.Faction:
+                        return Faction;
+                    case Relation_FieldIndex.Modifier:
+                        return Modifier;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Relation_FieldIndex enu = (Relation_FieldIndex)index;
+                switch (enu)
+                {
+                    case Relation_FieldIndex.Faction:
+                        this.Faction = ex;
+                        break;
+                    case Relation_FieldIndex.Modifier:
+                        this.Modifier = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Relation_FieldIndex enu = (Relation_FieldIndex)index;
+                switch (enu)
+                {
+                    case Relation_FieldIndex.Faction:
+                        this.Faction = (Exception)obj;
+                        break;
+                    case Relation_FieldIndex.Modifier:
+                        this.Modifier = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Faction != null) return true;
+                if (Modifier != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Faction => {Faction}");
+                fg.AppendLine($"Modifier => {Modifier}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Faction = this.Faction.Combine(rhs.Faction);
+                ret.Modifier = this.Modifier.Combine(rhs.Modifier);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Faction;
+            public bool Modifier;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Faction = defaultOn;
+                this.Modifier = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Faction, null));
+                ret.Add((Modifier, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -324,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Relation_Mask<bool> GetEqualsMask(
+        public static Relation.Mask<bool> GetEqualsMask(
             this IRelationGetter item,
             IRelationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -338,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRelationGetter item,
             string? name = null,
-            Relation_Mask<bool>? printMask = null)
+            Relation.Mask<bool>? printMask = null)
         {
             return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             FileGeneration fg,
             string? name = null,
-            Relation_Mask<bool>? printMask = null)
+            Relation.Mask<bool>? printMask = null)
         {
             ((RelationCommon)((IRelationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -361,16 +648,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRelationGetter item,
-            Relation_Mask<bool?> checkMask)
+            Relation.Mask<bool?> checkMask)
         {
             return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Relation_Mask<bool> GetHasBeenSetMask(this IRelationGetter item)
+        public static Relation.Mask<bool> GetHasBeenSetMask(this IRelationGetter item)
         {
-            var ret = new Relation_Mask<bool>(false);
+            var ret = new Relation.Mask<bool>(false);
             ((RelationCommon)((IRelationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -389,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRelation lhs,
             IRelationGetter rhs,
-            Relation_TranslationMask? copyMask = null)
+            Relation.TranslationMask? copyMask = null)
         {
             ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -401,8 +688,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRelation lhs,
             IRelationGetter rhs,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? copyMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -410,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -428,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation DeepCopy(
             this IRelationGetter item,
-            Relation_TranslationMask? copyMask = null)
+            Relation.TranslationMask? copyMask = null)
         {
             return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -437,8 +724,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Relation DeepCopy(
             this IRelationGetter item,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? copyMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? copyMask = null)
         {
             return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -462,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             XElement node,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -475,8 +762,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             XElement node,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -484,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -503,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             string path,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -515,8 +802,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             string path,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -530,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -543,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             Stream stream,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -555,8 +842,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRelation item,
             Stream stream,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -570,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -644,9 +931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(Relation_Mask<>);
+        public static readonly Type MaskType = typeof(Relation.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Relation_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Relation.ErrorMask);
 
         public static readonly Type ClassType = typeof(Relation);
 
@@ -891,12 +1178,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RelationCommon Instance = new RelationCommon();
 
-        public Relation_Mask<bool> GetEqualsMask(
+        public Relation.Mask<bool> GetEqualsMask(
             IRelationGetter item,
             IRelationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Relation_Mask<bool>(false);
+            var ret = new Relation.Mask<bool>(false);
             ((RelationCommon)((IRelationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -908,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRelationGetter item,
             IRelationGetter rhs,
-            Relation_Mask<bool> ret,
+            Relation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -919,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRelationGetter item,
             string? name = null,
-            Relation_Mask<bool>? printMask = null)
+            Relation.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -934,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelationGetter item,
             FileGeneration fg,
             string? name = null,
-            Relation_Mask<bool>? printMask = null)
+            Relation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -958,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRelationGetter item,
             FileGeneration fg,
-            Relation_Mask<bool>? printMask = null)
+            Relation.Mask<bool>? printMask = null)
         {
             if (printMask?.Faction ?? true)
             {
@@ -972,14 +1259,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRelationGetter item,
-            Relation_Mask<bool?> checkMask)
+            Relation.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRelationGetter item,
-            Relation_Mask<bool> mask)
+            Relation.Mask<bool> mask)
         {
             mask.Faction = true;
             mask.Modifier = true;
@@ -1048,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Relation DeepCopy(
             IRelationGetter item,
-            Relation_TranslationMask? copyMask = null)
+            Relation.TranslationMask? copyMask = null)
         {
             Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1059,8 +1346,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Relation DeepCopy(
             IRelationGetter item,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? copyMask = null)
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? copyMask = null)
         {
             Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1308,8 +1595,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             XElement node,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null,
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1319,14 +1606,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRelationGetter item,
             string path,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null,
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1359,8 +1646,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRelationGetter item,
             Stream stream,
-            out Relation_ErrorMask errorMask,
-            Relation_TranslationMask? translationMask = null,
+            out Relation.ErrorMask errorMask,
+            Relation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1409,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelationGetter item,
             XElement node,
             string? name = null,
-            Relation_TranslationMask? translationMask = null)
+            Relation.TranslationMask? translationMask = null)
         {
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1453,294 +1740,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Relation_Mask<T> :
-        IMask<T>,
-        IEquatable<Relation_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Relation_Mask(T initialValue)
-        {
-            this.Faction = initialValue;
-            this.Modifier = initialValue;
-        }
-
-        public Relation_Mask(
-            T Faction,
-            T Modifier)
-        {
-            this.Faction = Faction;
-            this.Modifier = Modifier;
-        }
-
-        #pragma warning disable CS8618
-        protected Relation_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Faction;
-        public T Modifier;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Relation_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Relation_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Faction, rhs.Faction)) return false;
-            if (!object.Equals(this.Modifier, rhs.Modifier)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Faction?.GetHashCode());
-            ret = ret.CombineHashCode(this.Modifier?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Faction)) return false;
-            if (!eval(this.Modifier)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Relation_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Relation_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Relation_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Faction = eval(this.Faction);
-            obj.Modifier = eval(this.Modifier);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Relation_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Relation_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Relation_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Faction ?? true)
-                {
-                    fg.AppendLine($"Faction => {Faction}");
-                }
-                if (printMask?.Modifier ?? true)
-                {
-                    fg.AppendLine($"Modifier => {Modifier}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Relation_ErrorMask : IErrorMask, IErrorMask<Relation_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Faction;
-        public Exception? Modifier;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    return Faction;
-                case Relation_FieldIndex.Modifier:
-                    return Modifier;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    this.Faction = ex;
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    this.Modifier = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
-            switch (enu)
-            {
-                case Relation_FieldIndex.Faction:
-                    this.Faction = (Exception)obj;
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    this.Modifier = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Faction != null) return true;
-            if (Modifier != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Relation_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Faction => {Faction}");
-            fg.AppendLine($"Modifier => {Modifier}");
-        }
-        #endregion
-
-        #region Combine
-        public Relation_ErrorMask Combine(Relation_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Relation_ErrorMask();
-            ret.Faction = this.Faction.Combine(rhs.Faction);
-            ret.Modifier = this.Modifier.Combine(rhs.Modifier);
-            return ret;
-        }
-        public static Relation_ErrorMask? Combine(Relation_ErrorMask? lhs, Relation_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Relation_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Relation_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Relation_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Faction;
-        public bool Modifier;
-        #endregion
-
-        #region Ctors
-        public Relation_TranslationMask(bool defaultOn)
-        {
-            this.Faction = defaultOn;
-            this.Modifier = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Faction, null));
-            ret.Add((Modifier, null));
-        }
-    }
 }
 #endregion
 

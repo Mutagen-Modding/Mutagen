@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Effect CreateFromXml(
             XElement node,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -197,15 +197,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Effect CreateFromXml(
             XElement node,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Effect.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect CreateFromXml(
             string path,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -235,8 +235,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect CreateFromXml(
             string path,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Effect CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect CreateFromXml(
             Stream stream,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -269,8 +269,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect CreateFromXml(
             Stream stream,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Effect CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -293,6 +293,459 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.MagicEffect = initialValue;
+                this.Magnitude = initialValue;
+                this.Area = initialValue;
+                this.Duration = initialValue;
+                this.Type = initialValue;
+                this.ActorValue = initialValue;
+                this.ScriptEffect = new MaskItem<T, ScriptEffect.Mask<T>?>(initialValue, new ScriptEffect.Mask<T>(initialValue));
+                this.EFITDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MagicEffect,
+                T Magnitude,
+                T Area,
+                T Duration,
+                T Type,
+                T ActorValue,
+                T ScriptEffect,
+                T EFITDataTypeState)
+            {
+                this.MagicEffect = MagicEffect;
+                this.Magnitude = Magnitude;
+                this.Area = Area;
+                this.Duration = Duration;
+                this.Type = Type;
+                this.ActorValue = ActorValue;
+                this.ScriptEffect = new MaskItem<T, ScriptEffect.Mask<T>?>(ScriptEffect, new ScriptEffect.Mask<T>(ScriptEffect));
+                this.EFITDataTypeState = EFITDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T MagicEffect;
+            public T Magnitude;
+            public T Area;
+            public T Duration;
+            public T Type;
+            public T ActorValue;
+            public MaskItem<T, ScriptEffect.Mask<T>?>? ScriptEffect { get; set; }
+            public T EFITDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.MagicEffect, rhs.MagicEffect)) return false;
+                if (!object.Equals(this.Magnitude, rhs.Magnitude)) return false;
+                if (!object.Equals(this.Area, rhs.Area)) return false;
+                if (!object.Equals(this.Duration, rhs.Duration)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+                if (!object.Equals(this.ScriptEffect, rhs.ScriptEffect)) return false;
+                if (!object.Equals(this.EFITDataTypeState, rhs.EFITDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.MagicEffect?.GetHashCode());
+                ret = ret.CombineHashCode(this.Magnitude?.GetHashCode());
+                ret = ret.CombineHashCode(this.Area?.GetHashCode());
+                ret = ret.CombineHashCode(this.Duration?.GetHashCode());
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.ActorValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.ScriptEffect?.GetHashCode());
+                ret = ret.CombineHashCode(this.EFITDataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.MagicEffect)) return false;
+                if (!eval(this.Magnitude)) return false;
+                if (!eval(this.Area)) return false;
+                if (!eval(this.Duration)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.ActorValue)) return false;
+                if (ScriptEffect != null)
+                {
+                    if (!eval(this.ScriptEffect.Overall)) return false;
+                    if (this.ScriptEffect.Specific != null && !this.ScriptEffect.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.EFITDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Effect.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.MagicEffect = eval(this.MagicEffect);
+                obj.Magnitude = eval(this.Magnitude);
+                obj.Area = eval(this.Area);
+                obj.Duration = eval(this.Duration);
+                obj.Type = eval(this.Type);
+                obj.ActorValue = eval(this.ActorValue);
+                obj.ScriptEffect = this.ScriptEffect == null ? null : new MaskItem<R, ScriptEffect.Mask<R>?>(eval(this.ScriptEffect.Overall), this.ScriptEffect.Specific?.Translate(eval));
+                obj.EFITDataTypeState = eval(this.EFITDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Effect.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Effect.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Effect.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.MagicEffect ?? true)
+                    {
+                        fg.AppendLine($"MagicEffect => {MagicEffect}");
+                    }
+                    if (printMask?.Magnitude ?? true)
+                    {
+                        fg.AppendLine($"Magnitude => {Magnitude}");
+                    }
+                    if (printMask?.Area ?? true)
+                    {
+                        fg.AppendLine($"Area => {Area}");
+                    }
+                    if (printMask?.Duration ?? true)
+                    {
+                        fg.AppendLine($"Duration => {Duration}");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.ActorValue ?? true)
+                    {
+                        fg.AppendLine($"ActorValue => {ActorValue}");
+                    }
+                    if (printMask?.ScriptEffect?.Overall ?? true)
+                    {
+                        ScriptEffect?.ToString(fg);
+                    }
+                    if (printMask?.EFITDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"EFITDataTypeState => {EFITDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? MagicEffect;
+            public Exception? Magnitude;
+            public Exception? Area;
+            public Exception? Duration;
+            public Exception? Type;
+            public Exception? ActorValue;
+            public MaskItem<Exception?, ScriptEffect.ErrorMask?>? ScriptEffect;
+            public Exception? EFITDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Effect_FieldIndex enu = (Effect_FieldIndex)index;
+                switch (enu)
+                {
+                    case Effect_FieldIndex.MagicEffect:
+                        return MagicEffect;
+                    case Effect_FieldIndex.Magnitude:
+                        return Magnitude;
+                    case Effect_FieldIndex.Area:
+                        return Area;
+                    case Effect_FieldIndex.Duration:
+                        return Duration;
+                    case Effect_FieldIndex.Type:
+                        return Type;
+                    case Effect_FieldIndex.ActorValue:
+                        return ActorValue;
+                    case Effect_FieldIndex.ScriptEffect:
+                        return ScriptEffect;
+                    case Effect_FieldIndex.EFITDataTypeState:
+                        return EFITDataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Effect_FieldIndex enu = (Effect_FieldIndex)index;
+                switch (enu)
+                {
+                    case Effect_FieldIndex.MagicEffect:
+                        this.MagicEffect = ex;
+                        break;
+                    case Effect_FieldIndex.Magnitude:
+                        this.Magnitude = ex;
+                        break;
+                    case Effect_FieldIndex.Area:
+                        this.Area = ex;
+                        break;
+                    case Effect_FieldIndex.Duration:
+                        this.Duration = ex;
+                        break;
+                    case Effect_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Effect_FieldIndex.ActorValue:
+                        this.ActorValue = ex;
+                        break;
+                    case Effect_FieldIndex.ScriptEffect:
+                        this.ScriptEffect = new MaskItem<Exception?, ScriptEffect.ErrorMask?>(ex, null);
+                        break;
+                    case Effect_FieldIndex.EFITDataTypeState:
+                        this.EFITDataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Effect_FieldIndex enu = (Effect_FieldIndex)index;
+                switch (enu)
+                {
+                    case Effect_FieldIndex.MagicEffect:
+                        this.MagicEffect = (Exception)obj;
+                        break;
+                    case Effect_FieldIndex.Magnitude:
+                        this.Magnitude = (Exception)obj;
+                        break;
+                    case Effect_FieldIndex.Area:
+                        this.Area = (Exception)obj;
+                        break;
+                    case Effect_FieldIndex.Duration:
+                        this.Duration = (Exception)obj;
+                        break;
+                    case Effect_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case Effect_FieldIndex.ActorValue:
+                        this.ActorValue = (Exception)obj;
+                        break;
+                    case Effect_FieldIndex.ScriptEffect:
+                        this.ScriptEffect = (MaskItem<Exception?, ScriptEffect.ErrorMask?>?)obj;
+                        break;
+                    case Effect_FieldIndex.EFITDataTypeState:
+                        this.EFITDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (MagicEffect != null) return true;
+                if (Magnitude != null) return true;
+                if (Area != null) return true;
+                if (Duration != null) return true;
+                if (Type != null) return true;
+                if (ActorValue != null) return true;
+                if (ScriptEffect != null) return true;
+                if (EFITDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"MagicEffect => {MagicEffect}");
+                fg.AppendLine($"Magnitude => {Magnitude}");
+                fg.AppendLine($"Area => {Area}");
+                fg.AppendLine($"Duration => {Duration}");
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"ActorValue => {ActorValue}");
+                ScriptEffect?.ToString(fg);
+                fg.AppendLine($"EFITDataTypeState => {EFITDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.MagicEffect = this.MagicEffect.Combine(rhs.MagicEffect);
+                ret.Magnitude = this.Magnitude.Combine(rhs.Magnitude);
+                ret.Area = this.Area.Combine(rhs.Area);
+                ret.Duration = this.Duration.Combine(rhs.Duration);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+                ret.ScriptEffect = new MaskItem<Exception?, ScriptEffect.ErrorMask?>(ExceptionExt.Combine(this.ScriptEffect?.Overall, rhs.ScriptEffect?.Overall), (this.ScriptEffect?.Specific as IErrorMask<ScriptEffect.ErrorMask>)?.Combine(rhs.ScriptEffect?.Specific));
+                ret.EFITDataTypeState = this.EFITDataTypeState.Combine(rhs.EFITDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool MagicEffect;
+            public bool Magnitude;
+            public bool Area;
+            public bool Duration;
+            public bool Type;
+            public bool ActorValue;
+            public MaskItem<bool, ScriptEffect.TranslationMask?> ScriptEffect;
+            public bool EFITDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.MagicEffect = defaultOn;
+                this.Magnitude = defaultOn;
+                this.Area = defaultOn;
+                this.Duration = defaultOn;
+                this.Type = defaultOn;
+                this.ActorValue = defaultOn;
+                this.ScriptEffect = new MaskItem<bool, ScriptEffect.TranslationMask?>(defaultOn, null);
+                this.EFITDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((MagicEffect, null));
+                ret.Add((Magnitude, null));
+                ret.Add((Area, null));
+                ret.Add((Duration, null));
+                ret.Add((Type, null));
+                ret.Add((ActorValue, null));
+                ret.Add((ScriptEffect?.Overall ?? true, ScriptEffect?.Specific?.GetCrystal()));
+                ret.Add((EFITDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -418,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Effect_Mask<bool> GetEqualsMask(
+        public static Effect.Mask<bool> GetEqualsMask(
             this IEffectGetter item,
             IEffectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -432,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IEffectGetter item,
             string? name = null,
-            Effect_Mask<bool>? printMask = null)
+            Effect.Mask<bool>? printMask = null)
         {
             return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -444,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectGetter item,
             FileGeneration fg,
             string? name = null,
-            Effect_Mask<bool>? printMask = null)
+            Effect.Mask<bool>? printMask = null)
         {
             ((EffectCommon)((IEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -455,16 +908,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IEffectGetter item,
-            Effect_Mask<bool?> checkMask)
+            Effect.Mask<bool?> checkMask)
         {
             return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Effect_Mask<bool> GetHasBeenSetMask(this IEffectGetter item)
+        public static Effect.Mask<bool> GetHasBeenSetMask(this IEffectGetter item)
         {
-            var ret = new Effect_Mask<bool>(false);
+            var ret = new Effect.Mask<bool>(false);
             ((EffectCommon)((IEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -483,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IEffect lhs,
             IEffectGetter rhs,
-            Effect_TranslationMask? copyMask = null)
+            Effect.TranslationMask? copyMask = null)
         {
             ((EffectSetterTranslationCommon)((IEffectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -495,8 +948,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IEffect lhs,
             IEffectGetter rhs,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? copyMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((EffectSetterTranslationCommon)((IEffectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -504,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Effect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -522,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect DeepCopy(
             this IEffectGetter item,
-            Effect_TranslationMask? copyMask = null)
+            Effect.TranslationMask? copyMask = null)
         {
             return ((EffectSetterTranslationCommon)((IEffectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -531,8 +984,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Effect DeepCopy(
             this IEffectGetter item,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? copyMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? copyMask = null)
         {
             return ((EffectSetterTranslationCommon)((IEffectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -556,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffect item,
             XElement node,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -569,8 +1022,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffect item,
             XElement node,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -578,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Effect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -597,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffect item,
             string path,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -609,8 +1062,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffect item,
             string path,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -624,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffect item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -637,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffect item,
             Stream stream,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -649,8 +1102,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffect item,
             Stream stream,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -664,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffect item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -744,9 +1197,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Effect_Mask<>);
+        public static readonly Type MaskType = typeof(Effect.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Effect_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Effect.ErrorMask);
 
         public static readonly Type ClassType = typeof(Effect);
 
@@ -1111,12 +1564,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly EffectCommon Instance = new EffectCommon();
 
-        public Effect_Mask<bool> GetEqualsMask(
+        public Effect.Mask<bool> GetEqualsMask(
             IEffectGetter item,
             IEffectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Effect_Mask<bool>(false);
+            var ret = new Effect.Mask<bool>(false);
             ((EffectCommon)((IEffectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1128,7 +1581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IEffectGetter item,
             IEffectGetter rhs,
-            Effect_Mask<bool> ret,
+            Effect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1149,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IEffectGetter item,
             string? name = null,
-            Effect_Mask<bool>? printMask = null)
+            Effect.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1164,7 +1617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectGetter item,
             FileGeneration fg,
             string? name = null,
-            Effect_Mask<bool>? printMask = null)
+            Effect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1188,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IEffectGetter item,
             FileGeneration fg,
-            Effect_Mask<bool>? printMask = null)
+            Effect.Mask<bool>? printMask = null)
         {
             if (printMask?.MagicEffect ?? true)
             {
@@ -1226,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IEffectGetter item,
-            Effect_Mask<bool?> checkMask)
+            Effect.Mask<bool?> checkMask)
         {
             if (checkMask.ScriptEffect?.Overall.HasValue ?? false && checkMask.ScriptEffect.Overall.Value != (item.ScriptEffect != null)) return false;
             if (checkMask.ScriptEffect?.Specific != null && (item.ScriptEffect == null || !item.ScriptEffect.HasBeenSet(checkMask.ScriptEffect.Specific))) return false;
@@ -1235,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IEffectGetter item,
-            Effect_Mask<bool> mask)
+            Effect.Mask<bool> mask)
         {
             mask.MagicEffect = true;
             mask.Magnitude = true;
@@ -1244,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Type = true;
             mask.ActorValue = true;
             var itemScriptEffect = item.ScriptEffect;
-            mask.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>?>(itemScriptEffect != null, itemScriptEffect?.GetHasBeenSetMask());
+            mask.ScriptEffect = new MaskItem<bool, ScriptEffect.Mask<bool>?>(itemScriptEffect != null, itemScriptEffect?.GetHasBeenSetMask());
             mask.EFITDataTypeState = true;
         }
         
@@ -1379,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Effect DeepCopy(
             IEffectGetter item,
-            Effect_TranslationMask? copyMask = null)
+            Effect.TranslationMask? copyMask = null)
         {
             Effect ret = (Effect)((EffectCommon)((IEffectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1390,8 +1843,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Effect DeepCopy(
             IEffectGetter item,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? copyMask = null)
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? copyMask = null)
         {
             Effect ret = (Effect)((EffectCommon)((IEffectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1809,8 +2262,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEffectGetter item,
             XElement node,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null,
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1820,14 +2273,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Effect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IEffectGetter item,
             string path,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null,
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1860,8 +2313,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEffectGetter item,
             Stream stream,
-            out Effect_ErrorMask errorMask,
-            Effect_TranslationMask? translationMask = null,
+            out Effect.ErrorMask errorMask,
+            Effect.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1910,7 +2363,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectGetter item,
             XElement node,
             string? name = null,
-            Effect_TranslationMask? translationMask = null)
+            Effect.TranslationMask? translationMask = null)
         {
             ((EffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1954,460 +2407,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Effect_Mask<T> :
-        IMask<T>,
-        IEquatable<Effect_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Effect_Mask(T initialValue)
-        {
-            this.MagicEffect = initialValue;
-            this.Magnitude = initialValue;
-            this.Area = initialValue;
-            this.Duration = initialValue;
-            this.Type = initialValue;
-            this.ActorValue = initialValue;
-            this.ScriptEffect = new MaskItem<T, ScriptEffect_Mask<T>?>(initialValue, new ScriptEffect_Mask<T>(initialValue));
-            this.EFITDataTypeState = initialValue;
-        }
-
-        public Effect_Mask(
-            T MagicEffect,
-            T Magnitude,
-            T Area,
-            T Duration,
-            T Type,
-            T ActorValue,
-            T ScriptEffect,
-            T EFITDataTypeState)
-        {
-            this.MagicEffect = MagicEffect;
-            this.Magnitude = Magnitude;
-            this.Area = Area;
-            this.Duration = Duration;
-            this.Type = Type;
-            this.ActorValue = ActorValue;
-            this.ScriptEffect = new MaskItem<T, ScriptEffect_Mask<T>?>(ScriptEffect, new ScriptEffect_Mask<T>(ScriptEffect));
-            this.EFITDataTypeState = EFITDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Effect_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T MagicEffect;
-        public T Magnitude;
-        public T Area;
-        public T Duration;
-        public T Type;
-        public T ActorValue;
-        public MaskItem<T, ScriptEffect_Mask<T>?>? ScriptEffect { get; set; }
-        public T EFITDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Effect_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Effect_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.MagicEffect, rhs.MagicEffect)) return false;
-            if (!object.Equals(this.Magnitude, rhs.Magnitude)) return false;
-            if (!object.Equals(this.Area, rhs.Area)) return false;
-            if (!object.Equals(this.Duration, rhs.Duration)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
-            if (!object.Equals(this.ScriptEffect, rhs.ScriptEffect)) return false;
-            if (!object.Equals(this.EFITDataTypeState, rhs.EFITDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.MagicEffect?.GetHashCode());
-            ret = ret.CombineHashCode(this.Magnitude?.GetHashCode());
-            ret = ret.CombineHashCode(this.Area?.GetHashCode());
-            ret = ret.CombineHashCode(this.Duration?.GetHashCode());
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.ActorValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.ScriptEffect?.GetHashCode());
-            ret = ret.CombineHashCode(this.EFITDataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.MagicEffect)) return false;
-            if (!eval(this.Magnitude)) return false;
-            if (!eval(this.Area)) return false;
-            if (!eval(this.Duration)) return false;
-            if (!eval(this.Type)) return false;
-            if (!eval(this.ActorValue)) return false;
-            if (ScriptEffect != null)
-            {
-                if (!eval(this.ScriptEffect.Overall)) return false;
-                if (this.ScriptEffect.Specific != null && !this.ScriptEffect.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.EFITDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Effect_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Effect_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Effect_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.MagicEffect = eval(this.MagicEffect);
-            obj.Magnitude = eval(this.Magnitude);
-            obj.Area = eval(this.Area);
-            obj.Duration = eval(this.Duration);
-            obj.Type = eval(this.Type);
-            obj.ActorValue = eval(this.ActorValue);
-            obj.ScriptEffect = this.ScriptEffect == null ? null : new MaskItem<R, ScriptEffect_Mask<R>?>(eval(this.ScriptEffect.Overall), this.ScriptEffect.Specific?.Translate(eval));
-            obj.EFITDataTypeState = eval(this.EFITDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Effect_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Effect_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Effect_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.MagicEffect ?? true)
-                {
-                    fg.AppendLine($"MagicEffect => {MagicEffect}");
-                }
-                if (printMask?.Magnitude ?? true)
-                {
-                    fg.AppendLine($"Magnitude => {Magnitude}");
-                }
-                if (printMask?.Area ?? true)
-                {
-                    fg.AppendLine($"Area => {Area}");
-                }
-                if (printMask?.Duration ?? true)
-                {
-                    fg.AppendLine($"Duration => {Duration}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.ActorValue ?? true)
-                {
-                    fg.AppendLine($"ActorValue => {ActorValue}");
-                }
-                if (printMask?.ScriptEffect?.Overall ?? true)
-                {
-                    ScriptEffect?.ToString(fg);
-                }
-                if (printMask?.EFITDataTypeState ?? true)
-                {
-                    fg.AppendLine($"EFITDataTypeState => {EFITDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Effect_ErrorMask : IErrorMask, IErrorMask<Effect_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? MagicEffect;
-        public Exception? Magnitude;
-        public Exception? Area;
-        public Exception? Duration;
-        public Exception? Type;
-        public Exception? ActorValue;
-        public MaskItem<Exception?, ScriptEffect_ErrorMask?>? ScriptEffect;
-        public Exception? EFITDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    return MagicEffect;
-                case Effect_FieldIndex.Magnitude:
-                    return Magnitude;
-                case Effect_FieldIndex.Area:
-                    return Area;
-                case Effect_FieldIndex.Duration:
-                    return Duration;
-                case Effect_FieldIndex.Type:
-                    return Type;
-                case Effect_FieldIndex.ActorValue:
-                    return ActorValue;
-                case Effect_FieldIndex.ScriptEffect:
-                    return ScriptEffect;
-                case Effect_FieldIndex.EFITDataTypeState:
-                    return EFITDataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    this.MagicEffect = ex;
-                    break;
-                case Effect_FieldIndex.Magnitude:
-                    this.Magnitude = ex;
-                    break;
-                case Effect_FieldIndex.Area:
-                    this.Area = ex;
-                    break;
-                case Effect_FieldIndex.Duration:
-                    this.Duration = ex;
-                    break;
-                case Effect_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case Effect_FieldIndex.ActorValue:
-                    this.ActorValue = ex;
-                    break;
-                case Effect_FieldIndex.ScriptEffect:
-                    this.ScriptEffect = new MaskItem<Exception?, ScriptEffect_ErrorMask?>(ex, null);
-                    break;
-                case Effect_FieldIndex.EFITDataTypeState:
-                    this.EFITDataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Effect_FieldIndex enu = (Effect_FieldIndex)index;
-            switch (enu)
-            {
-                case Effect_FieldIndex.MagicEffect:
-                    this.MagicEffect = (Exception)obj;
-                    break;
-                case Effect_FieldIndex.Magnitude:
-                    this.Magnitude = (Exception)obj;
-                    break;
-                case Effect_FieldIndex.Area:
-                    this.Area = (Exception)obj;
-                    break;
-                case Effect_FieldIndex.Duration:
-                    this.Duration = (Exception)obj;
-                    break;
-                case Effect_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case Effect_FieldIndex.ActorValue:
-                    this.ActorValue = (Exception)obj;
-                    break;
-                case Effect_FieldIndex.ScriptEffect:
-                    this.ScriptEffect = (MaskItem<Exception?, ScriptEffect_ErrorMask?>?)obj;
-                    break;
-                case Effect_FieldIndex.EFITDataTypeState:
-                    this.EFITDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (MagicEffect != null) return true;
-            if (Magnitude != null) return true;
-            if (Area != null) return true;
-            if (Duration != null) return true;
-            if (Type != null) return true;
-            if (ActorValue != null) return true;
-            if (ScriptEffect != null) return true;
-            if (EFITDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Effect_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"MagicEffect => {MagicEffect}");
-            fg.AppendLine($"Magnitude => {Magnitude}");
-            fg.AppendLine($"Area => {Area}");
-            fg.AppendLine($"Duration => {Duration}");
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"ActorValue => {ActorValue}");
-            ScriptEffect?.ToString(fg);
-            fg.AppendLine($"EFITDataTypeState => {EFITDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Effect_ErrorMask Combine(Effect_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Effect_ErrorMask();
-            ret.MagicEffect = this.MagicEffect.Combine(rhs.MagicEffect);
-            ret.Magnitude = this.Magnitude.Combine(rhs.Magnitude);
-            ret.Area = this.Area.Combine(rhs.Area);
-            ret.Duration = this.Duration.Combine(rhs.Duration);
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
-            ret.ScriptEffect = new MaskItem<Exception?, ScriptEffect_ErrorMask?>(ExceptionExt.Combine(this.ScriptEffect?.Overall, rhs.ScriptEffect?.Overall), (this.ScriptEffect?.Specific as IErrorMask<ScriptEffect_ErrorMask>)?.Combine(rhs.ScriptEffect?.Specific));
-            ret.EFITDataTypeState = this.EFITDataTypeState.Combine(rhs.EFITDataTypeState);
-            return ret;
-        }
-        public static Effect_ErrorMask? Combine(Effect_ErrorMask? lhs, Effect_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Effect_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Effect_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Effect_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool MagicEffect;
-        public bool Magnitude;
-        public bool Area;
-        public bool Duration;
-        public bool Type;
-        public bool ActorValue;
-        public MaskItem<bool, ScriptEffect_TranslationMask?> ScriptEffect;
-        public bool EFITDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Effect_TranslationMask(bool defaultOn)
-        {
-            this.MagicEffect = defaultOn;
-            this.Magnitude = defaultOn;
-            this.Area = defaultOn;
-            this.Duration = defaultOn;
-            this.Type = defaultOn;
-            this.ActorValue = defaultOn;
-            this.ScriptEffect = new MaskItem<bool, ScriptEffect_TranslationMask?>(defaultOn, null);
-            this.EFITDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((MagicEffect, null));
-            ret.Add((Magnitude, null));
-            ret.Add((Area, null));
-            ret.Add((Duration, null));
-            ret.Add((Type, null));
-            ret.Add((ActorValue, null));
-            ret.Add((ScriptEffect?.Overall ?? true, ScriptEffect?.Specific?.GetCrystal()));
-            ret.Add((EFITDataTypeState, null));
-        }
-    }
 }
 #endregion
 

@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new FormList CreateFromXml(
             XElement node,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -111,15 +111,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static FormList CreateFromXml(
             XElement node,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FormList_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FormList.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FormList CreateFromXml(
             string path,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -149,8 +149,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FormList CreateFromXml(
             string path,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static FormList CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FormList CreateFromXml(
             Stream stream,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -183,8 +183,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FormList CreateFromXml(
             Stream stream,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static FormList CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,6 +207,231 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            SkyrimMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T SkyrimMajorRecordFlags,
+                T FormVersion,
+                T Version2)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+                FormVersion: FormVersion,
+                Version2: Version2)
+            {
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new FormList.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(FormList.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, FormList.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(FormList.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            SkyrimMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                FormList_FieldIndex enu = (FormList_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                FormList_FieldIndex enu = (FormList_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                FormList_FieldIndex enu = (FormList_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            SkyrimMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+            }
+
+            #endregion
+
+        }
         #endregion
 
         #region Mutagen
@@ -319,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((FormListSetterCommon)((IFormListGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FormList_Mask<bool> GetEqualsMask(
+        public static FormList.Mask<bool> GetEqualsMask(
             this IFormListGetter item,
             IFormListGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -333,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IFormListGetter item,
             string? name = null,
-            FormList_Mask<bool>? printMask = null)
+            FormList.Mask<bool>? printMask = null)
         {
             return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -345,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFormListGetter item,
             FileGeneration fg,
             string? name = null,
-            FormList_Mask<bool>? printMask = null)
+            FormList.Mask<bool>? printMask = null)
         {
             ((FormListCommon)((IFormListGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -356,16 +581,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IFormListGetter item,
-            FormList_Mask<bool?> checkMask)
+            FormList.Mask<bool?> checkMask)
         {
             return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static FormList_Mask<bool> GetHasBeenSetMask(this IFormListGetter item)
+        public static FormList.Mask<bool> GetHasBeenSetMask(this IFormListGetter item)
         {
-            var ret = new FormList_Mask<bool>(false);
+            var ret = new FormList.Mask<bool>(false);
             ((FormListCommon)((IFormListGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -384,8 +609,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IFormListInternal lhs,
             IFormListGetter rhs,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? copyMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -393,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = FormList_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FormList.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -411,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FormList DeepCopy(
             this IFormListGetter item,
-            FormList_TranslationMask? copyMask = null)
+            FormList.TranslationMask? copyMask = null)
         {
             return ((FormListSetterTranslationCommon)((IFormListGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -420,8 +645,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FormList DeepCopy(
             this IFormListGetter item,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? copyMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? copyMask = null)
         {
             return ((FormListSetterTranslationCommon)((IFormListGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -445,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFormListInternal item,
             XElement node,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -458,8 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFormListInternal item,
             XElement node,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -467,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FormList_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FormList.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -486,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFormListInternal item,
             string path,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -498,8 +723,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFormListInternal item,
             string path,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFormListInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -526,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFormListInternal item,
             Stream stream,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -538,8 +763,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFormListInternal item,
             Stream stream,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFormListInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FormList_TranslationMask? translationMask = null)
+            FormList.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -632,9 +857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(FormList_Mask<>);
+        public static readonly Type MaskType = typeof(FormList.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FormList_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FormList.ErrorMask);
 
         public static readonly Type ClassType = typeof(FormList);
 
@@ -885,12 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly FormListCommon Instance = new FormListCommon();
 
-        public FormList_Mask<bool> GetEqualsMask(
+        public FormList.Mask<bool> GetEqualsMask(
             IFormListGetter item,
             IFormListGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FormList_Mask<bool>(false);
+            var ret = new FormList.Mask<bool>(false);
             ((FormListCommon)((IFormListGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -902,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IFormListGetter item,
             IFormListGetter rhs,
-            FormList_Mask<bool> ret,
+            FormList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -912,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IFormListGetter item,
             string? name = null,
-            FormList_Mask<bool>? printMask = null)
+            FormList.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -927,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFormListGetter item,
             FileGeneration fg,
             string? name = null,
-            FormList_Mask<bool>? printMask = null)
+            FormList.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -951,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IFormListGetter item,
             FileGeneration fg,
-            FormList_Mask<bool>? printMask = null)
+            FormList.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -961,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IFormListGetter item,
-            FormList_Mask<bool?> checkMask)
+            FormList.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -970,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IFormListGetter item,
-            FormList_Mask<bool> mask)
+            FormList.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
@@ -1182,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public FormList DeepCopy(
             IFormListGetter item,
-            FormList_TranslationMask? copyMask = null)
+            FormList.TranslationMask? copyMask = null)
         {
             FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1193,8 +1418,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public FormList DeepCopy(
             IFormListGetter item,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? copyMask = null)
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? copyMask = null)
         {
             FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1395,8 +1620,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IFormListGetter item,
             XElement node,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null,
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1406,14 +1631,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FormList_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FormList.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFormListGetter item,
             string path,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null,
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1429,8 +1654,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IFormListGetter item,
             Stream stream,
-            out FormList_ErrorMask errorMask,
-            FormList_TranslationMask? translationMask = null,
+            out FormList.ErrorMask errorMask,
+            FormList.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1447,230 +1672,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class FormList_Mask<T> :
-        SkyrimMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<FormList_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public FormList_Mask(T initialValue)
-        : base(initialValue)
-        {
-        }
-
-        public FormList_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T SkyrimMajorRecordFlags,
-            T FormVersion,
-            T Version2)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
-            FormVersion: FormVersion,
-            Version2: Version2)
-        {
-        }
-
-        #pragma warning disable CS8618
-        protected FormList_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is FormList_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(FormList_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new FormList_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new FormList_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(FormList_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(FormList_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, FormList_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(FormList_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class FormList_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<FormList_ErrorMask>
-    {
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            FormList_FieldIndex enu = (FormList_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("FormList_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-        }
-        #endregion
-
-        #region Combine
-        public FormList_ErrorMask Combine(FormList_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new FormList_ErrorMask();
-            return ret;
-        }
-        public static FormList_ErrorMask? Combine(FormList_ErrorMask? lhs, FormList_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new FormList_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new FormList_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class FormList_TranslationMask : SkyrimMajorRecord_TranslationMask
-    {
-        #region Ctors
-        public FormList_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-        }
-
-        #endregion
-
-    }
 }
 #endregion
 

@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SoundData CreateFromXml(
             XElement node,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -116,15 +116,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SoundData CreateFromXml(
             XElement node,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundData CreateFromXml(
             string path,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundData CreateFromXml(
             string path,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundData CreateFromXml(
             Stream stream,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -188,8 +188,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundData CreateFromXml(
             Stream stream,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,6 +212,347 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.MinimumAttenuationDistance = initialValue;
+                this.MaximumAttenuationDistance = initialValue;
+                this.FrequencyAdjustment = initialValue;
+                this.Flags = initialValue;
+            }
+
+            public Mask(
+                T MinimumAttenuationDistance,
+                T MaximumAttenuationDistance,
+                T FrequencyAdjustment,
+                T Flags)
+            {
+                this.MinimumAttenuationDistance = MinimumAttenuationDistance;
+                this.MaximumAttenuationDistance = MaximumAttenuationDistance;
+                this.FrequencyAdjustment = FrequencyAdjustment;
+                this.Flags = Flags;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T MinimumAttenuationDistance;
+            public T MaximumAttenuationDistance;
+            public T FrequencyAdjustment;
+            public T Flags;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.MinimumAttenuationDistance, rhs.MinimumAttenuationDistance)) return false;
+                if (!object.Equals(this.MaximumAttenuationDistance, rhs.MaximumAttenuationDistance)) return false;
+                if (!object.Equals(this.FrequencyAdjustment, rhs.FrequencyAdjustment)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.MinimumAttenuationDistance?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaximumAttenuationDistance?.GetHashCode());
+                ret = ret.CombineHashCode(this.FrequencyAdjustment?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public virtual bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.MinimumAttenuationDistance)) return false;
+                if (!eval(this.MaximumAttenuationDistance)) return false;
+                if (!eval(this.FrequencyAdjustment)) return false;
+                if (!eval(this.Flags)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SoundData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.MinimumAttenuationDistance = eval(this.MinimumAttenuationDistance);
+                obj.MaximumAttenuationDistance = eval(this.MaximumAttenuationDistance);
+                obj.FrequencyAdjustment = eval(this.FrequencyAdjustment);
+                obj.Flags = eval(this.Flags);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SoundData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SoundData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SoundData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.MinimumAttenuationDistance ?? true)
+                    {
+                        fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
+                    }
+                    if (printMask?.MaximumAttenuationDistance ?? true)
+                    {
+                        fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
+                    }
+                    if (printMask?.FrequencyAdjustment ?? true)
+                    {
+                        fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? MinimumAttenuationDistance;
+            public Exception? MaximumAttenuationDistance;
+            public Exception? FrequencyAdjustment;
+            public Exception? Flags;
+            #endregion
+
+            #region IErrorMask
+            public virtual object? GetNthMask(int index)
+            {
+                SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundData_FieldIndex.MinimumAttenuationDistance:
+                        return MinimumAttenuationDistance;
+                    case SoundData_FieldIndex.MaximumAttenuationDistance:
+                        return MaximumAttenuationDistance;
+                    case SoundData_FieldIndex.FrequencyAdjustment:
+                        return FrequencyAdjustment;
+                    case SoundData_FieldIndex.Flags:
+                        return Flags;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthException(int index, Exception ex)
+            {
+                SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundData_FieldIndex.MinimumAttenuationDistance:
+                        this.MinimumAttenuationDistance = ex;
+                        break;
+                    case SoundData_FieldIndex.MaximumAttenuationDistance:
+                        this.MaximumAttenuationDistance = ex;
+                        break;
+                    case SoundData_FieldIndex.FrequencyAdjustment:
+                        this.FrequencyAdjustment = ex;
+                        break;
+                    case SoundData_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthMask(int index, object obj)
+            {
+                SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundData_FieldIndex.MinimumAttenuationDistance:
+                        this.MinimumAttenuationDistance = (Exception)obj;
+                        break;
+                    case SoundData_FieldIndex.MaximumAttenuationDistance:
+                        this.MaximumAttenuationDistance = (Exception)obj;
+                        break;
+                    case SoundData_FieldIndex.FrequencyAdjustment:
+                        this.FrequencyAdjustment = (Exception)obj;
+                        break;
+                    case SoundData_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (MinimumAttenuationDistance != null) return true;
+                if (MaximumAttenuationDistance != null) return true;
+                if (FrequencyAdjustment != null) return true;
+                if (Flags != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public virtual void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected virtual void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
+                fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
+                fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
+                fg.AppendLine($"Flags => {Flags}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.MinimumAttenuationDistance = this.MinimumAttenuationDistance.Combine(rhs.MinimumAttenuationDistance);
+                ret.MaximumAttenuationDistance = this.MaximumAttenuationDistance.Combine(rhs.MaximumAttenuationDistance);
+                ret.FrequencyAdjustment = this.FrequencyAdjustment.Combine(rhs.FrequencyAdjustment);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool MinimumAttenuationDistance;
+            public bool MaximumAttenuationDistance;
+            public bool FrequencyAdjustment;
+            public bool Flags;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.MinimumAttenuationDistance = defaultOn;
+                this.MaximumAttenuationDistance = defaultOn;
+                this.FrequencyAdjustment = defaultOn;
+                this.Flags = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((MinimumAttenuationDistance, null));
+                ret.Add((MaximumAttenuationDistance, null));
+                ret.Add((FrequencyAdjustment, null));
+                ret.Add((Flags, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -328,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SoundData_Mask<bool> GetEqualsMask(
+        public static SoundData.Mask<bool> GetEqualsMask(
             this ISoundDataInternalGetter item,
             ISoundDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -342,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISoundDataInternalGetter item,
             string? name = null,
-            SoundData_Mask<bool>? printMask = null)
+            SoundData.Mask<bool>? printMask = null)
         {
             return ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -354,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternalGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundData_Mask<bool>? printMask = null)
+            SoundData.Mask<bool>? printMask = null)
         {
             ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -365,16 +706,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISoundDataInternalGetter item,
-            SoundData_Mask<bool?> checkMask)
+            SoundData.Mask<bool?> checkMask)
         {
             return ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SoundData_Mask<bool> GetHasBeenSetMask(this ISoundDataInternalGetter item)
+        public static SoundData.Mask<bool> GetHasBeenSetMask(this ISoundDataInternalGetter item)
         {
-            var ret = new SoundData_Mask<bool>(false);
+            var ret = new SoundData.Mask<bool>(false);
             ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -393,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISoundDataInternal lhs,
             ISoundDataInternalGetter rhs,
-            SoundData_TranslationMask? copyMask = null)
+            SoundData.TranslationMask? copyMask = null)
         {
             ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -405,8 +746,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISoundDataInternal lhs,
             ISoundDataInternalGetter rhs,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? copyMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -414,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SoundData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -432,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundData DeepCopy(
             this ISoundDataInternalGetter item,
-            SoundData_TranslationMask? copyMask = null)
+            SoundData.TranslationMask? copyMask = null)
         {
             return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -441,8 +782,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundData DeepCopy(
             this ISoundDataInternalGetter item,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? copyMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? copyMask = null)
         {
             return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -466,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             XElement node,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -479,8 +820,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             XElement node,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -488,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -507,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             string path,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -519,8 +860,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             string path,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -534,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -547,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             Stream stream,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -559,8 +900,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             Stream stream,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -574,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +991,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(SoundData_Mask<>);
+        public static readonly Type MaskType = typeof(SoundData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SoundData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SoundData.ErrorMask);
 
         public static readonly Type ClassType = typeof(SoundData);
 
@@ -939,12 +1280,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly SoundDataCommon Instance = new SoundDataCommon();
 
-        public SoundData_Mask<bool> GetEqualsMask(
+        public SoundData.Mask<bool> GetEqualsMask(
             ISoundDataInternalGetter item,
             ISoundDataInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SoundData_Mask<bool>(false);
+            var ret = new SoundData.Mask<bool>(false);
             ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -956,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISoundDataInternalGetter item,
             ISoundDataInternalGetter rhs,
-            SoundData_Mask<bool> ret,
+            SoundData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -969,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISoundDataInternalGetter item,
             string? name = null,
-            SoundData_Mask<bool>? printMask = null)
+            SoundData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -984,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataInternalGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundData_Mask<bool>? printMask = null)
+            SoundData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1008,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISoundDataInternalGetter item,
             FileGeneration fg,
-            SoundData_Mask<bool>? printMask = null)
+            SoundData.Mask<bool>? printMask = null)
         {
             if (printMask?.MinimumAttenuationDistance ?? true)
             {
@@ -1030,14 +1371,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISoundDataInternalGetter item,
-            SoundData_Mask<bool?> checkMask)
+            SoundData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ISoundDataInternalGetter item,
-            SoundData_Mask<bool> mask)
+            SoundData.Mask<bool> mask)
         {
             mask.MinimumAttenuationDistance = true;
             mask.MaximumAttenuationDistance = true;
@@ -1132,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundData DeepCopy(
             ISoundDataInternalGetter item,
-            SoundData_TranslationMask? copyMask = null)
+            SoundData.TranslationMask? copyMask = null)
         {
             SoundData ret = (SoundData)((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1143,8 +1484,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundData DeepCopy(
             ISoundDataInternalGetter item,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? copyMask = null)
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? copyMask = null)
         {
             SoundData ret = (SoundData)((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1445,8 +1786,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISoundDataInternalGetter item,
             XElement node,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null,
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1456,14 +1797,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISoundDataInternalGetter item,
             string path,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null,
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1496,8 +1837,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISoundDataInternalGetter item,
             Stream stream,
-            out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask? translationMask = null,
+            out SoundData.ErrorMask errorMask,
+            SoundData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1546,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternalGetter item,
             XElement node,
             string? name = null,
-            SoundData_TranslationMask? translationMask = null)
+            SoundData.TranslationMask? translationMask = null)
         {
             ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1590,348 +1931,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class SoundData_Mask<T> :
-        IMask<T>,
-        IEquatable<SoundData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SoundData_Mask(T initialValue)
-        {
-            this.MinimumAttenuationDistance = initialValue;
-            this.MaximumAttenuationDistance = initialValue;
-            this.FrequencyAdjustment = initialValue;
-            this.Flags = initialValue;
-        }
-
-        public SoundData_Mask(
-            T MinimumAttenuationDistance,
-            T MaximumAttenuationDistance,
-            T FrequencyAdjustment,
-            T Flags)
-        {
-            this.MinimumAttenuationDistance = MinimumAttenuationDistance;
-            this.MaximumAttenuationDistance = MaximumAttenuationDistance;
-            this.FrequencyAdjustment = FrequencyAdjustment;
-            this.Flags = Flags;
-        }
-
-        #pragma warning disable CS8618
-        protected SoundData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T MinimumAttenuationDistance;
-        public T MaximumAttenuationDistance;
-        public T FrequencyAdjustment;
-        public T Flags;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SoundData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SoundData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.MinimumAttenuationDistance, rhs.MinimumAttenuationDistance)) return false;
-            if (!object.Equals(this.MaximumAttenuationDistance, rhs.MaximumAttenuationDistance)) return false;
-            if (!object.Equals(this.FrequencyAdjustment, rhs.FrequencyAdjustment)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.MinimumAttenuationDistance?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumAttenuationDistance?.GetHashCode());
-            ret = ret.CombineHashCode(this.FrequencyAdjustment?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public virtual bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.MinimumAttenuationDistance)) return false;
-            if (!eval(this.MaximumAttenuationDistance)) return false;
-            if (!eval(this.FrequencyAdjustment)) return false;
-            if (!eval(this.Flags)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public SoundData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SoundData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SoundData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.MinimumAttenuationDistance = eval(this.MinimumAttenuationDistance);
-            obj.MaximumAttenuationDistance = eval(this.MaximumAttenuationDistance);
-            obj.FrequencyAdjustment = eval(this.FrequencyAdjustment);
-            obj.Flags = eval(this.Flags);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SoundData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SoundData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SoundData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.MinimumAttenuationDistance ?? true)
-                {
-                    fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
-                }
-                if (printMask?.MaximumAttenuationDistance ?? true)
-                {
-                    fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
-                }
-                if (printMask?.FrequencyAdjustment ?? true)
-                {
-                    fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SoundData_ErrorMask : IErrorMask, IErrorMask<SoundData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? MinimumAttenuationDistance;
-        public Exception? MaximumAttenuationDistance;
-        public Exception? FrequencyAdjustment;
-        public Exception? Flags;
-        #endregion
-
-        #region IErrorMask
-        public virtual object? GetNthMask(int index)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    return MinimumAttenuationDistance;
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    return MaximumAttenuationDistance;
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    return FrequencyAdjustment;
-                case SoundData_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthException(int index, Exception ex)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    this.MinimumAttenuationDistance = ex;
-                    break;
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    this.MaximumAttenuationDistance = ex;
-                    break;
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    this.FrequencyAdjustment = ex;
-                    break;
-                case SoundData_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthMask(int index, object obj)
-        {
-            SoundData_FieldIndex enu = (SoundData_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    this.MinimumAttenuationDistance = (Exception)obj;
-                    break;
-                case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    this.MaximumAttenuationDistance = (Exception)obj;
-                    break;
-                case SoundData_FieldIndex.FrequencyAdjustment:
-                    this.FrequencyAdjustment = (Exception)obj;
-                    break;
-                case SoundData_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (MinimumAttenuationDistance != null) return true;
-            if (MaximumAttenuationDistance != null) return true;
-            if (FrequencyAdjustment != null) return true;
-            if (Flags != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public virtual void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SoundData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected virtual void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
-            fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
-            fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
-            fg.AppendLine($"Flags => {Flags}");
-        }
-        #endregion
-
-        #region Combine
-        public SoundData_ErrorMask Combine(SoundData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SoundData_ErrorMask();
-            ret.MinimumAttenuationDistance = this.MinimumAttenuationDistance.Combine(rhs.MinimumAttenuationDistance);
-            ret.MaximumAttenuationDistance = this.MaximumAttenuationDistance.Combine(rhs.MaximumAttenuationDistance);
-            ret.FrequencyAdjustment = this.FrequencyAdjustment.Combine(rhs.FrequencyAdjustment);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            return ret;
-        }
-        public static SoundData_ErrorMask? Combine(SoundData_ErrorMask? lhs, SoundData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static SoundData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SoundData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SoundData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool MinimumAttenuationDistance;
-        public bool MaximumAttenuationDistance;
-        public bool FrequencyAdjustment;
-        public bool Flags;
-        #endregion
-
-        #region Ctors
-        public SoundData_TranslationMask(bool defaultOn)
-        {
-            this.MinimumAttenuationDistance = defaultOn;
-            this.MaximumAttenuationDistance = defaultOn;
-            this.FrequencyAdjustment = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((MinimumAttenuationDistance, null));
-            ret.Add((MaximumAttenuationDistance, null));
-            ret.Add((FrequencyAdjustment, null));
-            ret.Add((Flags, null));
-        }
-    }
 }
 #endregion
 

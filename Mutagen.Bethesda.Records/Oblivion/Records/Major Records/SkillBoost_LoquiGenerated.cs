@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SkillBoost CreateFromXml(
             XElement node,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -116,15 +116,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SkillBoost CreateFromXml(
             XElement node,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillBoost.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             string path,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             string path,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             Stream stream,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -188,8 +188,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost CreateFromXml(
             Stream stream,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,6 +212,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Skill = initialValue;
+                this.Boost = initialValue;
+            }
+
+            public Mask(
+                T Skill,
+                T Boost)
+            {
+                this.Skill = Skill;
+                this.Boost = Boost;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Skill;
+            public T Boost;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Skill, rhs.Skill)) return false;
+                if (!object.Equals(this.Boost, rhs.Boost)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Skill?.GetHashCode());
+                ret = ret.CombineHashCode(this.Boost?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Skill)) return false;
+                if (!eval(this.Boost)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SkillBoost.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Skill = eval(this.Skill);
+                obj.Boost = eval(this.Boost);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SkillBoost.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SkillBoost.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SkillBoost.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Skill ?? true)
+                    {
+                        fg.AppendLine($"Skill => {Skill}");
+                    }
+                    if (printMask?.Boost ?? true)
+                    {
+                        fg.AppendLine($"Boost => {Boost}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Skill;
+            public Exception? Boost;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
+                switch (enu)
+                {
+                    case SkillBoost_FieldIndex.Skill:
+                        return Skill;
+                    case SkillBoost_FieldIndex.Boost:
+                        return Boost;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
+                switch (enu)
+                {
+                    case SkillBoost_FieldIndex.Skill:
+                        this.Skill = ex;
+                        break;
+                    case SkillBoost_FieldIndex.Boost:
+                        this.Boost = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
+                switch (enu)
+                {
+                    case SkillBoost_FieldIndex.Skill:
+                        this.Skill = (Exception)obj;
+                        break;
+                    case SkillBoost_FieldIndex.Boost:
+                        this.Boost = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Skill != null) return true;
+                if (Boost != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Skill => {Skill}");
+                fg.AppendLine($"Boost => {Boost}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Skill = this.Skill.Combine(rhs.Skill);
+                ret.Boost = this.Boost.Combine(rhs.Boost);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Skill;
+            public bool Boost;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Skill = defaultOn;
+                this.Boost = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Skill, null));
+                ret.Add((Boost, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -313,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SkillBoost_Mask<bool> GetEqualsMask(
+        public static SkillBoost.Mask<bool> GetEqualsMask(
             this ISkillBoostGetter item,
             ISkillBoostGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -327,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISkillBoostGetter item,
             string? name = null,
-            SkillBoost_Mask<bool>? printMask = null)
+            SkillBoost.Mask<bool>? printMask = null)
         {
             return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -339,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             FileGeneration fg,
             string? name = null,
-            SkillBoost_Mask<bool>? printMask = null)
+            SkillBoost.Mask<bool>? printMask = null)
         {
             ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,16 +637,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISkillBoostGetter item,
-            SkillBoost_Mask<bool?> checkMask)
+            SkillBoost.Mask<bool?> checkMask)
         {
             return ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SkillBoost_Mask<bool> GetHasBeenSetMask(this ISkillBoostGetter item)
+        public static SkillBoost.Mask<bool> GetHasBeenSetMask(this ISkillBoostGetter item)
         {
-            var ret = new SkillBoost_Mask<bool>(false);
+            var ret = new SkillBoost.Mask<bool>(false);
             ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -378,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISkillBoost lhs,
             ISkillBoostGetter rhs,
-            SkillBoost_TranslationMask? copyMask = null)
+            SkillBoost.TranslationMask? copyMask = null)
         {
             ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -390,8 +677,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISkillBoost lhs,
             ISkillBoostGetter rhs,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? copyMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -399,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillBoost.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -417,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost DeepCopy(
             this ISkillBoostGetter item,
-            SkillBoost_TranslationMask? copyMask = null)
+            SkillBoost.TranslationMask? copyMask = null)
         {
             return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -426,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SkillBoost DeepCopy(
             this ISkillBoostGetter item,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? copyMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? copyMask = null)
         {
             return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -451,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             XElement node,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -464,8 +751,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             XElement node,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -473,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillBoost.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -492,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             string path,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -504,8 +791,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             string path,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -519,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -532,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             Stream stream,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -544,8 +831,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISkillBoost item,
             Stream stream,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -559,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -633,9 +920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(SkillBoost_Mask<>);
+        public static readonly Type MaskType = typeof(SkillBoost.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SkillBoost_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SkillBoost.ErrorMask);
 
         public static readonly Type ClassType = typeof(SkillBoost);
 
@@ -872,12 +1159,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly SkillBoostCommon Instance = new SkillBoostCommon();
 
-        public SkillBoost_Mask<bool> GetEqualsMask(
+        public SkillBoost.Mask<bool> GetEqualsMask(
             ISkillBoostGetter item,
             ISkillBoostGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SkillBoost_Mask<bool>(false);
+            var ret = new SkillBoost.Mask<bool>(false);
             ((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -889,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISkillBoostGetter item,
             ISkillBoostGetter rhs,
-            SkillBoost_Mask<bool> ret,
+            SkillBoost.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -900,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISkillBoostGetter item,
             string? name = null,
-            SkillBoost_Mask<bool>? printMask = null)
+            SkillBoost.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -915,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoostGetter item,
             FileGeneration fg,
             string? name = null,
-            SkillBoost_Mask<bool>? printMask = null)
+            SkillBoost.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -939,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISkillBoostGetter item,
             FileGeneration fg,
-            SkillBoost_Mask<bool>? printMask = null)
+            SkillBoost.Mask<bool>? printMask = null)
         {
             if (printMask?.Skill ?? true)
             {
@@ -953,14 +1240,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISkillBoostGetter item,
-            SkillBoost_Mask<bool?> checkMask)
+            SkillBoost.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ISkillBoostGetter item,
-            SkillBoost_Mask<bool> mask)
+            SkillBoost.Mask<bool> mask)
         {
             mask.Skill = true;
             mask.Boost = true;
@@ -1028,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SkillBoost DeepCopy(
             ISkillBoostGetter item,
-            SkillBoost_TranslationMask? copyMask = null)
+            SkillBoost.TranslationMask? copyMask = null)
         {
             SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1039,8 +1326,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SkillBoost DeepCopy(
             ISkillBoostGetter item,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? copyMask = null)
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? copyMask = null)
         {
             SkillBoost ret = (SkillBoost)((SkillBoostCommon)((ISkillBoostGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1287,8 +1574,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             XElement node,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null,
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1298,14 +1585,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillBoost.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISkillBoostGetter item,
             string path,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null,
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1338,8 +1625,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISkillBoostGetter item,
             Stream stream,
-            out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask? translationMask = null,
+            out SkillBoost.ErrorMask errorMask,
+            SkillBoost.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1388,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             XElement node,
             string? name = null,
-            SkillBoost_TranslationMask? translationMask = null)
+            SkillBoost.TranslationMask? translationMask = null)
         {
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1432,294 +1719,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class SkillBoost_Mask<T> :
-        IMask<T>,
-        IEquatable<SkillBoost_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SkillBoost_Mask(T initialValue)
-        {
-            this.Skill = initialValue;
-            this.Boost = initialValue;
-        }
-
-        public SkillBoost_Mask(
-            T Skill,
-            T Boost)
-        {
-            this.Skill = Skill;
-            this.Boost = Boost;
-        }
-
-        #pragma warning disable CS8618
-        protected SkillBoost_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Skill;
-        public T Boost;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SkillBoost_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SkillBoost_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Skill, rhs.Skill)) return false;
-            if (!object.Equals(this.Boost, rhs.Boost)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Skill?.GetHashCode());
-            ret = ret.CombineHashCode(this.Boost?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Skill)) return false;
-            if (!eval(this.Boost)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public SkillBoost_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SkillBoost_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SkillBoost_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Skill = eval(this.Skill);
-            obj.Boost = eval(this.Boost);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SkillBoost_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SkillBoost_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SkillBoost_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Skill ?? true)
-                {
-                    fg.AppendLine($"Skill => {Skill}");
-                }
-                if (printMask?.Boost ?? true)
-                {
-                    fg.AppendLine($"Boost => {Boost}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SkillBoost_ErrorMask : IErrorMask, IErrorMask<SkillBoost_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Skill;
-        public Exception? Boost;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    return Skill;
-                case SkillBoost_FieldIndex.Boost:
-                    return Boost;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    this.Skill = ex;
-                    break;
-                case SkillBoost_FieldIndex.Boost:
-                    this.Boost = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            SkillBoost_FieldIndex enu = (SkillBoost_FieldIndex)index;
-            switch (enu)
-            {
-                case SkillBoost_FieldIndex.Skill:
-                    this.Skill = (Exception)obj;
-                    break;
-                case SkillBoost_FieldIndex.Boost:
-                    this.Boost = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Skill != null) return true;
-            if (Boost != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SkillBoost_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Skill => {Skill}");
-            fg.AppendLine($"Boost => {Boost}");
-        }
-        #endregion
-
-        #region Combine
-        public SkillBoost_ErrorMask Combine(SkillBoost_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SkillBoost_ErrorMask();
-            ret.Skill = this.Skill.Combine(rhs.Skill);
-            ret.Boost = this.Boost.Combine(rhs.Boost);
-            return ret;
-        }
-        public static SkillBoost_ErrorMask? Combine(SkillBoost_ErrorMask? lhs, SkillBoost_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static SkillBoost_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SkillBoost_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SkillBoost_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Skill;
-        public bool Boost;
-        #endregion
-
-        #region Ctors
-        public SkillBoost_TranslationMask(bool defaultOn)
-        {
-            this.Skill = defaultOn;
-            this.Boost = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Skill, null));
-            ret.Add((Boost, null));
-        }
-    }
 }
 #endregion
 

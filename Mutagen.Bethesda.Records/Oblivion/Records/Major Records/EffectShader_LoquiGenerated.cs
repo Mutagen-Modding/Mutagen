@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new EffectShader CreateFromXml(
             XElement node,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -898,15 +898,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static EffectShader CreateFromXml(
             XElement node,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             string path,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -936,8 +936,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             string path,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             Stream stream,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -970,8 +970,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader CreateFromXml(
             Stream stream,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -994,6 +994,1833 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.FillTexture = initialValue;
+                this.ParticleShaderTexture = initialValue;
+                this.Flags = initialValue;
+                this.MembraneShaderSourceBlendMode = initialValue;
+                this.MembraneShaderBlendOperation = initialValue;
+                this.MembraneShaderZTestFunction = initialValue;
+                this.FillTextureEffectColor = initialValue;
+                this.FillTextureEffectAlphaFadeInTime = initialValue;
+                this.FillTextureEffectFullAlphaTime = initialValue;
+                this.FillTextureEffectAlphaFadeOutTime = initialValue;
+                this.FillTextureEffectPersistentAlphaRatio = initialValue;
+                this.FillTextureEffectAlphaPulseAmplitude = initialValue;
+                this.FillTextureEffectAlphaPulseFrequency = initialValue;
+                this.FillTextureEffectTextureAnimationSpeedU = initialValue;
+                this.FillTextureEffectTextureAnimationSpeedV = initialValue;
+                this.EdgeEffectFallOff = initialValue;
+                this.EdgeEffectColor = initialValue;
+                this.EdgeEffectAlphaFadeInTime = initialValue;
+                this.EdgeEffectFullAlphaTime = initialValue;
+                this.EdgeEffectAlphaFadeOutTime = initialValue;
+                this.EdgeEffectPersistentAlphaRatio = initialValue;
+                this.EdgeEffectAlphaPulseAmplitude = initialValue;
+                this.EdgeEffectAlphaPulseFrequency = initialValue;
+                this.FillTextureEffectFullAlphaRatio = initialValue;
+                this.EdgeEffectFullAlphaRatio = initialValue;
+                this.MembraneShaderDestBlendMode = initialValue;
+                this.ParticleShaderSourceBlendMode = initialValue;
+                this.ParticleShaderBlendOperation = initialValue;
+                this.ParticleShaderZTestFunction = initialValue;
+                this.ParticleShaderDestBlendMode = initialValue;
+                this.ParticleShaderParticleBirthRampUpTime = initialValue;
+                this.ParticleShaderFullParticleBirthTime = initialValue;
+                this.ParticleShaderParticleBirthRampDownTime = initialValue;
+                this.ParticleShaderFullParticleBirthRatio = initialValue;
+                this.ParticleShaderPersistentParticleBirthRatio = initialValue;
+                this.ParticleShaderParticleLifetime = initialValue;
+                this.ParticleShaderParticleLifetimePlusMinus = initialValue;
+                this.ParticleShaderInitialSpeedAlongNormal = initialValue;
+                this.ParticleShaderAccelerationAlongNormal = initialValue;
+                this.ParticleShaderInitialVelocity1 = initialValue;
+                this.ParticleShaderInitialVelocity2 = initialValue;
+                this.ParticleShaderInitialVelocity3 = initialValue;
+                this.ParticleShaderAcceleration1 = initialValue;
+                this.ParticleShaderAcceleration2 = initialValue;
+                this.ParticleShaderAcceleration3 = initialValue;
+                this.ParticleShaderScaleKey1 = initialValue;
+                this.ParticleShaderScaleKey2 = initialValue;
+                this.ParticleShaderScaleKey1Time = initialValue;
+                this.ParticleShaderScaleKey2Time = initialValue;
+                this.ColorKey1Color = initialValue;
+                this.ColorKey2Color = initialValue;
+                this.ColorKey3Color = initialValue;
+                this.ColorKey1ColorAlpha = initialValue;
+                this.ColorKey2ColorAlpha = initialValue;
+                this.ColorKey3ColorAlpha = initialValue;
+                this.ColorKey1ColorKeyTime = initialValue;
+                this.ColorKey2ColorKeyTime = initialValue;
+                this.ColorKey3ColorKeyTime = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T FillTexture,
+                T ParticleShaderTexture,
+                T Flags,
+                T MembraneShaderSourceBlendMode,
+                T MembraneShaderBlendOperation,
+                T MembraneShaderZTestFunction,
+                T FillTextureEffectColor,
+                T FillTextureEffectAlphaFadeInTime,
+                T FillTextureEffectFullAlphaTime,
+                T FillTextureEffectAlphaFadeOutTime,
+                T FillTextureEffectPersistentAlphaRatio,
+                T FillTextureEffectAlphaPulseAmplitude,
+                T FillTextureEffectAlphaPulseFrequency,
+                T FillTextureEffectTextureAnimationSpeedU,
+                T FillTextureEffectTextureAnimationSpeedV,
+                T EdgeEffectFallOff,
+                T EdgeEffectColor,
+                T EdgeEffectAlphaFadeInTime,
+                T EdgeEffectFullAlphaTime,
+                T EdgeEffectAlphaFadeOutTime,
+                T EdgeEffectPersistentAlphaRatio,
+                T EdgeEffectAlphaPulseAmplitude,
+                T EdgeEffectAlphaPulseFrequency,
+                T FillTextureEffectFullAlphaRatio,
+                T EdgeEffectFullAlphaRatio,
+                T MembraneShaderDestBlendMode,
+                T ParticleShaderSourceBlendMode,
+                T ParticleShaderBlendOperation,
+                T ParticleShaderZTestFunction,
+                T ParticleShaderDestBlendMode,
+                T ParticleShaderParticleBirthRampUpTime,
+                T ParticleShaderFullParticleBirthTime,
+                T ParticleShaderParticleBirthRampDownTime,
+                T ParticleShaderFullParticleBirthRatio,
+                T ParticleShaderPersistentParticleBirthRatio,
+                T ParticleShaderParticleLifetime,
+                T ParticleShaderParticleLifetimePlusMinus,
+                T ParticleShaderInitialSpeedAlongNormal,
+                T ParticleShaderAccelerationAlongNormal,
+                T ParticleShaderInitialVelocity1,
+                T ParticleShaderInitialVelocity2,
+                T ParticleShaderInitialVelocity3,
+                T ParticleShaderAcceleration1,
+                T ParticleShaderAcceleration2,
+                T ParticleShaderAcceleration3,
+                T ParticleShaderScaleKey1,
+                T ParticleShaderScaleKey2,
+                T ParticleShaderScaleKey1Time,
+                T ParticleShaderScaleKey2Time,
+                T ColorKey1Color,
+                T ColorKey2Color,
+                T ColorKey3Color,
+                T ColorKey1ColorAlpha,
+                T ColorKey2ColorAlpha,
+                T ColorKey3ColorAlpha,
+                T ColorKey1ColorKeyTime,
+                T ColorKey2ColorKeyTime,
+                T ColorKey3ColorKeyTime,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.FillTexture = FillTexture;
+                this.ParticleShaderTexture = ParticleShaderTexture;
+                this.Flags = Flags;
+                this.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendMode;
+                this.MembraneShaderBlendOperation = MembraneShaderBlendOperation;
+                this.MembraneShaderZTestFunction = MembraneShaderZTestFunction;
+                this.FillTextureEffectColor = FillTextureEffectColor;
+                this.FillTextureEffectAlphaFadeInTime = FillTextureEffectAlphaFadeInTime;
+                this.FillTextureEffectFullAlphaTime = FillTextureEffectFullAlphaTime;
+                this.FillTextureEffectAlphaFadeOutTime = FillTextureEffectAlphaFadeOutTime;
+                this.FillTextureEffectPersistentAlphaRatio = FillTextureEffectPersistentAlphaRatio;
+                this.FillTextureEffectAlphaPulseAmplitude = FillTextureEffectAlphaPulseAmplitude;
+                this.FillTextureEffectAlphaPulseFrequency = FillTextureEffectAlphaPulseFrequency;
+                this.FillTextureEffectTextureAnimationSpeedU = FillTextureEffectTextureAnimationSpeedU;
+                this.FillTextureEffectTextureAnimationSpeedV = FillTextureEffectTextureAnimationSpeedV;
+                this.EdgeEffectFallOff = EdgeEffectFallOff;
+                this.EdgeEffectColor = EdgeEffectColor;
+                this.EdgeEffectAlphaFadeInTime = EdgeEffectAlphaFadeInTime;
+                this.EdgeEffectFullAlphaTime = EdgeEffectFullAlphaTime;
+                this.EdgeEffectAlphaFadeOutTime = EdgeEffectAlphaFadeOutTime;
+                this.EdgeEffectPersistentAlphaRatio = EdgeEffectPersistentAlphaRatio;
+                this.EdgeEffectAlphaPulseAmplitude = EdgeEffectAlphaPulseAmplitude;
+                this.EdgeEffectAlphaPulseFrequency = EdgeEffectAlphaPulseFrequency;
+                this.FillTextureEffectFullAlphaRatio = FillTextureEffectFullAlphaRatio;
+                this.EdgeEffectFullAlphaRatio = EdgeEffectFullAlphaRatio;
+                this.MembraneShaderDestBlendMode = MembraneShaderDestBlendMode;
+                this.ParticleShaderSourceBlendMode = ParticleShaderSourceBlendMode;
+                this.ParticleShaderBlendOperation = ParticleShaderBlendOperation;
+                this.ParticleShaderZTestFunction = ParticleShaderZTestFunction;
+                this.ParticleShaderDestBlendMode = ParticleShaderDestBlendMode;
+                this.ParticleShaderParticleBirthRampUpTime = ParticleShaderParticleBirthRampUpTime;
+                this.ParticleShaderFullParticleBirthTime = ParticleShaderFullParticleBirthTime;
+                this.ParticleShaderParticleBirthRampDownTime = ParticleShaderParticleBirthRampDownTime;
+                this.ParticleShaderFullParticleBirthRatio = ParticleShaderFullParticleBirthRatio;
+                this.ParticleShaderPersistentParticleBirthRatio = ParticleShaderPersistentParticleBirthRatio;
+                this.ParticleShaderParticleLifetime = ParticleShaderParticleLifetime;
+                this.ParticleShaderParticleLifetimePlusMinus = ParticleShaderParticleLifetimePlusMinus;
+                this.ParticleShaderInitialSpeedAlongNormal = ParticleShaderInitialSpeedAlongNormal;
+                this.ParticleShaderAccelerationAlongNormal = ParticleShaderAccelerationAlongNormal;
+                this.ParticleShaderInitialVelocity1 = ParticleShaderInitialVelocity1;
+                this.ParticleShaderInitialVelocity2 = ParticleShaderInitialVelocity2;
+                this.ParticleShaderInitialVelocity3 = ParticleShaderInitialVelocity3;
+                this.ParticleShaderAcceleration1 = ParticleShaderAcceleration1;
+                this.ParticleShaderAcceleration2 = ParticleShaderAcceleration2;
+                this.ParticleShaderAcceleration3 = ParticleShaderAcceleration3;
+                this.ParticleShaderScaleKey1 = ParticleShaderScaleKey1;
+                this.ParticleShaderScaleKey2 = ParticleShaderScaleKey2;
+                this.ParticleShaderScaleKey1Time = ParticleShaderScaleKey1Time;
+                this.ParticleShaderScaleKey2Time = ParticleShaderScaleKey2Time;
+                this.ColorKey1Color = ColorKey1Color;
+                this.ColorKey2Color = ColorKey2Color;
+                this.ColorKey3Color = ColorKey3Color;
+                this.ColorKey1ColorAlpha = ColorKey1ColorAlpha;
+                this.ColorKey2ColorAlpha = ColorKey2ColorAlpha;
+                this.ColorKey3ColorAlpha = ColorKey3ColorAlpha;
+                this.ColorKey1ColorKeyTime = ColorKey1ColorKeyTime;
+                this.ColorKey2ColorKeyTime = ColorKey2ColorKeyTime;
+                this.ColorKey3ColorKeyTime = ColorKey3ColorKeyTime;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T FillTexture;
+            public T ParticleShaderTexture;
+            public T Flags;
+            public T MembraneShaderSourceBlendMode;
+            public T MembraneShaderBlendOperation;
+            public T MembraneShaderZTestFunction;
+            public T FillTextureEffectColor;
+            public T FillTextureEffectAlphaFadeInTime;
+            public T FillTextureEffectFullAlphaTime;
+            public T FillTextureEffectAlphaFadeOutTime;
+            public T FillTextureEffectPersistentAlphaRatio;
+            public T FillTextureEffectAlphaPulseAmplitude;
+            public T FillTextureEffectAlphaPulseFrequency;
+            public T FillTextureEffectTextureAnimationSpeedU;
+            public T FillTextureEffectTextureAnimationSpeedV;
+            public T EdgeEffectFallOff;
+            public T EdgeEffectColor;
+            public T EdgeEffectAlphaFadeInTime;
+            public T EdgeEffectFullAlphaTime;
+            public T EdgeEffectAlphaFadeOutTime;
+            public T EdgeEffectPersistentAlphaRatio;
+            public T EdgeEffectAlphaPulseAmplitude;
+            public T EdgeEffectAlphaPulseFrequency;
+            public T FillTextureEffectFullAlphaRatio;
+            public T EdgeEffectFullAlphaRatio;
+            public T MembraneShaderDestBlendMode;
+            public T ParticleShaderSourceBlendMode;
+            public T ParticleShaderBlendOperation;
+            public T ParticleShaderZTestFunction;
+            public T ParticleShaderDestBlendMode;
+            public T ParticleShaderParticleBirthRampUpTime;
+            public T ParticleShaderFullParticleBirthTime;
+            public T ParticleShaderParticleBirthRampDownTime;
+            public T ParticleShaderFullParticleBirthRatio;
+            public T ParticleShaderPersistentParticleBirthRatio;
+            public T ParticleShaderParticleLifetime;
+            public T ParticleShaderParticleLifetimePlusMinus;
+            public T ParticleShaderInitialSpeedAlongNormal;
+            public T ParticleShaderAccelerationAlongNormal;
+            public T ParticleShaderInitialVelocity1;
+            public T ParticleShaderInitialVelocity2;
+            public T ParticleShaderInitialVelocity3;
+            public T ParticleShaderAcceleration1;
+            public T ParticleShaderAcceleration2;
+            public T ParticleShaderAcceleration3;
+            public T ParticleShaderScaleKey1;
+            public T ParticleShaderScaleKey2;
+            public T ParticleShaderScaleKey1Time;
+            public T ParticleShaderScaleKey2Time;
+            public T ColorKey1Color;
+            public T ColorKey2Color;
+            public T ColorKey3Color;
+            public T ColorKey1ColorAlpha;
+            public T ColorKey2ColorAlpha;
+            public T ColorKey3ColorAlpha;
+            public T ColorKey1ColorKeyTime;
+            public T ColorKey2ColorKeyTime;
+            public T ColorKey3ColorKeyTime;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.FillTexture, rhs.FillTexture)) return false;
+                if (!object.Equals(this.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.MembraneShaderSourceBlendMode, rhs.MembraneShaderSourceBlendMode)) return false;
+                if (!object.Equals(this.MembraneShaderBlendOperation, rhs.MembraneShaderBlendOperation)) return false;
+                if (!object.Equals(this.MembraneShaderZTestFunction, rhs.MembraneShaderZTestFunction)) return false;
+                if (!object.Equals(this.FillTextureEffectColor, rhs.FillTextureEffectColor)) return false;
+                if (!object.Equals(this.FillTextureEffectAlphaFadeInTime, rhs.FillTextureEffectAlphaFadeInTime)) return false;
+                if (!object.Equals(this.FillTextureEffectFullAlphaTime, rhs.FillTextureEffectFullAlphaTime)) return false;
+                if (!object.Equals(this.FillTextureEffectAlphaFadeOutTime, rhs.FillTextureEffectAlphaFadeOutTime)) return false;
+                if (!object.Equals(this.FillTextureEffectPersistentAlphaRatio, rhs.FillTextureEffectPersistentAlphaRatio)) return false;
+                if (!object.Equals(this.FillTextureEffectAlphaPulseAmplitude, rhs.FillTextureEffectAlphaPulseAmplitude)) return false;
+                if (!object.Equals(this.FillTextureEffectAlphaPulseFrequency, rhs.FillTextureEffectAlphaPulseFrequency)) return false;
+                if (!object.Equals(this.FillTextureEffectTextureAnimationSpeedU, rhs.FillTextureEffectTextureAnimationSpeedU)) return false;
+                if (!object.Equals(this.FillTextureEffectTextureAnimationSpeedV, rhs.FillTextureEffectTextureAnimationSpeedV)) return false;
+                if (!object.Equals(this.EdgeEffectFallOff, rhs.EdgeEffectFallOff)) return false;
+                if (!object.Equals(this.EdgeEffectColor, rhs.EdgeEffectColor)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaFadeInTime, rhs.EdgeEffectAlphaFadeInTime)) return false;
+                if (!object.Equals(this.EdgeEffectFullAlphaTime, rhs.EdgeEffectFullAlphaTime)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaFadeOutTime, rhs.EdgeEffectAlphaFadeOutTime)) return false;
+                if (!object.Equals(this.EdgeEffectPersistentAlphaRatio, rhs.EdgeEffectPersistentAlphaRatio)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaPulseAmplitude, rhs.EdgeEffectAlphaPulseAmplitude)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaPulseFrequency, rhs.EdgeEffectAlphaPulseFrequency)) return false;
+                if (!object.Equals(this.FillTextureEffectFullAlphaRatio, rhs.FillTextureEffectFullAlphaRatio)) return false;
+                if (!object.Equals(this.EdgeEffectFullAlphaRatio, rhs.EdgeEffectFullAlphaRatio)) return false;
+                if (!object.Equals(this.MembraneShaderDestBlendMode, rhs.MembraneShaderDestBlendMode)) return false;
+                if (!object.Equals(this.ParticleShaderSourceBlendMode, rhs.ParticleShaderSourceBlendMode)) return false;
+                if (!object.Equals(this.ParticleShaderBlendOperation, rhs.ParticleShaderBlendOperation)) return false;
+                if (!object.Equals(this.ParticleShaderZTestFunction, rhs.ParticleShaderZTestFunction)) return false;
+                if (!object.Equals(this.ParticleShaderDestBlendMode, rhs.ParticleShaderDestBlendMode)) return false;
+                if (!object.Equals(this.ParticleShaderParticleBirthRampUpTime, rhs.ParticleShaderParticleBirthRampUpTime)) return false;
+                if (!object.Equals(this.ParticleShaderFullParticleBirthTime, rhs.ParticleShaderFullParticleBirthTime)) return false;
+                if (!object.Equals(this.ParticleShaderParticleBirthRampDownTime, rhs.ParticleShaderParticleBirthRampDownTime)) return false;
+                if (!object.Equals(this.ParticleShaderFullParticleBirthRatio, rhs.ParticleShaderFullParticleBirthRatio)) return false;
+                if (!object.Equals(this.ParticleShaderPersistentParticleBirthRatio, rhs.ParticleShaderPersistentParticleBirthRatio)) return false;
+                if (!object.Equals(this.ParticleShaderParticleLifetime, rhs.ParticleShaderParticleLifetime)) return false;
+                if (!object.Equals(this.ParticleShaderParticleLifetimePlusMinus, rhs.ParticleShaderParticleLifetimePlusMinus)) return false;
+                if (!object.Equals(this.ParticleShaderInitialSpeedAlongNormal, rhs.ParticleShaderInitialSpeedAlongNormal)) return false;
+                if (!object.Equals(this.ParticleShaderAccelerationAlongNormal, rhs.ParticleShaderAccelerationAlongNormal)) return false;
+                if (!object.Equals(this.ParticleShaderInitialVelocity1, rhs.ParticleShaderInitialVelocity1)) return false;
+                if (!object.Equals(this.ParticleShaderInitialVelocity2, rhs.ParticleShaderInitialVelocity2)) return false;
+                if (!object.Equals(this.ParticleShaderInitialVelocity3, rhs.ParticleShaderInitialVelocity3)) return false;
+                if (!object.Equals(this.ParticleShaderAcceleration1, rhs.ParticleShaderAcceleration1)) return false;
+                if (!object.Equals(this.ParticleShaderAcceleration2, rhs.ParticleShaderAcceleration2)) return false;
+                if (!object.Equals(this.ParticleShaderAcceleration3, rhs.ParticleShaderAcceleration3)) return false;
+                if (!object.Equals(this.ParticleShaderScaleKey1, rhs.ParticleShaderScaleKey1)) return false;
+                if (!object.Equals(this.ParticleShaderScaleKey2, rhs.ParticleShaderScaleKey2)) return false;
+                if (!object.Equals(this.ParticleShaderScaleKey1Time, rhs.ParticleShaderScaleKey1Time)) return false;
+                if (!object.Equals(this.ParticleShaderScaleKey2Time, rhs.ParticleShaderScaleKey2Time)) return false;
+                if (!object.Equals(this.ColorKey1Color, rhs.ColorKey1Color)) return false;
+                if (!object.Equals(this.ColorKey2Color, rhs.ColorKey2Color)) return false;
+                if (!object.Equals(this.ColorKey3Color, rhs.ColorKey3Color)) return false;
+                if (!object.Equals(this.ColorKey1ColorAlpha, rhs.ColorKey1ColorAlpha)) return false;
+                if (!object.Equals(this.ColorKey2ColorAlpha, rhs.ColorKey2ColorAlpha)) return false;
+                if (!object.Equals(this.ColorKey3ColorAlpha, rhs.ColorKey3ColorAlpha)) return false;
+                if (!object.Equals(this.ColorKey1ColorKeyTime, rhs.ColorKey1ColorKeyTime)) return false;
+                if (!object.Equals(this.ColorKey2ColorKeyTime, rhs.ColorKey2ColorKeyTime)) return false;
+                if (!object.Equals(this.ColorKey3ColorKeyTime, rhs.ColorKey3ColorKeyTime)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.FillTexture?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderTexture?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.MembraneShaderSourceBlendMode?.GetHashCode());
+                ret = ret.CombineHashCode(this.MembraneShaderBlendOperation?.GetHashCode());
+                ret = ret.CombineHashCode(this.MembraneShaderZTestFunction?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectAlphaFadeInTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectFullAlphaTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectAlphaFadeOutTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectPersistentAlphaRatio?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectAlphaPulseAmplitude?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectAlphaPulseFrequency?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectTextureAnimationSpeedU?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectTextureAnimationSpeedV?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectFallOff?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectAlphaFadeInTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectFullAlphaTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectAlphaFadeOutTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectPersistentAlphaRatio?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectAlphaPulseAmplitude?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectAlphaPulseFrequency?.GetHashCode());
+                ret = ret.CombineHashCode(this.FillTextureEffectFullAlphaRatio?.GetHashCode());
+                ret = ret.CombineHashCode(this.EdgeEffectFullAlphaRatio?.GetHashCode());
+                ret = ret.CombineHashCode(this.MembraneShaderDestBlendMode?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderSourceBlendMode?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderBlendOperation?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderZTestFunction?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderDestBlendMode?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderParticleBirthRampUpTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderFullParticleBirthTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderParticleBirthRampDownTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderFullParticleBirthRatio?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderPersistentParticleBirthRatio?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderParticleLifetime?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderParticleLifetimePlusMinus?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderInitialSpeedAlongNormal?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderAccelerationAlongNormal?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderInitialVelocity1?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderInitialVelocity2?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderInitialVelocity3?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderAcceleration1?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderAcceleration2?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderAcceleration3?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderScaleKey1?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderScaleKey2?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderScaleKey1Time?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParticleShaderScaleKey2Time?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey1Color?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey2Color?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey3Color?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey1ColorAlpha?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey2ColorAlpha?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey3ColorAlpha?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey1ColorKeyTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey2ColorKeyTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorKey3ColorKeyTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.FillTexture)) return false;
+                if (!eval(this.ParticleShaderTexture)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.MembraneShaderSourceBlendMode)) return false;
+                if (!eval(this.MembraneShaderBlendOperation)) return false;
+                if (!eval(this.MembraneShaderZTestFunction)) return false;
+                if (!eval(this.FillTextureEffectColor)) return false;
+                if (!eval(this.FillTextureEffectAlphaFadeInTime)) return false;
+                if (!eval(this.FillTextureEffectFullAlphaTime)) return false;
+                if (!eval(this.FillTextureEffectAlphaFadeOutTime)) return false;
+                if (!eval(this.FillTextureEffectPersistentAlphaRatio)) return false;
+                if (!eval(this.FillTextureEffectAlphaPulseAmplitude)) return false;
+                if (!eval(this.FillTextureEffectAlphaPulseFrequency)) return false;
+                if (!eval(this.FillTextureEffectTextureAnimationSpeedU)) return false;
+                if (!eval(this.FillTextureEffectTextureAnimationSpeedV)) return false;
+                if (!eval(this.EdgeEffectFallOff)) return false;
+                if (!eval(this.EdgeEffectColor)) return false;
+                if (!eval(this.EdgeEffectAlphaFadeInTime)) return false;
+                if (!eval(this.EdgeEffectFullAlphaTime)) return false;
+                if (!eval(this.EdgeEffectAlphaFadeOutTime)) return false;
+                if (!eval(this.EdgeEffectPersistentAlphaRatio)) return false;
+                if (!eval(this.EdgeEffectAlphaPulseAmplitude)) return false;
+                if (!eval(this.EdgeEffectAlphaPulseFrequency)) return false;
+                if (!eval(this.FillTextureEffectFullAlphaRatio)) return false;
+                if (!eval(this.EdgeEffectFullAlphaRatio)) return false;
+                if (!eval(this.MembraneShaderDestBlendMode)) return false;
+                if (!eval(this.ParticleShaderSourceBlendMode)) return false;
+                if (!eval(this.ParticleShaderBlendOperation)) return false;
+                if (!eval(this.ParticleShaderZTestFunction)) return false;
+                if (!eval(this.ParticleShaderDestBlendMode)) return false;
+                if (!eval(this.ParticleShaderParticleBirthRampUpTime)) return false;
+                if (!eval(this.ParticleShaderFullParticleBirthTime)) return false;
+                if (!eval(this.ParticleShaderParticleBirthRampDownTime)) return false;
+                if (!eval(this.ParticleShaderFullParticleBirthRatio)) return false;
+                if (!eval(this.ParticleShaderPersistentParticleBirthRatio)) return false;
+                if (!eval(this.ParticleShaderParticleLifetime)) return false;
+                if (!eval(this.ParticleShaderParticleLifetimePlusMinus)) return false;
+                if (!eval(this.ParticleShaderInitialSpeedAlongNormal)) return false;
+                if (!eval(this.ParticleShaderAccelerationAlongNormal)) return false;
+                if (!eval(this.ParticleShaderInitialVelocity1)) return false;
+                if (!eval(this.ParticleShaderInitialVelocity2)) return false;
+                if (!eval(this.ParticleShaderInitialVelocity3)) return false;
+                if (!eval(this.ParticleShaderAcceleration1)) return false;
+                if (!eval(this.ParticleShaderAcceleration2)) return false;
+                if (!eval(this.ParticleShaderAcceleration3)) return false;
+                if (!eval(this.ParticleShaderScaleKey1)) return false;
+                if (!eval(this.ParticleShaderScaleKey2)) return false;
+                if (!eval(this.ParticleShaderScaleKey1Time)) return false;
+                if (!eval(this.ParticleShaderScaleKey2Time)) return false;
+                if (!eval(this.ColorKey1Color)) return false;
+                if (!eval(this.ColorKey2Color)) return false;
+                if (!eval(this.ColorKey3Color)) return false;
+                if (!eval(this.ColorKey1ColorAlpha)) return false;
+                if (!eval(this.ColorKey2ColorAlpha)) return false;
+                if (!eval(this.ColorKey3ColorAlpha)) return false;
+                if (!eval(this.ColorKey1ColorKeyTime)) return false;
+                if (!eval(this.ColorKey2ColorKeyTime)) return false;
+                if (!eval(this.ColorKey3ColorKeyTime)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new EffectShader.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.FillTexture = eval(this.FillTexture);
+                obj.ParticleShaderTexture = eval(this.ParticleShaderTexture);
+                obj.Flags = eval(this.Flags);
+                obj.MembraneShaderSourceBlendMode = eval(this.MembraneShaderSourceBlendMode);
+                obj.MembraneShaderBlendOperation = eval(this.MembraneShaderBlendOperation);
+                obj.MembraneShaderZTestFunction = eval(this.MembraneShaderZTestFunction);
+                obj.FillTextureEffectColor = eval(this.FillTextureEffectColor);
+                obj.FillTextureEffectAlphaFadeInTime = eval(this.FillTextureEffectAlphaFadeInTime);
+                obj.FillTextureEffectFullAlphaTime = eval(this.FillTextureEffectFullAlphaTime);
+                obj.FillTextureEffectAlphaFadeOutTime = eval(this.FillTextureEffectAlphaFadeOutTime);
+                obj.FillTextureEffectPersistentAlphaRatio = eval(this.FillTextureEffectPersistentAlphaRatio);
+                obj.FillTextureEffectAlphaPulseAmplitude = eval(this.FillTextureEffectAlphaPulseAmplitude);
+                obj.FillTextureEffectAlphaPulseFrequency = eval(this.FillTextureEffectAlphaPulseFrequency);
+                obj.FillTextureEffectTextureAnimationSpeedU = eval(this.FillTextureEffectTextureAnimationSpeedU);
+                obj.FillTextureEffectTextureAnimationSpeedV = eval(this.FillTextureEffectTextureAnimationSpeedV);
+                obj.EdgeEffectFallOff = eval(this.EdgeEffectFallOff);
+                obj.EdgeEffectColor = eval(this.EdgeEffectColor);
+                obj.EdgeEffectAlphaFadeInTime = eval(this.EdgeEffectAlphaFadeInTime);
+                obj.EdgeEffectFullAlphaTime = eval(this.EdgeEffectFullAlphaTime);
+                obj.EdgeEffectAlphaFadeOutTime = eval(this.EdgeEffectAlphaFadeOutTime);
+                obj.EdgeEffectPersistentAlphaRatio = eval(this.EdgeEffectPersistentAlphaRatio);
+                obj.EdgeEffectAlphaPulseAmplitude = eval(this.EdgeEffectAlphaPulseAmplitude);
+                obj.EdgeEffectAlphaPulseFrequency = eval(this.EdgeEffectAlphaPulseFrequency);
+                obj.FillTextureEffectFullAlphaRatio = eval(this.FillTextureEffectFullAlphaRatio);
+                obj.EdgeEffectFullAlphaRatio = eval(this.EdgeEffectFullAlphaRatio);
+                obj.MembraneShaderDestBlendMode = eval(this.MembraneShaderDestBlendMode);
+                obj.ParticleShaderSourceBlendMode = eval(this.ParticleShaderSourceBlendMode);
+                obj.ParticleShaderBlendOperation = eval(this.ParticleShaderBlendOperation);
+                obj.ParticleShaderZTestFunction = eval(this.ParticleShaderZTestFunction);
+                obj.ParticleShaderDestBlendMode = eval(this.ParticleShaderDestBlendMode);
+                obj.ParticleShaderParticleBirthRampUpTime = eval(this.ParticleShaderParticleBirthRampUpTime);
+                obj.ParticleShaderFullParticleBirthTime = eval(this.ParticleShaderFullParticleBirthTime);
+                obj.ParticleShaderParticleBirthRampDownTime = eval(this.ParticleShaderParticleBirthRampDownTime);
+                obj.ParticleShaderFullParticleBirthRatio = eval(this.ParticleShaderFullParticleBirthRatio);
+                obj.ParticleShaderPersistentParticleBirthRatio = eval(this.ParticleShaderPersistentParticleBirthRatio);
+                obj.ParticleShaderParticleLifetime = eval(this.ParticleShaderParticleLifetime);
+                obj.ParticleShaderParticleLifetimePlusMinus = eval(this.ParticleShaderParticleLifetimePlusMinus);
+                obj.ParticleShaderInitialSpeedAlongNormal = eval(this.ParticleShaderInitialSpeedAlongNormal);
+                obj.ParticleShaderAccelerationAlongNormal = eval(this.ParticleShaderAccelerationAlongNormal);
+                obj.ParticleShaderInitialVelocity1 = eval(this.ParticleShaderInitialVelocity1);
+                obj.ParticleShaderInitialVelocity2 = eval(this.ParticleShaderInitialVelocity2);
+                obj.ParticleShaderInitialVelocity3 = eval(this.ParticleShaderInitialVelocity3);
+                obj.ParticleShaderAcceleration1 = eval(this.ParticleShaderAcceleration1);
+                obj.ParticleShaderAcceleration2 = eval(this.ParticleShaderAcceleration2);
+                obj.ParticleShaderAcceleration3 = eval(this.ParticleShaderAcceleration3);
+                obj.ParticleShaderScaleKey1 = eval(this.ParticleShaderScaleKey1);
+                obj.ParticleShaderScaleKey2 = eval(this.ParticleShaderScaleKey2);
+                obj.ParticleShaderScaleKey1Time = eval(this.ParticleShaderScaleKey1Time);
+                obj.ParticleShaderScaleKey2Time = eval(this.ParticleShaderScaleKey2Time);
+                obj.ColorKey1Color = eval(this.ColorKey1Color);
+                obj.ColorKey2Color = eval(this.ColorKey2Color);
+                obj.ColorKey3Color = eval(this.ColorKey3Color);
+                obj.ColorKey1ColorAlpha = eval(this.ColorKey1ColorAlpha);
+                obj.ColorKey2ColorAlpha = eval(this.ColorKey2ColorAlpha);
+                obj.ColorKey3ColorAlpha = eval(this.ColorKey3ColorAlpha);
+                obj.ColorKey1ColorKeyTime = eval(this.ColorKey1ColorKeyTime);
+                obj.ColorKey2ColorKeyTime = eval(this.ColorKey2ColorKeyTime);
+                obj.ColorKey3ColorKeyTime = eval(this.ColorKey3ColorKeyTime);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(EffectShader.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, EffectShader.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(EffectShader.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.FillTexture ?? true)
+                    {
+                        fg.AppendLine($"FillTexture => {FillTexture}");
+                    }
+                    if (printMask?.ParticleShaderTexture ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderTexture => {ParticleShaderTexture}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.MembraneShaderSourceBlendMode ?? true)
+                    {
+                        fg.AppendLine($"MembraneShaderSourceBlendMode => {MembraneShaderSourceBlendMode}");
+                    }
+                    if (printMask?.MembraneShaderBlendOperation ?? true)
+                    {
+                        fg.AppendLine($"MembraneShaderBlendOperation => {MembraneShaderBlendOperation}");
+                    }
+                    if (printMask?.MembraneShaderZTestFunction ?? true)
+                    {
+                        fg.AppendLine($"MembraneShaderZTestFunction => {MembraneShaderZTestFunction}");
+                    }
+                    if (printMask?.FillTextureEffectColor ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectColor => {FillTextureEffectColor}");
+                    }
+                    if (printMask?.FillTextureEffectAlphaFadeInTime ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectAlphaFadeInTime => {FillTextureEffectAlphaFadeInTime}");
+                    }
+                    if (printMask?.FillTextureEffectFullAlphaTime ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectFullAlphaTime => {FillTextureEffectFullAlphaTime}");
+                    }
+                    if (printMask?.FillTextureEffectAlphaFadeOutTime ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectAlphaFadeOutTime => {FillTextureEffectAlphaFadeOutTime}");
+                    }
+                    if (printMask?.FillTextureEffectPersistentAlphaRatio ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectPersistentAlphaRatio => {FillTextureEffectPersistentAlphaRatio}");
+                    }
+                    if (printMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectAlphaPulseAmplitude => {FillTextureEffectAlphaPulseAmplitude}");
+                    }
+                    if (printMask?.FillTextureEffectAlphaPulseFrequency ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectAlphaPulseFrequency => {FillTextureEffectAlphaPulseFrequency}");
+                    }
+                    if (printMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectTextureAnimationSpeedU => {FillTextureEffectTextureAnimationSpeedU}");
+                    }
+                    if (printMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectTextureAnimationSpeedV => {FillTextureEffectTextureAnimationSpeedV}");
+                    }
+                    if (printMask?.EdgeEffectFallOff ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectFallOff => {EdgeEffectFallOff}");
+                    }
+                    if (printMask?.EdgeEffectColor ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectColor => {EdgeEffectColor}");
+                    }
+                    if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectAlphaFadeInTime => {EdgeEffectAlphaFadeInTime}");
+                    }
+                    if (printMask?.EdgeEffectFullAlphaTime ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectFullAlphaTime => {EdgeEffectFullAlphaTime}");
+                    }
+                    if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectAlphaFadeOutTime => {EdgeEffectAlphaFadeOutTime}");
+                    }
+                    if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectPersistentAlphaRatio => {EdgeEffectPersistentAlphaRatio}");
+                    }
+                    if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectAlphaPulseAmplitude => {EdgeEffectAlphaPulseAmplitude}");
+                    }
+                    if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectAlphaPulseFrequency => {EdgeEffectAlphaPulseFrequency}");
+                    }
+                    if (printMask?.FillTextureEffectFullAlphaRatio ?? true)
+                    {
+                        fg.AppendLine($"FillTextureEffectFullAlphaRatio => {FillTextureEffectFullAlphaRatio}");
+                    }
+                    if (printMask?.EdgeEffectFullAlphaRatio ?? true)
+                    {
+                        fg.AppendLine($"EdgeEffectFullAlphaRatio => {EdgeEffectFullAlphaRatio}");
+                    }
+                    if (printMask?.MembraneShaderDestBlendMode ?? true)
+                    {
+                        fg.AppendLine($"MembraneShaderDestBlendMode => {MembraneShaderDestBlendMode}");
+                    }
+                    if (printMask?.ParticleShaderSourceBlendMode ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderSourceBlendMode => {ParticleShaderSourceBlendMode}");
+                    }
+                    if (printMask?.ParticleShaderBlendOperation ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderBlendOperation => {ParticleShaderBlendOperation}");
+                    }
+                    if (printMask?.ParticleShaderZTestFunction ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderZTestFunction => {ParticleShaderZTestFunction}");
+                    }
+                    if (printMask?.ParticleShaderDestBlendMode ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderDestBlendMode => {ParticleShaderDestBlendMode}");
+                    }
+                    if (printMask?.ParticleShaderParticleBirthRampUpTime ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderParticleBirthRampUpTime => {ParticleShaderParticleBirthRampUpTime}");
+                    }
+                    if (printMask?.ParticleShaderFullParticleBirthTime ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderFullParticleBirthTime => {ParticleShaderFullParticleBirthTime}");
+                    }
+                    if (printMask?.ParticleShaderParticleBirthRampDownTime ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderParticleBirthRampDownTime => {ParticleShaderParticleBirthRampDownTime}");
+                    }
+                    if (printMask?.ParticleShaderFullParticleBirthRatio ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderFullParticleBirthRatio => {ParticleShaderFullParticleBirthRatio}");
+                    }
+                    if (printMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderPersistentParticleBirthRatio => {ParticleShaderPersistentParticleBirthRatio}");
+                    }
+                    if (printMask?.ParticleShaderParticleLifetime ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderParticleLifetime => {ParticleShaderParticleLifetime}");
+                    }
+                    if (printMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderParticleLifetimePlusMinus => {ParticleShaderParticleLifetimePlusMinus}");
+                    }
+                    if (printMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderInitialSpeedAlongNormal => {ParticleShaderInitialSpeedAlongNormal}");
+                    }
+                    if (printMask?.ParticleShaderAccelerationAlongNormal ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderAccelerationAlongNormal => {ParticleShaderAccelerationAlongNormal}");
+                    }
+                    if (printMask?.ParticleShaderInitialVelocity1 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderInitialVelocity1 => {ParticleShaderInitialVelocity1}");
+                    }
+                    if (printMask?.ParticleShaderInitialVelocity2 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderInitialVelocity2 => {ParticleShaderInitialVelocity2}");
+                    }
+                    if (printMask?.ParticleShaderInitialVelocity3 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderInitialVelocity3 => {ParticleShaderInitialVelocity3}");
+                    }
+                    if (printMask?.ParticleShaderAcceleration1 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderAcceleration1 => {ParticleShaderAcceleration1}");
+                    }
+                    if (printMask?.ParticleShaderAcceleration2 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderAcceleration2 => {ParticleShaderAcceleration2}");
+                    }
+                    if (printMask?.ParticleShaderAcceleration3 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderAcceleration3 => {ParticleShaderAcceleration3}");
+                    }
+                    if (printMask?.ParticleShaderScaleKey1 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderScaleKey1 => {ParticleShaderScaleKey1}");
+                    }
+                    if (printMask?.ParticleShaderScaleKey2 ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderScaleKey2 => {ParticleShaderScaleKey2}");
+                    }
+                    if (printMask?.ParticleShaderScaleKey1Time ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderScaleKey1Time => {ParticleShaderScaleKey1Time}");
+                    }
+                    if (printMask?.ParticleShaderScaleKey2Time ?? true)
+                    {
+                        fg.AppendLine($"ParticleShaderScaleKey2Time => {ParticleShaderScaleKey2Time}");
+                    }
+                    if (printMask?.ColorKey1Color ?? true)
+                    {
+                        fg.AppendLine($"ColorKey1Color => {ColorKey1Color}");
+                    }
+                    if (printMask?.ColorKey2Color ?? true)
+                    {
+                        fg.AppendLine($"ColorKey2Color => {ColorKey2Color}");
+                    }
+                    if (printMask?.ColorKey3Color ?? true)
+                    {
+                        fg.AppendLine($"ColorKey3Color => {ColorKey3Color}");
+                    }
+                    if (printMask?.ColorKey1ColorAlpha ?? true)
+                    {
+                        fg.AppendLine($"ColorKey1ColorAlpha => {ColorKey1ColorAlpha}");
+                    }
+                    if (printMask?.ColorKey2ColorAlpha ?? true)
+                    {
+                        fg.AppendLine($"ColorKey2ColorAlpha => {ColorKey2ColorAlpha}");
+                    }
+                    if (printMask?.ColorKey3ColorAlpha ?? true)
+                    {
+                        fg.AppendLine($"ColorKey3ColorAlpha => {ColorKey3ColorAlpha}");
+                    }
+                    if (printMask?.ColorKey1ColorKeyTime ?? true)
+                    {
+                        fg.AppendLine($"ColorKey1ColorKeyTime => {ColorKey1ColorKeyTime}");
+                    }
+                    if (printMask?.ColorKey2ColorKeyTime ?? true)
+                    {
+                        fg.AppendLine($"ColorKey2ColorKeyTime => {ColorKey2ColorKeyTime}");
+                    }
+                    if (printMask?.ColorKey3ColorKeyTime ?? true)
+                    {
+                        fg.AppendLine($"ColorKey3ColorKeyTime => {ColorKey3ColorKeyTime}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? FillTexture;
+            public Exception? ParticleShaderTexture;
+            public Exception? Flags;
+            public Exception? MembraneShaderSourceBlendMode;
+            public Exception? MembraneShaderBlendOperation;
+            public Exception? MembraneShaderZTestFunction;
+            public Exception? FillTextureEffectColor;
+            public Exception? FillTextureEffectAlphaFadeInTime;
+            public Exception? FillTextureEffectFullAlphaTime;
+            public Exception? FillTextureEffectAlphaFadeOutTime;
+            public Exception? FillTextureEffectPersistentAlphaRatio;
+            public Exception? FillTextureEffectAlphaPulseAmplitude;
+            public Exception? FillTextureEffectAlphaPulseFrequency;
+            public Exception? FillTextureEffectTextureAnimationSpeedU;
+            public Exception? FillTextureEffectTextureAnimationSpeedV;
+            public Exception? EdgeEffectFallOff;
+            public Exception? EdgeEffectColor;
+            public Exception? EdgeEffectAlphaFadeInTime;
+            public Exception? EdgeEffectFullAlphaTime;
+            public Exception? EdgeEffectAlphaFadeOutTime;
+            public Exception? EdgeEffectPersistentAlphaRatio;
+            public Exception? EdgeEffectAlphaPulseAmplitude;
+            public Exception? EdgeEffectAlphaPulseFrequency;
+            public Exception? FillTextureEffectFullAlphaRatio;
+            public Exception? EdgeEffectFullAlphaRatio;
+            public Exception? MembraneShaderDestBlendMode;
+            public Exception? ParticleShaderSourceBlendMode;
+            public Exception? ParticleShaderBlendOperation;
+            public Exception? ParticleShaderZTestFunction;
+            public Exception? ParticleShaderDestBlendMode;
+            public Exception? ParticleShaderParticleBirthRampUpTime;
+            public Exception? ParticleShaderFullParticleBirthTime;
+            public Exception? ParticleShaderParticleBirthRampDownTime;
+            public Exception? ParticleShaderFullParticleBirthRatio;
+            public Exception? ParticleShaderPersistentParticleBirthRatio;
+            public Exception? ParticleShaderParticleLifetime;
+            public Exception? ParticleShaderParticleLifetimePlusMinus;
+            public Exception? ParticleShaderInitialSpeedAlongNormal;
+            public Exception? ParticleShaderAccelerationAlongNormal;
+            public Exception? ParticleShaderInitialVelocity1;
+            public Exception? ParticleShaderInitialVelocity2;
+            public Exception? ParticleShaderInitialVelocity3;
+            public Exception? ParticleShaderAcceleration1;
+            public Exception? ParticleShaderAcceleration2;
+            public Exception? ParticleShaderAcceleration3;
+            public Exception? ParticleShaderScaleKey1;
+            public Exception? ParticleShaderScaleKey2;
+            public Exception? ParticleShaderScaleKey1Time;
+            public Exception? ParticleShaderScaleKey2Time;
+            public Exception? ColorKey1Color;
+            public Exception? ColorKey2Color;
+            public Exception? ColorKey3Color;
+            public Exception? ColorKey1ColorAlpha;
+            public Exception? ColorKey2ColorAlpha;
+            public Exception? ColorKey3ColorAlpha;
+            public Exception? ColorKey1ColorKeyTime;
+            public Exception? ColorKey2ColorKeyTime;
+            public Exception? ColorKey3ColorKeyTime;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
+                switch (enu)
+                {
+                    case EffectShader_FieldIndex.FillTexture:
+                        return FillTexture;
+                    case EffectShader_FieldIndex.ParticleShaderTexture:
+                        return ParticleShaderTexture;
+                    case EffectShader_FieldIndex.Flags:
+                        return Flags;
+                    case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
+                        return MembraneShaderSourceBlendMode;
+                    case EffectShader_FieldIndex.MembraneShaderBlendOperation:
+                        return MembraneShaderBlendOperation;
+                    case EffectShader_FieldIndex.MembraneShaderZTestFunction:
+                        return MembraneShaderZTestFunction;
+                    case EffectShader_FieldIndex.FillTextureEffectColor:
+                        return FillTextureEffectColor;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
+                        return FillTextureEffectAlphaFadeInTime;
+                    case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
+                        return FillTextureEffectFullAlphaTime;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
+                        return FillTextureEffectAlphaFadeOutTime;
+                    case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
+                        return FillTextureEffectPersistentAlphaRatio;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
+                        return FillTextureEffectAlphaPulseAmplitude;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
+                        return FillTextureEffectAlphaPulseFrequency;
+                    case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
+                        return FillTextureEffectTextureAnimationSpeedU;
+                    case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
+                        return FillTextureEffectTextureAnimationSpeedV;
+                    case EffectShader_FieldIndex.EdgeEffectFallOff:
+                        return EdgeEffectFallOff;
+                    case EffectShader_FieldIndex.EdgeEffectColor:
+                        return EdgeEffectColor;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
+                        return EdgeEffectAlphaFadeInTime;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
+                        return EdgeEffectFullAlphaTime;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
+                        return EdgeEffectAlphaFadeOutTime;
+                    case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
+                        return EdgeEffectPersistentAlphaRatio;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
+                        return EdgeEffectAlphaPulseAmplitude;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
+                        return EdgeEffectAlphaPulseFrequency;
+                    case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
+                        return FillTextureEffectFullAlphaRatio;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
+                        return EdgeEffectFullAlphaRatio;
+                    case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
+                        return MembraneShaderDestBlendMode;
+                    case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
+                        return ParticleShaderSourceBlendMode;
+                    case EffectShader_FieldIndex.ParticleShaderBlendOperation:
+                        return ParticleShaderBlendOperation;
+                    case EffectShader_FieldIndex.ParticleShaderZTestFunction:
+                        return ParticleShaderZTestFunction;
+                    case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
+                        return ParticleShaderDestBlendMode;
+                    case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
+                        return ParticleShaderParticleBirthRampUpTime;
+                    case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
+                        return ParticleShaderFullParticleBirthTime;
+                    case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
+                        return ParticleShaderParticleBirthRampDownTime;
+                    case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
+                        return ParticleShaderFullParticleBirthRatio;
+                    case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
+                        return ParticleShaderPersistentParticleBirthRatio;
+                    case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
+                        return ParticleShaderParticleLifetime;
+                    case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
+                        return ParticleShaderParticleLifetimePlusMinus;
+                    case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
+                        return ParticleShaderInitialSpeedAlongNormal;
+                    case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
+                        return ParticleShaderAccelerationAlongNormal;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
+                        return ParticleShaderInitialVelocity1;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
+                        return ParticleShaderInitialVelocity2;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
+                        return ParticleShaderInitialVelocity3;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration1:
+                        return ParticleShaderAcceleration1;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration2:
+                        return ParticleShaderAcceleration2;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration3:
+                        return ParticleShaderAcceleration3;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey1:
+                        return ParticleShaderScaleKey1;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey2:
+                        return ParticleShaderScaleKey2;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
+                        return ParticleShaderScaleKey1Time;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
+                        return ParticleShaderScaleKey2Time;
+                    case EffectShader_FieldIndex.ColorKey1Color:
+                        return ColorKey1Color;
+                    case EffectShader_FieldIndex.ColorKey2Color:
+                        return ColorKey2Color;
+                    case EffectShader_FieldIndex.ColorKey3Color:
+                        return ColorKey3Color;
+                    case EffectShader_FieldIndex.ColorKey1ColorAlpha:
+                        return ColorKey1ColorAlpha;
+                    case EffectShader_FieldIndex.ColorKey2ColorAlpha:
+                        return ColorKey2ColorAlpha;
+                    case EffectShader_FieldIndex.ColorKey3ColorAlpha:
+                        return ColorKey3ColorAlpha;
+                    case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
+                        return ColorKey1ColorKeyTime;
+                    case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
+                        return ColorKey2ColorKeyTime;
+                    case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                        return ColorKey3ColorKeyTime;
+                    case EffectShader_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
+                switch (enu)
+                {
+                    case EffectShader_FieldIndex.FillTexture:
+                        this.FillTexture = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderTexture:
+                        this.ParticleShaderTexture = ex;
+                        break;
+                    case EffectShader_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
+                        this.MembraneShaderSourceBlendMode = ex;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderBlendOperation:
+                        this.MembraneShaderBlendOperation = ex;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderZTestFunction:
+                        this.MembraneShaderZTestFunction = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectColor:
+                        this.FillTextureEffectColor = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
+                        this.FillTextureEffectAlphaFadeInTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
+                        this.FillTextureEffectFullAlphaTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
+                        this.FillTextureEffectAlphaFadeOutTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
+                        this.FillTextureEffectPersistentAlphaRatio = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
+                        this.FillTextureEffectAlphaPulseAmplitude = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
+                        this.FillTextureEffectAlphaPulseFrequency = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
+                        this.FillTextureEffectTextureAnimationSpeedU = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
+                        this.FillTextureEffectTextureAnimationSpeedV = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectFallOff:
+                        this.EdgeEffectFallOff = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectColor:
+                        this.EdgeEffectColor = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
+                        this.EdgeEffectAlphaFadeInTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
+                        this.EdgeEffectFullAlphaTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
+                        this.EdgeEffectAlphaFadeOutTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
+                        this.EdgeEffectPersistentAlphaRatio = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
+                        this.EdgeEffectAlphaPulseAmplitude = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
+                        this.EdgeEffectAlphaPulseFrequency = ex;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
+                        this.FillTextureEffectFullAlphaRatio = ex;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
+                        this.EdgeEffectFullAlphaRatio = ex;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
+                        this.MembraneShaderDestBlendMode = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
+                        this.ParticleShaderSourceBlendMode = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderBlendOperation:
+                        this.ParticleShaderBlendOperation = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderZTestFunction:
+                        this.ParticleShaderZTestFunction = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
+                        this.ParticleShaderDestBlendMode = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
+                        this.ParticleShaderParticleBirthRampUpTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
+                        this.ParticleShaderFullParticleBirthTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
+                        this.ParticleShaderParticleBirthRampDownTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
+                        this.ParticleShaderFullParticleBirthRatio = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
+                        this.ParticleShaderPersistentParticleBirthRatio = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
+                        this.ParticleShaderParticleLifetime = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
+                        this.ParticleShaderParticleLifetimePlusMinus = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
+                        this.ParticleShaderInitialSpeedAlongNormal = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
+                        this.ParticleShaderAccelerationAlongNormal = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
+                        this.ParticleShaderInitialVelocity1 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
+                        this.ParticleShaderInitialVelocity2 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
+                        this.ParticleShaderInitialVelocity3 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration1:
+                        this.ParticleShaderAcceleration1 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration2:
+                        this.ParticleShaderAcceleration2 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration3:
+                        this.ParticleShaderAcceleration3 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey1:
+                        this.ParticleShaderScaleKey1 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey2:
+                        this.ParticleShaderScaleKey2 = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
+                        this.ParticleShaderScaleKey1Time = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
+                        this.ParticleShaderScaleKey2Time = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey1Color:
+                        this.ColorKey1Color = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey2Color:
+                        this.ColorKey2Color = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey3Color:
+                        this.ColorKey3Color = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey1ColorAlpha:
+                        this.ColorKey1ColorAlpha = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey2ColorAlpha:
+                        this.ColorKey2ColorAlpha = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey3ColorAlpha:
+                        this.ColorKey3ColorAlpha = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
+                        this.ColorKey1ColorKeyTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
+                        this.ColorKey2ColorKeyTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                        this.ColorKey3ColorKeyTime = ex;
+                        break;
+                    case EffectShader_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
+                switch (enu)
+                {
+                    case EffectShader_FieldIndex.FillTexture:
+                        this.FillTexture = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderTexture:
+                        this.ParticleShaderTexture = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
+                        this.MembraneShaderSourceBlendMode = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderBlendOperation:
+                        this.MembraneShaderBlendOperation = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderZTestFunction:
+                        this.MembraneShaderZTestFunction = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectColor:
+                        this.FillTextureEffectColor = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
+                        this.FillTextureEffectAlphaFadeInTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
+                        this.FillTextureEffectFullAlphaTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
+                        this.FillTextureEffectAlphaFadeOutTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
+                        this.FillTextureEffectPersistentAlphaRatio = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
+                        this.FillTextureEffectAlphaPulseAmplitude = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
+                        this.FillTextureEffectAlphaPulseFrequency = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
+                        this.FillTextureEffectTextureAnimationSpeedU = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
+                        this.FillTextureEffectTextureAnimationSpeedV = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectFallOff:
+                        this.EdgeEffectFallOff = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectColor:
+                        this.EdgeEffectColor = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
+                        this.EdgeEffectAlphaFadeInTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
+                        this.EdgeEffectFullAlphaTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
+                        this.EdgeEffectAlphaFadeOutTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
+                        this.EdgeEffectPersistentAlphaRatio = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
+                        this.EdgeEffectAlphaPulseAmplitude = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
+                        this.EdgeEffectAlphaPulseFrequency = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
+                        this.FillTextureEffectFullAlphaRatio = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
+                        this.EdgeEffectFullAlphaRatio = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
+                        this.MembraneShaderDestBlendMode = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
+                        this.ParticleShaderSourceBlendMode = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderBlendOperation:
+                        this.ParticleShaderBlendOperation = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderZTestFunction:
+                        this.ParticleShaderZTestFunction = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
+                        this.ParticleShaderDestBlendMode = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
+                        this.ParticleShaderParticleBirthRampUpTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
+                        this.ParticleShaderFullParticleBirthTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
+                        this.ParticleShaderParticleBirthRampDownTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
+                        this.ParticleShaderFullParticleBirthRatio = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
+                        this.ParticleShaderPersistentParticleBirthRatio = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
+                        this.ParticleShaderParticleLifetime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
+                        this.ParticleShaderParticleLifetimePlusMinus = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
+                        this.ParticleShaderInitialSpeedAlongNormal = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
+                        this.ParticleShaderAccelerationAlongNormal = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
+                        this.ParticleShaderInitialVelocity1 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
+                        this.ParticleShaderInitialVelocity2 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
+                        this.ParticleShaderInitialVelocity3 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration1:
+                        this.ParticleShaderAcceleration1 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration2:
+                        this.ParticleShaderAcceleration2 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderAcceleration3:
+                        this.ParticleShaderAcceleration3 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey1:
+                        this.ParticleShaderScaleKey1 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey2:
+                        this.ParticleShaderScaleKey2 = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
+                        this.ParticleShaderScaleKey1Time = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
+                        this.ParticleShaderScaleKey2Time = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey1Color:
+                        this.ColorKey1Color = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey2Color:
+                        this.ColorKey2Color = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey3Color:
+                        this.ColorKey3Color = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey1ColorAlpha:
+                        this.ColorKey1ColorAlpha = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey2ColorAlpha:
+                        this.ColorKey2ColorAlpha = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey3ColorAlpha:
+                        this.ColorKey3ColorAlpha = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
+                        this.ColorKey1ColorKeyTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
+                        this.ColorKey2ColorKeyTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
+                        this.ColorKey3ColorKeyTime = (Exception)obj;
+                        break;
+                    case EffectShader_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (FillTexture != null) return true;
+                if (ParticleShaderTexture != null) return true;
+                if (Flags != null) return true;
+                if (MembraneShaderSourceBlendMode != null) return true;
+                if (MembraneShaderBlendOperation != null) return true;
+                if (MembraneShaderZTestFunction != null) return true;
+                if (FillTextureEffectColor != null) return true;
+                if (FillTextureEffectAlphaFadeInTime != null) return true;
+                if (FillTextureEffectFullAlphaTime != null) return true;
+                if (FillTextureEffectAlphaFadeOutTime != null) return true;
+                if (FillTextureEffectPersistentAlphaRatio != null) return true;
+                if (FillTextureEffectAlphaPulseAmplitude != null) return true;
+                if (FillTextureEffectAlphaPulseFrequency != null) return true;
+                if (FillTextureEffectTextureAnimationSpeedU != null) return true;
+                if (FillTextureEffectTextureAnimationSpeedV != null) return true;
+                if (EdgeEffectFallOff != null) return true;
+                if (EdgeEffectColor != null) return true;
+                if (EdgeEffectAlphaFadeInTime != null) return true;
+                if (EdgeEffectFullAlphaTime != null) return true;
+                if (EdgeEffectAlphaFadeOutTime != null) return true;
+                if (EdgeEffectPersistentAlphaRatio != null) return true;
+                if (EdgeEffectAlphaPulseAmplitude != null) return true;
+                if (EdgeEffectAlphaPulseFrequency != null) return true;
+                if (FillTextureEffectFullAlphaRatio != null) return true;
+                if (EdgeEffectFullAlphaRatio != null) return true;
+                if (MembraneShaderDestBlendMode != null) return true;
+                if (ParticleShaderSourceBlendMode != null) return true;
+                if (ParticleShaderBlendOperation != null) return true;
+                if (ParticleShaderZTestFunction != null) return true;
+                if (ParticleShaderDestBlendMode != null) return true;
+                if (ParticleShaderParticleBirthRampUpTime != null) return true;
+                if (ParticleShaderFullParticleBirthTime != null) return true;
+                if (ParticleShaderParticleBirthRampDownTime != null) return true;
+                if (ParticleShaderFullParticleBirthRatio != null) return true;
+                if (ParticleShaderPersistentParticleBirthRatio != null) return true;
+                if (ParticleShaderParticleLifetime != null) return true;
+                if (ParticleShaderParticleLifetimePlusMinus != null) return true;
+                if (ParticleShaderInitialSpeedAlongNormal != null) return true;
+                if (ParticleShaderAccelerationAlongNormal != null) return true;
+                if (ParticleShaderInitialVelocity1 != null) return true;
+                if (ParticleShaderInitialVelocity2 != null) return true;
+                if (ParticleShaderInitialVelocity3 != null) return true;
+                if (ParticleShaderAcceleration1 != null) return true;
+                if (ParticleShaderAcceleration2 != null) return true;
+                if (ParticleShaderAcceleration3 != null) return true;
+                if (ParticleShaderScaleKey1 != null) return true;
+                if (ParticleShaderScaleKey2 != null) return true;
+                if (ParticleShaderScaleKey1Time != null) return true;
+                if (ParticleShaderScaleKey2Time != null) return true;
+                if (ColorKey1Color != null) return true;
+                if (ColorKey2Color != null) return true;
+                if (ColorKey3Color != null) return true;
+                if (ColorKey1ColorAlpha != null) return true;
+                if (ColorKey2ColorAlpha != null) return true;
+                if (ColorKey3ColorAlpha != null) return true;
+                if (ColorKey1ColorKeyTime != null) return true;
+                if (ColorKey2ColorKeyTime != null) return true;
+                if (ColorKey3ColorKeyTime != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"FillTexture => {FillTexture}");
+                fg.AppendLine($"ParticleShaderTexture => {ParticleShaderTexture}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"MembraneShaderSourceBlendMode => {MembraneShaderSourceBlendMode}");
+                fg.AppendLine($"MembraneShaderBlendOperation => {MembraneShaderBlendOperation}");
+                fg.AppendLine($"MembraneShaderZTestFunction => {MembraneShaderZTestFunction}");
+                fg.AppendLine($"FillTextureEffectColor => {FillTextureEffectColor}");
+                fg.AppendLine($"FillTextureEffectAlphaFadeInTime => {FillTextureEffectAlphaFadeInTime}");
+                fg.AppendLine($"FillTextureEffectFullAlphaTime => {FillTextureEffectFullAlphaTime}");
+                fg.AppendLine($"FillTextureEffectAlphaFadeOutTime => {FillTextureEffectAlphaFadeOutTime}");
+                fg.AppendLine($"FillTextureEffectPersistentAlphaRatio => {FillTextureEffectPersistentAlphaRatio}");
+                fg.AppendLine($"FillTextureEffectAlphaPulseAmplitude => {FillTextureEffectAlphaPulseAmplitude}");
+                fg.AppendLine($"FillTextureEffectAlphaPulseFrequency => {FillTextureEffectAlphaPulseFrequency}");
+                fg.AppendLine($"FillTextureEffectTextureAnimationSpeedU => {FillTextureEffectTextureAnimationSpeedU}");
+                fg.AppendLine($"FillTextureEffectTextureAnimationSpeedV => {FillTextureEffectTextureAnimationSpeedV}");
+                fg.AppendLine($"EdgeEffectFallOff => {EdgeEffectFallOff}");
+                fg.AppendLine($"EdgeEffectColor => {EdgeEffectColor}");
+                fg.AppendLine($"EdgeEffectAlphaFadeInTime => {EdgeEffectAlphaFadeInTime}");
+                fg.AppendLine($"EdgeEffectFullAlphaTime => {EdgeEffectFullAlphaTime}");
+                fg.AppendLine($"EdgeEffectAlphaFadeOutTime => {EdgeEffectAlphaFadeOutTime}");
+                fg.AppendLine($"EdgeEffectPersistentAlphaRatio => {EdgeEffectPersistentAlphaRatio}");
+                fg.AppendLine($"EdgeEffectAlphaPulseAmplitude => {EdgeEffectAlphaPulseAmplitude}");
+                fg.AppendLine($"EdgeEffectAlphaPulseFrequency => {EdgeEffectAlphaPulseFrequency}");
+                fg.AppendLine($"FillTextureEffectFullAlphaRatio => {FillTextureEffectFullAlphaRatio}");
+                fg.AppendLine($"EdgeEffectFullAlphaRatio => {EdgeEffectFullAlphaRatio}");
+                fg.AppendLine($"MembraneShaderDestBlendMode => {MembraneShaderDestBlendMode}");
+                fg.AppendLine($"ParticleShaderSourceBlendMode => {ParticleShaderSourceBlendMode}");
+                fg.AppendLine($"ParticleShaderBlendOperation => {ParticleShaderBlendOperation}");
+                fg.AppendLine($"ParticleShaderZTestFunction => {ParticleShaderZTestFunction}");
+                fg.AppendLine($"ParticleShaderDestBlendMode => {ParticleShaderDestBlendMode}");
+                fg.AppendLine($"ParticleShaderParticleBirthRampUpTime => {ParticleShaderParticleBirthRampUpTime}");
+                fg.AppendLine($"ParticleShaderFullParticleBirthTime => {ParticleShaderFullParticleBirthTime}");
+                fg.AppendLine($"ParticleShaderParticleBirthRampDownTime => {ParticleShaderParticleBirthRampDownTime}");
+                fg.AppendLine($"ParticleShaderFullParticleBirthRatio => {ParticleShaderFullParticleBirthRatio}");
+                fg.AppendLine($"ParticleShaderPersistentParticleBirthRatio => {ParticleShaderPersistentParticleBirthRatio}");
+                fg.AppendLine($"ParticleShaderParticleLifetime => {ParticleShaderParticleLifetime}");
+                fg.AppendLine($"ParticleShaderParticleLifetimePlusMinus => {ParticleShaderParticleLifetimePlusMinus}");
+                fg.AppendLine($"ParticleShaderInitialSpeedAlongNormal => {ParticleShaderInitialSpeedAlongNormal}");
+                fg.AppendLine($"ParticleShaderAccelerationAlongNormal => {ParticleShaderAccelerationAlongNormal}");
+                fg.AppendLine($"ParticleShaderInitialVelocity1 => {ParticleShaderInitialVelocity1}");
+                fg.AppendLine($"ParticleShaderInitialVelocity2 => {ParticleShaderInitialVelocity2}");
+                fg.AppendLine($"ParticleShaderInitialVelocity3 => {ParticleShaderInitialVelocity3}");
+                fg.AppendLine($"ParticleShaderAcceleration1 => {ParticleShaderAcceleration1}");
+                fg.AppendLine($"ParticleShaderAcceleration2 => {ParticleShaderAcceleration2}");
+                fg.AppendLine($"ParticleShaderAcceleration3 => {ParticleShaderAcceleration3}");
+                fg.AppendLine($"ParticleShaderScaleKey1 => {ParticleShaderScaleKey1}");
+                fg.AppendLine($"ParticleShaderScaleKey2 => {ParticleShaderScaleKey2}");
+                fg.AppendLine($"ParticleShaderScaleKey1Time => {ParticleShaderScaleKey1Time}");
+                fg.AppendLine($"ParticleShaderScaleKey2Time => {ParticleShaderScaleKey2Time}");
+                fg.AppendLine($"ColorKey1Color => {ColorKey1Color}");
+                fg.AppendLine($"ColorKey2Color => {ColorKey2Color}");
+                fg.AppendLine($"ColorKey3Color => {ColorKey3Color}");
+                fg.AppendLine($"ColorKey1ColorAlpha => {ColorKey1ColorAlpha}");
+                fg.AppendLine($"ColorKey2ColorAlpha => {ColorKey2ColorAlpha}");
+                fg.AppendLine($"ColorKey3ColorAlpha => {ColorKey3ColorAlpha}");
+                fg.AppendLine($"ColorKey1ColorKeyTime => {ColorKey1ColorKeyTime}");
+                fg.AppendLine($"ColorKey2ColorKeyTime => {ColorKey2ColorKeyTime}");
+                fg.AppendLine($"ColorKey3ColorKeyTime => {ColorKey3ColorKeyTime}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.FillTexture = this.FillTexture.Combine(rhs.FillTexture);
+                ret.ParticleShaderTexture = this.ParticleShaderTexture.Combine(rhs.ParticleShaderTexture);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.MembraneShaderSourceBlendMode = this.MembraneShaderSourceBlendMode.Combine(rhs.MembraneShaderSourceBlendMode);
+                ret.MembraneShaderBlendOperation = this.MembraneShaderBlendOperation.Combine(rhs.MembraneShaderBlendOperation);
+                ret.MembraneShaderZTestFunction = this.MembraneShaderZTestFunction.Combine(rhs.MembraneShaderZTestFunction);
+                ret.FillTextureEffectColor = this.FillTextureEffectColor.Combine(rhs.FillTextureEffectColor);
+                ret.FillTextureEffectAlphaFadeInTime = this.FillTextureEffectAlphaFadeInTime.Combine(rhs.FillTextureEffectAlphaFadeInTime);
+                ret.FillTextureEffectFullAlphaTime = this.FillTextureEffectFullAlphaTime.Combine(rhs.FillTextureEffectFullAlphaTime);
+                ret.FillTextureEffectAlphaFadeOutTime = this.FillTextureEffectAlphaFadeOutTime.Combine(rhs.FillTextureEffectAlphaFadeOutTime);
+                ret.FillTextureEffectPersistentAlphaRatio = this.FillTextureEffectPersistentAlphaRatio.Combine(rhs.FillTextureEffectPersistentAlphaRatio);
+                ret.FillTextureEffectAlphaPulseAmplitude = this.FillTextureEffectAlphaPulseAmplitude.Combine(rhs.FillTextureEffectAlphaPulseAmplitude);
+                ret.FillTextureEffectAlphaPulseFrequency = this.FillTextureEffectAlphaPulseFrequency.Combine(rhs.FillTextureEffectAlphaPulseFrequency);
+                ret.FillTextureEffectTextureAnimationSpeedU = this.FillTextureEffectTextureAnimationSpeedU.Combine(rhs.FillTextureEffectTextureAnimationSpeedU);
+                ret.FillTextureEffectTextureAnimationSpeedV = this.FillTextureEffectTextureAnimationSpeedV.Combine(rhs.FillTextureEffectTextureAnimationSpeedV);
+                ret.EdgeEffectFallOff = this.EdgeEffectFallOff.Combine(rhs.EdgeEffectFallOff);
+                ret.EdgeEffectColor = this.EdgeEffectColor.Combine(rhs.EdgeEffectColor);
+                ret.EdgeEffectAlphaFadeInTime = this.EdgeEffectAlphaFadeInTime.Combine(rhs.EdgeEffectAlphaFadeInTime);
+                ret.EdgeEffectFullAlphaTime = this.EdgeEffectFullAlphaTime.Combine(rhs.EdgeEffectFullAlphaTime);
+                ret.EdgeEffectAlphaFadeOutTime = this.EdgeEffectAlphaFadeOutTime.Combine(rhs.EdgeEffectAlphaFadeOutTime);
+                ret.EdgeEffectPersistentAlphaRatio = this.EdgeEffectPersistentAlphaRatio.Combine(rhs.EdgeEffectPersistentAlphaRatio);
+                ret.EdgeEffectAlphaPulseAmplitude = this.EdgeEffectAlphaPulseAmplitude.Combine(rhs.EdgeEffectAlphaPulseAmplitude);
+                ret.EdgeEffectAlphaPulseFrequency = this.EdgeEffectAlphaPulseFrequency.Combine(rhs.EdgeEffectAlphaPulseFrequency);
+                ret.FillTextureEffectFullAlphaRatio = this.FillTextureEffectFullAlphaRatio.Combine(rhs.FillTextureEffectFullAlphaRatio);
+                ret.EdgeEffectFullAlphaRatio = this.EdgeEffectFullAlphaRatio.Combine(rhs.EdgeEffectFullAlphaRatio);
+                ret.MembraneShaderDestBlendMode = this.MembraneShaderDestBlendMode.Combine(rhs.MembraneShaderDestBlendMode);
+                ret.ParticleShaderSourceBlendMode = this.ParticleShaderSourceBlendMode.Combine(rhs.ParticleShaderSourceBlendMode);
+                ret.ParticleShaderBlendOperation = this.ParticleShaderBlendOperation.Combine(rhs.ParticleShaderBlendOperation);
+                ret.ParticleShaderZTestFunction = this.ParticleShaderZTestFunction.Combine(rhs.ParticleShaderZTestFunction);
+                ret.ParticleShaderDestBlendMode = this.ParticleShaderDestBlendMode.Combine(rhs.ParticleShaderDestBlendMode);
+                ret.ParticleShaderParticleBirthRampUpTime = this.ParticleShaderParticleBirthRampUpTime.Combine(rhs.ParticleShaderParticleBirthRampUpTime);
+                ret.ParticleShaderFullParticleBirthTime = this.ParticleShaderFullParticleBirthTime.Combine(rhs.ParticleShaderFullParticleBirthTime);
+                ret.ParticleShaderParticleBirthRampDownTime = this.ParticleShaderParticleBirthRampDownTime.Combine(rhs.ParticleShaderParticleBirthRampDownTime);
+                ret.ParticleShaderFullParticleBirthRatio = this.ParticleShaderFullParticleBirthRatio.Combine(rhs.ParticleShaderFullParticleBirthRatio);
+                ret.ParticleShaderPersistentParticleBirthRatio = this.ParticleShaderPersistentParticleBirthRatio.Combine(rhs.ParticleShaderPersistentParticleBirthRatio);
+                ret.ParticleShaderParticleLifetime = this.ParticleShaderParticleLifetime.Combine(rhs.ParticleShaderParticleLifetime);
+                ret.ParticleShaderParticleLifetimePlusMinus = this.ParticleShaderParticleLifetimePlusMinus.Combine(rhs.ParticleShaderParticleLifetimePlusMinus);
+                ret.ParticleShaderInitialSpeedAlongNormal = this.ParticleShaderInitialSpeedAlongNormal.Combine(rhs.ParticleShaderInitialSpeedAlongNormal);
+                ret.ParticleShaderAccelerationAlongNormal = this.ParticleShaderAccelerationAlongNormal.Combine(rhs.ParticleShaderAccelerationAlongNormal);
+                ret.ParticleShaderInitialVelocity1 = this.ParticleShaderInitialVelocity1.Combine(rhs.ParticleShaderInitialVelocity1);
+                ret.ParticleShaderInitialVelocity2 = this.ParticleShaderInitialVelocity2.Combine(rhs.ParticleShaderInitialVelocity2);
+                ret.ParticleShaderInitialVelocity3 = this.ParticleShaderInitialVelocity3.Combine(rhs.ParticleShaderInitialVelocity3);
+                ret.ParticleShaderAcceleration1 = this.ParticleShaderAcceleration1.Combine(rhs.ParticleShaderAcceleration1);
+                ret.ParticleShaderAcceleration2 = this.ParticleShaderAcceleration2.Combine(rhs.ParticleShaderAcceleration2);
+                ret.ParticleShaderAcceleration3 = this.ParticleShaderAcceleration3.Combine(rhs.ParticleShaderAcceleration3);
+                ret.ParticleShaderScaleKey1 = this.ParticleShaderScaleKey1.Combine(rhs.ParticleShaderScaleKey1);
+                ret.ParticleShaderScaleKey2 = this.ParticleShaderScaleKey2.Combine(rhs.ParticleShaderScaleKey2);
+                ret.ParticleShaderScaleKey1Time = this.ParticleShaderScaleKey1Time.Combine(rhs.ParticleShaderScaleKey1Time);
+                ret.ParticleShaderScaleKey2Time = this.ParticleShaderScaleKey2Time.Combine(rhs.ParticleShaderScaleKey2Time);
+                ret.ColorKey1Color = this.ColorKey1Color.Combine(rhs.ColorKey1Color);
+                ret.ColorKey2Color = this.ColorKey2Color.Combine(rhs.ColorKey2Color);
+                ret.ColorKey3Color = this.ColorKey3Color.Combine(rhs.ColorKey3Color);
+                ret.ColorKey1ColorAlpha = this.ColorKey1ColorAlpha.Combine(rhs.ColorKey1ColorAlpha);
+                ret.ColorKey2ColorAlpha = this.ColorKey2ColorAlpha.Combine(rhs.ColorKey2ColorAlpha);
+                ret.ColorKey3ColorAlpha = this.ColorKey3ColorAlpha.Combine(rhs.ColorKey3ColorAlpha);
+                ret.ColorKey1ColorKeyTime = this.ColorKey1ColorKeyTime.Combine(rhs.ColorKey1ColorKeyTime);
+                ret.ColorKey2ColorKeyTime = this.ColorKey2ColorKeyTime.Combine(rhs.ColorKey2ColorKeyTime);
+                ret.ColorKey3ColorKeyTime = this.ColorKey3ColorKeyTime.Combine(rhs.ColorKey3ColorKeyTime);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool FillTexture;
+            public bool ParticleShaderTexture;
+            public bool Flags;
+            public bool MembraneShaderSourceBlendMode;
+            public bool MembraneShaderBlendOperation;
+            public bool MembraneShaderZTestFunction;
+            public bool FillTextureEffectColor;
+            public bool FillTextureEffectAlphaFadeInTime;
+            public bool FillTextureEffectFullAlphaTime;
+            public bool FillTextureEffectAlphaFadeOutTime;
+            public bool FillTextureEffectPersistentAlphaRatio;
+            public bool FillTextureEffectAlphaPulseAmplitude;
+            public bool FillTextureEffectAlphaPulseFrequency;
+            public bool FillTextureEffectTextureAnimationSpeedU;
+            public bool FillTextureEffectTextureAnimationSpeedV;
+            public bool EdgeEffectFallOff;
+            public bool EdgeEffectColor;
+            public bool EdgeEffectAlphaFadeInTime;
+            public bool EdgeEffectFullAlphaTime;
+            public bool EdgeEffectAlphaFadeOutTime;
+            public bool EdgeEffectPersistentAlphaRatio;
+            public bool EdgeEffectAlphaPulseAmplitude;
+            public bool EdgeEffectAlphaPulseFrequency;
+            public bool FillTextureEffectFullAlphaRatio;
+            public bool EdgeEffectFullAlphaRatio;
+            public bool MembraneShaderDestBlendMode;
+            public bool ParticleShaderSourceBlendMode;
+            public bool ParticleShaderBlendOperation;
+            public bool ParticleShaderZTestFunction;
+            public bool ParticleShaderDestBlendMode;
+            public bool ParticleShaderParticleBirthRampUpTime;
+            public bool ParticleShaderFullParticleBirthTime;
+            public bool ParticleShaderParticleBirthRampDownTime;
+            public bool ParticleShaderFullParticleBirthRatio;
+            public bool ParticleShaderPersistentParticleBirthRatio;
+            public bool ParticleShaderParticleLifetime;
+            public bool ParticleShaderParticleLifetimePlusMinus;
+            public bool ParticleShaderInitialSpeedAlongNormal;
+            public bool ParticleShaderAccelerationAlongNormal;
+            public bool ParticleShaderInitialVelocity1;
+            public bool ParticleShaderInitialVelocity2;
+            public bool ParticleShaderInitialVelocity3;
+            public bool ParticleShaderAcceleration1;
+            public bool ParticleShaderAcceleration2;
+            public bool ParticleShaderAcceleration3;
+            public bool ParticleShaderScaleKey1;
+            public bool ParticleShaderScaleKey2;
+            public bool ParticleShaderScaleKey1Time;
+            public bool ParticleShaderScaleKey2Time;
+            public bool ColorKey1Color;
+            public bool ColorKey2Color;
+            public bool ColorKey3Color;
+            public bool ColorKey1ColorAlpha;
+            public bool ColorKey2ColorAlpha;
+            public bool ColorKey3ColorAlpha;
+            public bool ColorKey1ColorKeyTime;
+            public bool ColorKey2ColorKeyTime;
+            public bool ColorKey3ColorKeyTime;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.FillTexture = defaultOn;
+                this.ParticleShaderTexture = defaultOn;
+                this.Flags = defaultOn;
+                this.MembraneShaderSourceBlendMode = defaultOn;
+                this.MembraneShaderBlendOperation = defaultOn;
+                this.MembraneShaderZTestFunction = defaultOn;
+                this.FillTextureEffectColor = defaultOn;
+                this.FillTextureEffectAlphaFadeInTime = defaultOn;
+                this.FillTextureEffectFullAlphaTime = defaultOn;
+                this.FillTextureEffectAlphaFadeOutTime = defaultOn;
+                this.FillTextureEffectPersistentAlphaRatio = defaultOn;
+                this.FillTextureEffectAlphaPulseAmplitude = defaultOn;
+                this.FillTextureEffectAlphaPulseFrequency = defaultOn;
+                this.FillTextureEffectTextureAnimationSpeedU = defaultOn;
+                this.FillTextureEffectTextureAnimationSpeedV = defaultOn;
+                this.EdgeEffectFallOff = defaultOn;
+                this.EdgeEffectColor = defaultOn;
+                this.EdgeEffectAlphaFadeInTime = defaultOn;
+                this.EdgeEffectFullAlphaTime = defaultOn;
+                this.EdgeEffectAlphaFadeOutTime = defaultOn;
+                this.EdgeEffectPersistentAlphaRatio = defaultOn;
+                this.EdgeEffectAlphaPulseAmplitude = defaultOn;
+                this.EdgeEffectAlphaPulseFrequency = defaultOn;
+                this.FillTextureEffectFullAlphaRatio = defaultOn;
+                this.EdgeEffectFullAlphaRatio = defaultOn;
+                this.MembraneShaderDestBlendMode = defaultOn;
+                this.ParticleShaderSourceBlendMode = defaultOn;
+                this.ParticleShaderBlendOperation = defaultOn;
+                this.ParticleShaderZTestFunction = defaultOn;
+                this.ParticleShaderDestBlendMode = defaultOn;
+                this.ParticleShaderParticleBirthRampUpTime = defaultOn;
+                this.ParticleShaderFullParticleBirthTime = defaultOn;
+                this.ParticleShaderParticleBirthRampDownTime = defaultOn;
+                this.ParticleShaderFullParticleBirthRatio = defaultOn;
+                this.ParticleShaderPersistentParticleBirthRatio = defaultOn;
+                this.ParticleShaderParticleLifetime = defaultOn;
+                this.ParticleShaderParticleLifetimePlusMinus = defaultOn;
+                this.ParticleShaderInitialSpeedAlongNormal = defaultOn;
+                this.ParticleShaderAccelerationAlongNormal = defaultOn;
+                this.ParticleShaderInitialVelocity1 = defaultOn;
+                this.ParticleShaderInitialVelocity2 = defaultOn;
+                this.ParticleShaderInitialVelocity3 = defaultOn;
+                this.ParticleShaderAcceleration1 = defaultOn;
+                this.ParticleShaderAcceleration2 = defaultOn;
+                this.ParticleShaderAcceleration3 = defaultOn;
+                this.ParticleShaderScaleKey1 = defaultOn;
+                this.ParticleShaderScaleKey2 = defaultOn;
+                this.ParticleShaderScaleKey1Time = defaultOn;
+                this.ParticleShaderScaleKey2Time = defaultOn;
+                this.ColorKey1Color = defaultOn;
+                this.ColorKey2Color = defaultOn;
+                this.ColorKey3Color = defaultOn;
+                this.ColorKey1ColorAlpha = defaultOn;
+                this.ColorKey2ColorAlpha = defaultOn;
+                this.ColorKey3ColorAlpha = defaultOn;
+                this.ColorKey1ColorKeyTime = defaultOn;
+                this.ColorKey2ColorKeyTime = defaultOn;
+                this.ColorKey3ColorKeyTime = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((FillTexture, null));
+                ret.Add((ParticleShaderTexture, null));
+                ret.Add((Flags, null));
+                ret.Add((MembraneShaderSourceBlendMode, null));
+                ret.Add((MembraneShaderBlendOperation, null));
+                ret.Add((MembraneShaderZTestFunction, null));
+                ret.Add((FillTextureEffectColor, null));
+                ret.Add((FillTextureEffectAlphaFadeInTime, null));
+                ret.Add((FillTextureEffectFullAlphaTime, null));
+                ret.Add((FillTextureEffectAlphaFadeOutTime, null));
+                ret.Add((FillTextureEffectPersistentAlphaRatio, null));
+                ret.Add((FillTextureEffectAlphaPulseAmplitude, null));
+                ret.Add((FillTextureEffectAlphaPulseFrequency, null));
+                ret.Add((FillTextureEffectTextureAnimationSpeedU, null));
+                ret.Add((FillTextureEffectTextureAnimationSpeedV, null));
+                ret.Add((EdgeEffectFallOff, null));
+                ret.Add((EdgeEffectColor, null));
+                ret.Add((EdgeEffectAlphaFadeInTime, null));
+                ret.Add((EdgeEffectFullAlphaTime, null));
+                ret.Add((EdgeEffectAlphaFadeOutTime, null));
+                ret.Add((EdgeEffectPersistentAlphaRatio, null));
+                ret.Add((EdgeEffectAlphaPulseAmplitude, null));
+                ret.Add((EdgeEffectAlphaPulseFrequency, null));
+                ret.Add((FillTextureEffectFullAlphaRatio, null));
+                ret.Add((EdgeEffectFullAlphaRatio, null));
+                ret.Add((MembraneShaderDestBlendMode, null));
+                ret.Add((ParticleShaderSourceBlendMode, null));
+                ret.Add((ParticleShaderBlendOperation, null));
+                ret.Add((ParticleShaderZTestFunction, null));
+                ret.Add((ParticleShaderDestBlendMode, null));
+                ret.Add((ParticleShaderParticleBirthRampUpTime, null));
+                ret.Add((ParticleShaderFullParticleBirthTime, null));
+                ret.Add((ParticleShaderParticleBirthRampDownTime, null));
+                ret.Add((ParticleShaderFullParticleBirthRatio, null));
+                ret.Add((ParticleShaderPersistentParticleBirthRatio, null));
+                ret.Add((ParticleShaderParticleLifetime, null));
+                ret.Add((ParticleShaderParticleLifetimePlusMinus, null));
+                ret.Add((ParticleShaderInitialSpeedAlongNormal, null));
+                ret.Add((ParticleShaderAccelerationAlongNormal, null));
+                ret.Add((ParticleShaderInitialVelocity1, null));
+                ret.Add((ParticleShaderInitialVelocity2, null));
+                ret.Add((ParticleShaderInitialVelocity3, null));
+                ret.Add((ParticleShaderAcceleration1, null));
+                ret.Add((ParticleShaderAcceleration2, null));
+                ret.Add((ParticleShaderAcceleration3, null));
+                ret.Add((ParticleShaderScaleKey1, null));
+                ret.Add((ParticleShaderScaleKey2, null));
+                ret.Add((ParticleShaderScaleKey1Time, null));
+                ret.Add((ParticleShaderScaleKey2Time, null));
+                ret.Add((ColorKey1Color, null));
+                ret.Add((ColorKey2Color, null));
+                ret.Add((ColorKey3Color, null));
+                ret.Add((ColorKey1ColorAlpha, null));
+                ret.Add((ColorKey2ColorAlpha, null));
+                ret.Add((ColorKey3ColorAlpha, null));
+                ret.Add((ColorKey1ColorKeyTime, null));
+                ret.Add((ColorKey2ColorKeyTime, null));
+                ret.Add((ColorKey3ColorKeyTime, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -1230,7 +3057,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static EffectShader_Mask<bool> GetEqualsMask(
+        public static EffectShader.Mask<bool> GetEqualsMask(
             this IEffectShaderGetter item,
             IEffectShaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -1244,7 +3071,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IEffectShaderGetter item,
             string? name = null,
-            EffectShader_Mask<bool>? printMask = null)
+            EffectShader.Mask<bool>? printMask = null)
         {
             return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -1256,7 +3083,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             FileGeneration fg,
             string? name = null,
-            EffectShader_Mask<bool>? printMask = null)
+            EffectShader.Mask<bool>? printMask = null)
         {
             ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -1267,16 +3094,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IEffectShaderGetter item,
-            EffectShader_Mask<bool?> checkMask)
+            EffectShader.Mask<bool?> checkMask)
         {
             return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static EffectShader_Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
+        public static EffectShader.Mask<bool> GetHasBeenSetMask(this IEffectShaderGetter item)
         {
-            var ret = new EffectShader_Mask<bool>(false);
+            var ret = new EffectShader.Mask<bool>(false);
             ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -1295,8 +3122,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? copyMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -1304,7 +3131,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -1322,7 +3149,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader DeepCopy(
             this IEffectShaderGetter item,
-            EffectShader_TranslationMask? copyMask = null)
+            EffectShader.TranslationMask? copyMask = null)
         {
             return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1331,8 +3158,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static EffectShader DeepCopy(
             this IEffectShaderGetter item,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? copyMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? copyMask = null)
         {
             return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1356,7 +3183,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             XElement node,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -1369,8 +3196,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             XElement node,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1378,7 +3205,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -1397,7 +3224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             string path,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1409,8 +3236,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             string path,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1424,7 +3251,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1437,7 +3264,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             Stream stream,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1449,8 +3276,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IEffectShaderInternal item,
             Stream stream,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1464,7 +3291,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            EffectShader_TranslationMask? translationMask = null)
+            EffectShader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1600,9 +3427,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 64;
 
-        public static readonly Type MaskType = typeof(EffectShader_Mask<>);
+        public static readonly Type MaskType = typeof(EffectShader.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(EffectShader_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(EffectShader.ErrorMask);
 
         public static readonly Type ClassType = typeof(EffectShader);
 
@@ -2692,12 +4519,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly EffectShaderCommon Instance = new EffectShaderCommon();
 
-        public EffectShader_Mask<bool> GetEqualsMask(
+        public EffectShader.Mask<bool> GetEqualsMask(
             IEffectShaderGetter item,
             IEffectShaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EffectShader_Mask<bool>(false);
+            var ret = new EffectShader.Mask<bool>(false);
             ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -2709,7 +4536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IEffectShaderGetter item,
             IEffectShaderGetter rhs,
-            EffectShader_Mask<bool> ret,
+            EffectShader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -2778,7 +4605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IEffectShaderGetter item,
             string? name = null,
-            EffectShader_Mask<bool>? printMask = null)
+            EffectShader.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2793,7 +4620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter item,
             FileGeneration fg,
             string? name = null,
-            EffectShader_Mask<bool>? printMask = null)
+            EffectShader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2817,7 +4644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IEffectShaderGetter item,
             FileGeneration fg,
-            EffectShader_Mask<bool>? printMask = null)
+            EffectShader.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -3063,7 +4890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IEffectShaderGetter item,
-            EffectShader_Mask<bool?> checkMask)
+            EffectShader.Mask<bool?> checkMask)
         {
             if (checkMask.FillTexture.HasValue && checkMask.FillTexture.Value != (item.FillTexture != null)) return false;
             if (checkMask.ParticleShaderTexture.HasValue && checkMask.ParticleShaderTexture.Value != (item.ParticleShaderTexture != null)) return false;
@@ -3074,7 +4901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IEffectShaderGetter item,
-            EffectShader_Mask<bool> mask)
+            EffectShader.Mask<bool> mask)
         {
             mask.FillTexture = (item.FillTexture != null);
             mask.ParticleShaderTexture = (item.ParticleShaderTexture != null);
@@ -3701,7 +5528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public EffectShader DeepCopy(
             IEffectShaderGetter item,
-            EffectShader_TranslationMask? copyMask = null)
+            EffectShader.TranslationMask? copyMask = null)
         {
             EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -3712,8 +5539,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public EffectShader DeepCopy(
             IEffectShaderGetter item,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? copyMask = null)
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? copyMask = null)
         {
             EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -5521,8 +7348,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEffectShaderGetter item,
             XElement node,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null,
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -5532,14 +7359,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IEffectShaderGetter item,
             string path,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null,
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -5555,8 +7382,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IEffectShaderGetter item,
             Stream stream,
-            out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask? translationMask = null,
+            out EffectShader.ErrorMask errorMask,
+            EffectShader.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -5573,1832 +7400,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class EffectShader_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<EffectShader_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public EffectShader_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.FillTexture = initialValue;
-            this.ParticleShaderTexture = initialValue;
-            this.Flags = initialValue;
-            this.MembraneShaderSourceBlendMode = initialValue;
-            this.MembraneShaderBlendOperation = initialValue;
-            this.MembraneShaderZTestFunction = initialValue;
-            this.FillTextureEffectColor = initialValue;
-            this.FillTextureEffectAlphaFadeInTime = initialValue;
-            this.FillTextureEffectFullAlphaTime = initialValue;
-            this.FillTextureEffectAlphaFadeOutTime = initialValue;
-            this.FillTextureEffectPersistentAlphaRatio = initialValue;
-            this.FillTextureEffectAlphaPulseAmplitude = initialValue;
-            this.FillTextureEffectAlphaPulseFrequency = initialValue;
-            this.FillTextureEffectTextureAnimationSpeedU = initialValue;
-            this.FillTextureEffectTextureAnimationSpeedV = initialValue;
-            this.EdgeEffectFallOff = initialValue;
-            this.EdgeEffectColor = initialValue;
-            this.EdgeEffectAlphaFadeInTime = initialValue;
-            this.EdgeEffectFullAlphaTime = initialValue;
-            this.EdgeEffectAlphaFadeOutTime = initialValue;
-            this.EdgeEffectPersistentAlphaRatio = initialValue;
-            this.EdgeEffectAlphaPulseAmplitude = initialValue;
-            this.EdgeEffectAlphaPulseFrequency = initialValue;
-            this.FillTextureEffectFullAlphaRatio = initialValue;
-            this.EdgeEffectFullAlphaRatio = initialValue;
-            this.MembraneShaderDestBlendMode = initialValue;
-            this.ParticleShaderSourceBlendMode = initialValue;
-            this.ParticleShaderBlendOperation = initialValue;
-            this.ParticleShaderZTestFunction = initialValue;
-            this.ParticleShaderDestBlendMode = initialValue;
-            this.ParticleShaderParticleBirthRampUpTime = initialValue;
-            this.ParticleShaderFullParticleBirthTime = initialValue;
-            this.ParticleShaderParticleBirthRampDownTime = initialValue;
-            this.ParticleShaderFullParticleBirthRatio = initialValue;
-            this.ParticleShaderPersistentParticleBirthRatio = initialValue;
-            this.ParticleShaderParticleLifetime = initialValue;
-            this.ParticleShaderParticleLifetimePlusMinus = initialValue;
-            this.ParticleShaderInitialSpeedAlongNormal = initialValue;
-            this.ParticleShaderAccelerationAlongNormal = initialValue;
-            this.ParticleShaderInitialVelocity1 = initialValue;
-            this.ParticleShaderInitialVelocity2 = initialValue;
-            this.ParticleShaderInitialVelocity3 = initialValue;
-            this.ParticleShaderAcceleration1 = initialValue;
-            this.ParticleShaderAcceleration2 = initialValue;
-            this.ParticleShaderAcceleration3 = initialValue;
-            this.ParticleShaderScaleKey1 = initialValue;
-            this.ParticleShaderScaleKey2 = initialValue;
-            this.ParticleShaderScaleKey1Time = initialValue;
-            this.ParticleShaderScaleKey2Time = initialValue;
-            this.ColorKey1Color = initialValue;
-            this.ColorKey2Color = initialValue;
-            this.ColorKey3Color = initialValue;
-            this.ColorKey1ColorAlpha = initialValue;
-            this.ColorKey2ColorAlpha = initialValue;
-            this.ColorKey3ColorAlpha = initialValue;
-            this.ColorKey1ColorKeyTime = initialValue;
-            this.ColorKey2ColorKeyTime = initialValue;
-            this.ColorKey3ColorKeyTime = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public EffectShader_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T FillTexture,
-            T ParticleShaderTexture,
-            T Flags,
-            T MembraneShaderSourceBlendMode,
-            T MembraneShaderBlendOperation,
-            T MembraneShaderZTestFunction,
-            T FillTextureEffectColor,
-            T FillTextureEffectAlphaFadeInTime,
-            T FillTextureEffectFullAlphaTime,
-            T FillTextureEffectAlphaFadeOutTime,
-            T FillTextureEffectPersistentAlphaRatio,
-            T FillTextureEffectAlphaPulseAmplitude,
-            T FillTextureEffectAlphaPulseFrequency,
-            T FillTextureEffectTextureAnimationSpeedU,
-            T FillTextureEffectTextureAnimationSpeedV,
-            T EdgeEffectFallOff,
-            T EdgeEffectColor,
-            T EdgeEffectAlphaFadeInTime,
-            T EdgeEffectFullAlphaTime,
-            T EdgeEffectAlphaFadeOutTime,
-            T EdgeEffectPersistentAlphaRatio,
-            T EdgeEffectAlphaPulseAmplitude,
-            T EdgeEffectAlphaPulseFrequency,
-            T FillTextureEffectFullAlphaRatio,
-            T EdgeEffectFullAlphaRatio,
-            T MembraneShaderDestBlendMode,
-            T ParticleShaderSourceBlendMode,
-            T ParticleShaderBlendOperation,
-            T ParticleShaderZTestFunction,
-            T ParticleShaderDestBlendMode,
-            T ParticleShaderParticleBirthRampUpTime,
-            T ParticleShaderFullParticleBirthTime,
-            T ParticleShaderParticleBirthRampDownTime,
-            T ParticleShaderFullParticleBirthRatio,
-            T ParticleShaderPersistentParticleBirthRatio,
-            T ParticleShaderParticleLifetime,
-            T ParticleShaderParticleLifetimePlusMinus,
-            T ParticleShaderInitialSpeedAlongNormal,
-            T ParticleShaderAccelerationAlongNormal,
-            T ParticleShaderInitialVelocity1,
-            T ParticleShaderInitialVelocity2,
-            T ParticleShaderInitialVelocity3,
-            T ParticleShaderAcceleration1,
-            T ParticleShaderAcceleration2,
-            T ParticleShaderAcceleration3,
-            T ParticleShaderScaleKey1,
-            T ParticleShaderScaleKey2,
-            T ParticleShaderScaleKey1Time,
-            T ParticleShaderScaleKey2Time,
-            T ColorKey1Color,
-            T ColorKey2Color,
-            T ColorKey3Color,
-            T ColorKey1ColorAlpha,
-            T ColorKey2ColorAlpha,
-            T ColorKey3ColorAlpha,
-            T ColorKey1ColorKeyTime,
-            T ColorKey2ColorKeyTime,
-            T ColorKey3ColorKeyTime,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.FillTexture = FillTexture;
-            this.ParticleShaderTexture = ParticleShaderTexture;
-            this.Flags = Flags;
-            this.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendMode;
-            this.MembraneShaderBlendOperation = MembraneShaderBlendOperation;
-            this.MembraneShaderZTestFunction = MembraneShaderZTestFunction;
-            this.FillTextureEffectColor = FillTextureEffectColor;
-            this.FillTextureEffectAlphaFadeInTime = FillTextureEffectAlphaFadeInTime;
-            this.FillTextureEffectFullAlphaTime = FillTextureEffectFullAlphaTime;
-            this.FillTextureEffectAlphaFadeOutTime = FillTextureEffectAlphaFadeOutTime;
-            this.FillTextureEffectPersistentAlphaRatio = FillTextureEffectPersistentAlphaRatio;
-            this.FillTextureEffectAlphaPulseAmplitude = FillTextureEffectAlphaPulseAmplitude;
-            this.FillTextureEffectAlphaPulseFrequency = FillTextureEffectAlphaPulseFrequency;
-            this.FillTextureEffectTextureAnimationSpeedU = FillTextureEffectTextureAnimationSpeedU;
-            this.FillTextureEffectTextureAnimationSpeedV = FillTextureEffectTextureAnimationSpeedV;
-            this.EdgeEffectFallOff = EdgeEffectFallOff;
-            this.EdgeEffectColor = EdgeEffectColor;
-            this.EdgeEffectAlphaFadeInTime = EdgeEffectAlphaFadeInTime;
-            this.EdgeEffectFullAlphaTime = EdgeEffectFullAlphaTime;
-            this.EdgeEffectAlphaFadeOutTime = EdgeEffectAlphaFadeOutTime;
-            this.EdgeEffectPersistentAlphaRatio = EdgeEffectPersistentAlphaRatio;
-            this.EdgeEffectAlphaPulseAmplitude = EdgeEffectAlphaPulseAmplitude;
-            this.EdgeEffectAlphaPulseFrequency = EdgeEffectAlphaPulseFrequency;
-            this.FillTextureEffectFullAlphaRatio = FillTextureEffectFullAlphaRatio;
-            this.EdgeEffectFullAlphaRatio = EdgeEffectFullAlphaRatio;
-            this.MembraneShaderDestBlendMode = MembraneShaderDestBlendMode;
-            this.ParticleShaderSourceBlendMode = ParticleShaderSourceBlendMode;
-            this.ParticleShaderBlendOperation = ParticleShaderBlendOperation;
-            this.ParticleShaderZTestFunction = ParticleShaderZTestFunction;
-            this.ParticleShaderDestBlendMode = ParticleShaderDestBlendMode;
-            this.ParticleShaderParticleBirthRampUpTime = ParticleShaderParticleBirthRampUpTime;
-            this.ParticleShaderFullParticleBirthTime = ParticleShaderFullParticleBirthTime;
-            this.ParticleShaderParticleBirthRampDownTime = ParticleShaderParticleBirthRampDownTime;
-            this.ParticleShaderFullParticleBirthRatio = ParticleShaderFullParticleBirthRatio;
-            this.ParticleShaderPersistentParticleBirthRatio = ParticleShaderPersistentParticleBirthRatio;
-            this.ParticleShaderParticleLifetime = ParticleShaderParticleLifetime;
-            this.ParticleShaderParticleLifetimePlusMinus = ParticleShaderParticleLifetimePlusMinus;
-            this.ParticleShaderInitialSpeedAlongNormal = ParticleShaderInitialSpeedAlongNormal;
-            this.ParticleShaderAccelerationAlongNormal = ParticleShaderAccelerationAlongNormal;
-            this.ParticleShaderInitialVelocity1 = ParticleShaderInitialVelocity1;
-            this.ParticleShaderInitialVelocity2 = ParticleShaderInitialVelocity2;
-            this.ParticleShaderInitialVelocity3 = ParticleShaderInitialVelocity3;
-            this.ParticleShaderAcceleration1 = ParticleShaderAcceleration1;
-            this.ParticleShaderAcceleration2 = ParticleShaderAcceleration2;
-            this.ParticleShaderAcceleration3 = ParticleShaderAcceleration3;
-            this.ParticleShaderScaleKey1 = ParticleShaderScaleKey1;
-            this.ParticleShaderScaleKey2 = ParticleShaderScaleKey2;
-            this.ParticleShaderScaleKey1Time = ParticleShaderScaleKey1Time;
-            this.ParticleShaderScaleKey2Time = ParticleShaderScaleKey2Time;
-            this.ColorKey1Color = ColorKey1Color;
-            this.ColorKey2Color = ColorKey2Color;
-            this.ColorKey3Color = ColorKey3Color;
-            this.ColorKey1ColorAlpha = ColorKey1ColorAlpha;
-            this.ColorKey2ColorAlpha = ColorKey2ColorAlpha;
-            this.ColorKey3ColorAlpha = ColorKey3ColorAlpha;
-            this.ColorKey1ColorKeyTime = ColorKey1ColorKeyTime;
-            this.ColorKey2ColorKeyTime = ColorKey2ColorKeyTime;
-            this.ColorKey3ColorKeyTime = ColorKey3ColorKeyTime;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected EffectShader_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T FillTexture;
-        public T ParticleShaderTexture;
-        public T Flags;
-        public T MembraneShaderSourceBlendMode;
-        public T MembraneShaderBlendOperation;
-        public T MembraneShaderZTestFunction;
-        public T FillTextureEffectColor;
-        public T FillTextureEffectAlphaFadeInTime;
-        public T FillTextureEffectFullAlphaTime;
-        public T FillTextureEffectAlphaFadeOutTime;
-        public T FillTextureEffectPersistentAlphaRatio;
-        public T FillTextureEffectAlphaPulseAmplitude;
-        public T FillTextureEffectAlphaPulseFrequency;
-        public T FillTextureEffectTextureAnimationSpeedU;
-        public T FillTextureEffectTextureAnimationSpeedV;
-        public T EdgeEffectFallOff;
-        public T EdgeEffectColor;
-        public T EdgeEffectAlphaFadeInTime;
-        public T EdgeEffectFullAlphaTime;
-        public T EdgeEffectAlphaFadeOutTime;
-        public T EdgeEffectPersistentAlphaRatio;
-        public T EdgeEffectAlphaPulseAmplitude;
-        public T EdgeEffectAlphaPulseFrequency;
-        public T FillTextureEffectFullAlphaRatio;
-        public T EdgeEffectFullAlphaRatio;
-        public T MembraneShaderDestBlendMode;
-        public T ParticleShaderSourceBlendMode;
-        public T ParticleShaderBlendOperation;
-        public T ParticleShaderZTestFunction;
-        public T ParticleShaderDestBlendMode;
-        public T ParticleShaderParticleBirthRampUpTime;
-        public T ParticleShaderFullParticleBirthTime;
-        public T ParticleShaderParticleBirthRampDownTime;
-        public T ParticleShaderFullParticleBirthRatio;
-        public T ParticleShaderPersistentParticleBirthRatio;
-        public T ParticleShaderParticleLifetime;
-        public T ParticleShaderParticleLifetimePlusMinus;
-        public T ParticleShaderInitialSpeedAlongNormal;
-        public T ParticleShaderAccelerationAlongNormal;
-        public T ParticleShaderInitialVelocity1;
-        public T ParticleShaderInitialVelocity2;
-        public T ParticleShaderInitialVelocity3;
-        public T ParticleShaderAcceleration1;
-        public T ParticleShaderAcceleration2;
-        public T ParticleShaderAcceleration3;
-        public T ParticleShaderScaleKey1;
-        public T ParticleShaderScaleKey2;
-        public T ParticleShaderScaleKey1Time;
-        public T ParticleShaderScaleKey2Time;
-        public T ColorKey1Color;
-        public T ColorKey2Color;
-        public T ColorKey3Color;
-        public T ColorKey1ColorAlpha;
-        public T ColorKey2ColorAlpha;
-        public T ColorKey3ColorAlpha;
-        public T ColorKey1ColorKeyTime;
-        public T ColorKey2ColorKeyTime;
-        public T ColorKey3ColorKeyTime;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is EffectShader_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(EffectShader_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.FillTexture, rhs.FillTexture)) return false;
-            if (!object.Equals(this.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.MembraneShaderSourceBlendMode, rhs.MembraneShaderSourceBlendMode)) return false;
-            if (!object.Equals(this.MembraneShaderBlendOperation, rhs.MembraneShaderBlendOperation)) return false;
-            if (!object.Equals(this.MembraneShaderZTestFunction, rhs.MembraneShaderZTestFunction)) return false;
-            if (!object.Equals(this.FillTextureEffectColor, rhs.FillTextureEffectColor)) return false;
-            if (!object.Equals(this.FillTextureEffectAlphaFadeInTime, rhs.FillTextureEffectAlphaFadeInTime)) return false;
-            if (!object.Equals(this.FillTextureEffectFullAlphaTime, rhs.FillTextureEffectFullAlphaTime)) return false;
-            if (!object.Equals(this.FillTextureEffectAlphaFadeOutTime, rhs.FillTextureEffectAlphaFadeOutTime)) return false;
-            if (!object.Equals(this.FillTextureEffectPersistentAlphaRatio, rhs.FillTextureEffectPersistentAlphaRatio)) return false;
-            if (!object.Equals(this.FillTextureEffectAlphaPulseAmplitude, rhs.FillTextureEffectAlphaPulseAmplitude)) return false;
-            if (!object.Equals(this.FillTextureEffectAlphaPulseFrequency, rhs.FillTextureEffectAlphaPulseFrequency)) return false;
-            if (!object.Equals(this.FillTextureEffectTextureAnimationSpeedU, rhs.FillTextureEffectTextureAnimationSpeedU)) return false;
-            if (!object.Equals(this.FillTextureEffectTextureAnimationSpeedV, rhs.FillTextureEffectTextureAnimationSpeedV)) return false;
-            if (!object.Equals(this.EdgeEffectFallOff, rhs.EdgeEffectFallOff)) return false;
-            if (!object.Equals(this.EdgeEffectColor, rhs.EdgeEffectColor)) return false;
-            if (!object.Equals(this.EdgeEffectAlphaFadeInTime, rhs.EdgeEffectAlphaFadeInTime)) return false;
-            if (!object.Equals(this.EdgeEffectFullAlphaTime, rhs.EdgeEffectFullAlphaTime)) return false;
-            if (!object.Equals(this.EdgeEffectAlphaFadeOutTime, rhs.EdgeEffectAlphaFadeOutTime)) return false;
-            if (!object.Equals(this.EdgeEffectPersistentAlphaRatio, rhs.EdgeEffectPersistentAlphaRatio)) return false;
-            if (!object.Equals(this.EdgeEffectAlphaPulseAmplitude, rhs.EdgeEffectAlphaPulseAmplitude)) return false;
-            if (!object.Equals(this.EdgeEffectAlphaPulseFrequency, rhs.EdgeEffectAlphaPulseFrequency)) return false;
-            if (!object.Equals(this.FillTextureEffectFullAlphaRatio, rhs.FillTextureEffectFullAlphaRatio)) return false;
-            if (!object.Equals(this.EdgeEffectFullAlphaRatio, rhs.EdgeEffectFullAlphaRatio)) return false;
-            if (!object.Equals(this.MembraneShaderDestBlendMode, rhs.MembraneShaderDestBlendMode)) return false;
-            if (!object.Equals(this.ParticleShaderSourceBlendMode, rhs.ParticleShaderSourceBlendMode)) return false;
-            if (!object.Equals(this.ParticleShaderBlendOperation, rhs.ParticleShaderBlendOperation)) return false;
-            if (!object.Equals(this.ParticleShaderZTestFunction, rhs.ParticleShaderZTestFunction)) return false;
-            if (!object.Equals(this.ParticleShaderDestBlendMode, rhs.ParticleShaderDestBlendMode)) return false;
-            if (!object.Equals(this.ParticleShaderParticleBirthRampUpTime, rhs.ParticleShaderParticleBirthRampUpTime)) return false;
-            if (!object.Equals(this.ParticleShaderFullParticleBirthTime, rhs.ParticleShaderFullParticleBirthTime)) return false;
-            if (!object.Equals(this.ParticleShaderParticleBirthRampDownTime, rhs.ParticleShaderParticleBirthRampDownTime)) return false;
-            if (!object.Equals(this.ParticleShaderFullParticleBirthRatio, rhs.ParticleShaderFullParticleBirthRatio)) return false;
-            if (!object.Equals(this.ParticleShaderPersistentParticleBirthRatio, rhs.ParticleShaderPersistentParticleBirthRatio)) return false;
-            if (!object.Equals(this.ParticleShaderParticleLifetime, rhs.ParticleShaderParticleLifetime)) return false;
-            if (!object.Equals(this.ParticleShaderParticleLifetimePlusMinus, rhs.ParticleShaderParticleLifetimePlusMinus)) return false;
-            if (!object.Equals(this.ParticleShaderInitialSpeedAlongNormal, rhs.ParticleShaderInitialSpeedAlongNormal)) return false;
-            if (!object.Equals(this.ParticleShaderAccelerationAlongNormal, rhs.ParticleShaderAccelerationAlongNormal)) return false;
-            if (!object.Equals(this.ParticleShaderInitialVelocity1, rhs.ParticleShaderInitialVelocity1)) return false;
-            if (!object.Equals(this.ParticleShaderInitialVelocity2, rhs.ParticleShaderInitialVelocity2)) return false;
-            if (!object.Equals(this.ParticleShaderInitialVelocity3, rhs.ParticleShaderInitialVelocity3)) return false;
-            if (!object.Equals(this.ParticleShaderAcceleration1, rhs.ParticleShaderAcceleration1)) return false;
-            if (!object.Equals(this.ParticleShaderAcceleration2, rhs.ParticleShaderAcceleration2)) return false;
-            if (!object.Equals(this.ParticleShaderAcceleration3, rhs.ParticleShaderAcceleration3)) return false;
-            if (!object.Equals(this.ParticleShaderScaleKey1, rhs.ParticleShaderScaleKey1)) return false;
-            if (!object.Equals(this.ParticleShaderScaleKey2, rhs.ParticleShaderScaleKey2)) return false;
-            if (!object.Equals(this.ParticleShaderScaleKey1Time, rhs.ParticleShaderScaleKey1Time)) return false;
-            if (!object.Equals(this.ParticleShaderScaleKey2Time, rhs.ParticleShaderScaleKey2Time)) return false;
-            if (!object.Equals(this.ColorKey1Color, rhs.ColorKey1Color)) return false;
-            if (!object.Equals(this.ColorKey2Color, rhs.ColorKey2Color)) return false;
-            if (!object.Equals(this.ColorKey3Color, rhs.ColorKey3Color)) return false;
-            if (!object.Equals(this.ColorKey1ColorAlpha, rhs.ColorKey1ColorAlpha)) return false;
-            if (!object.Equals(this.ColorKey2ColorAlpha, rhs.ColorKey2ColorAlpha)) return false;
-            if (!object.Equals(this.ColorKey3ColorAlpha, rhs.ColorKey3ColorAlpha)) return false;
-            if (!object.Equals(this.ColorKey1ColorKeyTime, rhs.ColorKey1ColorKeyTime)) return false;
-            if (!object.Equals(this.ColorKey2ColorKeyTime, rhs.ColorKey2ColorKeyTime)) return false;
-            if (!object.Equals(this.ColorKey3ColorKeyTime, rhs.ColorKey3ColorKeyTime)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.FillTexture?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderTexture?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.MembraneShaderSourceBlendMode?.GetHashCode());
-            ret = ret.CombineHashCode(this.MembraneShaderBlendOperation?.GetHashCode());
-            ret = ret.CombineHashCode(this.MembraneShaderZTestFunction?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectAlphaFadeInTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectFullAlphaTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectAlphaFadeOutTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectPersistentAlphaRatio?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectAlphaPulseAmplitude?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectAlphaPulseFrequency?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectTextureAnimationSpeedU?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectTextureAnimationSpeedV?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectFallOff?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectAlphaFadeInTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectFullAlphaTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectAlphaFadeOutTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectPersistentAlphaRatio?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectAlphaPulseAmplitude?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectAlphaPulseFrequency?.GetHashCode());
-            ret = ret.CombineHashCode(this.FillTextureEffectFullAlphaRatio?.GetHashCode());
-            ret = ret.CombineHashCode(this.EdgeEffectFullAlphaRatio?.GetHashCode());
-            ret = ret.CombineHashCode(this.MembraneShaderDestBlendMode?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderSourceBlendMode?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderBlendOperation?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderZTestFunction?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderDestBlendMode?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderParticleBirthRampUpTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderFullParticleBirthTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderParticleBirthRampDownTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderFullParticleBirthRatio?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderPersistentParticleBirthRatio?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderParticleLifetime?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderParticleLifetimePlusMinus?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderInitialSpeedAlongNormal?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderAccelerationAlongNormal?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderInitialVelocity1?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderInitialVelocity2?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderInitialVelocity3?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderAcceleration1?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderAcceleration2?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderAcceleration3?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderScaleKey1?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderScaleKey2?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderScaleKey1Time?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParticleShaderScaleKey2Time?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey1Color?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey2Color?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey3Color?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey1ColorAlpha?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey2ColorAlpha?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey3ColorAlpha?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey1ColorKeyTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey2ColorKeyTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorKey3ColorKeyTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.FillTexture)) return false;
-            if (!eval(this.ParticleShaderTexture)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.MembraneShaderSourceBlendMode)) return false;
-            if (!eval(this.MembraneShaderBlendOperation)) return false;
-            if (!eval(this.MembraneShaderZTestFunction)) return false;
-            if (!eval(this.FillTextureEffectColor)) return false;
-            if (!eval(this.FillTextureEffectAlphaFadeInTime)) return false;
-            if (!eval(this.FillTextureEffectFullAlphaTime)) return false;
-            if (!eval(this.FillTextureEffectAlphaFadeOutTime)) return false;
-            if (!eval(this.FillTextureEffectPersistentAlphaRatio)) return false;
-            if (!eval(this.FillTextureEffectAlphaPulseAmplitude)) return false;
-            if (!eval(this.FillTextureEffectAlphaPulseFrequency)) return false;
-            if (!eval(this.FillTextureEffectTextureAnimationSpeedU)) return false;
-            if (!eval(this.FillTextureEffectTextureAnimationSpeedV)) return false;
-            if (!eval(this.EdgeEffectFallOff)) return false;
-            if (!eval(this.EdgeEffectColor)) return false;
-            if (!eval(this.EdgeEffectAlphaFadeInTime)) return false;
-            if (!eval(this.EdgeEffectFullAlphaTime)) return false;
-            if (!eval(this.EdgeEffectAlphaFadeOutTime)) return false;
-            if (!eval(this.EdgeEffectPersistentAlphaRatio)) return false;
-            if (!eval(this.EdgeEffectAlphaPulseAmplitude)) return false;
-            if (!eval(this.EdgeEffectAlphaPulseFrequency)) return false;
-            if (!eval(this.FillTextureEffectFullAlphaRatio)) return false;
-            if (!eval(this.EdgeEffectFullAlphaRatio)) return false;
-            if (!eval(this.MembraneShaderDestBlendMode)) return false;
-            if (!eval(this.ParticleShaderSourceBlendMode)) return false;
-            if (!eval(this.ParticleShaderBlendOperation)) return false;
-            if (!eval(this.ParticleShaderZTestFunction)) return false;
-            if (!eval(this.ParticleShaderDestBlendMode)) return false;
-            if (!eval(this.ParticleShaderParticleBirthRampUpTime)) return false;
-            if (!eval(this.ParticleShaderFullParticleBirthTime)) return false;
-            if (!eval(this.ParticleShaderParticleBirthRampDownTime)) return false;
-            if (!eval(this.ParticleShaderFullParticleBirthRatio)) return false;
-            if (!eval(this.ParticleShaderPersistentParticleBirthRatio)) return false;
-            if (!eval(this.ParticleShaderParticleLifetime)) return false;
-            if (!eval(this.ParticleShaderParticleLifetimePlusMinus)) return false;
-            if (!eval(this.ParticleShaderInitialSpeedAlongNormal)) return false;
-            if (!eval(this.ParticleShaderAccelerationAlongNormal)) return false;
-            if (!eval(this.ParticleShaderInitialVelocity1)) return false;
-            if (!eval(this.ParticleShaderInitialVelocity2)) return false;
-            if (!eval(this.ParticleShaderInitialVelocity3)) return false;
-            if (!eval(this.ParticleShaderAcceleration1)) return false;
-            if (!eval(this.ParticleShaderAcceleration2)) return false;
-            if (!eval(this.ParticleShaderAcceleration3)) return false;
-            if (!eval(this.ParticleShaderScaleKey1)) return false;
-            if (!eval(this.ParticleShaderScaleKey2)) return false;
-            if (!eval(this.ParticleShaderScaleKey1Time)) return false;
-            if (!eval(this.ParticleShaderScaleKey2Time)) return false;
-            if (!eval(this.ColorKey1Color)) return false;
-            if (!eval(this.ColorKey2Color)) return false;
-            if (!eval(this.ColorKey3Color)) return false;
-            if (!eval(this.ColorKey1ColorAlpha)) return false;
-            if (!eval(this.ColorKey2ColorAlpha)) return false;
-            if (!eval(this.ColorKey3ColorAlpha)) return false;
-            if (!eval(this.ColorKey1ColorKeyTime)) return false;
-            if (!eval(this.ColorKey2ColorKeyTime)) return false;
-            if (!eval(this.ColorKey3ColorKeyTime)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new EffectShader_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new EffectShader_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(EffectShader_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.FillTexture = eval(this.FillTexture);
-            obj.ParticleShaderTexture = eval(this.ParticleShaderTexture);
-            obj.Flags = eval(this.Flags);
-            obj.MembraneShaderSourceBlendMode = eval(this.MembraneShaderSourceBlendMode);
-            obj.MembraneShaderBlendOperation = eval(this.MembraneShaderBlendOperation);
-            obj.MembraneShaderZTestFunction = eval(this.MembraneShaderZTestFunction);
-            obj.FillTextureEffectColor = eval(this.FillTextureEffectColor);
-            obj.FillTextureEffectAlphaFadeInTime = eval(this.FillTextureEffectAlphaFadeInTime);
-            obj.FillTextureEffectFullAlphaTime = eval(this.FillTextureEffectFullAlphaTime);
-            obj.FillTextureEffectAlphaFadeOutTime = eval(this.FillTextureEffectAlphaFadeOutTime);
-            obj.FillTextureEffectPersistentAlphaRatio = eval(this.FillTextureEffectPersistentAlphaRatio);
-            obj.FillTextureEffectAlphaPulseAmplitude = eval(this.FillTextureEffectAlphaPulseAmplitude);
-            obj.FillTextureEffectAlphaPulseFrequency = eval(this.FillTextureEffectAlphaPulseFrequency);
-            obj.FillTextureEffectTextureAnimationSpeedU = eval(this.FillTextureEffectTextureAnimationSpeedU);
-            obj.FillTextureEffectTextureAnimationSpeedV = eval(this.FillTextureEffectTextureAnimationSpeedV);
-            obj.EdgeEffectFallOff = eval(this.EdgeEffectFallOff);
-            obj.EdgeEffectColor = eval(this.EdgeEffectColor);
-            obj.EdgeEffectAlphaFadeInTime = eval(this.EdgeEffectAlphaFadeInTime);
-            obj.EdgeEffectFullAlphaTime = eval(this.EdgeEffectFullAlphaTime);
-            obj.EdgeEffectAlphaFadeOutTime = eval(this.EdgeEffectAlphaFadeOutTime);
-            obj.EdgeEffectPersistentAlphaRatio = eval(this.EdgeEffectPersistentAlphaRatio);
-            obj.EdgeEffectAlphaPulseAmplitude = eval(this.EdgeEffectAlphaPulseAmplitude);
-            obj.EdgeEffectAlphaPulseFrequency = eval(this.EdgeEffectAlphaPulseFrequency);
-            obj.FillTextureEffectFullAlphaRatio = eval(this.FillTextureEffectFullAlphaRatio);
-            obj.EdgeEffectFullAlphaRatio = eval(this.EdgeEffectFullAlphaRatio);
-            obj.MembraneShaderDestBlendMode = eval(this.MembraneShaderDestBlendMode);
-            obj.ParticleShaderSourceBlendMode = eval(this.ParticleShaderSourceBlendMode);
-            obj.ParticleShaderBlendOperation = eval(this.ParticleShaderBlendOperation);
-            obj.ParticleShaderZTestFunction = eval(this.ParticleShaderZTestFunction);
-            obj.ParticleShaderDestBlendMode = eval(this.ParticleShaderDestBlendMode);
-            obj.ParticleShaderParticleBirthRampUpTime = eval(this.ParticleShaderParticleBirthRampUpTime);
-            obj.ParticleShaderFullParticleBirthTime = eval(this.ParticleShaderFullParticleBirthTime);
-            obj.ParticleShaderParticleBirthRampDownTime = eval(this.ParticleShaderParticleBirthRampDownTime);
-            obj.ParticleShaderFullParticleBirthRatio = eval(this.ParticleShaderFullParticleBirthRatio);
-            obj.ParticleShaderPersistentParticleBirthRatio = eval(this.ParticleShaderPersistentParticleBirthRatio);
-            obj.ParticleShaderParticleLifetime = eval(this.ParticleShaderParticleLifetime);
-            obj.ParticleShaderParticleLifetimePlusMinus = eval(this.ParticleShaderParticleLifetimePlusMinus);
-            obj.ParticleShaderInitialSpeedAlongNormal = eval(this.ParticleShaderInitialSpeedAlongNormal);
-            obj.ParticleShaderAccelerationAlongNormal = eval(this.ParticleShaderAccelerationAlongNormal);
-            obj.ParticleShaderInitialVelocity1 = eval(this.ParticleShaderInitialVelocity1);
-            obj.ParticleShaderInitialVelocity2 = eval(this.ParticleShaderInitialVelocity2);
-            obj.ParticleShaderInitialVelocity3 = eval(this.ParticleShaderInitialVelocity3);
-            obj.ParticleShaderAcceleration1 = eval(this.ParticleShaderAcceleration1);
-            obj.ParticleShaderAcceleration2 = eval(this.ParticleShaderAcceleration2);
-            obj.ParticleShaderAcceleration3 = eval(this.ParticleShaderAcceleration3);
-            obj.ParticleShaderScaleKey1 = eval(this.ParticleShaderScaleKey1);
-            obj.ParticleShaderScaleKey2 = eval(this.ParticleShaderScaleKey2);
-            obj.ParticleShaderScaleKey1Time = eval(this.ParticleShaderScaleKey1Time);
-            obj.ParticleShaderScaleKey2Time = eval(this.ParticleShaderScaleKey2Time);
-            obj.ColorKey1Color = eval(this.ColorKey1Color);
-            obj.ColorKey2Color = eval(this.ColorKey2Color);
-            obj.ColorKey3Color = eval(this.ColorKey3Color);
-            obj.ColorKey1ColorAlpha = eval(this.ColorKey1ColorAlpha);
-            obj.ColorKey2ColorAlpha = eval(this.ColorKey2ColorAlpha);
-            obj.ColorKey3ColorAlpha = eval(this.ColorKey3ColorAlpha);
-            obj.ColorKey1ColorKeyTime = eval(this.ColorKey1ColorKeyTime);
-            obj.ColorKey2ColorKeyTime = eval(this.ColorKey2ColorKeyTime);
-            obj.ColorKey3ColorKeyTime = eval(this.ColorKey3ColorKeyTime);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(EffectShader_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, EffectShader_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(EffectShader_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.FillTexture ?? true)
-                {
-                    fg.AppendLine($"FillTexture => {FillTexture}");
-                }
-                if (printMask?.ParticleShaderTexture ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderTexture => {ParticleShaderTexture}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.MembraneShaderSourceBlendMode ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderSourceBlendMode => {MembraneShaderSourceBlendMode}");
-                }
-                if (printMask?.MembraneShaderBlendOperation ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderBlendOperation => {MembraneShaderBlendOperation}");
-                }
-                if (printMask?.MembraneShaderZTestFunction ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderZTestFunction => {MembraneShaderZTestFunction}");
-                }
-                if (printMask?.FillTextureEffectColor ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectColor => {FillTextureEffectColor}");
-                }
-                if (printMask?.FillTextureEffectAlphaFadeInTime ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaFadeInTime => {FillTextureEffectAlphaFadeInTime}");
-                }
-                if (printMask?.FillTextureEffectFullAlphaTime ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectFullAlphaTime => {FillTextureEffectFullAlphaTime}");
-                }
-                if (printMask?.FillTextureEffectAlphaFadeOutTime ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaFadeOutTime => {FillTextureEffectAlphaFadeOutTime}");
-                }
-                if (printMask?.FillTextureEffectPersistentAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectPersistentAlphaRatio => {FillTextureEffectPersistentAlphaRatio}");
-                }
-                if (printMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaPulseAmplitude => {FillTextureEffectAlphaPulseAmplitude}");
-                }
-                if (printMask?.FillTextureEffectAlphaPulseFrequency ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectAlphaPulseFrequency => {FillTextureEffectAlphaPulseFrequency}");
-                }
-                if (printMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectTextureAnimationSpeedU => {FillTextureEffectTextureAnimationSpeedU}");
-                }
-                if (printMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectTextureAnimationSpeedV => {FillTextureEffectTextureAnimationSpeedV}");
-                }
-                if (printMask?.EdgeEffectFallOff ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectFallOff => {EdgeEffectFallOff}");
-                }
-                if (printMask?.EdgeEffectColor ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectColor => {EdgeEffectColor}");
-                }
-                if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaFadeInTime => {EdgeEffectAlphaFadeInTime}");
-                }
-                if (printMask?.EdgeEffectFullAlphaTime ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectFullAlphaTime => {EdgeEffectFullAlphaTime}");
-                }
-                if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaFadeOutTime => {EdgeEffectAlphaFadeOutTime}");
-                }
-                if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectPersistentAlphaRatio => {EdgeEffectPersistentAlphaRatio}");
-                }
-                if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaPulseAmplitude => {EdgeEffectAlphaPulseAmplitude}");
-                }
-                if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectAlphaPulseFrequency => {EdgeEffectAlphaPulseFrequency}");
-                }
-                if (printMask?.FillTextureEffectFullAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"FillTextureEffectFullAlphaRatio => {FillTextureEffectFullAlphaRatio}");
-                }
-                if (printMask?.EdgeEffectFullAlphaRatio ?? true)
-                {
-                    fg.AppendLine($"EdgeEffectFullAlphaRatio => {EdgeEffectFullAlphaRatio}");
-                }
-                if (printMask?.MembraneShaderDestBlendMode ?? true)
-                {
-                    fg.AppendLine($"MembraneShaderDestBlendMode => {MembraneShaderDestBlendMode}");
-                }
-                if (printMask?.ParticleShaderSourceBlendMode ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderSourceBlendMode => {ParticleShaderSourceBlendMode}");
-                }
-                if (printMask?.ParticleShaderBlendOperation ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderBlendOperation => {ParticleShaderBlendOperation}");
-                }
-                if (printMask?.ParticleShaderZTestFunction ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderZTestFunction => {ParticleShaderZTestFunction}");
-                }
-                if (printMask?.ParticleShaderDestBlendMode ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderDestBlendMode => {ParticleShaderDestBlendMode}");
-                }
-                if (printMask?.ParticleShaderParticleBirthRampUpTime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleBirthRampUpTime => {ParticleShaderParticleBirthRampUpTime}");
-                }
-                if (printMask?.ParticleShaderFullParticleBirthTime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderFullParticleBirthTime => {ParticleShaderFullParticleBirthTime}");
-                }
-                if (printMask?.ParticleShaderParticleBirthRampDownTime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleBirthRampDownTime => {ParticleShaderParticleBirthRampDownTime}");
-                }
-                if (printMask?.ParticleShaderFullParticleBirthRatio ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderFullParticleBirthRatio => {ParticleShaderFullParticleBirthRatio}");
-                }
-                if (printMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderPersistentParticleBirthRatio => {ParticleShaderPersistentParticleBirthRatio}");
-                }
-                if (printMask?.ParticleShaderParticleLifetime ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleLifetime => {ParticleShaderParticleLifetime}");
-                }
-                if (printMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderParticleLifetimePlusMinus => {ParticleShaderParticleLifetimePlusMinus}");
-                }
-                if (printMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialSpeedAlongNormal => {ParticleShaderInitialSpeedAlongNormal}");
-                }
-                if (printMask?.ParticleShaderAccelerationAlongNormal ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAccelerationAlongNormal => {ParticleShaderAccelerationAlongNormal}");
-                }
-                if (printMask?.ParticleShaderInitialVelocity1 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialVelocity1 => {ParticleShaderInitialVelocity1}");
-                }
-                if (printMask?.ParticleShaderInitialVelocity2 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialVelocity2 => {ParticleShaderInitialVelocity2}");
-                }
-                if (printMask?.ParticleShaderInitialVelocity3 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderInitialVelocity3 => {ParticleShaderInitialVelocity3}");
-                }
-                if (printMask?.ParticleShaderAcceleration1 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAcceleration1 => {ParticleShaderAcceleration1}");
-                }
-                if (printMask?.ParticleShaderAcceleration2 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAcceleration2 => {ParticleShaderAcceleration2}");
-                }
-                if (printMask?.ParticleShaderAcceleration3 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderAcceleration3 => {ParticleShaderAcceleration3}");
-                }
-                if (printMask?.ParticleShaderScaleKey1 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey1 => {ParticleShaderScaleKey1}");
-                }
-                if (printMask?.ParticleShaderScaleKey2 ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey2 => {ParticleShaderScaleKey2}");
-                }
-                if (printMask?.ParticleShaderScaleKey1Time ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey1Time => {ParticleShaderScaleKey1Time}");
-                }
-                if (printMask?.ParticleShaderScaleKey2Time ?? true)
-                {
-                    fg.AppendLine($"ParticleShaderScaleKey2Time => {ParticleShaderScaleKey2Time}");
-                }
-                if (printMask?.ColorKey1Color ?? true)
-                {
-                    fg.AppendLine($"ColorKey1Color => {ColorKey1Color}");
-                }
-                if (printMask?.ColorKey2Color ?? true)
-                {
-                    fg.AppendLine($"ColorKey2Color => {ColorKey2Color}");
-                }
-                if (printMask?.ColorKey3Color ?? true)
-                {
-                    fg.AppendLine($"ColorKey3Color => {ColorKey3Color}");
-                }
-                if (printMask?.ColorKey1ColorAlpha ?? true)
-                {
-                    fg.AppendLine($"ColorKey1ColorAlpha => {ColorKey1ColorAlpha}");
-                }
-                if (printMask?.ColorKey2ColorAlpha ?? true)
-                {
-                    fg.AppendLine($"ColorKey2ColorAlpha => {ColorKey2ColorAlpha}");
-                }
-                if (printMask?.ColorKey3ColorAlpha ?? true)
-                {
-                    fg.AppendLine($"ColorKey3ColorAlpha => {ColorKey3ColorAlpha}");
-                }
-                if (printMask?.ColorKey1ColorKeyTime ?? true)
-                {
-                    fg.AppendLine($"ColorKey1ColorKeyTime => {ColorKey1ColorKeyTime}");
-                }
-                if (printMask?.ColorKey2ColorKeyTime ?? true)
-                {
-                    fg.AppendLine($"ColorKey2ColorKeyTime => {ColorKey2ColorKeyTime}");
-                }
-                if (printMask?.ColorKey3ColorKeyTime ?? true)
-                {
-                    fg.AppendLine($"ColorKey3ColorKeyTime => {ColorKey3ColorKeyTime}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class EffectShader_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<EffectShader_ErrorMask>
-    {
-        #region Members
-        public Exception? FillTexture;
-        public Exception? ParticleShaderTexture;
-        public Exception? Flags;
-        public Exception? MembraneShaderSourceBlendMode;
-        public Exception? MembraneShaderBlendOperation;
-        public Exception? MembraneShaderZTestFunction;
-        public Exception? FillTextureEffectColor;
-        public Exception? FillTextureEffectAlphaFadeInTime;
-        public Exception? FillTextureEffectFullAlphaTime;
-        public Exception? FillTextureEffectAlphaFadeOutTime;
-        public Exception? FillTextureEffectPersistentAlphaRatio;
-        public Exception? FillTextureEffectAlphaPulseAmplitude;
-        public Exception? FillTextureEffectAlphaPulseFrequency;
-        public Exception? FillTextureEffectTextureAnimationSpeedU;
-        public Exception? FillTextureEffectTextureAnimationSpeedV;
-        public Exception? EdgeEffectFallOff;
-        public Exception? EdgeEffectColor;
-        public Exception? EdgeEffectAlphaFadeInTime;
-        public Exception? EdgeEffectFullAlphaTime;
-        public Exception? EdgeEffectAlphaFadeOutTime;
-        public Exception? EdgeEffectPersistentAlphaRatio;
-        public Exception? EdgeEffectAlphaPulseAmplitude;
-        public Exception? EdgeEffectAlphaPulseFrequency;
-        public Exception? FillTextureEffectFullAlphaRatio;
-        public Exception? EdgeEffectFullAlphaRatio;
-        public Exception? MembraneShaderDestBlendMode;
-        public Exception? ParticleShaderSourceBlendMode;
-        public Exception? ParticleShaderBlendOperation;
-        public Exception? ParticleShaderZTestFunction;
-        public Exception? ParticleShaderDestBlendMode;
-        public Exception? ParticleShaderParticleBirthRampUpTime;
-        public Exception? ParticleShaderFullParticleBirthTime;
-        public Exception? ParticleShaderParticleBirthRampDownTime;
-        public Exception? ParticleShaderFullParticleBirthRatio;
-        public Exception? ParticleShaderPersistentParticleBirthRatio;
-        public Exception? ParticleShaderParticleLifetime;
-        public Exception? ParticleShaderParticleLifetimePlusMinus;
-        public Exception? ParticleShaderInitialSpeedAlongNormal;
-        public Exception? ParticleShaderAccelerationAlongNormal;
-        public Exception? ParticleShaderInitialVelocity1;
-        public Exception? ParticleShaderInitialVelocity2;
-        public Exception? ParticleShaderInitialVelocity3;
-        public Exception? ParticleShaderAcceleration1;
-        public Exception? ParticleShaderAcceleration2;
-        public Exception? ParticleShaderAcceleration3;
-        public Exception? ParticleShaderScaleKey1;
-        public Exception? ParticleShaderScaleKey2;
-        public Exception? ParticleShaderScaleKey1Time;
-        public Exception? ParticleShaderScaleKey2Time;
-        public Exception? ColorKey1Color;
-        public Exception? ColorKey2Color;
-        public Exception? ColorKey3Color;
-        public Exception? ColorKey1ColorAlpha;
-        public Exception? ColorKey2ColorAlpha;
-        public Exception? ColorKey3ColorAlpha;
-        public Exception? ColorKey1ColorKeyTime;
-        public Exception? ColorKey2ColorKeyTime;
-        public Exception? ColorKey3ColorKeyTime;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    return FillTexture;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    return ParticleShaderTexture;
-                case EffectShader_FieldIndex.Flags:
-                    return Flags;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    return MembraneShaderSourceBlendMode;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    return MembraneShaderBlendOperation;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    return MembraneShaderZTestFunction;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    return FillTextureEffectColor;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    return FillTextureEffectAlphaFadeInTime;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    return FillTextureEffectFullAlphaTime;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    return FillTextureEffectAlphaFadeOutTime;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    return FillTextureEffectPersistentAlphaRatio;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    return FillTextureEffectAlphaPulseAmplitude;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    return FillTextureEffectAlphaPulseFrequency;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    return FillTextureEffectTextureAnimationSpeedU;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    return FillTextureEffectTextureAnimationSpeedV;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    return EdgeEffectFallOff;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    return EdgeEffectColor;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    return EdgeEffectAlphaFadeInTime;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    return EdgeEffectFullAlphaTime;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    return EdgeEffectAlphaFadeOutTime;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    return EdgeEffectPersistentAlphaRatio;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    return EdgeEffectAlphaPulseAmplitude;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    return EdgeEffectAlphaPulseFrequency;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    return FillTextureEffectFullAlphaRatio;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    return EdgeEffectFullAlphaRatio;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    return MembraneShaderDestBlendMode;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    return ParticleShaderSourceBlendMode;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    return ParticleShaderBlendOperation;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    return ParticleShaderZTestFunction;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    return ParticleShaderDestBlendMode;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    return ParticleShaderParticleBirthRampUpTime;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    return ParticleShaderFullParticleBirthTime;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    return ParticleShaderParticleBirthRampDownTime;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    return ParticleShaderFullParticleBirthRatio;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    return ParticleShaderPersistentParticleBirthRatio;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    return ParticleShaderParticleLifetime;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    return ParticleShaderParticleLifetimePlusMinus;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    return ParticleShaderInitialSpeedAlongNormal;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    return ParticleShaderAccelerationAlongNormal;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    return ParticleShaderInitialVelocity1;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    return ParticleShaderInitialVelocity2;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    return ParticleShaderInitialVelocity3;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    return ParticleShaderAcceleration1;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    return ParticleShaderAcceleration2;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    return ParticleShaderAcceleration3;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    return ParticleShaderScaleKey1;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    return ParticleShaderScaleKey2;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    return ParticleShaderScaleKey1Time;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    return ParticleShaderScaleKey2Time;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    return ColorKey1Color;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    return ColorKey2Color;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    return ColorKey3Color;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    return ColorKey1ColorAlpha;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    return ColorKey2ColorAlpha;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    return ColorKey3ColorAlpha;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    return ColorKey1ColorKeyTime;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    return ColorKey2ColorKeyTime;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    return ColorKey3ColorKeyTime;
-                case EffectShader_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    this.FillTexture = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    this.ParticleShaderTexture = ex;
-                    break;
-                case EffectShader_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    this.MembraneShaderSourceBlendMode = ex;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    this.MembraneShaderBlendOperation = ex;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    this.MembraneShaderZTestFunction = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    this.FillTextureEffectColor = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    this.FillTextureEffectAlphaFadeInTime = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    this.FillTextureEffectFullAlphaTime = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    this.FillTextureEffectAlphaFadeOutTime = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    this.FillTextureEffectPersistentAlphaRatio = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    this.FillTextureEffectAlphaPulseAmplitude = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    this.FillTextureEffectAlphaPulseFrequency = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    this.FillTextureEffectTextureAnimationSpeedU = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    this.FillTextureEffectTextureAnimationSpeedV = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    this.EdgeEffectFallOff = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    this.EdgeEffectColor = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    this.EdgeEffectAlphaFadeInTime = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    this.EdgeEffectFullAlphaTime = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    this.EdgeEffectAlphaFadeOutTime = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    this.EdgeEffectPersistentAlphaRatio = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    this.EdgeEffectAlphaPulseAmplitude = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    this.EdgeEffectAlphaPulseFrequency = ex;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    this.FillTextureEffectFullAlphaRatio = ex;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    this.EdgeEffectFullAlphaRatio = ex;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    this.MembraneShaderDestBlendMode = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    this.ParticleShaderSourceBlendMode = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    this.ParticleShaderBlendOperation = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    this.ParticleShaderZTestFunction = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    this.ParticleShaderDestBlendMode = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    this.ParticleShaderParticleBirthRampUpTime = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    this.ParticleShaderFullParticleBirthTime = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    this.ParticleShaderParticleBirthRampDownTime = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    this.ParticleShaderFullParticleBirthRatio = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    this.ParticleShaderPersistentParticleBirthRatio = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    this.ParticleShaderParticleLifetime = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    this.ParticleShaderParticleLifetimePlusMinus = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    this.ParticleShaderInitialSpeedAlongNormal = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    this.ParticleShaderAccelerationAlongNormal = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    this.ParticleShaderInitialVelocity1 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    this.ParticleShaderInitialVelocity2 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    this.ParticleShaderInitialVelocity3 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    this.ParticleShaderAcceleration1 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    this.ParticleShaderAcceleration2 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    this.ParticleShaderAcceleration3 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    this.ParticleShaderScaleKey1 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    this.ParticleShaderScaleKey2 = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    this.ParticleShaderScaleKey1Time = ex;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    this.ParticleShaderScaleKey2Time = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    this.ColorKey1Color = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    this.ColorKey2Color = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    this.ColorKey3Color = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    this.ColorKey1ColorAlpha = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    this.ColorKey2ColorAlpha = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    this.ColorKey3ColorAlpha = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    this.ColorKey1ColorKeyTime = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    this.ColorKey2ColorKeyTime = ex;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    this.ColorKey3ColorKeyTime = ex;
-                    break;
-                case EffectShader_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
-            switch (enu)
-            {
-                case EffectShader_FieldIndex.FillTexture:
-                    this.FillTexture = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderTexture:
-                    this.ParticleShaderTexture = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderSourceBlendMode:
-                    this.MembraneShaderSourceBlendMode = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderBlendOperation:
-                    this.MembraneShaderBlendOperation = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderZTestFunction:
-                    this.MembraneShaderZTestFunction = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectColor:
-                    this.FillTextureEffectColor = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime:
-                    this.FillTextureEffectAlphaFadeInTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaTime:
-                    this.FillTextureEffectFullAlphaTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime:
-                    this.FillTextureEffectAlphaFadeOutTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio:
-                    this.FillTextureEffectPersistentAlphaRatio = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude:
-                    this.FillTextureEffectAlphaPulseAmplitude = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency:
-                    this.FillTextureEffectAlphaPulseFrequency = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU:
-                    this.FillTextureEffectTextureAnimationSpeedU = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV:
-                    this.FillTextureEffectTextureAnimationSpeedV = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFallOff:
-                    this.EdgeEffectFallOff = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectColor:
-                    this.EdgeEffectColor = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
-                    this.EdgeEffectAlphaFadeInTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
-                    this.EdgeEffectFullAlphaTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
-                    this.EdgeEffectAlphaFadeOutTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
-                    this.EdgeEffectPersistentAlphaRatio = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
-                    this.EdgeEffectAlphaPulseAmplitude = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
-                    this.EdgeEffectAlphaPulseFrequency = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio:
-                    this.FillTextureEffectFullAlphaRatio = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
-                    this.EdgeEffectFullAlphaRatio = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.MembraneShaderDestBlendMode:
-                    this.MembraneShaderDestBlendMode = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderSourceBlendMode:
-                    this.ParticleShaderSourceBlendMode = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderBlendOperation:
-                    this.ParticleShaderBlendOperation = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderZTestFunction:
-                    this.ParticleShaderZTestFunction = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderDestBlendMode:
-                    this.ParticleShaderDestBlendMode = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime:
-                    this.ParticleShaderParticleBirthRampUpTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime:
-                    this.ParticleShaderFullParticleBirthTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime:
-                    this.ParticleShaderParticleBirthRampDownTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio:
-                    this.ParticleShaderFullParticleBirthRatio = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio:
-                    this.ParticleShaderPersistentParticleBirthRatio = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetime:
-                    this.ParticleShaderParticleLifetime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus:
-                    this.ParticleShaderParticleLifetimePlusMinus = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal:
-                    this.ParticleShaderInitialSpeedAlongNormal = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal:
-                    this.ParticleShaderAccelerationAlongNormal = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity1:
-                    this.ParticleShaderInitialVelocity1 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity2:
-                    this.ParticleShaderInitialVelocity2 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderInitialVelocity3:
-                    this.ParticleShaderInitialVelocity3 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration1:
-                    this.ParticleShaderAcceleration1 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration2:
-                    this.ParticleShaderAcceleration2 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderAcceleration3:
-                    this.ParticleShaderAcceleration3 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1:
-                    this.ParticleShaderScaleKey1 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2:
-                    this.ParticleShaderScaleKey2 = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey1Time:
-                    this.ParticleShaderScaleKey1Time = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ParticleShaderScaleKey2Time:
-                    this.ParticleShaderScaleKey2Time = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1Color:
-                    this.ColorKey1Color = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2Color:
-                    this.ColorKey2Color = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3Color:
-                    this.ColorKey3Color = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorAlpha:
-                    this.ColorKey1ColorAlpha = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorAlpha:
-                    this.ColorKey2ColorAlpha = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorAlpha:
-                    this.ColorKey3ColorAlpha = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey1ColorKeyTime:
-                    this.ColorKey1ColorKeyTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey2ColorKeyTime:
-                    this.ColorKey2ColorKeyTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.ColorKey3ColorKeyTime:
-                    this.ColorKey3ColorKeyTime = (Exception)obj;
-                    break;
-                case EffectShader_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (FillTexture != null) return true;
-            if (ParticleShaderTexture != null) return true;
-            if (Flags != null) return true;
-            if (MembraneShaderSourceBlendMode != null) return true;
-            if (MembraneShaderBlendOperation != null) return true;
-            if (MembraneShaderZTestFunction != null) return true;
-            if (FillTextureEffectColor != null) return true;
-            if (FillTextureEffectAlphaFadeInTime != null) return true;
-            if (FillTextureEffectFullAlphaTime != null) return true;
-            if (FillTextureEffectAlphaFadeOutTime != null) return true;
-            if (FillTextureEffectPersistentAlphaRatio != null) return true;
-            if (FillTextureEffectAlphaPulseAmplitude != null) return true;
-            if (FillTextureEffectAlphaPulseFrequency != null) return true;
-            if (FillTextureEffectTextureAnimationSpeedU != null) return true;
-            if (FillTextureEffectTextureAnimationSpeedV != null) return true;
-            if (EdgeEffectFallOff != null) return true;
-            if (EdgeEffectColor != null) return true;
-            if (EdgeEffectAlphaFadeInTime != null) return true;
-            if (EdgeEffectFullAlphaTime != null) return true;
-            if (EdgeEffectAlphaFadeOutTime != null) return true;
-            if (EdgeEffectPersistentAlphaRatio != null) return true;
-            if (EdgeEffectAlphaPulseAmplitude != null) return true;
-            if (EdgeEffectAlphaPulseFrequency != null) return true;
-            if (FillTextureEffectFullAlphaRatio != null) return true;
-            if (EdgeEffectFullAlphaRatio != null) return true;
-            if (MembraneShaderDestBlendMode != null) return true;
-            if (ParticleShaderSourceBlendMode != null) return true;
-            if (ParticleShaderBlendOperation != null) return true;
-            if (ParticleShaderZTestFunction != null) return true;
-            if (ParticleShaderDestBlendMode != null) return true;
-            if (ParticleShaderParticleBirthRampUpTime != null) return true;
-            if (ParticleShaderFullParticleBirthTime != null) return true;
-            if (ParticleShaderParticleBirthRampDownTime != null) return true;
-            if (ParticleShaderFullParticleBirthRatio != null) return true;
-            if (ParticleShaderPersistentParticleBirthRatio != null) return true;
-            if (ParticleShaderParticleLifetime != null) return true;
-            if (ParticleShaderParticleLifetimePlusMinus != null) return true;
-            if (ParticleShaderInitialSpeedAlongNormal != null) return true;
-            if (ParticleShaderAccelerationAlongNormal != null) return true;
-            if (ParticleShaderInitialVelocity1 != null) return true;
-            if (ParticleShaderInitialVelocity2 != null) return true;
-            if (ParticleShaderInitialVelocity3 != null) return true;
-            if (ParticleShaderAcceleration1 != null) return true;
-            if (ParticleShaderAcceleration2 != null) return true;
-            if (ParticleShaderAcceleration3 != null) return true;
-            if (ParticleShaderScaleKey1 != null) return true;
-            if (ParticleShaderScaleKey2 != null) return true;
-            if (ParticleShaderScaleKey1Time != null) return true;
-            if (ParticleShaderScaleKey2Time != null) return true;
-            if (ColorKey1Color != null) return true;
-            if (ColorKey2Color != null) return true;
-            if (ColorKey3Color != null) return true;
-            if (ColorKey1ColorAlpha != null) return true;
-            if (ColorKey2ColorAlpha != null) return true;
-            if (ColorKey3ColorAlpha != null) return true;
-            if (ColorKey1ColorKeyTime != null) return true;
-            if (ColorKey2ColorKeyTime != null) return true;
-            if (ColorKey3ColorKeyTime != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("EffectShader_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"FillTexture => {FillTexture}");
-            fg.AppendLine($"ParticleShaderTexture => {ParticleShaderTexture}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"MembraneShaderSourceBlendMode => {MembraneShaderSourceBlendMode}");
-            fg.AppendLine($"MembraneShaderBlendOperation => {MembraneShaderBlendOperation}");
-            fg.AppendLine($"MembraneShaderZTestFunction => {MembraneShaderZTestFunction}");
-            fg.AppendLine($"FillTextureEffectColor => {FillTextureEffectColor}");
-            fg.AppendLine($"FillTextureEffectAlphaFadeInTime => {FillTextureEffectAlphaFadeInTime}");
-            fg.AppendLine($"FillTextureEffectFullAlphaTime => {FillTextureEffectFullAlphaTime}");
-            fg.AppendLine($"FillTextureEffectAlphaFadeOutTime => {FillTextureEffectAlphaFadeOutTime}");
-            fg.AppendLine($"FillTextureEffectPersistentAlphaRatio => {FillTextureEffectPersistentAlphaRatio}");
-            fg.AppendLine($"FillTextureEffectAlphaPulseAmplitude => {FillTextureEffectAlphaPulseAmplitude}");
-            fg.AppendLine($"FillTextureEffectAlphaPulseFrequency => {FillTextureEffectAlphaPulseFrequency}");
-            fg.AppendLine($"FillTextureEffectTextureAnimationSpeedU => {FillTextureEffectTextureAnimationSpeedU}");
-            fg.AppendLine($"FillTextureEffectTextureAnimationSpeedV => {FillTextureEffectTextureAnimationSpeedV}");
-            fg.AppendLine($"EdgeEffectFallOff => {EdgeEffectFallOff}");
-            fg.AppendLine($"EdgeEffectColor => {EdgeEffectColor}");
-            fg.AppendLine($"EdgeEffectAlphaFadeInTime => {EdgeEffectAlphaFadeInTime}");
-            fg.AppendLine($"EdgeEffectFullAlphaTime => {EdgeEffectFullAlphaTime}");
-            fg.AppendLine($"EdgeEffectAlphaFadeOutTime => {EdgeEffectAlphaFadeOutTime}");
-            fg.AppendLine($"EdgeEffectPersistentAlphaRatio => {EdgeEffectPersistentAlphaRatio}");
-            fg.AppendLine($"EdgeEffectAlphaPulseAmplitude => {EdgeEffectAlphaPulseAmplitude}");
-            fg.AppendLine($"EdgeEffectAlphaPulseFrequency => {EdgeEffectAlphaPulseFrequency}");
-            fg.AppendLine($"FillTextureEffectFullAlphaRatio => {FillTextureEffectFullAlphaRatio}");
-            fg.AppendLine($"EdgeEffectFullAlphaRatio => {EdgeEffectFullAlphaRatio}");
-            fg.AppendLine($"MembraneShaderDestBlendMode => {MembraneShaderDestBlendMode}");
-            fg.AppendLine($"ParticleShaderSourceBlendMode => {ParticleShaderSourceBlendMode}");
-            fg.AppendLine($"ParticleShaderBlendOperation => {ParticleShaderBlendOperation}");
-            fg.AppendLine($"ParticleShaderZTestFunction => {ParticleShaderZTestFunction}");
-            fg.AppendLine($"ParticleShaderDestBlendMode => {ParticleShaderDestBlendMode}");
-            fg.AppendLine($"ParticleShaderParticleBirthRampUpTime => {ParticleShaderParticleBirthRampUpTime}");
-            fg.AppendLine($"ParticleShaderFullParticleBirthTime => {ParticleShaderFullParticleBirthTime}");
-            fg.AppendLine($"ParticleShaderParticleBirthRampDownTime => {ParticleShaderParticleBirthRampDownTime}");
-            fg.AppendLine($"ParticleShaderFullParticleBirthRatio => {ParticleShaderFullParticleBirthRatio}");
-            fg.AppendLine($"ParticleShaderPersistentParticleBirthRatio => {ParticleShaderPersistentParticleBirthRatio}");
-            fg.AppendLine($"ParticleShaderParticleLifetime => {ParticleShaderParticleLifetime}");
-            fg.AppendLine($"ParticleShaderParticleLifetimePlusMinus => {ParticleShaderParticleLifetimePlusMinus}");
-            fg.AppendLine($"ParticleShaderInitialSpeedAlongNormal => {ParticleShaderInitialSpeedAlongNormal}");
-            fg.AppendLine($"ParticleShaderAccelerationAlongNormal => {ParticleShaderAccelerationAlongNormal}");
-            fg.AppendLine($"ParticleShaderInitialVelocity1 => {ParticleShaderInitialVelocity1}");
-            fg.AppendLine($"ParticleShaderInitialVelocity2 => {ParticleShaderInitialVelocity2}");
-            fg.AppendLine($"ParticleShaderInitialVelocity3 => {ParticleShaderInitialVelocity3}");
-            fg.AppendLine($"ParticleShaderAcceleration1 => {ParticleShaderAcceleration1}");
-            fg.AppendLine($"ParticleShaderAcceleration2 => {ParticleShaderAcceleration2}");
-            fg.AppendLine($"ParticleShaderAcceleration3 => {ParticleShaderAcceleration3}");
-            fg.AppendLine($"ParticleShaderScaleKey1 => {ParticleShaderScaleKey1}");
-            fg.AppendLine($"ParticleShaderScaleKey2 => {ParticleShaderScaleKey2}");
-            fg.AppendLine($"ParticleShaderScaleKey1Time => {ParticleShaderScaleKey1Time}");
-            fg.AppendLine($"ParticleShaderScaleKey2Time => {ParticleShaderScaleKey2Time}");
-            fg.AppendLine($"ColorKey1Color => {ColorKey1Color}");
-            fg.AppendLine($"ColorKey2Color => {ColorKey2Color}");
-            fg.AppendLine($"ColorKey3Color => {ColorKey3Color}");
-            fg.AppendLine($"ColorKey1ColorAlpha => {ColorKey1ColorAlpha}");
-            fg.AppendLine($"ColorKey2ColorAlpha => {ColorKey2ColorAlpha}");
-            fg.AppendLine($"ColorKey3ColorAlpha => {ColorKey3ColorAlpha}");
-            fg.AppendLine($"ColorKey1ColorKeyTime => {ColorKey1ColorKeyTime}");
-            fg.AppendLine($"ColorKey2ColorKeyTime => {ColorKey2ColorKeyTime}");
-            fg.AppendLine($"ColorKey3ColorKeyTime => {ColorKey3ColorKeyTime}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public EffectShader_ErrorMask Combine(EffectShader_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new EffectShader_ErrorMask();
-            ret.FillTexture = this.FillTexture.Combine(rhs.FillTexture);
-            ret.ParticleShaderTexture = this.ParticleShaderTexture.Combine(rhs.ParticleShaderTexture);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.MembraneShaderSourceBlendMode = this.MembraneShaderSourceBlendMode.Combine(rhs.MembraneShaderSourceBlendMode);
-            ret.MembraneShaderBlendOperation = this.MembraneShaderBlendOperation.Combine(rhs.MembraneShaderBlendOperation);
-            ret.MembraneShaderZTestFunction = this.MembraneShaderZTestFunction.Combine(rhs.MembraneShaderZTestFunction);
-            ret.FillTextureEffectColor = this.FillTextureEffectColor.Combine(rhs.FillTextureEffectColor);
-            ret.FillTextureEffectAlphaFadeInTime = this.FillTextureEffectAlphaFadeInTime.Combine(rhs.FillTextureEffectAlphaFadeInTime);
-            ret.FillTextureEffectFullAlphaTime = this.FillTextureEffectFullAlphaTime.Combine(rhs.FillTextureEffectFullAlphaTime);
-            ret.FillTextureEffectAlphaFadeOutTime = this.FillTextureEffectAlphaFadeOutTime.Combine(rhs.FillTextureEffectAlphaFadeOutTime);
-            ret.FillTextureEffectPersistentAlphaRatio = this.FillTextureEffectPersistentAlphaRatio.Combine(rhs.FillTextureEffectPersistentAlphaRatio);
-            ret.FillTextureEffectAlphaPulseAmplitude = this.FillTextureEffectAlphaPulseAmplitude.Combine(rhs.FillTextureEffectAlphaPulseAmplitude);
-            ret.FillTextureEffectAlphaPulseFrequency = this.FillTextureEffectAlphaPulseFrequency.Combine(rhs.FillTextureEffectAlphaPulseFrequency);
-            ret.FillTextureEffectTextureAnimationSpeedU = this.FillTextureEffectTextureAnimationSpeedU.Combine(rhs.FillTextureEffectTextureAnimationSpeedU);
-            ret.FillTextureEffectTextureAnimationSpeedV = this.FillTextureEffectTextureAnimationSpeedV.Combine(rhs.FillTextureEffectTextureAnimationSpeedV);
-            ret.EdgeEffectFallOff = this.EdgeEffectFallOff.Combine(rhs.EdgeEffectFallOff);
-            ret.EdgeEffectColor = this.EdgeEffectColor.Combine(rhs.EdgeEffectColor);
-            ret.EdgeEffectAlphaFadeInTime = this.EdgeEffectAlphaFadeInTime.Combine(rhs.EdgeEffectAlphaFadeInTime);
-            ret.EdgeEffectFullAlphaTime = this.EdgeEffectFullAlphaTime.Combine(rhs.EdgeEffectFullAlphaTime);
-            ret.EdgeEffectAlphaFadeOutTime = this.EdgeEffectAlphaFadeOutTime.Combine(rhs.EdgeEffectAlphaFadeOutTime);
-            ret.EdgeEffectPersistentAlphaRatio = this.EdgeEffectPersistentAlphaRatio.Combine(rhs.EdgeEffectPersistentAlphaRatio);
-            ret.EdgeEffectAlphaPulseAmplitude = this.EdgeEffectAlphaPulseAmplitude.Combine(rhs.EdgeEffectAlphaPulseAmplitude);
-            ret.EdgeEffectAlphaPulseFrequency = this.EdgeEffectAlphaPulseFrequency.Combine(rhs.EdgeEffectAlphaPulseFrequency);
-            ret.FillTextureEffectFullAlphaRatio = this.FillTextureEffectFullAlphaRatio.Combine(rhs.FillTextureEffectFullAlphaRatio);
-            ret.EdgeEffectFullAlphaRatio = this.EdgeEffectFullAlphaRatio.Combine(rhs.EdgeEffectFullAlphaRatio);
-            ret.MembraneShaderDestBlendMode = this.MembraneShaderDestBlendMode.Combine(rhs.MembraneShaderDestBlendMode);
-            ret.ParticleShaderSourceBlendMode = this.ParticleShaderSourceBlendMode.Combine(rhs.ParticleShaderSourceBlendMode);
-            ret.ParticleShaderBlendOperation = this.ParticleShaderBlendOperation.Combine(rhs.ParticleShaderBlendOperation);
-            ret.ParticleShaderZTestFunction = this.ParticleShaderZTestFunction.Combine(rhs.ParticleShaderZTestFunction);
-            ret.ParticleShaderDestBlendMode = this.ParticleShaderDestBlendMode.Combine(rhs.ParticleShaderDestBlendMode);
-            ret.ParticleShaderParticleBirthRampUpTime = this.ParticleShaderParticleBirthRampUpTime.Combine(rhs.ParticleShaderParticleBirthRampUpTime);
-            ret.ParticleShaderFullParticleBirthTime = this.ParticleShaderFullParticleBirthTime.Combine(rhs.ParticleShaderFullParticleBirthTime);
-            ret.ParticleShaderParticleBirthRampDownTime = this.ParticleShaderParticleBirthRampDownTime.Combine(rhs.ParticleShaderParticleBirthRampDownTime);
-            ret.ParticleShaderFullParticleBirthRatio = this.ParticleShaderFullParticleBirthRatio.Combine(rhs.ParticleShaderFullParticleBirthRatio);
-            ret.ParticleShaderPersistentParticleBirthRatio = this.ParticleShaderPersistentParticleBirthRatio.Combine(rhs.ParticleShaderPersistentParticleBirthRatio);
-            ret.ParticleShaderParticleLifetime = this.ParticleShaderParticleLifetime.Combine(rhs.ParticleShaderParticleLifetime);
-            ret.ParticleShaderParticleLifetimePlusMinus = this.ParticleShaderParticleLifetimePlusMinus.Combine(rhs.ParticleShaderParticleLifetimePlusMinus);
-            ret.ParticleShaderInitialSpeedAlongNormal = this.ParticleShaderInitialSpeedAlongNormal.Combine(rhs.ParticleShaderInitialSpeedAlongNormal);
-            ret.ParticleShaderAccelerationAlongNormal = this.ParticleShaderAccelerationAlongNormal.Combine(rhs.ParticleShaderAccelerationAlongNormal);
-            ret.ParticleShaderInitialVelocity1 = this.ParticleShaderInitialVelocity1.Combine(rhs.ParticleShaderInitialVelocity1);
-            ret.ParticleShaderInitialVelocity2 = this.ParticleShaderInitialVelocity2.Combine(rhs.ParticleShaderInitialVelocity2);
-            ret.ParticleShaderInitialVelocity3 = this.ParticleShaderInitialVelocity3.Combine(rhs.ParticleShaderInitialVelocity3);
-            ret.ParticleShaderAcceleration1 = this.ParticleShaderAcceleration1.Combine(rhs.ParticleShaderAcceleration1);
-            ret.ParticleShaderAcceleration2 = this.ParticleShaderAcceleration2.Combine(rhs.ParticleShaderAcceleration2);
-            ret.ParticleShaderAcceleration3 = this.ParticleShaderAcceleration3.Combine(rhs.ParticleShaderAcceleration3);
-            ret.ParticleShaderScaleKey1 = this.ParticleShaderScaleKey1.Combine(rhs.ParticleShaderScaleKey1);
-            ret.ParticleShaderScaleKey2 = this.ParticleShaderScaleKey2.Combine(rhs.ParticleShaderScaleKey2);
-            ret.ParticleShaderScaleKey1Time = this.ParticleShaderScaleKey1Time.Combine(rhs.ParticleShaderScaleKey1Time);
-            ret.ParticleShaderScaleKey2Time = this.ParticleShaderScaleKey2Time.Combine(rhs.ParticleShaderScaleKey2Time);
-            ret.ColorKey1Color = this.ColorKey1Color.Combine(rhs.ColorKey1Color);
-            ret.ColorKey2Color = this.ColorKey2Color.Combine(rhs.ColorKey2Color);
-            ret.ColorKey3Color = this.ColorKey3Color.Combine(rhs.ColorKey3Color);
-            ret.ColorKey1ColorAlpha = this.ColorKey1ColorAlpha.Combine(rhs.ColorKey1ColorAlpha);
-            ret.ColorKey2ColorAlpha = this.ColorKey2ColorAlpha.Combine(rhs.ColorKey2ColorAlpha);
-            ret.ColorKey3ColorAlpha = this.ColorKey3ColorAlpha.Combine(rhs.ColorKey3ColorAlpha);
-            ret.ColorKey1ColorKeyTime = this.ColorKey1ColorKeyTime.Combine(rhs.ColorKey1ColorKeyTime);
-            ret.ColorKey2ColorKeyTime = this.ColorKey2ColorKeyTime.Combine(rhs.ColorKey2ColorKeyTime);
-            ret.ColorKey3ColorKeyTime = this.ColorKey3ColorKeyTime.Combine(rhs.ColorKey3ColorKeyTime);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static EffectShader_ErrorMask? Combine(EffectShader_ErrorMask? lhs, EffectShader_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new EffectShader_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new EffectShader_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class EffectShader_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool FillTexture;
-        public bool ParticleShaderTexture;
-        public bool Flags;
-        public bool MembraneShaderSourceBlendMode;
-        public bool MembraneShaderBlendOperation;
-        public bool MembraneShaderZTestFunction;
-        public bool FillTextureEffectColor;
-        public bool FillTextureEffectAlphaFadeInTime;
-        public bool FillTextureEffectFullAlphaTime;
-        public bool FillTextureEffectAlphaFadeOutTime;
-        public bool FillTextureEffectPersistentAlphaRatio;
-        public bool FillTextureEffectAlphaPulseAmplitude;
-        public bool FillTextureEffectAlphaPulseFrequency;
-        public bool FillTextureEffectTextureAnimationSpeedU;
-        public bool FillTextureEffectTextureAnimationSpeedV;
-        public bool EdgeEffectFallOff;
-        public bool EdgeEffectColor;
-        public bool EdgeEffectAlphaFadeInTime;
-        public bool EdgeEffectFullAlphaTime;
-        public bool EdgeEffectAlphaFadeOutTime;
-        public bool EdgeEffectPersistentAlphaRatio;
-        public bool EdgeEffectAlphaPulseAmplitude;
-        public bool EdgeEffectAlphaPulseFrequency;
-        public bool FillTextureEffectFullAlphaRatio;
-        public bool EdgeEffectFullAlphaRatio;
-        public bool MembraneShaderDestBlendMode;
-        public bool ParticleShaderSourceBlendMode;
-        public bool ParticleShaderBlendOperation;
-        public bool ParticleShaderZTestFunction;
-        public bool ParticleShaderDestBlendMode;
-        public bool ParticleShaderParticleBirthRampUpTime;
-        public bool ParticleShaderFullParticleBirthTime;
-        public bool ParticleShaderParticleBirthRampDownTime;
-        public bool ParticleShaderFullParticleBirthRatio;
-        public bool ParticleShaderPersistentParticleBirthRatio;
-        public bool ParticleShaderParticleLifetime;
-        public bool ParticleShaderParticleLifetimePlusMinus;
-        public bool ParticleShaderInitialSpeedAlongNormal;
-        public bool ParticleShaderAccelerationAlongNormal;
-        public bool ParticleShaderInitialVelocity1;
-        public bool ParticleShaderInitialVelocity2;
-        public bool ParticleShaderInitialVelocity3;
-        public bool ParticleShaderAcceleration1;
-        public bool ParticleShaderAcceleration2;
-        public bool ParticleShaderAcceleration3;
-        public bool ParticleShaderScaleKey1;
-        public bool ParticleShaderScaleKey2;
-        public bool ParticleShaderScaleKey1Time;
-        public bool ParticleShaderScaleKey2Time;
-        public bool ColorKey1Color;
-        public bool ColorKey2Color;
-        public bool ColorKey3Color;
-        public bool ColorKey1ColorAlpha;
-        public bool ColorKey2ColorAlpha;
-        public bool ColorKey3ColorAlpha;
-        public bool ColorKey1ColorKeyTime;
-        public bool ColorKey2ColorKeyTime;
-        public bool ColorKey3ColorKeyTime;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public EffectShader_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.FillTexture = defaultOn;
-            this.ParticleShaderTexture = defaultOn;
-            this.Flags = defaultOn;
-            this.MembraneShaderSourceBlendMode = defaultOn;
-            this.MembraneShaderBlendOperation = defaultOn;
-            this.MembraneShaderZTestFunction = defaultOn;
-            this.FillTextureEffectColor = defaultOn;
-            this.FillTextureEffectAlphaFadeInTime = defaultOn;
-            this.FillTextureEffectFullAlphaTime = defaultOn;
-            this.FillTextureEffectAlphaFadeOutTime = defaultOn;
-            this.FillTextureEffectPersistentAlphaRatio = defaultOn;
-            this.FillTextureEffectAlphaPulseAmplitude = defaultOn;
-            this.FillTextureEffectAlphaPulseFrequency = defaultOn;
-            this.FillTextureEffectTextureAnimationSpeedU = defaultOn;
-            this.FillTextureEffectTextureAnimationSpeedV = defaultOn;
-            this.EdgeEffectFallOff = defaultOn;
-            this.EdgeEffectColor = defaultOn;
-            this.EdgeEffectAlphaFadeInTime = defaultOn;
-            this.EdgeEffectFullAlphaTime = defaultOn;
-            this.EdgeEffectAlphaFadeOutTime = defaultOn;
-            this.EdgeEffectPersistentAlphaRatio = defaultOn;
-            this.EdgeEffectAlphaPulseAmplitude = defaultOn;
-            this.EdgeEffectAlphaPulseFrequency = defaultOn;
-            this.FillTextureEffectFullAlphaRatio = defaultOn;
-            this.EdgeEffectFullAlphaRatio = defaultOn;
-            this.MembraneShaderDestBlendMode = defaultOn;
-            this.ParticleShaderSourceBlendMode = defaultOn;
-            this.ParticleShaderBlendOperation = defaultOn;
-            this.ParticleShaderZTestFunction = defaultOn;
-            this.ParticleShaderDestBlendMode = defaultOn;
-            this.ParticleShaderParticleBirthRampUpTime = defaultOn;
-            this.ParticleShaderFullParticleBirthTime = defaultOn;
-            this.ParticleShaderParticleBirthRampDownTime = defaultOn;
-            this.ParticleShaderFullParticleBirthRatio = defaultOn;
-            this.ParticleShaderPersistentParticleBirthRatio = defaultOn;
-            this.ParticleShaderParticleLifetime = defaultOn;
-            this.ParticleShaderParticleLifetimePlusMinus = defaultOn;
-            this.ParticleShaderInitialSpeedAlongNormal = defaultOn;
-            this.ParticleShaderAccelerationAlongNormal = defaultOn;
-            this.ParticleShaderInitialVelocity1 = defaultOn;
-            this.ParticleShaderInitialVelocity2 = defaultOn;
-            this.ParticleShaderInitialVelocity3 = defaultOn;
-            this.ParticleShaderAcceleration1 = defaultOn;
-            this.ParticleShaderAcceleration2 = defaultOn;
-            this.ParticleShaderAcceleration3 = defaultOn;
-            this.ParticleShaderScaleKey1 = defaultOn;
-            this.ParticleShaderScaleKey2 = defaultOn;
-            this.ParticleShaderScaleKey1Time = defaultOn;
-            this.ParticleShaderScaleKey2Time = defaultOn;
-            this.ColorKey1Color = defaultOn;
-            this.ColorKey2Color = defaultOn;
-            this.ColorKey3Color = defaultOn;
-            this.ColorKey1ColorAlpha = defaultOn;
-            this.ColorKey2ColorAlpha = defaultOn;
-            this.ColorKey3ColorAlpha = defaultOn;
-            this.ColorKey1ColorKeyTime = defaultOn;
-            this.ColorKey2ColorKeyTime = defaultOn;
-            this.ColorKey3ColorKeyTime = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((FillTexture, null));
-            ret.Add((ParticleShaderTexture, null));
-            ret.Add((Flags, null));
-            ret.Add((MembraneShaderSourceBlendMode, null));
-            ret.Add((MembraneShaderBlendOperation, null));
-            ret.Add((MembraneShaderZTestFunction, null));
-            ret.Add((FillTextureEffectColor, null));
-            ret.Add((FillTextureEffectAlphaFadeInTime, null));
-            ret.Add((FillTextureEffectFullAlphaTime, null));
-            ret.Add((FillTextureEffectAlphaFadeOutTime, null));
-            ret.Add((FillTextureEffectPersistentAlphaRatio, null));
-            ret.Add((FillTextureEffectAlphaPulseAmplitude, null));
-            ret.Add((FillTextureEffectAlphaPulseFrequency, null));
-            ret.Add((FillTextureEffectTextureAnimationSpeedU, null));
-            ret.Add((FillTextureEffectTextureAnimationSpeedV, null));
-            ret.Add((EdgeEffectFallOff, null));
-            ret.Add((EdgeEffectColor, null));
-            ret.Add((EdgeEffectAlphaFadeInTime, null));
-            ret.Add((EdgeEffectFullAlphaTime, null));
-            ret.Add((EdgeEffectAlphaFadeOutTime, null));
-            ret.Add((EdgeEffectPersistentAlphaRatio, null));
-            ret.Add((EdgeEffectAlphaPulseAmplitude, null));
-            ret.Add((EdgeEffectAlphaPulseFrequency, null));
-            ret.Add((FillTextureEffectFullAlphaRatio, null));
-            ret.Add((EdgeEffectFullAlphaRatio, null));
-            ret.Add((MembraneShaderDestBlendMode, null));
-            ret.Add((ParticleShaderSourceBlendMode, null));
-            ret.Add((ParticleShaderBlendOperation, null));
-            ret.Add((ParticleShaderZTestFunction, null));
-            ret.Add((ParticleShaderDestBlendMode, null));
-            ret.Add((ParticleShaderParticleBirthRampUpTime, null));
-            ret.Add((ParticleShaderFullParticleBirthTime, null));
-            ret.Add((ParticleShaderParticleBirthRampDownTime, null));
-            ret.Add((ParticleShaderFullParticleBirthRatio, null));
-            ret.Add((ParticleShaderPersistentParticleBirthRatio, null));
-            ret.Add((ParticleShaderParticleLifetime, null));
-            ret.Add((ParticleShaderParticleLifetimePlusMinus, null));
-            ret.Add((ParticleShaderInitialSpeedAlongNormal, null));
-            ret.Add((ParticleShaderAccelerationAlongNormal, null));
-            ret.Add((ParticleShaderInitialVelocity1, null));
-            ret.Add((ParticleShaderInitialVelocity2, null));
-            ret.Add((ParticleShaderInitialVelocity3, null));
-            ret.Add((ParticleShaderAcceleration1, null));
-            ret.Add((ParticleShaderAcceleration2, null));
-            ret.Add((ParticleShaderAcceleration3, null));
-            ret.Add((ParticleShaderScaleKey1, null));
-            ret.Add((ParticleShaderScaleKey2, null));
-            ret.Add((ParticleShaderScaleKey1Time, null));
-            ret.Add((ParticleShaderScaleKey2Time, null));
-            ret.Add((ColorKey1Color, null));
-            ret.Add((ColorKey2Color, null));
-            ret.Add((ColorKey3Color, null));
-            ret.Add((ColorKey1ColorAlpha, null));
-            ret.Add((ColorKey2ColorAlpha, null));
-            ret.Add((ColorKey3ColorAlpha, null));
-            ret.Add((ColorKey1ColorKeyTime, null));
-            ret.Add((ColorKey2ColorKeyTime, null));
-            ret.Add((ColorKey3ColorKeyTime, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

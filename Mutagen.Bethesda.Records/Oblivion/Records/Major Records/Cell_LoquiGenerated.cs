@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Cell CreateFromXml(
             XElement node,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -332,15 +332,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Cell CreateFromXml(
             XElement node,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell CreateFromXml(
             string path,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -370,8 +370,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell CreateFromXml(
             string path,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Cell CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell CreateFromXml(
             Stream stream,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -404,8 +404,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell CreateFromXml(
             Stream stream,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Cell CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -428,6 +428,1112 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            Place.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Flags = initialValue;
+                this.Grid = initialValue;
+                this.Lighting = new MaskItem<T, CellLighting.Mask<T>?>(initialValue, new CellLighting.Mask<T>(initialValue));
+                this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.MusicType = initialValue;
+                this.WaterHeight = initialValue;
+                this.Climate = initialValue;
+                this.Water = initialValue;
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
+                this.GlobalVariable = initialValue;
+                this.PathGrid = new MaskItem<T, PathGrid.Mask<T>?>(initialValue, new PathGrid.Mask<T>(initialValue));
+                this.Landscape = new MaskItem<T, Landscape.Mask<T>?>(initialValue, new Landscape.Mask<T>(initialValue));
+                this.Timestamp = initialValue;
+                this.PersistentTimestamp = initialValue;
+                this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.TemporaryTimestamp = initialValue;
+                this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.VisibleWhenDistantTimestamp = initialValue;
+                this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Flags,
+                T Grid,
+                T Lighting,
+                T Regions,
+                T MusicType,
+                T WaterHeight,
+                T Climate,
+                T Water,
+                T Owner,
+                T FactionRank,
+                T GlobalVariable,
+                T PathGrid,
+                T Landscape,
+                T Timestamp,
+                T PersistentTimestamp,
+                T Persistent,
+                T TemporaryTimestamp,
+                T Temporary,
+                T VisibleWhenDistantTimestamp,
+                T VisibleWhenDistant)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Flags = Flags;
+                this.Grid = Grid;
+                this.Lighting = new MaskItem<T, CellLighting.Mask<T>?>(Lighting, new CellLighting.Mask<T>(Lighting));
+                this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Regions, Enumerable.Empty<(int Index, T Value)>());
+                this.MusicType = MusicType;
+                this.WaterHeight = WaterHeight;
+                this.Climate = Climate;
+                this.Water = Water;
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
+                this.GlobalVariable = GlobalVariable;
+                this.PathGrid = new MaskItem<T, PathGrid.Mask<T>?>(PathGrid, new PathGrid.Mask<T>(PathGrid));
+                this.Landscape = new MaskItem<T, Landscape.Mask<T>?>(Landscape, new Landscape.Mask<T>(Landscape));
+                this.Timestamp = Timestamp;
+                this.PersistentTimestamp = PersistentTimestamp;
+                this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(Persistent, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.TemporaryTimestamp = TemporaryTimestamp;
+                this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(Temporary, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+                this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
+                this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public T Flags;
+            public T Grid;
+            public MaskItem<T, CellLighting.Mask<T>?>? Lighting { get; set; }
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Regions;
+            public T MusicType;
+            public T WaterHeight;
+            public T Climate;
+            public T Water;
+            public T Owner;
+            public T FactionRank;
+            public T GlobalVariable;
+            public MaskItem<T, PathGrid.Mask<T>?>? PathGrid { get; set; }
+            public MaskItem<T, Landscape.Mask<T>?>? Landscape { get; set; }
+            public T Timestamp;
+            public T PersistentTimestamp;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? Persistent;
+            public T TemporaryTimestamp;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? Temporary;
+            public T VisibleWhenDistantTimestamp;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? VisibleWhenDistant;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Grid, rhs.Grid)) return false;
+                if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
+                if (!object.Equals(this.Regions, rhs.Regions)) return false;
+                if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
+                if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
+                if (!object.Equals(this.Climate, rhs.Climate)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+                if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
+                if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
+                if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
+                if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
+                if (!object.Equals(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
+                if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
+                if (!object.Equals(this.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
+                if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
+                if (!object.Equals(this.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
+                if (!object.Equals(this.VisibleWhenDistant, rhs.VisibleWhenDistant)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Grid?.GetHashCode());
+                ret = ret.CombineHashCode(this.Lighting?.GetHashCode());
+                ret = ret.CombineHashCode(this.Regions?.GetHashCode());
+                ret = ret.CombineHashCode(this.MusicType?.GetHashCode());
+                ret = ret.CombineHashCode(this.WaterHeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Climate?.GetHashCode());
+                ret = ret.CombineHashCode(this.Water?.GetHashCode());
+                ret = ret.CombineHashCode(this.Owner?.GetHashCode());
+                ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
+                ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
+                ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
+                ret = ret.CombineHashCode(this.Landscape?.GetHashCode());
+                ret = ret.CombineHashCode(this.Timestamp?.GetHashCode());
+                ret = ret.CombineHashCode(this.PersistentTimestamp?.GetHashCode());
+                ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
+                ret = ret.CombineHashCode(this.TemporaryTimestamp?.GetHashCode());
+                ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
+                ret = ret.CombineHashCode(this.VisibleWhenDistantTimestamp?.GetHashCode());
+                ret = ret.CombineHashCode(this.VisibleWhenDistant?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Grid)) return false;
+                if (Lighting != null)
+                {
+                    if (!eval(this.Lighting.Overall)) return false;
+                    if (this.Lighting.Specific != null && !this.Lighting.Specific.AllEqual(eval)) return false;
+                }
+                if (this.Regions != null)
+                {
+                    if (!eval(this.Regions.Overall)) return false;
+                    if (this.Regions.Specific != null)
+                    {
+                        foreach (var item in this.Regions.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.MusicType)) return false;
+                if (!eval(this.WaterHeight)) return false;
+                if (!eval(this.Climate)) return false;
+                if (!eval(this.Water)) return false;
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
+                if (!eval(this.GlobalVariable)) return false;
+                if (PathGrid != null)
+                {
+                    if (!eval(this.PathGrid.Overall)) return false;
+                    if (this.PathGrid.Specific != null && !this.PathGrid.Specific.AllEqual(eval)) return false;
+                }
+                if (Landscape != null)
+                {
+                    if (!eval(this.Landscape.Overall)) return false;
+                    if (this.Landscape.Specific != null && !this.Landscape.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Timestamp)) return false;
+                if (!eval(this.PersistentTimestamp)) return false;
+                if (this.Persistent != null)
+                {
+                    if (!eval(this.Persistent.Overall)) return false;
+                    if (this.Persistent.Specific != null)
+                    {
+                        foreach (var item in this.Persistent.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.AllEqual(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.TemporaryTimestamp)) return false;
+                if (this.Temporary != null)
+                {
+                    if (!eval(this.Temporary.Overall)) return false;
+                    if (this.Temporary.Specific != null)
+                    {
+                        foreach (var item in this.Temporary.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.AllEqual(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.VisibleWhenDistantTimestamp)) return false;
+                if (this.VisibleWhenDistant != null)
+                {
+                    if (!eval(this.VisibleWhenDistant.Overall)) return false;
+                    if (this.VisibleWhenDistant.Specific != null)
+                    {
+                        foreach (var item in this.VisibleWhenDistant.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.AllEqual(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Cell.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Flags = eval(this.Flags);
+                obj.Grid = eval(this.Grid);
+                obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
+                if (Regions != null)
+                {
+                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Regions.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Regions.Specific = l;
+                        foreach (var item in Regions.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.MusicType = eval(this.MusicType);
+                obj.WaterHeight = eval(this.WaterHeight);
+                obj.Climate = eval(this.Climate);
+                obj.Water = eval(this.Water);
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
+                obj.GlobalVariable = eval(this.GlobalVariable);
+                obj.PathGrid = this.PathGrid == null ? null : new MaskItem<R, PathGrid.Mask<R>?>(eval(this.PathGrid.Overall), this.PathGrid.Specific?.Translate(eval));
+                obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
+                obj.Timestamp = eval(this.Timestamp);
+                obj.PersistentTimestamp = eval(this.PersistentTimestamp);
+                if (Persistent != null)
+                {
+                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (Persistent.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.Persistent.Specific = l;
+                        foreach (var item in Persistent.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
+                if (Temporary != null)
+                {
+                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (Temporary.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.Temporary.Specific = l;
+                        foreach (var item in Temporary.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.VisibleWhenDistantTimestamp = eval(this.VisibleWhenDistantTimestamp);
+                if (VisibleWhenDistant != null)
+                {
+                    obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.VisibleWhenDistant.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (VisibleWhenDistant.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.VisibleWhenDistant.Specific = l;
+                        foreach (var item in VisibleWhenDistant.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Cell.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Cell.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Cell.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Grid ?? true)
+                    {
+                        fg.AppendLine($"Grid => {Grid}");
+                    }
+                    if (printMask?.Lighting?.Overall ?? true)
+                    {
+                        Lighting?.ToString(fg);
+                    }
+                    if (printMask?.Regions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Regions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Regions != null)
+                            {
+                                if (Regions.Overall != null)
+                                {
+                                    fg.AppendLine(Regions.Overall.ToString());
+                                }
+                                if (Regions.Specific != null)
+                                {
+                                    foreach (var subItem in Regions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.MusicType ?? true)
+                    {
+                        fg.AppendLine($"MusicType => {MusicType}");
+                    }
+                    if (printMask?.WaterHeight ?? true)
+                    {
+                        fg.AppendLine($"WaterHeight => {WaterHeight}");
+                    }
+                    if (printMask?.Climate ?? true)
+                    {
+                        fg.AppendLine($"Climate => {Climate}");
+                    }
+                    if (printMask?.Water ?? true)
+                    {
+                        fg.AppendLine($"Water => {Water}");
+                    }
+                    if (printMask?.Owner ?? true)
+                    {
+                        fg.AppendLine($"Owner => {Owner}");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        fg.AppendLine($"FactionRank => {FactionRank}");
+                    }
+                    if (printMask?.GlobalVariable ?? true)
+                    {
+                        fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                    }
+                    if (printMask?.PathGrid?.Overall ?? true)
+                    {
+                        PathGrid?.ToString(fg);
+                    }
+                    if (printMask?.Landscape?.Overall ?? true)
+                    {
+                        Landscape?.ToString(fg);
+                    }
+                    if (printMask?.Timestamp ?? true)
+                    {
+                        fg.AppendLine($"Timestamp => {Timestamp}");
+                    }
+                    if (printMask?.PersistentTimestamp ?? true)
+                    {
+                        fg.AppendLine($"PersistentTimestamp => {PersistentTimestamp}");
+                    }
+                    if (printMask?.Persistent?.Overall ?? true)
+                    {
+                        fg.AppendLine("Persistent =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Persistent != null)
+                            {
+                                if (Persistent.Overall != null)
+                                {
+                                    fg.AppendLine(Persistent.Overall.ToString());
+                                }
+                                if (Persistent.Specific != null)
+                                {
+                                    foreach (var subItem in Persistent.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.TemporaryTimestamp ?? true)
+                    {
+                        fg.AppendLine($"TemporaryTimestamp => {TemporaryTimestamp}");
+                    }
+                    if (printMask?.Temporary?.Overall ?? true)
+                    {
+                        fg.AppendLine("Temporary =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Temporary != null)
+                            {
+                                if (Temporary.Overall != null)
+                                {
+                                    fg.AppendLine(Temporary.Overall.ToString());
+                                }
+                                if (Temporary.Specific != null)
+                                {
+                                    foreach (var subItem in Temporary.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.VisibleWhenDistantTimestamp ?? true)
+                    {
+                        fg.AppendLine($"VisibleWhenDistantTimestamp => {VisibleWhenDistantTimestamp}");
+                    }
+                    if (printMask?.VisibleWhenDistant?.Overall ?? true)
+                    {
+                        fg.AppendLine("VisibleWhenDistant =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (VisibleWhenDistant != null)
+                            {
+                                if (VisibleWhenDistant.Overall != null)
+                                {
+                                    fg.AppendLine(VisibleWhenDistant.Overall.ToString());
+                                }
+                                if (VisibleWhenDistant.Specific != null)
+                                {
+                                    foreach (var subItem in VisibleWhenDistant.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            Place.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public Exception? Flags;
+            public Exception? Grid;
+            public MaskItem<Exception?, CellLighting.ErrorMask?>? Lighting;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Regions;
+            public Exception? MusicType;
+            public Exception? WaterHeight;
+            public Exception? Climate;
+            public Exception? Water;
+            public Exception? Owner;
+            public Exception? FactionRank;
+            public Exception? GlobalVariable;
+            public MaskItem<Exception?, PathGrid.ErrorMask?>? PathGrid;
+            public MaskItem<Exception?, Landscape.ErrorMask?>? Landscape;
+            public Exception? Timestamp;
+            public Exception? PersistentTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Persistent;
+            public Exception? TemporaryTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Temporary;
+            public Exception? VisibleWhenDistantTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? VisibleWhenDistant;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
+                switch (enu)
+                {
+                    case Cell_FieldIndex.Name:
+                        return Name;
+                    case Cell_FieldIndex.Flags:
+                        return Flags;
+                    case Cell_FieldIndex.Grid:
+                        return Grid;
+                    case Cell_FieldIndex.Lighting:
+                        return Lighting;
+                    case Cell_FieldIndex.Regions:
+                        return Regions;
+                    case Cell_FieldIndex.MusicType:
+                        return MusicType;
+                    case Cell_FieldIndex.WaterHeight:
+                        return WaterHeight;
+                    case Cell_FieldIndex.Climate:
+                        return Climate;
+                    case Cell_FieldIndex.Water:
+                        return Water;
+                    case Cell_FieldIndex.Owner:
+                        return Owner;
+                    case Cell_FieldIndex.FactionRank:
+                        return FactionRank;
+                    case Cell_FieldIndex.GlobalVariable:
+                        return GlobalVariable;
+                    case Cell_FieldIndex.PathGrid:
+                        return PathGrid;
+                    case Cell_FieldIndex.Landscape:
+                        return Landscape;
+                    case Cell_FieldIndex.Timestamp:
+                        return Timestamp;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        return PersistentTimestamp;
+                    case Cell_FieldIndex.Persistent:
+                        return Persistent;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        return TemporaryTimestamp;
+                    case Cell_FieldIndex.Temporary:
+                        return Temporary;
+                    case Cell_FieldIndex.VisibleWhenDistantTimestamp:
+                        return VisibleWhenDistantTimestamp;
+                    case Cell_FieldIndex.VisibleWhenDistant:
+                        return VisibleWhenDistant;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
+                switch (enu)
+                {
+                    case Cell_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Cell_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Cell_FieldIndex.Grid:
+                        this.Grid = ex;
+                        break;
+                    case Cell_FieldIndex.Lighting:
+                        this.Lighting = new MaskItem<Exception?, CellLighting.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Regions:
+                        this.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.MusicType:
+                        this.MusicType = ex;
+                        break;
+                    case Cell_FieldIndex.WaterHeight:
+                        this.WaterHeight = ex;
+                        break;
+                    case Cell_FieldIndex.Climate:
+                        this.Climate = ex;
+                        break;
+                    case Cell_FieldIndex.Water:
+                        this.Water = ex;
+                        break;
+                    case Cell_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case Cell_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
+                        break;
+                    case Cell_FieldIndex.GlobalVariable:
+                        this.GlobalVariable = ex;
+                        break;
+                    case Cell_FieldIndex.PathGrid:
+                        this.PathGrid = new MaskItem<Exception?, PathGrid.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Landscape:
+                        this.Landscape = new MaskItem<Exception?, Landscape.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Timestamp:
+                        this.Timestamp = ex;
+                        break;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        this.PersistentTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.Persistent:
+                        this.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        this.TemporaryTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.Temporary:
+                        this.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistantTimestamp:
+                        this.VisibleWhenDistantTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistant:
+                        this.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
+                switch (enu)
+                {
+                    case Cell_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Grid:
+                        this.Grid = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Lighting:
+                        this.Lighting = (MaskItem<Exception?, CellLighting.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.Regions:
+                        this.Regions = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Cell_FieldIndex.MusicType:
+                        this.MusicType = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.WaterHeight:
+                        this.WaterHeight = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Climate:
+                        this.Climate = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Water:
+                        this.Water = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Owner:
+                        this.Owner = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.GlobalVariable:
+                        this.GlobalVariable = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.PathGrid:
+                        this.PathGrid = (MaskItem<Exception?, PathGrid.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.Landscape:
+                        this.Landscape = (MaskItem<Exception?, Landscape.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.Timestamp:
+                        this.Timestamp = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        this.PersistentTimestamp = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Persistent:
+                        this.Persistent = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        this.TemporaryTimestamp = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.Temporary:
+                        this.Temporary = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistantTimestamp:
+                        this.VisibleWhenDistantTimestamp = (Exception)obj;
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistant:
+                        this.VisibleWhenDistant = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Flags != null) return true;
+                if (Grid != null) return true;
+                if (Lighting != null) return true;
+                if (Regions != null) return true;
+                if (MusicType != null) return true;
+                if (WaterHeight != null) return true;
+                if (Climate != null) return true;
+                if (Water != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
+                if (GlobalVariable != null) return true;
+                if (PathGrid != null) return true;
+                if (Landscape != null) return true;
+                if (Timestamp != null) return true;
+                if (PersistentTimestamp != null) return true;
+                if (Persistent != null) return true;
+                if (TemporaryTimestamp != null) return true;
+                if (Temporary != null) return true;
+                if (VisibleWhenDistantTimestamp != null) return true;
+                if (VisibleWhenDistant != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Grid => {Grid}");
+                Lighting?.ToString(fg);
+                fg.AppendLine("Regions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Regions != null)
+                    {
+                        if (Regions.Overall != null)
+                        {
+                            fg.AppendLine(Regions.Overall.ToString());
+                        }
+                        if (Regions.Specific != null)
+                        {
+                            foreach (var subItem in Regions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"MusicType => {MusicType}");
+                fg.AppendLine($"WaterHeight => {WaterHeight}");
+                fg.AppendLine($"Climate => {Climate}");
+                fg.AppendLine($"Water => {Water}");
+                fg.AppendLine($"Owner => {Owner}");
+                fg.AppendLine($"FactionRank => {FactionRank}");
+                fg.AppendLine($"GlobalVariable => {GlobalVariable}");
+                PathGrid?.ToString(fg);
+                Landscape?.ToString(fg);
+                fg.AppendLine($"Timestamp => {Timestamp}");
+                fg.AppendLine($"PersistentTimestamp => {PersistentTimestamp}");
+                fg.AppendLine("Persistent =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Persistent != null)
+                    {
+                        if (Persistent.Overall != null)
+                        {
+                            fg.AppendLine(Persistent.Overall.ToString());
+                        }
+                        if (Persistent.Specific != null)
+                        {
+                            foreach (var subItem in Persistent.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"TemporaryTimestamp => {TemporaryTimestamp}");
+                fg.AppendLine("Temporary =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Temporary != null)
+                    {
+                        if (Temporary.Overall != null)
+                        {
+                            fg.AppendLine(Temporary.Overall.ToString());
+                        }
+                        if (Temporary.Specific != null)
+                        {
+                            foreach (var subItem in Temporary.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"VisibleWhenDistantTimestamp => {VisibleWhenDistantTimestamp}");
+                fg.AppendLine("VisibleWhenDistant =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (VisibleWhenDistant != null)
+                    {
+                        if (VisibleWhenDistant.Overall != null)
+                        {
+                            fg.AppendLine(VisibleWhenDistant.Overall.ToString());
+                        }
+                        if (VisibleWhenDistant.Specific != null)
+                        {
+                            foreach (var subItem in VisibleWhenDistant.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Grid = this.Grid.Combine(rhs.Grid);
+                ret.Lighting = new MaskItem<Exception?, CellLighting.ErrorMask?>(ExceptionExt.Combine(this.Lighting?.Overall, rhs.Lighting?.Overall), (this.Lighting?.Specific as IErrorMask<CellLighting.ErrorMask>)?.Combine(rhs.Lighting?.Specific));
+                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
+                ret.MusicType = this.MusicType.Combine(rhs.MusicType);
+                ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
+                ret.Climate = this.Climate.Combine(rhs.Climate);
+                ret.Water = this.Water.Combine(rhs.Water);
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+                ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
+                ret.PathGrid = new MaskItem<Exception?, PathGrid.ErrorMask?>(ExceptionExt.Combine(this.PathGrid?.Overall, rhs.PathGrid?.Overall), (this.PathGrid?.Specific as IErrorMask<PathGrid.ErrorMask>)?.Combine(rhs.PathGrid?.Specific));
+                ret.Landscape = new MaskItem<Exception?, Landscape.ErrorMask?>(ExceptionExt.Combine(this.Landscape?.Overall, rhs.Landscape?.Overall), (this.Landscape?.Specific as IErrorMask<Landscape.ErrorMask>)?.Combine(rhs.Landscape?.Specific));
+                ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
+                ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
+                ret.VisibleWhenDistantTimestamp = this.VisibleWhenDistantTimestamp.Combine(rhs.VisibleWhenDistantTimestamp);
+                ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            Place.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public bool Flags;
+            public bool Grid;
+            public MaskItem<bool, CellLighting.TranslationMask?> Lighting;
+            public bool Regions;
+            public bool MusicType;
+            public bool WaterHeight;
+            public bool Climate;
+            public bool Water;
+            public bool Owner;
+            public bool FactionRank;
+            public bool GlobalVariable;
+            public MaskItem<bool, PathGrid.TranslationMask?> PathGrid;
+            public MaskItem<bool, Landscape.TranslationMask?> Landscape;
+            public bool Timestamp;
+            public bool PersistentTimestamp;
+            public bool Persistent;
+            public bool TemporaryTimestamp;
+            public bool Temporary;
+            public bool VisibleWhenDistantTimestamp;
+            public bool VisibleWhenDistant;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Flags = defaultOn;
+                this.Grid = defaultOn;
+                this.Lighting = new MaskItem<bool, CellLighting.TranslationMask?>(defaultOn, null);
+                this.Regions = defaultOn;
+                this.MusicType = defaultOn;
+                this.WaterHeight = defaultOn;
+                this.Climate = defaultOn;
+                this.Water = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
+                this.GlobalVariable = defaultOn;
+                this.PathGrid = new MaskItem<bool, PathGrid.TranslationMask?>(defaultOn, null);
+                this.Landscape = new MaskItem<bool, Landscape.TranslationMask?>(defaultOn, null);
+                this.Timestamp = defaultOn;
+                this.PersistentTimestamp = defaultOn;
+                this.Persistent = defaultOn;
+                this.TemporaryTimestamp = defaultOn;
+                this.Temporary = defaultOn;
+                this.VisibleWhenDistantTimestamp = defaultOn;
+                this.VisibleWhenDistant = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Flags, null));
+                ret.Add((Grid, null));
+                ret.Add((Lighting?.Overall ?? true, Lighting?.Specific?.GetCrystal()));
+                ret.Add((Regions, null));
+                ret.Add((MusicType, null));
+                ret.Add((WaterHeight, null));
+                ret.Add((Climate, null));
+                ret.Add((Water, null));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
+                ret.Add((GlobalVariable, null));
+                ret.Add((PathGrid?.Overall ?? true, PathGrid?.Specific?.GetCrystal()));
+                ret.Add((Landscape?.Overall ?? true, Landscape?.Specific?.GetCrystal()));
+                ret.Add((Timestamp, null));
+                ret.Add((PersistentTimestamp, null));
+                ret.Add((Persistent, null));
+                ret.Add((TemporaryTimestamp, null));
+                ret.Add((Temporary, null));
+                ret.Add((VisibleWhenDistantTimestamp, null));
+                ret.Add((VisibleWhenDistant, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -595,7 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Cell_Mask<bool> GetEqualsMask(
+        public static Cell.Mask<bool> GetEqualsMask(
             this ICellGetter item,
             ICellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -609,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ICellGetter item,
             string? name = null,
-            Cell_Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             return ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -621,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellGetter item,
             FileGeneration fg,
             string? name = null,
-            Cell_Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -632,16 +1738,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ICellGetter item,
-            Cell_Mask<bool?> checkMask)
+            Cell.Mask<bool?> checkMask)
         {
             return ((CellCommon)((ICellGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Cell_Mask<bool> GetHasBeenSetMask(this ICellGetter item)
+        public static Cell.Mask<bool> GetHasBeenSetMask(this ICellGetter item)
         {
-            var ret = new Cell_Mask<bool>(false);
+            var ret = new Cell.Mask<bool>(false);
             ((CellCommon)((ICellGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -660,8 +1766,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICellInternal lhs,
             ICellGetter rhs,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? copyMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -669,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -687,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell DeepCopy(
             this ICellGetter item,
-            Cell_TranslationMask? copyMask = null)
+            Cell.TranslationMask? copyMask = null)
         {
             return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -696,8 +1802,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Cell DeepCopy(
             this ICellGetter item,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? copyMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -721,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellInternal item,
             XElement node,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -734,8 +1840,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellInternal item,
             XElement node,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -743,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -762,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellInternal item,
             string path,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -774,8 +1880,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellInternal item,
             string path,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -789,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -802,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellInternal item,
             Stream stream,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -814,8 +1920,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellInternal item,
             Stream stream,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -829,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Cell_TranslationMask? translationMask = null)
+            Cell.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -956,9 +2062,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 26;
 
-        public static readonly Type MaskType = typeof(Cell_Mask<>);
+        public static readonly Type MaskType = typeof(Cell.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Cell_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Cell.ErrorMask);
 
         public static readonly Type ClassType = typeof(Cell);
 
@@ -1628,12 +2734,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly CellCommon Instance = new CellCommon();
 
-        public Cell_Mask<bool> GetEqualsMask(
+        public Cell.Mask<bool> GetEqualsMask(
             ICellGetter item,
             ICellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Cell_Mask<bool>(false);
+            var ret = new Cell.Mask<bool>(false);
             ((CellCommon)((ICellGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1645,7 +2751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ICellGetter item,
             ICellGetter rhs,
-            Cell_Mask<bool> ret,
+            Cell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1700,7 +2806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ICellGetter item,
             string? name = null,
-            Cell_Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1715,7 +2821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellGetter item,
             FileGeneration fg,
             string? name = null,
-            Cell_Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1739,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICellGetter item,
             FileGeneration fg,
-            Cell_Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             PlaceCommon.ToStringFields(
                 item: item,
@@ -1889,7 +2995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ICellGetter item,
-            Cell_Mask<bool?> checkMask)
+            Cell.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
@@ -1918,13 +3024,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ICellGetter item,
-            Cell_Mask<bool> mask)
+            Cell.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Flags = (item.Flags != null);
             mask.Grid = (item.Grid != null);
             var itemLighting = item.Lighting;
-            mask.Lighting = new MaskItem<bool, CellLighting_Mask<bool>?>(itemLighting != null, itemLighting?.GetHasBeenSetMask());
+            mask.Lighting = new MaskItem<bool, CellLighting.Mask<bool>?>(itemLighting != null, itemLighting?.GetHasBeenSetMask());
             mask.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.MusicType = (item.MusicType != null);
             mask.WaterHeight = (item.WaterHeight != null);
@@ -1934,9 +3040,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FactionRank = (item.FactionRank != null);
             mask.GlobalVariable = item.GlobalVariable.HasBeenSet;
             var itemPathGrid = item.PathGrid;
-            mask.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>?>(itemPathGrid != null, itemPathGrid?.GetHasBeenSetMask());
+            mask.PathGrid = new MaskItem<bool, PathGrid.Mask<bool>?>(itemPathGrid != null, itemPathGrid?.GetHasBeenSetMask());
             var itemLandscape = item.Landscape;
-            mask.Landscape = new MaskItem<bool, Landscape_Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
+            mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
             mask.Timestamp = true;
             mask.PersistentTimestamp = true;
             mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>>(item.Persistent.HasBeenSet, item.Persistent.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
@@ -2674,7 +3780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Cell DeepCopy(
             ICellGetter item,
-            Cell_TranslationMask? copyMask = null)
+            Cell.TranslationMask? copyMask = null)
         {
             Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2685,8 +3791,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Cell DeepCopy(
             ICellGetter item,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? copyMask = null)
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -3585,8 +4691,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICellGetter item,
             XElement node,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -3596,14 +4702,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ICellGetter item,
             string path,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3619,8 +4725,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICellGetter item,
             Stream stream,
-            out Cell_ErrorMask errorMask,
-            Cell_TranslationMask? translationMask = null,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3637,1111 +4743,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Cell_Mask<T> :
-        Place_Mask<T>,
-        IMask<T>,
-        IEquatable<Cell_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Cell_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Flags = initialValue;
-            this.Grid = initialValue;
-            this.Lighting = new MaskItem<T, CellLighting_Mask<T>?>(initialValue, new CellLighting_Mask<T>(initialValue));
-            this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.MusicType = initialValue;
-            this.WaterHeight = initialValue;
-            this.Climate = initialValue;
-            this.Water = initialValue;
-            this.Owner = initialValue;
-            this.FactionRank = initialValue;
-            this.GlobalVariable = initialValue;
-            this.PathGrid = new MaskItem<T, PathGrid_Mask<T>?>(initialValue, new PathGrid_Mask<T>(initialValue));
-            this.Landscape = new MaskItem<T, Landscape_Mask<T>?>(initialValue, new Landscape_Mask<T>(initialValue));
-            this.Timestamp = initialValue;
-            this.PersistentTimestamp = initialValue;
-            this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
-            this.TemporaryTimestamp = initialValue;
-            this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
-            this.VisibleWhenDistantTimestamp = initialValue;
-            this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
-        }
-
-        public Cell_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Flags,
-            T Grid,
-            T Lighting,
-            T Regions,
-            T MusicType,
-            T WaterHeight,
-            T Climate,
-            T Water,
-            T Owner,
-            T FactionRank,
-            T GlobalVariable,
-            T PathGrid,
-            T Landscape,
-            T Timestamp,
-            T PersistentTimestamp,
-            T Persistent,
-            T TemporaryTimestamp,
-            T Temporary,
-            T VisibleWhenDistantTimestamp,
-            T VisibleWhenDistant)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Flags = Flags;
-            this.Grid = Grid;
-            this.Lighting = new MaskItem<T, CellLighting_Mask<T>?>(Lighting, new CellLighting_Mask<T>(Lighting));
-            this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Regions, Enumerable.Empty<(int Index, T Value)>());
-            this.MusicType = MusicType;
-            this.WaterHeight = WaterHeight;
-            this.Climate = Climate;
-            this.Water = Water;
-            this.Owner = Owner;
-            this.FactionRank = FactionRank;
-            this.GlobalVariable = GlobalVariable;
-            this.PathGrid = new MaskItem<T, PathGrid_Mask<T>?>(PathGrid, new PathGrid_Mask<T>(PathGrid));
-            this.Landscape = new MaskItem<T, Landscape_Mask<T>?>(Landscape, new Landscape_Mask<T>(Landscape));
-            this.Timestamp = Timestamp;
-            this.PersistentTimestamp = PersistentTimestamp;
-            this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(Persistent, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
-            this.TemporaryTimestamp = TemporaryTimestamp;
-            this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(Temporary, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
-            this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
-            this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<T, IMask<T>?>>());
-        }
-
-        #pragma warning disable CS8618
-        protected Cell_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Flags;
-        public T Grid;
-        public MaskItem<T, CellLighting_Mask<T>?>? Lighting { get; set; }
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Regions;
-        public T MusicType;
-        public T WaterHeight;
-        public T Climate;
-        public T Water;
-        public T Owner;
-        public T FactionRank;
-        public T GlobalVariable;
-        public MaskItem<T, PathGrid_Mask<T>?>? PathGrid { get; set; }
-        public MaskItem<T, Landscape_Mask<T>?>? Landscape { get; set; }
-        public T Timestamp;
-        public T PersistentTimestamp;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? Persistent;
-        public T TemporaryTimestamp;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? Temporary;
-        public T VisibleWhenDistantTimestamp;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>?>>>? VisibleWhenDistant;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Cell_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Cell_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Grid, rhs.Grid)) return false;
-            if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
-            if (!object.Equals(this.Regions, rhs.Regions)) return false;
-            if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
-            if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
-            if (!object.Equals(this.Climate, rhs.Climate)) return false;
-            if (!object.Equals(this.Water, rhs.Water)) return false;
-            if (!object.Equals(this.Owner, rhs.Owner)) return false;
-            if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
-            if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
-            if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
-            if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
-            if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
-            if (!object.Equals(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
-            if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
-            if (!object.Equals(this.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
-            if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
-            if (!object.Equals(this.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
-            if (!object.Equals(this.VisibleWhenDistant, rhs.VisibleWhenDistant)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Grid?.GetHashCode());
-            ret = ret.CombineHashCode(this.Lighting?.GetHashCode());
-            ret = ret.CombineHashCode(this.Regions?.GetHashCode());
-            ret = ret.CombineHashCode(this.MusicType?.GetHashCode());
-            ret = ret.CombineHashCode(this.WaterHeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Climate?.GetHashCode());
-            ret = ret.CombineHashCode(this.Water?.GetHashCode());
-            ret = ret.CombineHashCode(this.Owner?.GetHashCode());
-            ret = ret.CombineHashCode(this.FactionRank?.GetHashCode());
-            ret = ret.CombineHashCode(this.GlobalVariable?.GetHashCode());
-            ret = ret.CombineHashCode(this.PathGrid?.GetHashCode());
-            ret = ret.CombineHashCode(this.Landscape?.GetHashCode());
-            ret = ret.CombineHashCode(this.Timestamp?.GetHashCode());
-            ret = ret.CombineHashCode(this.PersistentTimestamp?.GetHashCode());
-            ret = ret.CombineHashCode(this.Persistent?.GetHashCode());
-            ret = ret.CombineHashCode(this.TemporaryTimestamp?.GetHashCode());
-            ret = ret.CombineHashCode(this.Temporary?.GetHashCode());
-            ret = ret.CombineHashCode(this.VisibleWhenDistantTimestamp?.GetHashCode());
-            ret = ret.CombineHashCode(this.VisibleWhenDistant?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Grid)) return false;
-            if (Lighting != null)
-            {
-                if (!eval(this.Lighting.Overall)) return false;
-                if (this.Lighting.Specific != null && !this.Lighting.Specific.AllEqual(eval)) return false;
-            }
-            if (this.Regions != null)
-            {
-                if (!eval(this.Regions.Overall)) return false;
-                if (this.Regions.Specific != null)
-                {
-                    foreach (var item in this.Regions.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.MusicType)) return false;
-            if (!eval(this.WaterHeight)) return false;
-            if (!eval(this.Climate)) return false;
-            if (!eval(this.Water)) return false;
-            if (!eval(this.Owner)) return false;
-            if (!eval(this.FactionRank)) return false;
-            if (!eval(this.GlobalVariable)) return false;
-            if (PathGrid != null)
-            {
-                if (!eval(this.PathGrid.Overall)) return false;
-                if (this.PathGrid.Specific != null && !this.PathGrid.Specific.AllEqual(eval)) return false;
-            }
-            if (Landscape != null)
-            {
-                if (!eval(this.Landscape.Overall)) return false;
-                if (this.Landscape.Specific != null && !this.Landscape.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Timestamp)) return false;
-            if (!eval(this.PersistentTimestamp)) return false;
-            if (this.Persistent != null)
-            {
-                if (!eval(this.Persistent.Overall)) return false;
-                if (this.Persistent.Specific != null)
-                {
-                    foreach (var item in this.Persistent.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (!(item.Specific?.AllEqual(eval) ?? true)) return false;
-                    }
-                }
-            }
-            if (!eval(this.TemporaryTimestamp)) return false;
-            if (this.Temporary != null)
-            {
-                if (!eval(this.Temporary.Overall)) return false;
-                if (this.Temporary.Specific != null)
-                {
-                    foreach (var item in this.Temporary.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (!(item.Specific?.AllEqual(eval) ?? true)) return false;
-                    }
-                }
-            }
-            if (!eval(this.VisibleWhenDistantTimestamp)) return false;
-            if (this.VisibleWhenDistant != null)
-            {
-                if (!eval(this.VisibleWhenDistant.Overall)) return false;
-                if (this.VisibleWhenDistant.Specific != null)
-                {
-                    foreach (var item in this.VisibleWhenDistant.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (!(item.Specific?.AllEqual(eval) ?? true)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Cell_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Cell_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Cell_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Flags = eval(this.Flags);
-            obj.Grid = eval(this.Grid);
-            obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting_Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
-            if (Regions != null)
-            {
-                obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Regions.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Regions.Specific = l;
-                    foreach (var item in Regions.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.MusicType = eval(this.MusicType);
-            obj.WaterHeight = eval(this.WaterHeight);
-            obj.Climate = eval(this.Climate);
-            obj.Water = eval(this.Water);
-            obj.Owner = eval(this.Owner);
-            obj.FactionRank = eval(this.FactionRank);
-            obj.GlobalVariable = eval(this.GlobalVariable);
-            obj.PathGrid = this.PathGrid == null ? null : new MaskItem<R, PathGrid_Mask<R>?>(eval(this.PathGrid.Overall), this.PathGrid.Specific?.Translate(eval));
-            obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape_Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
-            obj.Timestamp = eval(this.Timestamp);
-            obj.PersistentTimestamp = eval(this.PersistentTimestamp);
-            if (Persistent != null)
-            {
-                obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
-                if (Persistent.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, IMask<R>?>>();
-                    obj.Persistent.Specific = l;
-                    foreach (var item in Persistent.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, IMask<R>?>? mask;
-                        throw new NotImplementedException();
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
-            if (Temporary != null)
-            {
-                obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
-                if (Temporary.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, IMask<R>?>>();
-                    obj.Temporary.Specific = l;
-                    foreach (var item in Temporary.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, IMask<R>?>? mask;
-                        throw new NotImplementedException();
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.VisibleWhenDistantTimestamp = eval(this.VisibleWhenDistantTimestamp);
-            if (VisibleWhenDistant != null)
-            {
-                obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>>(eval(this.VisibleWhenDistant.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
-                if (VisibleWhenDistant.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, IMask<R>?>>();
-                    obj.VisibleWhenDistant.Specific = l;
-                    foreach (var item in VisibleWhenDistant.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, IMask<R>?>? mask;
-                        throw new NotImplementedException();
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Cell_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Cell_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Cell_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Grid ?? true)
-                {
-                    fg.AppendLine($"Grid => {Grid}");
-                }
-                if (printMask?.Lighting?.Overall ?? true)
-                {
-                    Lighting?.ToString(fg);
-                }
-                if (printMask?.Regions?.Overall ?? true)
-                {
-                    fg.AppendLine("Regions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Regions != null)
-                        {
-                            if (Regions.Overall != null)
-                            {
-                                fg.AppendLine(Regions.Overall.ToString());
-                            }
-                            if (Regions.Specific != null)
-                            {
-                                foreach (var subItem in Regions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.MusicType ?? true)
-                {
-                    fg.AppendLine($"MusicType => {MusicType}");
-                }
-                if (printMask?.WaterHeight ?? true)
-                {
-                    fg.AppendLine($"WaterHeight => {WaterHeight}");
-                }
-                if (printMask?.Climate ?? true)
-                {
-                    fg.AppendLine($"Climate => {Climate}");
-                }
-                if (printMask?.Water ?? true)
-                {
-                    fg.AppendLine($"Water => {Water}");
-                }
-                if (printMask?.Owner ?? true)
-                {
-                    fg.AppendLine($"Owner => {Owner}");
-                }
-                if (printMask?.FactionRank ?? true)
-                {
-                    fg.AppendLine($"FactionRank => {FactionRank}");
-                }
-                if (printMask?.GlobalVariable ?? true)
-                {
-                    fg.AppendLine($"GlobalVariable => {GlobalVariable}");
-                }
-                if (printMask?.PathGrid?.Overall ?? true)
-                {
-                    PathGrid?.ToString(fg);
-                }
-                if (printMask?.Landscape?.Overall ?? true)
-                {
-                    Landscape?.ToString(fg);
-                }
-                if (printMask?.Timestamp ?? true)
-                {
-                    fg.AppendLine($"Timestamp => {Timestamp}");
-                }
-                if (printMask?.PersistentTimestamp ?? true)
-                {
-                    fg.AppendLine($"PersistentTimestamp => {PersistentTimestamp}");
-                }
-                if (printMask?.Persistent?.Overall ?? true)
-                {
-                    fg.AppendLine("Persistent =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Persistent != null)
-                        {
-                            if (Persistent.Overall != null)
-                            {
-                                fg.AppendLine(Persistent.Overall.ToString());
-                            }
-                            if (Persistent.Specific != null)
-                            {
-                                foreach (var subItem in Persistent.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.TemporaryTimestamp ?? true)
-                {
-                    fg.AppendLine($"TemporaryTimestamp => {TemporaryTimestamp}");
-                }
-                if (printMask?.Temporary?.Overall ?? true)
-                {
-                    fg.AppendLine("Temporary =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Temporary != null)
-                        {
-                            if (Temporary.Overall != null)
-                            {
-                                fg.AppendLine(Temporary.Overall.ToString());
-                            }
-                            if (Temporary.Specific != null)
-                            {
-                                foreach (var subItem in Temporary.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.VisibleWhenDistantTimestamp ?? true)
-                {
-                    fg.AppendLine($"VisibleWhenDistantTimestamp => {VisibleWhenDistantTimestamp}");
-                }
-                if (printMask?.VisibleWhenDistant?.Overall ?? true)
-                {
-                    fg.AppendLine("VisibleWhenDistant =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (VisibleWhenDistant != null)
-                        {
-                            if (VisibleWhenDistant.Overall != null)
-                            {
-                                fg.AppendLine(VisibleWhenDistant.Overall.ToString());
-                            }
-                            if (VisibleWhenDistant.Specific != null)
-                            {
-                                foreach (var subItem in VisibleWhenDistant.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Cell_ErrorMask : Place_ErrorMask, IErrorMask<Cell_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public Exception? Flags;
-        public Exception? Grid;
-        public MaskItem<Exception?, CellLighting_ErrorMask?>? Lighting;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Regions;
-        public Exception? MusicType;
-        public Exception? WaterHeight;
-        public Exception? Climate;
-        public Exception? Water;
-        public Exception? Owner;
-        public Exception? FactionRank;
-        public Exception? GlobalVariable;
-        public MaskItem<Exception?, PathGrid_ErrorMask?>? PathGrid;
-        public MaskItem<Exception?, Landscape_ErrorMask?>? Landscape;
-        public Exception? Timestamp;
-        public Exception? PersistentTimestamp;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Persistent;
-        public Exception? TemporaryTimestamp;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Temporary;
-        public Exception? VisibleWhenDistantTimestamp;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? VisibleWhenDistant;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    return Name;
-                case Cell_FieldIndex.Flags:
-                    return Flags;
-                case Cell_FieldIndex.Grid:
-                    return Grid;
-                case Cell_FieldIndex.Lighting:
-                    return Lighting;
-                case Cell_FieldIndex.Regions:
-                    return Regions;
-                case Cell_FieldIndex.MusicType:
-                    return MusicType;
-                case Cell_FieldIndex.WaterHeight:
-                    return WaterHeight;
-                case Cell_FieldIndex.Climate:
-                    return Climate;
-                case Cell_FieldIndex.Water:
-                    return Water;
-                case Cell_FieldIndex.Owner:
-                    return Owner;
-                case Cell_FieldIndex.FactionRank:
-                    return FactionRank;
-                case Cell_FieldIndex.GlobalVariable:
-                    return GlobalVariable;
-                case Cell_FieldIndex.PathGrid:
-                    return PathGrid;
-                case Cell_FieldIndex.Landscape:
-                    return Landscape;
-                case Cell_FieldIndex.Timestamp:
-                    return Timestamp;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    return PersistentTimestamp;
-                case Cell_FieldIndex.Persistent:
-                    return Persistent;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    return TemporaryTimestamp;
-                case Cell_FieldIndex.Temporary:
-                    return Temporary;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return VisibleWhenDistantTimestamp;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    return VisibleWhenDistant;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Cell_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Cell_FieldIndex.Grid:
-                    this.Grid = ex;
-                    break;
-                case Cell_FieldIndex.Lighting:
-                    this.Lighting = new MaskItem<Exception?, CellLighting_ErrorMask?>(ex, null);
-                    break;
-                case Cell_FieldIndex.Regions:
-                    this.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Cell_FieldIndex.MusicType:
-                    this.MusicType = ex;
-                    break;
-                case Cell_FieldIndex.WaterHeight:
-                    this.WaterHeight = ex;
-                    break;
-                case Cell_FieldIndex.Climate:
-                    this.Climate = ex;
-                    break;
-                case Cell_FieldIndex.Water:
-                    this.Water = ex;
-                    break;
-                case Cell_FieldIndex.Owner:
-                    this.Owner = ex;
-                    break;
-                case Cell_FieldIndex.FactionRank:
-                    this.FactionRank = ex;
-                    break;
-                case Cell_FieldIndex.GlobalVariable:
-                    this.GlobalVariable = ex;
-                    break;
-                case Cell_FieldIndex.PathGrid:
-                    this.PathGrid = new MaskItem<Exception?, PathGrid_ErrorMask?>(ex, null);
-                    break;
-                case Cell_FieldIndex.Landscape:
-                    this.Landscape = new MaskItem<Exception?, Landscape_ErrorMask?>(ex, null);
-                    break;
-                case Cell_FieldIndex.Timestamp:
-                    this.Timestamp = ex;
-                    break;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    this.PersistentTimestamp = ex;
-                    break;
-                case Cell_FieldIndex.Persistent:
-                    this.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
-                    break;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    this.TemporaryTimestamp = ex;
-                    break;
-                case Cell_FieldIndex.Temporary:
-                    this.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    this.VisibleWhenDistantTimestamp = ex;
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    this.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Cell_FieldIndex enu = (Cell_FieldIndex)index;
-            switch (enu)
-            {
-                case Cell_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Grid:
-                    this.Grid = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Lighting:
-                    this.Lighting = (MaskItem<Exception?, CellLighting_ErrorMask?>?)obj;
-                    break;
-                case Cell_FieldIndex.Regions:
-                    this.Regions = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Cell_FieldIndex.MusicType:
-                    this.MusicType = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.WaterHeight:
-                    this.WaterHeight = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Climate:
-                    this.Climate = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Water:
-                    this.Water = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Owner:
-                    this.Owner = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.FactionRank:
-                    this.FactionRank = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.GlobalVariable:
-                    this.GlobalVariable = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.PathGrid:
-                    this.PathGrid = (MaskItem<Exception?, PathGrid_ErrorMask?>?)obj;
-                    break;
-                case Cell_FieldIndex.Landscape:
-                    this.Landscape = (MaskItem<Exception?, Landscape_ErrorMask?>?)obj;
-                    break;
-                case Cell_FieldIndex.Timestamp:
-                    this.Timestamp = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.PersistentTimestamp:
-                    this.PersistentTimestamp = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Persistent:
-                    this.Persistent = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
-                    break;
-                case Cell_FieldIndex.TemporaryTimestamp:
-                    this.TemporaryTimestamp = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.Temporary:
-                    this.Temporary = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    this.VisibleWhenDistantTimestamp = (Exception)obj;
-                    break;
-                case Cell_FieldIndex.VisibleWhenDistant:
-                    this.VisibleWhenDistant = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Flags != null) return true;
-            if (Grid != null) return true;
-            if (Lighting != null) return true;
-            if (Regions != null) return true;
-            if (MusicType != null) return true;
-            if (WaterHeight != null) return true;
-            if (Climate != null) return true;
-            if (Water != null) return true;
-            if (Owner != null) return true;
-            if (FactionRank != null) return true;
-            if (GlobalVariable != null) return true;
-            if (PathGrid != null) return true;
-            if (Landscape != null) return true;
-            if (Timestamp != null) return true;
-            if (PersistentTimestamp != null) return true;
-            if (Persistent != null) return true;
-            if (TemporaryTimestamp != null) return true;
-            if (Temporary != null) return true;
-            if (VisibleWhenDistantTimestamp != null) return true;
-            if (VisibleWhenDistant != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Cell_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Grid => {Grid}");
-            Lighting?.ToString(fg);
-            fg.AppendLine("Regions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Regions != null)
-                {
-                    if (Regions.Overall != null)
-                    {
-                        fg.AppendLine(Regions.Overall.ToString());
-                    }
-                    if (Regions.Specific != null)
-                    {
-                        foreach (var subItem in Regions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"MusicType => {MusicType}");
-            fg.AppendLine($"WaterHeight => {WaterHeight}");
-            fg.AppendLine($"Climate => {Climate}");
-            fg.AppendLine($"Water => {Water}");
-            fg.AppendLine($"Owner => {Owner}");
-            fg.AppendLine($"FactionRank => {FactionRank}");
-            fg.AppendLine($"GlobalVariable => {GlobalVariable}");
-            PathGrid?.ToString(fg);
-            Landscape?.ToString(fg);
-            fg.AppendLine($"Timestamp => {Timestamp}");
-            fg.AppendLine($"PersistentTimestamp => {PersistentTimestamp}");
-            fg.AppendLine("Persistent =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Persistent != null)
-                {
-                    if (Persistent.Overall != null)
-                    {
-                        fg.AppendLine(Persistent.Overall.ToString());
-                    }
-                    if (Persistent.Specific != null)
-                    {
-                        foreach (var subItem in Persistent.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"TemporaryTimestamp => {TemporaryTimestamp}");
-            fg.AppendLine("Temporary =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Temporary != null)
-                {
-                    if (Temporary.Overall != null)
-                    {
-                        fg.AppendLine(Temporary.Overall.ToString());
-                    }
-                    if (Temporary.Specific != null)
-                    {
-                        foreach (var subItem in Temporary.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"VisibleWhenDistantTimestamp => {VisibleWhenDistantTimestamp}");
-            fg.AppendLine("VisibleWhenDistant =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (VisibleWhenDistant != null)
-                {
-                    if (VisibleWhenDistant.Overall != null)
-                    {
-                        fg.AppendLine(VisibleWhenDistant.Overall.ToString());
-                    }
-                    if (VisibleWhenDistant.Specific != null)
-                    {
-                        foreach (var subItem in VisibleWhenDistant.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public Cell_ErrorMask Combine(Cell_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Cell_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Grid = this.Grid.Combine(rhs.Grid);
-            ret.Lighting = new MaskItem<Exception?, CellLighting_ErrorMask?>(ExceptionExt.Combine(this.Lighting?.Overall, rhs.Lighting?.Overall), (this.Lighting?.Specific as IErrorMask<CellLighting_ErrorMask>)?.Combine(rhs.Lighting?.Specific));
-            ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
-            ret.MusicType = this.MusicType.Combine(rhs.MusicType);
-            ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
-            ret.Climate = this.Climate.Combine(rhs.Climate);
-            ret.Water = this.Water.Combine(rhs.Water);
-            ret.Owner = this.Owner.Combine(rhs.Owner);
-            ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
-            ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
-            ret.PathGrid = new MaskItem<Exception?, PathGrid_ErrorMask?>(ExceptionExt.Combine(this.PathGrid?.Overall, rhs.PathGrid?.Overall), (this.PathGrid?.Specific as IErrorMask<PathGrid_ErrorMask>)?.Combine(rhs.PathGrid?.Specific));
-            ret.Landscape = new MaskItem<Exception?, Landscape_ErrorMask?>(ExceptionExt.Combine(this.Landscape?.Overall, rhs.Landscape?.Overall), (this.Landscape?.Specific as IErrorMask<Landscape_ErrorMask>)?.Combine(rhs.Landscape?.Specific));
-            ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
-            ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
-            ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
-            ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
-            ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
-            ret.VisibleWhenDistantTimestamp = this.VisibleWhenDistantTimestamp.Combine(rhs.VisibleWhenDistantTimestamp);
-            ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
-            return ret;
-        }
-        public static Cell_ErrorMask? Combine(Cell_ErrorMask? lhs, Cell_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Cell_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Cell_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Cell_TranslationMask : Place_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Flags;
-        public bool Grid;
-        public MaskItem<bool, CellLighting_TranslationMask?> Lighting;
-        public bool Regions;
-        public bool MusicType;
-        public bool WaterHeight;
-        public bool Climate;
-        public bool Water;
-        public bool Owner;
-        public bool FactionRank;
-        public bool GlobalVariable;
-        public MaskItem<bool, PathGrid_TranslationMask?> PathGrid;
-        public MaskItem<bool, Landscape_TranslationMask?> Landscape;
-        public bool Timestamp;
-        public bool PersistentTimestamp;
-        public bool Persistent;
-        public bool TemporaryTimestamp;
-        public bool Temporary;
-        public bool VisibleWhenDistantTimestamp;
-        public bool VisibleWhenDistant;
-        #endregion
-
-        #region Ctors
-        public Cell_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Flags = defaultOn;
-            this.Grid = defaultOn;
-            this.Lighting = new MaskItem<bool, CellLighting_TranslationMask?>(defaultOn, null);
-            this.Regions = defaultOn;
-            this.MusicType = defaultOn;
-            this.WaterHeight = defaultOn;
-            this.Climate = defaultOn;
-            this.Water = defaultOn;
-            this.Owner = defaultOn;
-            this.FactionRank = defaultOn;
-            this.GlobalVariable = defaultOn;
-            this.PathGrid = new MaskItem<bool, PathGrid_TranslationMask?>(defaultOn, null);
-            this.Landscape = new MaskItem<bool, Landscape_TranslationMask?>(defaultOn, null);
-            this.Timestamp = defaultOn;
-            this.PersistentTimestamp = defaultOn;
-            this.Persistent = defaultOn;
-            this.TemporaryTimestamp = defaultOn;
-            this.Temporary = defaultOn;
-            this.VisibleWhenDistantTimestamp = defaultOn;
-            this.VisibleWhenDistant = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Flags, null));
-            ret.Add((Grid, null));
-            ret.Add((Lighting?.Overall ?? true, Lighting?.Specific?.GetCrystal()));
-            ret.Add((Regions, null));
-            ret.Add((MusicType, null));
-            ret.Add((WaterHeight, null));
-            ret.Add((Climate, null));
-            ret.Add((Water, null));
-            ret.Add((Owner, null));
-            ret.Add((FactionRank, null));
-            ret.Add((GlobalVariable, null));
-            ret.Add((PathGrid?.Overall ?? true, PathGrid?.Specific?.GetCrystal()));
-            ret.Add((Landscape?.Overall ?? true, Landscape?.Specific?.GetCrystal()));
-            ret.Add((Timestamp, null));
-            ret.Add((PersistentTimestamp, null));
-            ret.Add((Persistent, null));
-            ret.Add((TemporaryTimestamp, null));
-            ret.Add((Temporary, null));
-            ret.Add((VisibleWhenDistantTimestamp, null));
-            ret.Add((VisibleWhenDistant, null));
-        }
-    }
 }
 #endregion
 

@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new RegionDataGrasses CreateFromXml(
             XElement node,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionDataGrasses CreateFromXml(
             XElement node,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataGrasses.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses CreateFromXml(
             string path,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses CreateFromXml(
             string path,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataGrasses CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses CreateFromXml(
             Stream stream,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses CreateFromXml(
             Stream stream,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataGrasses CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,6 +218,336 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            RegionData.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T DataType,
+                T Flags,
+                T Priority,
+                T RDATDataTypeState,
+                T Grasses)
+            : base(
+                DataType: DataType,
+                Flags: Flags,
+                Priority: Priority,
+                RDATDataTypeState: RDATDataTypeState)
+            {
+                this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Grasses, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Grasses;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (this.Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null)
+                    {
+                        foreach (var item in this.Grasses.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RegionDataGrasses.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                if (Grasses != null)
+                {
+                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Grasses.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Grasses.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Grasses.Specific = l;
+                        foreach (var item in Grasses.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RegionDataGrasses.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RegionDataGrasses.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RegionDataGrasses.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        fg.AppendLine("Grasses =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Grasses != null)
+                            {
+                                if (Grasses.Overall != null)
+                                {
+                                    fg.AppendLine(Grasses.Overall.ToString());
+                                }
+                                if (Grasses.Specific != null)
+                                {
+                                    foreach (var subItem in Grasses.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            RegionData.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Grasses;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataGrasses_FieldIndex.Grasses:
+                        return Grasses;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataGrasses_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataGrasses_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Grasses != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine("Grasses =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Grasses != null)
+                    {
+                        if (Grasses.Overall != null)
+                        {
+                            fg.AppendLine(Grasses.Overall.ToString());
+                        }
+                        if (Grasses.Specific != null)
+                        {
+                            foreach (var subItem in Grasses.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            RegionData.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Grasses;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Grasses = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Grasses, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -324,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionDataGrasses_Mask<bool> GetEqualsMask(
+        public static RegionDataGrasses.Mask<bool> GetEqualsMask(
             this IRegionDataGrassesGetter item,
             IRegionDataGrassesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -338,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionDataGrassesGetter item,
             string? name = null,
-            RegionDataGrasses_Mask<bool>? printMask = null)
+            RegionDataGrasses.Mask<bool>? printMask = null)
         {
             return ((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionDataGrasses_Mask<bool>? printMask = null)
+            RegionDataGrasses.Mask<bool>? printMask = null)
         {
             ((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -361,16 +691,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionDataGrassesGetter item,
-            RegionDataGrasses_Mask<bool?> checkMask)
+            RegionDataGrasses.Mask<bool?> checkMask)
         {
             return ((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionDataGrasses_Mask<bool> GetHasBeenSetMask(this IRegionDataGrassesGetter item)
+        public static RegionDataGrasses.Mask<bool> GetHasBeenSetMask(this IRegionDataGrassesGetter item)
         {
-            var ret = new RegionDataGrasses_Mask<bool>(false);
+            var ret = new RegionDataGrasses.Mask<bool>(false);
             ((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -389,8 +719,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionDataGrassesInternal lhs,
             IRegionDataGrassesGetter rhs,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? copyMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -398,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataGrasses.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -416,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses DeepCopy(
             this IRegionDataGrassesGetter item,
-            RegionDataGrasses_TranslationMask? copyMask = null)
+            RegionDataGrasses.TranslationMask? copyMask = null)
         {
             return ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -425,8 +755,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataGrasses DeepCopy(
             this IRegionDataGrassesGetter item,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? copyMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? copyMask = null)
         {
             return ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -450,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataGrassesInternal item,
             XElement node,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -463,8 +793,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataGrassesInternal item,
             XElement node,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -472,7 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataGrasses.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -491,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataGrassesInternal item,
             string path,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -503,8 +833,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataGrassesInternal item,
             string path,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -518,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -531,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataGrassesInternal item,
             Stream stream,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -543,8 +873,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataGrassesInternal item,
             Stream stream,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -558,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null)
+            RegionDataGrasses.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -635,9 +965,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(RegionDataGrasses_Mask<>);
+        public static readonly Type MaskType = typeof(RegionDataGrasses.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionDataGrasses_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionDataGrasses.ErrorMask);
 
         public static readonly Type ClassType = typeof(RegionDataGrasses);
 
@@ -933,12 +1263,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly RegionDataGrassesCommon Instance = new RegionDataGrassesCommon();
 
-        public RegionDataGrasses_Mask<bool> GetEqualsMask(
+        public RegionDataGrasses.Mask<bool> GetEqualsMask(
             IRegionDataGrassesGetter item,
             IRegionDataGrassesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionDataGrasses_Mask<bool>(false);
+            var ret = new RegionDataGrasses.Mask<bool>(false);
             ((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -950,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionDataGrassesGetter item,
             IRegionDataGrassesGetter rhs,
-            RegionDataGrasses_Mask<bool> ret,
+            RegionDataGrasses.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -964,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionDataGrassesGetter item,
             string? name = null,
-            RegionDataGrasses_Mask<bool>? printMask = null)
+            RegionDataGrasses.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -979,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrassesGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionDataGrasses_Mask<bool>? printMask = null)
+            RegionDataGrasses.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1003,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionDataGrassesGetter item,
             FileGeneration fg,
-            RegionDataGrasses_Mask<bool>? printMask = null)
+            RegionDataGrasses.Mask<bool>? printMask = null)
         {
             RegionDataCommon.ToStringFields(
                 item: item,
@@ -1031,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionDataGrassesGetter item,
-            RegionDataGrasses_Mask<bool?> checkMask)
+            RegionDataGrasses.Mask<bool?> checkMask)
         {
             if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses!.Overall.Value != item.Grasses.HasBeenSet) return false;
             return base.HasBeenSet(
@@ -1041,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IRegionDataGrassesGetter item,
-            RegionDataGrasses_Mask<bool> mask)
+            RegionDataGrasses.Mask<bool> mask)
         {
             mask.Grasses = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Grasses.HasBeenSet, Enumerable.Empty<(int, bool)>());
             base.FillHasBeenSetMask(
@@ -1212,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataGrasses DeepCopy(
             IRegionDataGrassesGetter item,
-            RegionDataGrasses_TranslationMask? copyMask = null)
+            RegionDataGrasses.TranslationMask? copyMask = null)
         {
             RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1223,8 +1553,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataGrasses DeepCopy(
             IRegionDataGrassesGetter item,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? copyMask = null)
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? copyMask = null)
         {
             RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1457,8 +1787,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataGrassesGetter item,
             XElement node,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null,
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1468,14 +1798,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataGrasses.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionDataGrassesGetter item,
             string path,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null,
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1491,8 +1821,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataGrassesGetter item,
             Stream stream,
-            out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask? translationMask = null,
+            out RegionDataGrasses.ErrorMask errorMask,
+            RegionDataGrasses.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1509,335 +1839,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RegionDataGrasses_Mask<T> :
-        RegionData_Mask<T>,
-        IMask<T>,
-        IEquatable<RegionDataGrasses_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RegionDataGrasses_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public RegionDataGrasses_Mask(
-            T DataType,
-            T Flags,
-            T Priority,
-            T RDATDataTypeState,
-            T Grasses)
-        : base(
-            DataType: DataType,
-            Flags: Flags,
-            Priority: Priority,
-            RDATDataTypeState: RDATDataTypeState)
-        {
-            this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Grasses, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected RegionDataGrasses_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Grasses;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RegionDataGrasses_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RegionDataGrasses_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (this.Grasses != null)
-            {
-                if (!eval(this.Grasses.Overall)) return false;
-                if (this.Grasses.Specific != null)
-                {
-                    foreach (var item in this.Grasses.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new RegionDataGrasses_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RegionDataGrasses_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RegionDataGrasses_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            if (Grasses != null)
-            {
-                obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Grasses.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Grasses.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Grasses.Specific = l;
-                    foreach (var item in Grasses.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RegionDataGrasses_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RegionDataGrasses_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RegionDataGrasses_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Grasses?.Overall ?? true)
-                {
-                    fg.AppendLine("Grasses =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Grasses != null)
-                        {
-                            if (Grasses.Overall != null)
-                            {
-                                fg.AppendLine(Grasses.Overall.ToString());
-                            }
-                            if (Grasses.Specific != null)
-                            {
-                                foreach (var subItem in Grasses.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RegionDataGrasses_ErrorMask : RegionData_ErrorMask, IErrorMask<RegionDataGrasses_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Grasses;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataGrasses_FieldIndex.Grasses:
-                    return Grasses;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataGrasses_FieldIndex.Grasses:
-                    this.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            RegionDataGrasses_FieldIndex enu = (RegionDataGrasses_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataGrasses_FieldIndex.Grasses:
-                    this.Grasses = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Grasses != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RegionDataGrasses_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine("Grasses =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Grasses != null)
-                {
-                    if (Grasses.Overall != null)
-                    {
-                        fg.AppendLine(Grasses.Overall.ToString());
-                    }
-                    if (Grasses.Specific != null)
-                    {
-                        foreach (var subItem in Grasses.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public RegionDataGrasses_ErrorMask Combine(RegionDataGrasses_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RegionDataGrasses_ErrorMask();
-            ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
-            return ret;
-        }
-        public static RegionDataGrasses_ErrorMask? Combine(RegionDataGrasses_ErrorMask? lhs, RegionDataGrasses_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new RegionDataGrasses_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RegionDataGrasses_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RegionDataGrasses_TranslationMask : RegionData_TranslationMask
-    {
-        #region Members
-        public bool Grasses;
-        #endregion
-
-        #region Ctors
-        public RegionDataGrasses_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Grasses = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Grasses, null));
-        }
-    }
 }
 #endregion
 

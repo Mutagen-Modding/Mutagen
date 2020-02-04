@@ -173,11 +173,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static readonly Script_TranslationMask ScriptXmlFolderTranslationMask = new Script_TranslationMask(true)
+        public static readonly Script.TranslationMask ScriptXmlFolderTranslationMask = new Script.TranslationMask(true)
         {
-            Fields = new Loqui.MaskItem<bool, ScriptFields_TranslationMask?>(
+            Fields = new Loqui.MaskItem<bool, ScriptFields.TranslationMask?>(
                 true,
-                new ScriptFields_TranslationMask(true)
+                new ScriptFields.TranslationMask(true)
                 {
                     SourceCode = false
                 })

@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static VendorValues CreateFromXml(
             XElement node,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static VendorValues CreateFromXml(
             XElement node,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorValues_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorValues.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             string path,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             string path,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             Stream stream,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,8 +200,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues CreateFromXml(
             Stream stream,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorValues CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,6 +224,401 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.StartHour = initialValue;
+                this.EndHour = initialValue;
+                this.Radius = initialValue;
+                this.OnlyBuysStolenItems = initialValue;
+                this.NotSellBuy = initialValue;
+                this.Unknown = initialValue;
+            }
+
+            public Mask(
+                T StartHour,
+                T EndHour,
+                T Radius,
+                T OnlyBuysStolenItems,
+                T NotSellBuy,
+                T Unknown)
+            {
+                this.StartHour = StartHour;
+                this.EndHour = EndHour;
+                this.Radius = Radius;
+                this.OnlyBuysStolenItems = OnlyBuysStolenItems;
+                this.NotSellBuy = NotSellBuy;
+                this.Unknown = Unknown;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T StartHour;
+            public T EndHour;
+            public T Radius;
+            public T OnlyBuysStolenItems;
+            public T NotSellBuy;
+            public T Unknown;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.StartHour, rhs.StartHour)) return false;
+                if (!object.Equals(this.EndHour, rhs.EndHour)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.OnlyBuysStolenItems, rhs.OnlyBuysStolenItems)) return false;
+                if (!object.Equals(this.NotSellBuy, rhs.NotSellBuy)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.StartHour?.GetHashCode());
+                ret = ret.CombineHashCode(this.EndHour?.GetHashCode());
+                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
+                ret = ret.CombineHashCode(this.OnlyBuysStolenItems?.GetHashCode());
+                ret = ret.CombineHashCode(this.NotSellBuy?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.StartHour)) return false;
+                if (!eval(this.EndHour)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.OnlyBuysStolenItems)) return false;
+                if (!eval(this.NotSellBuy)) return false;
+                if (!eval(this.Unknown)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new VendorValues.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.StartHour = eval(this.StartHour);
+                obj.EndHour = eval(this.EndHour);
+                obj.Radius = eval(this.Radius);
+                obj.OnlyBuysStolenItems = eval(this.OnlyBuysStolenItems);
+                obj.NotSellBuy = eval(this.NotSellBuy);
+                obj.Unknown = eval(this.Unknown);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(VendorValues.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, VendorValues.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(VendorValues.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.StartHour ?? true)
+                    {
+                        fg.AppendLine($"StartHour => {StartHour}");
+                    }
+                    if (printMask?.EndHour ?? true)
+                    {
+                        fg.AppendLine($"EndHour => {EndHour}");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendLine($"Radius => {Radius}");
+                    }
+                    if (printMask?.OnlyBuysStolenItems ?? true)
+                    {
+                        fg.AppendLine($"OnlyBuysStolenItems => {OnlyBuysStolenItems}");
+                    }
+                    if (printMask?.NotSellBuy ?? true)
+                    {
+                        fg.AppendLine($"NotSellBuy => {NotSellBuy}");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendLine($"Unknown => {Unknown}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? StartHour;
+            public Exception? EndHour;
+            public Exception? Radius;
+            public Exception? OnlyBuysStolenItems;
+            public Exception? NotSellBuy;
+            public Exception? Unknown;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
+                switch (enu)
+                {
+                    case VendorValues_FieldIndex.StartHour:
+                        return StartHour;
+                    case VendorValues_FieldIndex.EndHour:
+                        return EndHour;
+                    case VendorValues_FieldIndex.Radius:
+                        return Radius;
+                    case VendorValues_FieldIndex.OnlyBuysStolenItems:
+                        return OnlyBuysStolenItems;
+                    case VendorValues_FieldIndex.NotSellBuy:
+                        return NotSellBuy;
+                    case VendorValues_FieldIndex.Unknown:
+                        return Unknown;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
+                switch (enu)
+                {
+                    case VendorValues_FieldIndex.StartHour:
+                        this.StartHour = ex;
+                        break;
+                    case VendorValues_FieldIndex.EndHour:
+                        this.EndHour = ex;
+                        break;
+                    case VendorValues_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case VendorValues_FieldIndex.OnlyBuysStolenItems:
+                        this.OnlyBuysStolenItems = ex;
+                        break;
+                    case VendorValues_FieldIndex.NotSellBuy:
+                        this.NotSellBuy = ex;
+                        break;
+                    case VendorValues_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
+                switch (enu)
+                {
+                    case VendorValues_FieldIndex.StartHour:
+                        this.StartHour = (Exception)obj;
+                        break;
+                    case VendorValues_FieldIndex.EndHour:
+                        this.EndHour = (Exception)obj;
+                        break;
+                    case VendorValues_FieldIndex.Radius:
+                        this.Radius = (Exception)obj;
+                        break;
+                    case VendorValues_FieldIndex.OnlyBuysStolenItems:
+                        this.OnlyBuysStolenItems = (Exception)obj;
+                        break;
+                    case VendorValues_FieldIndex.NotSellBuy:
+                        this.NotSellBuy = (Exception)obj;
+                        break;
+                    case VendorValues_FieldIndex.Unknown:
+                        this.Unknown = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (StartHour != null) return true;
+                if (EndHour != null) return true;
+                if (Radius != null) return true;
+                if (OnlyBuysStolenItems != null) return true;
+                if (NotSellBuy != null) return true;
+                if (Unknown != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"StartHour => {StartHour}");
+                fg.AppendLine($"EndHour => {EndHour}");
+                fg.AppendLine($"Radius => {Radius}");
+                fg.AppendLine($"OnlyBuysStolenItems => {OnlyBuysStolenItems}");
+                fg.AppendLine($"NotSellBuy => {NotSellBuy}");
+                fg.AppendLine($"Unknown => {Unknown}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.StartHour = this.StartHour.Combine(rhs.StartHour);
+                ret.EndHour = this.EndHour.Combine(rhs.EndHour);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.OnlyBuysStolenItems = this.OnlyBuysStolenItems.Combine(rhs.OnlyBuysStolenItems);
+                ret.NotSellBuy = this.NotSellBuy.Combine(rhs.NotSellBuy);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool StartHour;
+            public bool EndHour;
+            public bool Radius;
+            public bool OnlyBuysStolenItems;
+            public bool NotSellBuy;
+            public bool Unknown;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.StartHour = defaultOn;
+                this.EndHour = defaultOn;
+                this.Radius = defaultOn;
+                this.OnlyBuysStolenItems = defaultOn;
+                this.NotSellBuy = defaultOn;
+                this.Unknown = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((StartHour, null));
+                ret.Add((EndHour, null));
+                ret.Add((Radius, null));
+                ret.Add((OnlyBuysStolenItems, null));
+                ret.Add((NotSellBuy, null));
+                ret.Add((Unknown, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -337,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static VendorValues_Mask<bool> GetEqualsMask(
+        public static VendorValues.Mask<bool> GetEqualsMask(
             this IVendorValuesGetter item,
             IVendorValuesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -351,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IVendorValuesGetter item,
             string? name = null,
-            VendorValues_Mask<bool>? printMask = null)
+            VendorValues.Mask<bool>? printMask = null)
         {
             return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -363,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             FileGeneration fg,
             string? name = null,
-            VendorValues_Mask<bool>? printMask = null)
+            VendorValues.Mask<bool>? printMask = null)
         {
             ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -374,16 +769,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IVendorValuesGetter item,
-            VendorValues_Mask<bool?> checkMask)
+            VendorValues.Mask<bool?> checkMask)
         {
             return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static VendorValues_Mask<bool> GetHasBeenSetMask(this IVendorValuesGetter item)
+        public static VendorValues.Mask<bool> GetHasBeenSetMask(this IVendorValuesGetter item)
         {
-            var ret = new VendorValues_Mask<bool>(false);
+            var ret = new VendorValues.Mask<bool>(false);
             ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -402,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IVendorValues lhs,
             IVendorValuesGetter rhs,
-            VendorValues_TranslationMask? copyMask = null)
+            VendorValues.TranslationMask? copyMask = null)
         {
             ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -414,8 +809,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IVendorValues lhs,
             IVendorValuesGetter rhs,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? copyMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -423,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = VendorValues_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorValues.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -441,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues DeepCopy(
             this IVendorValuesGetter item,
-            VendorValues_TranslationMask? copyMask = null)
+            VendorValues.TranslationMask? copyMask = null)
         {
             return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -450,8 +845,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorValues DeepCopy(
             this IVendorValuesGetter item,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? copyMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? copyMask = null)
         {
             return ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -475,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             XElement node,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -488,8 +883,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             XElement node,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -497,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorValues_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorValues.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -516,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             string path,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,8 +923,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             string path,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -543,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValues item,
             string path,
             ErrorMaskBuilder? errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -556,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             Stream stream,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,8 +963,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorValues item,
             Stream stream,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -583,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValues item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -661,9 +1056,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(VendorValues_Mask<>);
+        public static readonly Type MaskType = typeof(VendorValues.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(VendorValues_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(VendorValues.ErrorMask);
 
         public static readonly Type ClassType = typeof(VendorValues);
 
@@ -957,12 +1352,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly VendorValuesCommon Instance = new VendorValuesCommon();
 
-        public VendorValues_Mask<bool> GetEqualsMask(
+        public VendorValues.Mask<bool> GetEqualsMask(
             IVendorValuesGetter item,
             IVendorValuesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new VendorValues_Mask<bool>(false);
+            var ret = new VendorValues.Mask<bool>(false);
             ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -974,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IVendorValuesGetter item,
             IVendorValuesGetter rhs,
-            VendorValues_Mask<bool> ret,
+            VendorValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -989,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IVendorValuesGetter item,
             string? name = null,
-            VendorValues_Mask<bool>? printMask = null)
+            VendorValues.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1004,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVendorValuesGetter item,
             FileGeneration fg,
             string? name = null,
-            VendorValues_Mask<bool>? printMask = null)
+            VendorValues.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1028,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IVendorValuesGetter item,
             FileGeneration fg,
-            VendorValues_Mask<bool>? printMask = null)
+            VendorValues.Mask<bool>? printMask = null)
         {
             if (printMask?.StartHour ?? true)
             {
@@ -1058,14 +1453,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IVendorValuesGetter item,
-            VendorValues_Mask<bool?> checkMask)
+            VendorValues.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IVendorValuesGetter item,
-            VendorValues_Mask<bool> mask)
+            VendorValues.Mask<bool> mask)
         {
             mask.StartHour = true;
             mask.EndHour = true;
@@ -1161,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public VendorValues DeepCopy(
             IVendorValuesGetter item,
-            VendorValues_TranslationMask? copyMask = null)
+            VendorValues.TranslationMask? copyMask = null)
         {
             VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1172,8 +1567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public VendorValues DeepCopy(
             IVendorValuesGetter item,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? copyMask = null)
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? copyMask = null)
         {
             VendorValues ret = (VendorValues)((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1528,8 +1923,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             XElement node,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null,
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1539,14 +1934,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorValues_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorValues.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IVendorValuesGetter item,
             string path,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null,
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1579,8 +1974,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorValuesGetter item,
             Stream stream,
-            out VendorValues_ErrorMask errorMask,
-            VendorValues_TranslationMask? translationMask = null,
+            out VendorValues.ErrorMask errorMask,
+            VendorValues.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1629,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorValuesGetter item,
             XElement node,
             string? name = null,
-            VendorValues_TranslationMask? translationMask = null)
+            VendorValues.TranslationMask? translationMask = null)
         {
             ((VendorValuesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1673,402 +2068,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class VendorValues_Mask<T> :
-        IMask<T>,
-        IEquatable<VendorValues_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public VendorValues_Mask(T initialValue)
-        {
-            this.StartHour = initialValue;
-            this.EndHour = initialValue;
-            this.Radius = initialValue;
-            this.OnlyBuysStolenItems = initialValue;
-            this.NotSellBuy = initialValue;
-            this.Unknown = initialValue;
-        }
-
-        public VendorValues_Mask(
-            T StartHour,
-            T EndHour,
-            T Radius,
-            T OnlyBuysStolenItems,
-            T NotSellBuy,
-            T Unknown)
-        {
-            this.StartHour = StartHour;
-            this.EndHour = EndHour;
-            this.Radius = Radius;
-            this.OnlyBuysStolenItems = OnlyBuysStolenItems;
-            this.NotSellBuy = NotSellBuy;
-            this.Unknown = Unknown;
-        }
-
-        #pragma warning disable CS8618
-        protected VendorValues_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T StartHour;
-        public T EndHour;
-        public T Radius;
-        public T OnlyBuysStolenItems;
-        public T NotSellBuy;
-        public T Unknown;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is VendorValues_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(VendorValues_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.StartHour, rhs.StartHour)) return false;
-            if (!object.Equals(this.EndHour, rhs.EndHour)) return false;
-            if (!object.Equals(this.Radius, rhs.Radius)) return false;
-            if (!object.Equals(this.OnlyBuysStolenItems, rhs.OnlyBuysStolenItems)) return false;
-            if (!object.Equals(this.NotSellBuy, rhs.NotSellBuy)) return false;
-            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.StartHour?.GetHashCode());
-            ret = ret.CombineHashCode(this.EndHour?.GetHashCode());
-            ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-            ret = ret.CombineHashCode(this.OnlyBuysStolenItems?.GetHashCode());
-            ret = ret.CombineHashCode(this.NotSellBuy?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.StartHour)) return false;
-            if (!eval(this.EndHour)) return false;
-            if (!eval(this.Radius)) return false;
-            if (!eval(this.OnlyBuysStolenItems)) return false;
-            if (!eval(this.NotSellBuy)) return false;
-            if (!eval(this.Unknown)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public VendorValues_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new VendorValues_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(VendorValues_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.StartHour = eval(this.StartHour);
-            obj.EndHour = eval(this.EndHour);
-            obj.Radius = eval(this.Radius);
-            obj.OnlyBuysStolenItems = eval(this.OnlyBuysStolenItems);
-            obj.NotSellBuy = eval(this.NotSellBuy);
-            obj.Unknown = eval(this.Unknown);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(VendorValues_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, VendorValues_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(VendorValues_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.StartHour ?? true)
-                {
-                    fg.AppendLine($"StartHour => {StartHour}");
-                }
-                if (printMask?.EndHour ?? true)
-                {
-                    fg.AppendLine($"EndHour => {EndHour}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {Radius}");
-                }
-                if (printMask?.OnlyBuysStolenItems ?? true)
-                {
-                    fg.AppendLine($"OnlyBuysStolenItems => {OnlyBuysStolenItems}");
-                }
-                if (printMask?.NotSellBuy ?? true)
-                {
-                    fg.AppendLine($"NotSellBuy => {NotSellBuy}");
-                }
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {Unknown}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class VendorValues_ErrorMask : IErrorMask, IErrorMask<VendorValues_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? StartHour;
-        public Exception? EndHour;
-        public Exception? Radius;
-        public Exception? OnlyBuysStolenItems;
-        public Exception? NotSellBuy;
-        public Exception? Unknown;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
-            switch (enu)
-            {
-                case VendorValues_FieldIndex.StartHour:
-                    return StartHour;
-                case VendorValues_FieldIndex.EndHour:
-                    return EndHour;
-                case VendorValues_FieldIndex.Radius:
-                    return Radius;
-                case VendorValues_FieldIndex.OnlyBuysStolenItems:
-                    return OnlyBuysStolenItems;
-                case VendorValues_FieldIndex.NotSellBuy:
-                    return NotSellBuy;
-                case VendorValues_FieldIndex.Unknown:
-                    return Unknown;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
-            switch (enu)
-            {
-                case VendorValues_FieldIndex.StartHour:
-                    this.StartHour = ex;
-                    break;
-                case VendorValues_FieldIndex.EndHour:
-                    this.EndHour = ex;
-                    break;
-                case VendorValues_FieldIndex.Radius:
-                    this.Radius = ex;
-                    break;
-                case VendorValues_FieldIndex.OnlyBuysStolenItems:
-                    this.OnlyBuysStolenItems = ex;
-                    break;
-                case VendorValues_FieldIndex.NotSellBuy:
-                    this.NotSellBuy = ex;
-                    break;
-                case VendorValues_FieldIndex.Unknown:
-                    this.Unknown = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            VendorValues_FieldIndex enu = (VendorValues_FieldIndex)index;
-            switch (enu)
-            {
-                case VendorValues_FieldIndex.StartHour:
-                    this.StartHour = (Exception)obj;
-                    break;
-                case VendorValues_FieldIndex.EndHour:
-                    this.EndHour = (Exception)obj;
-                    break;
-                case VendorValues_FieldIndex.Radius:
-                    this.Radius = (Exception)obj;
-                    break;
-                case VendorValues_FieldIndex.OnlyBuysStolenItems:
-                    this.OnlyBuysStolenItems = (Exception)obj;
-                    break;
-                case VendorValues_FieldIndex.NotSellBuy:
-                    this.NotSellBuy = (Exception)obj;
-                    break;
-                case VendorValues_FieldIndex.Unknown:
-                    this.Unknown = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (StartHour != null) return true;
-            if (EndHour != null) return true;
-            if (Radius != null) return true;
-            if (OnlyBuysStolenItems != null) return true;
-            if (NotSellBuy != null) return true;
-            if (Unknown != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("VendorValues_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"StartHour => {StartHour}");
-            fg.AppendLine($"EndHour => {EndHour}");
-            fg.AppendLine($"Radius => {Radius}");
-            fg.AppendLine($"OnlyBuysStolenItems => {OnlyBuysStolenItems}");
-            fg.AppendLine($"NotSellBuy => {NotSellBuy}");
-            fg.AppendLine($"Unknown => {Unknown}");
-        }
-        #endregion
-
-        #region Combine
-        public VendorValues_ErrorMask Combine(VendorValues_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new VendorValues_ErrorMask();
-            ret.StartHour = this.StartHour.Combine(rhs.StartHour);
-            ret.EndHour = this.EndHour.Combine(rhs.EndHour);
-            ret.Radius = this.Radius.Combine(rhs.Radius);
-            ret.OnlyBuysStolenItems = this.OnlyBuysStolenItems.Combine(rhs.OnlyBuysStolenItems);
-            ret.NotSellBuy = this.NotSellBuy.Combine(rhs.NotSellBuy);
-            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-            return ret;
-        }
-        public static VendorValues_ErrorMask? Combine(VendorValues_ErrorMask? lhs, VendorValues_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static VendorValues_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new VendorValues_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class VendorValues_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool StartHour;
-        public bool EndHour;
-        public bool Radius;
-        public bool OnlyBuysStolenItems;
-        public bool NotSellBuy;
-        public bool Unknown;
-        #endregion
-
-        #region Ctors
-        public VendorValues_TranslationMask(bool defaultOn)
-        {
-            this.StartHour = defaultOn;
-            this.EndHour = defaultOn;
-            this.Radius = defaultOn;
-            this.OnlyBuysStolenItems = defaultOn;
-            this.NotSellBuy = defaultOn;
-            this.Unknown = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((StartHour, null));
-            ret.Add((EndHour, null));
-            ret.Add((Radius, null));
-            ret.Add((OnlyBuysStolenItems, null));
-            ret.Add((NotSellBuy, null));
-            ret.Add((Unknown, null));
-        }
-    }
 }
 #endregion
 

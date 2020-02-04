@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Textures CreateFromXml(
             XElement node,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -198,15 +198,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Textures CreateFromXml(
             XElement node,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Textures.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Textures CreateFromXml(
             string path,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -236,8 +236,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Textures CreateFromXml(
             string path,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Textures CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Textures CreateFromXml(
             Stream stream,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -270,8 +270,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Textures CreateFromXml(
             Stream stream,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Textures CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -294,6 +294,455 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Diffuse = initialValue;
+                this.NormalOrGloss = initialValue;
+                this.EnvironmentMaskOrSubsurfaceTint = initialValue;
+                this.GlowOrDetailMap = initialValue;
+                this.Height = initialValue;
+                this.Environment = initialValue;
+                this.Multilayer = initialValue;
+                this.BacklightMaskOrSpecular = initialValue;
+            }
+
+            public Mask(
+                T Diffuse,
+                T NormalOrGloss,
+                T EnvironmentMaskOrSubsurfaceTint,
+                T GlowOrDetailMap,
+                T Height,
+                T Environment,
+                T Multilayer,
+                T BacklightMaskOrSpecular)
+            {
+                this.Diffuse = Diffuse;
+                this.NormalOrGloss = NormalOrGloss;
+                this.EnvironmentMaskOrSubsurfaceTint = EnvironmentMaskOrSubsurfaceTint;
+                this.GlowOrDetailMap = GlowOrDetailMap;
+                this.Height = Height;
+                this.Environment = Environment;
+                this.Multilayer = Multilayer;
+                this.BacklightMaskOrSpecular = BacklightMaskOrSpecular;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Diffuse;
+            public T NormalOrGloss;
+            public T EnvironmentMaskOrSubsurfaceTint;
+            public T GlowOrDetailMap;
+            public T Height;
+            public T Environment;
+            public T Multilayer;
+            public T BacklightMaskOrSpecular;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Diffuse, rhs.Diffuse)) return false;
+                if (!object.Equals(this.NormalOrGloss, rhs.NormalOrGloss)) return false;
+                if (!object.Equals(this.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint)) return false;
+                if (!object.Equals(this.GlowOrDetailMap, rhs.GlowOrDetailMap)) return false;
+                if (!object.Equals(this.Height, rhs.Height)) return false;
+                if (!object.Equals(this.Environment, rhs.Environment)) return false;
+                if (!object.Equals(this.Multilayer, rhs.Multilayer)) return false;
+                if (!object.Equals(this.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Diffuse?.GetHashCode());
+                ret = ret.CombineHashCode(this.NormalOrGloss?.GetHashCode());
+                ret = ret.CombineHashCode(this.EnvironmentMaskOrSubsurfaceTint?.GetHashCode());
+                ret = ret.CombineHashCode(this.GlowOrDetailMap?.GetHashCode());
+                ret = ret.CombineHashCode(this.Height?.GetHashCode());
+                ret = ret.CombineHashCode(this.Environment?.GetHashCode());
+                ret = ret.CombineHashCode(this.Multilayer?.GetHashCode());
+                ret = ret.CombineHashCode(this.BacklightMaskOrSpecular?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Diffuse)) return false;
+                if (!eval(this.NormalOrGloss)) return false;
+                if (!eval(this.EnvironmentMaskOrSubsurfaceTint)) return false;
+                if (!eval(this.GlowOrDetailMap)) return false;
+                if (!eval(this.Height)) return false;
+                if (!eval(this.Environment)) return false;
+                if (!eval(this.Multilayer)) return false;
+                if (!eval(this.BacklightMaskOrSpecular)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Textures.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Diffuse = eval(this.Diffuse);
+                obj.NormalOrGloss = eval(this.NormalOrGloss);
+                obj.EnvironmentMaskOrSubsurfaceTint = eval(this.EnvironmentMaskOrSubsurfaceTint);
+                obj.GlowOrDetailMap = eval(this.GlowOrDetailMap);
+                obj.Height = eval(this.Height);
+                obj.Environment = eval(this.Environment);
+                obj.Multilayer = eval(this.Multilayer);
+                obj.BacklightMaskOrSpecular = eval(this.BacklightMaskOrSpecular);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Textures.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Textures.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Textures.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Diffuse ?? true)
+                    {
+                        fg.AppendLine($"Diffuse => {Diffuse}");
+                    }
+                    if (printMask?.NormalOrGloss ?? true)
+                    {
+                        fg.AppendLine($"NormalOrGloss => {NormalOrGloss}");
+                    }
+                    if (printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
+                    {
+                        fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {EnvironmentMaskOrSubsurfaceTint}");
+                    }
+                    if (printMask?.GlowOrDetailMap ?? true)
+                    {
+                        fg.AppendLine($"GlowOrDetailMap => {GlowOrDetailMap}");
+                    }
+                    if (printMask?.Height ?? true)
+                    {
+                        fg.AppendLine($"Height => {Height}");
+                    }
+                    if (printMask?.Environment ?? true)
+                    {
+                        fg.AppendLine($"Environment => {Environment}");
+                    }
+                    if (printMask?.Multilayer ?? true)
+                    {
+                        fg.AppendLine($"Multilayer => {Multilayer}");
+                    }
+                    if (printMask?.BacklightMaskOrSpecular ?? true)
+                    {
+                        fg.AppendLine($"BacklightMaskOrSpecular => {BacklightMaskOrSpecular}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Diffuse;
+            public Exception? NormalOrGloss;
+            public Exception? EnvironmentMaskOrSubsurfaceTint;
+            public Exception? GlowOrDetailMap;
+            public Exception? Height;
+            public Exception? Environment;
+            public Exception? Multilayer;
+            public Exception? BacklightMaskOrSpecular;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Textures_FieldIndex enu = (Textures_FieldIndex)index;
+                switch (enu)
+                {
+                    case Textures_FieldIndex.Diffuse:
+                        return Diffuse;
+                    case Textures_FieldIndex.NormalOrGloss:
+                        return NormalOrGloss;
+                    case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
+                        return EnvironmentMaskOrSubsurfaceTint;
+                    case Textures_FieldIndex.GlowOrDetailMap:
+                        return GlowOrDetailMap;
+                    case Textures_FieldIndex.Height:
+                        return Height;
+                    case Textures_FieldIndex.Environment:
+                        return Environment;
+                    case Textures_FieldIndex.Multilayer:
+                        return Multilayer;
+                    case Textures_FieldIndex.BacklightMaskOrSpecular:
+                        return BacklightMaskOrSpecular;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Textures_FieldIndex enu = (Textures_FieldIndex)index;
+                switch (enu)
+                {
+                    case Textures_FieldIndex.Diffuse:
+                        this.Diffuse = ex;
+                        break;
+                    case Textures_FieldIndex.NormalOrGloss:
+                        this.NormalOrGloss = ex;
+                        break;
+                    case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
+                        this.EnvironmentMaskOrSubsurfaceTint = ex;
+                        break;
+                    case Textures_FieldIndex.GlowOrDetailMap:
+                        this.GlowOrDetailMap = ex;
+                        break;
+                    case Textures_FieldIndex.Height:
+                        this.Height = ex;
+                        break;
+                    case Textures_FieldIndex.Environment:
+                        this.Environment = ex;
+                        break;
+                    case Textures_FieldIndex.Multilayer:
+                        this.Multilayer = ex;
+                        break;
+                    case Textures_FieldIndex.BacklightMaskOrSpecular:
+                        this.BacklightMaskOrSpecular = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Textures_FieldIndex enu = (Textures_FieldIndex)index;
+                switch (enu)
+                {
+                    case Textures_FieldIndex.Diffuse:
+                        this.Diffuse = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.NormalOrGloss:
+                        this.NormalOrGloss = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
+                        this.EnvironmentMaskOrSubsurfaceTint = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.GlowOrDetailMap:
+                        this.GlowOrDetailMap = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.Height:
+                        this.Height = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.Environment:
+                        this.Environment = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.Multilayer:
+                        this.Multilayer = (Exception)obj;
+                        break;
+                    case Textures_FieldIndex.BacklightMaskOrSpecular:
+                        this.BacklightMaskOrSpecular = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Diffuse != null) return true;
+                if (NormalOrGloss != null) return true;
+                if (EnvironmentMaskOrSubsurfaceTint != null) return true;
+                if (GlowOrDetailMap != null) return true;
+                if (Height != null) return true;
+                if (Environment != null) return true;
+                if (Multilayer != null) return true;
+                if (BacklightMaskOrSpecular != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Diffuse => {Diffuse}");
+                fg.AppendLine($"NormalOrGloss => {NormalOrGloss}");
+                fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {EnvironmentMaskOrSubsurfaceTint}");
+                fg.AppendLine($"GlowOrDetailMap => {GlowOrDetailMap}");
+                fg.AppendLine($"Height => {Height}");
+                fg.AppendLine($"Environment => {Environment}");
+                fg.AppendLine($"Multilayer => {Multilayer}");
+                fg.AppendLine($"BacklightMaskOrSpecular => {BacklightMaskOrSpecular}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Diffuse = this.Diffuse.Combine(rhs.Diffuse);
+                ret.NormalOrGloss = this.NormalOrGloss.Combine(rhs.NormalOrGloss);
+                ret.EnvironmentMaskOrSubsurfaceTint = this.EnvironmentMaskOrSubsurfaceTint.Combine(rhs.EnvironmentMaskOrSubsurfaceTint);
+                ret.GlowOrDetailMap = this.GlowOrDetailMap.Combine(rhs.GlowOrDetailMap);
+                ret.Height = this.Height.Combine(rhs.Height);
+                ret.Environment = this.Environment.Combine(rhs.Environment);
+                ret.Multilayer = this.Multilayer.Combine(rhs.Multilayer);
+                ret.BacklightMaskOrSpecular = this.BacklightMaskOrSpecular.Combine(rhs.BacklightMaskOrSpecular);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Diffuse;
+            public bool NormalOrGloss;
+            public bool EnvironmentMaskOrSubsurfaceTint;
+            public bool GlowOrDetailMap;
+            public bool Height;
+            public bool Environment;
+            public bool Multilayer;
+            public bool BacklightMaskOrSpecular;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Diffuse = defaultOn;
+                this.NormalOrGloss = defaultOn;
+                this.EnvironmentMaskOrSubsurfaceTint = defaultOn;
+                this.GlowOrDetailMap = defaultOn;
+                this.Height = defaultOn;
+                this.Environment = defaultOn;
+                this.Multilayer = defaultOn;
+                this.BacklightMaskOrSpecular = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Diffuse, null));
+                ret.Add((NormalOrGloss, null));
+                ret.Add((EnvironmentMaskOrSubsurfaceTint, null));
+                ret.Add((GlowOrDetailMap, null));
+                ret.Add((Height, null));
+                ret.Add((Environment, null));
+                ret.Add((Multilayer, null));
+                ret.Add((BacklightMaskOrSpecular, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -407,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Textures_Mask<bool> GetEqualsMask(
+        public static Textures.Mask<bool> GetEqualsMask(
             this ITexturesGetter item,
             ITexturesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -421,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this ITexturesGetter item,
             string? name = null,
-            Textures_Mask<bool>? printMask = null)
+            Textures.Mask<bool>? printMask = null)
         {
             return ((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -433,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITexturesGetter item,
             FileGeneration fg,
             string? name = null,
-            Textures_Mask<bool>? printMask = null)
+            Textures.Mask<bool>? printMask = null)
         {
             ((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -444,16 +893,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this ITexturesGetter item,
-            Textures_Mask<bool?> checkMask)
+            Textures.Mask<bool?> checkMask)
         {
             return ((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Textures_Mask<bool> GetHasBeenSetMask(this ITexturesGetter item)
+        public static Textures.Mask<bool> GetHasBeenSetMask(this ITexturesGetter item)
         {
-            var ret = new Textures_Mask<bool>(false);
+            var ret = new Textures.Mask<bool>(false);
             ((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -472,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this ITextures lhs,
             ITexturesGetter rhs,
-            Textures_TranslationMask? copyMask = null)
+            Textures.TranslationMask? copyMask = null)
         {
             ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -484,8 +933,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this ITextures lhs,
             ITexturesGetter rhs,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? copyMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -493,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Textures.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -511,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Textures DeepCopy(
             this ITexturesGetter item,
-            Textures_TranslationMask? copyMask = null)
+            Textures.TranslationMask? copyMask = null)
         {
             return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -520,8 +969,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Textures DeepCopy(
             this ITexturesGetter item,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? copyMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? copyMask = null)
         {
             return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -545,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextures item,
             XElement node,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -558,8 +1007,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextures item,
             XElement node,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -567,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Textures.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -586,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextures item,
             string path,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -598,8 +1047,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextures item,
             string path,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -613,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextures item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -626,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextures item,
             Stream stream,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -638,8 +1087,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ITextures item,
             Stream stream,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -653,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextures item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -733,9 +1182,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Textures_Mask<>);
+        public static readonly Type MaskType = typeof(Textures.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Textures_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Textures.ErrorMask);
 
         public static readonly Type ClassType = typeof(Textures);
 
@@ -1158,12 +1607,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly TexturesCommon Instance = new TexturesCommon();
 
-        public Textures_Mask<bool> GetEqualsMask(
+        public Textures.Mask<bool> GetEqualsMask(
             ITexturesGetter item,
             ITexturesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Textures_Mask<bool>(false);
+            var ret = new Textures.Mask<bool>(false);
             ((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1175,7 +1624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             ITexturesGetter item,
             ITexturesGetter rhs,
-            Textures_Mask<bool> ret,
+            Textures.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1192,7 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             ITexturesGetter item,
             string? name = null,
-            Textures_Mask<bool>? printMask = null)
+            Textures.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1207,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITexturesGetter item,
             FileGeneration fg,
             string? name = null,
-            Textures_Mask<bool>? printMask = null)
+            Textures.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1231,7 +1680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             ITexturesGetter item,
             FileGeneration fg,
-            Textures_Mask<bool>? printMask = null)
+            Textures.Mask<bool>? printMask = null)
         {
             if (printMask?.Diffuse ?? true)
             {
@@ -1269,7 +1718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             ITexturesGetter item,
-            Textures_Mask<bool?> checkMask)
+            Textures.Mask<bool?> checkMask)
         {
             if (checkMask.Diffuse.HasValue && checkMask.Diffuse.Value != (item.Diffuse != null)) return false;
             if (checkMask.NormalOrGloss.HasValue && checkMask.NormalOrGloss.Value != (item.NormalOrGloss != null)) return false;
@@ -1284,7 +1733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             ITexturesGetter item,
-            Textures_Mask<bool> mask)
+            Textures.Mask<bool> mask)
         {
             mask.Diffuse = (item.Diffuse != null);
             mask.NormalOrGloss = (item.NormalOrGloss != null);
@@ -1418,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Textures DeepCopy(
             ITexturesGetter item,
-            Textures_TranslationMask? copyMask = null)
+            Textures.TranslationMask? copyMask = null)
         {
             Textures ret = (Textures)((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1429,8 +1878,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Textures DeepCopy(
             ITexturesGetter item,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? copyMask = null)
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? copyMask = null)
         {
             Textures ret = (Textures)((TexturesCommon)((ITexturesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1847,8 +2296,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this ITexturesGetter item,
             XElement node,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null,
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1858,14 +2307,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Textures.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ITexturesGetter item,
             string path,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null,
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1898,8 +2347,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this ITexturesGetter item,
             Stream stream,
-            out Textures_ErrorMask errorMask,
-            Textures_TranslationMask? translationMask = null,
+            out Textures.ErrorMask errorMask,
+            Textures.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1948,7 +2397,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITexturesGetter item,
             XElement node,
             string? name = null,
-            Textures_TranslationMask? translationMask = null)
+            Textures.TranslationMask? translationMask = null)
         {
             ((TexturesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1992,456 +2441,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class Textures_Mask<T> :
-        IMask<T>,
-        IEquatable<Textures_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Textures_Mask(T initialValue)
-        {
-            this.Diffuse = initialValue;
-            this.NormalOrGloss = initialValue;
-            this.EnvironmentMaskOrSubsurfaceTint = initialValue;
-            this.GlowOrDetailMap = initialValue;
-            this.Height = initialValue;
-            this.Environment = initialValue;
-            this.Multilayer = initialValue;
-            this.BacklightMaskOrSpecular = initialValue;
-        }
-
-        public Textures_Mask(
-            T Diffuse,
-            T NormalOrGloss,
-            T EnvironmentMaskOrSubsurfaceTint,
-            T GlowOrDetailMap,
-            T Height,
-            T Environment,
-            T Multilayer,
-            T BacklightMaskOrSpecular)
-        {
-            this.Diffuse = Diffuse;
-            this.NormalOrGloss = NormalOrGloss;
-            this.EnvironmentMaskOrSubsurfaceTint = EnvironmentMaskOrSubsurfaceTint;
-            this.GlowOrDetailMap = GlowOrDetailMap;
-            this.Height = Height;
-            this.Environment = Environment;
-            this.Multilayer = Multilayer;
-            this.BacklightMaskOrSpecular = BacklightMaskOrSpecular;
-        }
-
-        #pragma warning disable CS8618
-        protected Textures_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Diffuse;
-        public T NormalOrGloss;
-        public T EnvironmentMaskOrSubsurfaceTint;
-        public T GlowOrDetailMap;
-        public T Height;
-        public T Environment;
-        public T Multilayer;
-        public T BacklightMaskOrSpecular;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Textures_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Textures_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Diffuse, rhs.Diffuse)) return false;
-            if (!object.Equals(this.NormalOrGloss, rhs.NormalOrGloss)) return false;
-            if (!object.Equals(this.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint)) return false;
-            if (!object.Equals(this.GlowOrDetailMap, rhs.GlowOrDetailMap)) return false;
-            if (!object.Equals(this.Height, rhs.Height)) return false;
-            if (!object.Equals(this.Environment, rhs.Environment)) return false;
-            if (!object.Equals(this.Multilayer, rhs.Multilayer)) return false;
-            if (!object.Equals(this.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Diffuse?.GetHashCode());
-            ret = ret.CombineHashCode(this.NormalOrGloss?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnvironmentMaskOrSubsurfaceTint?.GetHashCode());
-            ret = ret.CombineHashCode(this.GlowOrDetailMap?.GetHashCode());
-            ret = ret.CombineHashCode(this.Height?.GetHashCode());
-            ret = ret.CombineHashCode(this.Environment?.GetHashCode());
-            ret = ret.CombineHashCode(this.Multilayer?.GetHashCode());
-            ret = ret.CombineHashCode(this.BacklightMaskOrSpecular?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Diffuse)) return false;
-            if (!eval(this.NormalOrGloss)) return false;
-            if (!eval(this.EnvironmentMaskOrSubsurfaceTint)) return false;
-            if (!eval(this.GlowOrDetailMap)) return false;
-            if (!eval(this.Height)) return false;
-            if (!eval(this.Environment)) return false;
-            if (!eval(this.Multilayer)) return false;
-            if (!eval(this.BacklightMaskOrSpecular)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Textures_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Textures_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Textures_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Diffuse = eval(this.Diffuse);
-            obj.NormalOrGloss = eval(this.NormalOrGloss);
-            obj.EnvironmentMaskOrSubsurfaceTint = eval(this.EnvironmentMaskOrSubsurfaceTint);
-            obj.GlowOrDetailMap = eval(this.GlowOrDetailMap);
-            obj.Height = eval(this.Height);
-            obj.Environment = eval(this.Environment);
-            obj.Multilayer = eval(this.Multilayer);
-            obj.BacklightMaskOrSpecular = eval(this.BacklightMaskOrSpecular);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Textures_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Textures_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Textures_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Diffuse ?? true)
-                {
-                    fg.AppendLine($"Diffuse => {Diffuse}");
-                }
-                if (printMask?.NormalOrGloss ?? true)
-                {
-                    fg.AppendLine($"NormalOrGloss => {NormalOrGloss}");
-                }
-                if (printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
-                {
-                    fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {EnvironmentMaskOrSubsurfaceTint}");
-                }
-                if (printMask?.GlowOrDetailMap ?? true)
-                {
-                    fg.AppendLine($"GlowOrDetailMap => {GlowOrDetailMap}");
-                }
-                if (printMask?.Height ?? true)
-                {
-                    fg.AppendLine($"Height => {Height}");
-                }
-                if (printMask?.Environment ?? true)
-                {
-                    fg.AppendLine($"Environment => {Environment}");
-                }
-                if (printMask?.Multilayer ?? true)
-                {
-                    fg.AppendLine($"Multilayer => {Multilayer}");
-                }
-                if (printMask?.BacklightMaskOrSpecular ?? true)
-                {
-                    fg.AppendLine($"BacklightMaskOrSpecular => {BacklightMaskOrSpecular}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Textures_ErrorMask : IErrorMask, IErrorMask<Textures_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Diffuse;
-        public Exception? NormalOrGloss;
-        public Exception? EnvironmentMaskOrSubsurfaceTint;
-        public Exception? GlowOrDetailMap;
-        public Exception? Height;
-        public Exception? Environment;
-        public Exception? Multilayer;
-        public Exception? BacklightMaskOrSpecular;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Textures_FieldIndex enu = (Textures_FieldIndex)index;
-            switch (enu)
-            {
-                case Textures_FieldIndex.Diffuse:
-                    return Diffuse;
-                case Textures_FieldIndex.NormalOrGloss:
-                    return NormalOrGloss;
-                case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                    return EnvironmentMaskOrSubsurfaceTint;
-                case Textures_FieldIndex.GlowOrDetailMap:
-                    return GlowOrDetailMap;
-                case Textures_FieldIndex.Height:
-                    return Height;
-                case Textures_FieldIndex.Environment:
-                    return Environment;
-                case Textures_FieldIndex.Multilayer:
-                    return Multilayer;
-                case Textures_FieldIndex.BacklightMaskOrSpecular:
-                    return BacklightMaskOrSpecular;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Textures_FieldIndex enu = (Textures_FieldIndex)index;
-            switch (enu)
-            {
-                case Textures_FieldIndex.Diffuse:
-                    this.Diffuse = ex;
-                    break;
-                case Textures_FieldIndex.NormalOrGloss:
-                    this.NormalOrGloss = ex;
-                    break;
-                case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                    this.EnvironmentMaskOrSubsurfaceTint = ex;
-                    break;
-                case Textures_FieldIndex.GlowOrDetailMap:
-                    this.GlowOrDetailMap = ex;
-                    break;
-                case Textures_FieldIndex.Height:
-                    this.Height = ex;
-                    break;
-                case Textures_FieldIndex.Environment:
-                    this.Environment = ex;
-                    break;
-                case Textures_FieldIndex.Multilayer:
-                    this.Multilayer = ex;
-                    break;
-                case Textures_FieldIndex.BacklightMaskOrSpecular:
-                    this.BacklightMaskOrSpecular = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Textures_FieldIndex enu = (Textures_FieldIndex)index;
-            switch (enu)
-            {
-                case Textures_FieldIndex.Diffuse:
-                    this.Diffuse = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.NormalOrGloss:
-                    this.NormalOrGloss = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint:
-                    this.EnvironmentMaskOrSubsurfaceTint = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.GlowOrDetailMap:
-                    this.GlowOrDetailMap = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.Height:
-                    this.Height = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.Environment:
-                    this.Environment = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.Multilayer:
-                    this.Multilayer = (Exception)obj;
-                    break;
-                case Textures_FieldIndex.BacklightMaskOrSpecular:
-                    this.BacklightMaskOrSpecular = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Diffuse != null) return true;
-            if (NormalOrGloss != null) return true;
-            if (EnvironmentMaskOrSubsurfaceTint != null) return true;
-            if (GlowOrDetailMap != null) return true;
-            if (Height != null) return true;
-            if (Environment != null) return true;
-            if (Multilayer != null) return true;
-            if (BacklightMaskOrSpecular != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Textures_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Diffuse => {Diffuse}");
-            fg.AppendLine($"NormalOrGloss => {NormalOrGloss}");
-            fg.AppendLine($"EnvironmentMaskOrSubsurfaceTint => {EnvironmentMaskOrSubsurfaceTint}");
-            fg.AppendLine($"GlowOrDetailMap => {GlowOrDetailMap}");
-            fg.AppendLine($"Height => {Height}");
-            fg.AppendLine($"Environment => {Environment}");
-            fg.AppendLine($"Multilayer => {Multilayer}");
-            fg.AppendLine($"BacklightMaskOrSpecular => {BacklightMaskOrSpecular}");
-        }
-        #endregion
-
-        #region Combine
-        public Textures_ErrorMask Combine(Textures_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Textures_ErrorMask();
-            ret.Diffuse = this.Diffuse.Combine(rhs.Diffuse);
-            ret.NormalOrGloss = this.NormalOrGloss.Combine(rhs.NormalOrGloss);
-            ret.EnvironmentMaskOrSubsurfaceTint = this.EnvironmentMaskOrSubsurfaceTint.Combine(rhs.EnvironmentMaskOrSubsurfaceTint);
-            ret.GlowOrDetailMap = this.GlowOrDetailMap.Combine(rhs.GlowOrDetailMap);
-            ret.Height = this.Height.Combine(rhs.Height);
-            ret.Environment = this.Environment.Combine(rhs.Environment);
-            ret.Multilayer = this.Multilayer.Combine(rhs.Multilayer);
-            ret.BacklightMaskOrSpecular = this.BacklightMaskOrSpecular.Combine(rhs.BacklightMaskOrSpecular);
-            return ret;
-        }
-        public static Textures_ErrorMask? Combine(Textures_ErrorMask? lhs, Textures_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Textures_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Textures_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Textures_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Diffuse;
-        public bool NormalOrGloss;
-        public bool EnvironmentMaskOrSubsurfaceTint;
-        public bool GlowOrDetailMap;
-        public bool Height;
-        public bool Environment;
-        public bool Multilayer;
-        public bool BacklightMaskOrSpecular;
-        #endregion
-
-        #region Ctors
-        public Textures_TranslationMask(bool defaultOn)
-        {
-            this.Diffuse = defaultOn;
-            this.NormalOrGloss = defaultOn;
-            this.EnvironmentMaskOrSubsurfaceTint = defaultOn;
-            this.GlowOrDetailMap = defaultOn;
-            this.Height = defaultOn;
-            this.Environment = defaultOn;
-            this.Multilayer = defaultOn;
-            this.BacklightMaskOrSpecular = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Diffuse, null));
-            ret.Add((NormalOrGloss, null));
-            ret.Add((EnvironmentMaskOrSubsurfaceTint, null));
-            ret.Add((GlowOrDetailMap, null));
-            ret.Add((Height, null));
-            ret.Add((Environment, null));
-            ret.Add((Multilayer, null));
-            ret.Add((BacklightMaskOrSpecular, null));
-        }
-    }
 }
 #endregion
 

@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static InterCellPoint CreateFromXml(
             XElement node,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -116,15 +116,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static InterCellPoint CreateFromXml(
             XElement node,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InterCellPoint.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static InterCellPoint CreateFromXml(
             string path,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static InterCellPoint CreateFromXml(
             string path,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static InterCellPoint CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static InterCellPoint CreateFromXml(
             Stream stream,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -188,8 +188,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static InterCellPoint CreateFromXml(
             Stream stream,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static InterCellPoint CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,6 +212,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.PointID = initialValue;
+                this.Point = initialValue;
+            }
+
+            public Mask(
+                T PointID,
+                T Point)
+            {
+                this.PointID = PointID;
+                this.Point = Point;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T PointID;
+            public T Point;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.PointID, rhs.PointID)) return false;
+                if (!object.Equals(this.Point, rhs.Point)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.PointID?.GetHashCode());
+                ret = ret.CombineHashCode(this.Point?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.PointID)) return false;
+                if (!eval(this.Point)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new InterCellPoint.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.PointID = eval(this.PointID);
+                obj.Point = eval(this.Point);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(InterCellPoint.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, InterCellPoint.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(InterCellPoint.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.PointID ?? true)
+                    {
+                        fg.AppendLine($"PointID => {PointID}");
+                    }
+                    if (printMask?.Point ?? true)
+                    {
+                        fg.AppendLine($"Point => {Point}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? PointID;
+            public Exception? Point;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
+                switch (enu)
+                {
+                    case InterCellPoint_FieldIndex.PointID:
+                        return PointID;
+                    case InterCellPoint_FieldIndex.Point:
+                        return Point;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
+                switch (enu)
+                {
+                    case InterCellPoint_FieldIndex.PointID:
+                        this.PointID = ex;
+                        break;
+                    case InterCellPoint_FieldIndex.Point:
+                        this.Point = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
+                switch (enu)
+                {
+                    case InterCellPoint_FieldIndex.PointID:
+                        this.PointID = (Exception)obj;
+                        break;
+                    case InterCellPoint_FieldIndex.Point:
+                        this.Point = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (PointID != null) return true;
+                if (Point != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"PointID => {PointID}");
+                fg.AppendLine($"Point => {Point}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.PointID = this.PointID.Combine(rhs.PointID);
+                ret.Point = this.Point.Combine(rhs.Point);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool PointID;
+            public bool Point;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.PointID = defaultOn;
+                this.Point = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((PointID, null));
+                ret.Add((Point, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -313,7 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static InterCellPoint_Mask<bool> GetEqualsMask(
+        public static InterCellPoint.Mask<bool> GetEqualsMask(
             this IInterCellPointGetter item,
             IInterCellPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -327,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IInterCellPointGetter item,
             string? name = null,
-            InterCellPoint_Mask<bool>? printMask = null)
+            InterCellPoint.Mask<bool>? printMask = null)
         {
             return ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -339,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPointGetter item,
             FileGeneration fg,
             string? name = null,
-            InterCellPoint_Mask<bool>? printMask = null)
+            InterCellPoint.Mask<bool>? printMask = null)
         {
             ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,16 +637,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IInterCellPointGetter item,
-            InterCellPoint_Mask<bool?> checkMask)
+            InterCellPoint.Mask<bool?> checkMask)
         {
             return ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static InterCellPoint_Mask<bool> GetHasBeenSetMask(this IInterCellPointGetter item)
+        public static InterCellPoint.Mask<bool> GetHasBeenSetMask(this IInterCellPointGetter item)
         {
-            var ret = new InterCellPoint_Mask<bool>(false);
+            var ret = new InterCellPoint.Mask<bool>(false);
             ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -378,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
-            InterCellPoint_TranslationMask? copyMask = null)
+            InterCellPoint.TranslationMask? copyMask = null)
         {
             ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -390,8 +677,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? copyMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -399,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InterCellPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -417,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static InterCellPoint DeepCopy(
             this IInterCellPointGetter item,
-            InterCellPoint_TranslationMask? copyMask = null)
+            InterCellPoint.TranslationMask? copyMask = null)
         {
             return ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -426,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static InterCellPoint DeepCopy(
             this IInterCellPointGetter item,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? copyMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? copyMask = null)
         {
             return ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -451,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IInterCellPoint item,
             XElement node,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -464,8 +751,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IInterCellPoint item,
             XElement node,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -473,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InterCellPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -492,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IInterCellPoint item,
             string path,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -504,8 +791,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IInterCellPoint item,
             string path,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -519,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPoint item,
             string path,
             ErrorMaskBuilder? errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -532,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IInterCellPoint item,
             Stream stream,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -544,8 +831,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IInterCellPoint item,
             Stream stream,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -559,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPoint item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -633,9 +920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(InterCellPoint_Mask<>);
+        public static readonly Type MaskType = typeof(InterCellPoint.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(InterCellPoint_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(InterCellPoint.ErrorMask);
 
         public static readonly Type ClassType = typeof(InterCellPoint);
 
@@ -872,12 +1159,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly InterCellPointCommon Instance = new InterCellPointCommon();
 
-        public InterCellPoint_Mask<bool> GetEqualsMask(
+        public InterCellPoint.Mask<bool> GetEqualsMask(
             IInterCellPointGetter item,
             IInterCellPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new InterCellPoint_Mask<bool>(false);
+            var ret = new InterCellPoint.Mask<bool>(false);
             ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -889,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IInterCellPointGetter item,
             IInterCellPointGetter rhs,
-            InterCellPoint_Mask<bool> ret,
+            InterCellPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -900,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IInterCellPointGetter item,
             string? name = null,
-            InterCellPoint_Mask<bool>? printMask = null)
+            InterCellPoint.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -915,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPointGetter item,
             FileGeneration fg,
             string? name = null,
-            InterCellPoint_Mask<bool>? printMask = null)
+            InterCellPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -939,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IInterCellPointGetter item,
             FileGeneration fg,
-            InterCellPoint_Mask<bool>? printMask = null)
+            InterCellPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.PointID ?? true)
             {
@@ -953,14 +1240,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IInterCellPointGetter item,
-            InterCellPoint_Mask<bool?> checkMask)
+            InterCellPoint.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IInterCellPointGetter item,
-            InterCellPoint_Mask<bool> mask)
+            InterCellPoint.Mask<bool> mask)
         {
             mask.PointID = true;
             mask.Point = true;
@@ -1028,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public InterCellPoint DeepCopy(
             IInterCellPointGetter item,
-            InterCellPoint_TranslationMask? copyMask = null)
+            InterCellPoint.TranslationMask? copyMask = null)
         {
             InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1039,8 +1326,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public InterCellPoint DeepCopy(
             IInterCellPointGetter item,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? copyMask = null)
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? copyMask = null)
         {
             InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1287,8 +1574,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IInterCellPointGetter item,
             XElement node,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null,
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1298,14 +1585,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = InterCellPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IInterCellPointGetter item,
             string path,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null,
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1338,8 +1625,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IInterCellPointGetter item,
             Stream stream,
-            out InterCellPoint_ErrorMask errorMask,
-            InterCellPoint_TranslationMask? translationMask = null,
+            out InterCellPoint.ErrorMask errorMask,
+            InterCellPoint.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1388,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPointGetter item,
             XElement node,
             string? name = null,
-            InterCellPoint_TranslationMask? translationMask = null)
+            InterCellPoint.TranslationMask? translationMask = null)
         {
             ((InterCellPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1432,294 +1719,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class InterCellPoint_Mask<T> :
-        IMask<T>,
-        IEquatable<InterCellPoint_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public InterCellPoint_Mask(T initialValue)
-        {
-            this.PointID = initialValue;
-            this.Point = initialValue;
-        }
-
-        public InterCellPoint_Mask(
-            T PointID,
-            T Point)
-        {
-            this.PointID = PointID;
-            this.Point = Point;
-        }
-
-        #pragma warning disable CS8618
-        protected InterCellPoint_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T PointID;
-        public T Point;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is InterCellPoint_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(InterCellPoint_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.PointID, rhs.PointID)) return false;
-            if (!object.Equals(this.Point, rhs.Point)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.PointID?.GetHashCode());
-            ret = ret.CombineHashCode(this.Point?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.PointID)) return false;
-            if (!eval(this.Point)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public InterCellPoint_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new InterCellPoint_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(InterCellPoint_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.PointID = eval(this.PointID);
-            obj.Point = eval(this.Point);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(InterCellPoint_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, InterCellPoint_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(InterCellPoint_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.PointID ?? true)
-                {
-                    fg.AppendLine($"PointID => {PointID}");
-                }
-                if (printMask?.Point ?? true)
-                {
-                    fg.AppendLine($"Point => {Point}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class InterCellPoint_ErrorMask : IErrorMask, IErrorMask<InterCellPoint_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? PointID;
-        public Exception? Point;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    return PointID;
-                case InterCellPoint_FieldIndex.Point:
-                    return Point;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    this.PointID = ex;
-                    break;
-                case InterCellPoint_FieldIndex.Point:
-                    this.Point = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            InterCellPoint_FieldIndex enu = (InterCellPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case InterCellPoint_FieldIndex.PointID:
-                    this.PointID = (Exception)obj;
-                    break;
-                case InterCellPoint_FieldIndex.Point:
-                    this.Point = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (PointID != null) return true;
-            if (Point != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("InterCellPoint_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"PointID => {PointID}");
-            fg.AppendLine($"Point => {Point}");
-        }
-        #endregion
-
-        #region Combine
-        public InterCellPoint_ErrorMask Combine(InterCellPoint_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new InterCellPoint_ErrorMask();
-            ret.PointID = this.PointID.Combine(rhs.PointID);
-            ret.Point = this.Point.Combine(rhs.Point);
-            return ret;
-        }
-        public static InterCellPoint_ErrorMask? Combine(InterCellPoint_ErrorMask? lhs, InterCellPoint_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static InterCellPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new InterCellPoint_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class InterCellPoint_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool PointID;
-        public bool Point;
-        #endregion
-
-        #region Ctors
-        public InterCellPoint_TranslationMask(bool defaultOn)
-        {
-            this.PointID = defaultOn;
-            this.Point = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((PointID, null));
-            ret.Add((Point, null));
-        }
-    }
 }
 #endregion
 

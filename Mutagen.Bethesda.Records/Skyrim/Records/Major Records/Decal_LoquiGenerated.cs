@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Decal CreateFromXml(
             XElement node,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -145,15 +145,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Decal CreateFromXml(
             XElement node,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Decal.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             string path,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -183,8 +183,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             string path,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             Stream stream,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -217,8 +217,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal CreateFromXml(
             Stream stream,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -241,6 +241,536 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.MinWidth = initialValue;
+                this.MaxWidth = initialValue;
+                this.MinHeight = initialValue;
+                this.MaxHeight = initialValue;
+                this.Depth = initialValue;
+                this.Shininess = initialValue;
+                this.ParallaxScale = initialValue;
+                this.ParallaxPasses = initialValue;
+                this.Flags = initialValue;
+                this.Unknown = initialValue;
+                this.Color = initialValue;
+            }
+
+            public Mask(
+                T MinWidth,
+                T MaxWidth,
+                T MinHeight,
+                T MaxHeight,
+                T Depth,
+                T Shininess,
+                T ParallaxScale,
+                T ParallaxPasses,
+                T Flags,
+                T Unknown,
+                T Color)
+            {
+                this.MinWidth = MinWidth;
+                this.MaxWidth = MaxWidth;
+                this.MinHeight = MinHeight;
+                this.MaxHeight = MaxHeight;
+                this.Depth = Depth;
+                this.Shininess = Shininess;
+                this.ParallaxScale = ParallaxScale;
+                this.ParallaxPasses = ParallaxPasses;
+                this.Flags = Flags;
+                this.Unknown = Unknown;
+                this.Color = Color;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T MinWidth;
+            public T MaxWidth;
+            public T MinHeight;
+            public T MaxHeight;
+            public T Depth;
+            public T Shininess;
+            public T ParallaxScale;
+            public T ParallaxPasses;
+            public T Flags;
+            public T Unknown;
+            public T Color;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.MinWidth, rhs.MinWidth)) return false;
+                if (!object.Equals(this.MaxWidth, rhs.MaxWidth)) return false;
+                if (!object.Equals(this.MinHeight, rhs.MinHeight)) return false;
+                if (!object.Equals(this.MaxHeight, rhs.MaxHeight)) return false;
+                if (!object.Equals(this.Depth, rhs.Depth)) return false;
+                if (!object.Equals(this.Shininess, rhs.Shininess)) return false;
+                if (!object.Equals(this.ParallaxScale, rhs.ParallaxScale)) return false;
+                if (!object.Equals(this.ParallaxPasses, rhs.ParallaxPasses)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.MinWidth?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaxWidth?.GetHashCode());
+                ret = ret.CombineHashCode(this.MinHeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaxHeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Depth?.GetHashCode());
+                ret = ret.CombineHashCode(this.Shininess?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParallaxScale?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParallaxPasses?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
+                ret = ret.CombineHashCode(this.Color?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.MinWidth)) return false;
+                if (!eval(this.MaxWidth)) return false;
+                if (!eval(this.MinHeight)) return false;
+                if (!eval(this.MaxHeight)) return false;
+                if (!eval(this.Depth)) return false;
+                if (!eval(this.Shininess)) return false;
+                if (!eval(this.ParallaxScale)) return false;
+                if (!eval(this.ParallaxPasses)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Color)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Decal.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.MinWidth = eval(this.MinWidth);
+                obj.MaxWidth = eval(this.MaxWidth);
+                obj.MinHeight = eval(this.MinHeight);
+                obj.MaxHeight = eval(this.MaxHeight);
+                obj.Depth = eval(this.Depth);
+                obj.Shininess = eval(this.Shininess);
+                obj.ParallaxScale = eval(this.ParallaxScale);
+                obj.ParallaxPasses = eval(this.ParallaxPasses);
+                obj.Flags = eval(this.Flags);
+                obj.Unknown = eval(this.Unknown);
+                obj.Color = eval(this.Color);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Decal.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Decal.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Decal.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.MinWidth ?? true)
+                    {
+                        fg.AppendLine($"MinWidth => {MinWidth}");
+                    }
+                    if (printMask?.MaxWidth ?? true)
+                    {
+                        fg.AppendLine($"MaxWidth => {MaxWidth}");
+                    }
+                    if (printMask?.MinHeight ?? true)
+                    {
+                        fg.AppendLine($"MinHeight => {MinHeight}");
+                    }
+                    if (printMask?.MaxHeight ?? true)
+                    {
+                        fg.AppendLine($"MaxHeight => {MaxHeight}");
+                    }
+                    if (printMask?.Depth ?? true)
+                    {
+                        fg.AppendLine($"Depth => {Depth}");
+                    }
+                    if (printMask?.Shininess ?? true)
+                    {
+                        fg.AppendLine($"Shininess => {Shininess}");
+                    }
+                    if (printMask?.ParallaxScale ?? true)
+                    {
+                        fg.AppendLine($"ParallaxScale => {ParallaxScale}");
+                    }
+                    if (printMask?.ParallaxPasses ?? true)
+                    {
+                        fg.AppendLine($"ParallaxPasses => {ParallaxPasses}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendLine($"Unknown => {Unknown}");
+                    }
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendLine($"Color => {Color}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? MinWidth;
+            public Exception? MaxWidth;
+            public Exception? MinHeight;
+            public Exception? MaxHeight;
+            public Exception? Depth;
+            public Exception? Shininess;
+            public Exception? ParallaxScale;
+            public Exception? ParallaxPasses;
+            public Exception? Flags;
+            public Exception? Unknown;
+            public Exception? Color;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Decal_FieldIndex enu = (Decal_FieldIndex)index;
+                switch (enu)
+                {
+                    case Decal_FieldIndex.MinWidth:
+                        return MinWidth;
+                    case Decal_FieldIndex.MaxWidth:
+                        return MaxWidth;
+                    case Decal_FieldIndex.MinHeight:
+                        return MinHeight;
+                    case Decal_FieldIndex.MaxHeight:
+                        return MaxHeight;
+                    case Decal_FieldIndex.Depth:
+                        return Depth;
+                    case Decal_FieldIndex.Shininess:
+                        return Shininess;
+                    case Decal_FieldIndex.ParallaxScale:
+                        return ParallaxScale;
+                    case Decal_FieldIndex.ParallaxPasses:
+                        return ParallaxPasses;
+                    case Decal_FieldIndex.Flags:
+                        return Flags;
+                    case Decal_FieldIndex.Unknown:
+                        return Unknown;
+                    case Decal_FieldIndex.Color:
+                        return Color;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Decal_FieldIndex enu = (Decal_FieldIndex)index;
+                switch (enu)
+                {
+                    case Decal_FieldIndex.MinWidth:
+                        this.MinWidth = ex;
+                        break;
+                    case Decal_FieldIndex.MaxWidth:
+                        this.MaxWidth = ex;
+                        break;
+                    case Decal_FieldIndex.MinHeight:
+                        this.MinHeight = ex;
+                        break;
+                    case Decal_FieldIndex.MaxHeight:
+                        this.MaxHeight = ex;
+                        break;
+                    case Decal_FieldIndex.Depth:
+                        this.Depth = ex;
+                        break;
+                    case Decal_FieldIndex.Shininess:
+                        this.Shininess = ex;
+                        break;
+                    case Decal_FieldIndex.ParallaxScale:
+                        this.ParallaxScale = ex;
+                        break;
+                    case Decal_FieldIndex.ParallaxPasses:
+                        this.ParallaxPasses = ex;
+                        break;
+                    case Decal_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Decal_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Decal_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Decal_FieldIndex enu = (Decal_FieldIndex)index;
+                switch (enu)
+                {
+                    case Decal_FieldIndex.MinWidth:
+                        this.MinWidth = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.MaxWidth:
+                        this.MaxWidth = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.MinHeight:
+                        this.MinHeight = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.MaxHeight:
+                        this.MaxHeight = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.Depth:
+                        this.Depth = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.Shininess:
+                        this.Shininess = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.ParallaxScale:
+                        this.ParallaxScale = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.ParallaxPasses:
+                        this.ParallaxPasses = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.Unknown:
+                        this.Unknown = (Exception)obj;
+                        break;
+                    case Decal_FieldIndex.Color:
+                        this.Color = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (MinWidth != null) return true;
+                if (MaxWidth != null) return true;
+                if (MinHeight != null) return true;
+                if (MaxHeight != null) return true;
+                if (Depth != null) return true;
+                if (Shininess != null) return true;
+                if (ParallaxScale != null) return true;
+                if (ParallaxPasses != null) return true;
+                if (Flags != null) return true;
+                if (Unknown != null) return true;
+                if (Color != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"MinWidth => {MinWidth}");
+                fg.AppendLine($"MaxWidth => {MaxWidth}");
+                fg.AppendLine($"MinHeight => {MinHeight}");
+                fg.AppendLine($"MaxHeight => {MaxHeight}");
+                fg.AppendLine($"Depth => {Depth}");
+                fg.AppendLine($"Shininess => {Shininess}");
+                fg.AppendLine($"ParallaxScale => {ParallaxScale}");
+                fg.AppendLine($"ParallaxPasses => {ParallaxPasses}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Unknown => {Unknown}");
+                fg.AppendLine($"Color => {Color}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.MinWidth = this.MinWidth.Combine(rhs.MinWidth);
+                ret.MaxWidth = this.MaxWidth.Combine(rhs.MaxWidth);
+                ret.MinHeight = this.MinHeight.Combine(rhs.MinHeight);
+                ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight);
+                ret.Depth = this.Depth.Combine(rhs.Depth);
+                ret.Shininess = this.Shininess.Combine(rhs.Shininess);
+                ret.ParallaxScale = this.ParallaxScale.Combine(rhs.ParallaxScale);
+                ret.ParallaxPasses = this.ParallaxPasses.Combine(rhs.ParallaxPasses);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Color = this.Color.Combine(rhs.Color);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool MinWidth;
+            public bool MaxWidth;
+            public bool MinHeight;
+            public bool MaxHeight;
+            public bool Depth;
+            public bool Shininess;
+            public bool ParallaxScale;
+            public bool ParallaxPasses;
+            public bool Flags;
+            public bool Unknown;
+            public bool Color;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.MinWidth = defaultOn;
+                this.MaxWidth = defaultOn;
+                this.MinHeight = defaultOn;
+                this.MaxHeight = defaultOn;
+                this.Depth = defaultOn;
+                this.Shininess = defaultOn;
+                this.ParallaxScale = defaultOn;
+                this.ParallaxPasses = defaultOn;
+                this.Flags = defaultOn;
+                this.Unknown = defaultOn;
+                this.Color = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((MinWidth, null));
+                ret.Add((MaxWidth, null));
+                ret.Add((MinHeight, null));
+                ret.Add((MaxHeight, null));
+                ret.Add((Depth, null));
+                ret.Add((Shininess, null));
+                ret.Add((ParallaxScale, null));
+                ret.Add((ParallaxPasses, null));
+                ret.Add((Flags, null));
+                ret.Add((Unknown, null));
+                ret.Add((Color, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -364,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Decal_Mask<bool> GetEqualsMask(
+        public static Decal.Mask<bool> GetEqualsMask(
             this IDecalGetter item,
             IDecalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -378,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IDecalGetter item,
             string? name = null,
-            Decal_Mask<bool>? printMask = null)
+            Decal.Mask<bool>? printMask = null)
         {
             return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -390,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             FileGeneration fg,
             string? name = null,
-            Decal_Mask<bool>? printMask = null)
+            Decal.Mask<bool>? printMask = null)
         {
             ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -401,16 +931,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IDecalGetter item,
-            Decal_Mask<bool?> checkMask)
+            Decal.Mask<bool?> checkMask)
         {
             return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Decal_Mask<bool> GetHasBeenSetMask(this IDecalGetter item)
+        public static Decal.Mask<bool> GetHasBeenSetMask(this IDecalGetter item)
         {
-            var ret = new Decal_Mask<bool>(false);
+            var ret = new Decal.Mask<bool>(false);
             ((DecalCommon)((IDecalGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -429,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IDecal lhs,
             IDecalGetter rhs,
-            Decal_TranslationMask? copyMask = null)
+            Decal.TranslationMask? copyMask = null)
         {
             ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -441,8 +971,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IDecal lhs,
             IDecalGetter rhs,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? copyMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -450,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Decal.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -468,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal DeepCopy(
             this IDecalGetter item,
-            Decal_TranslationMask? copyMask = null)
+            Decal.TranslationMask? copyMask = null)
         {
             return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -477,8 +1007,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Decal DeepCopy(
             this IDecalGetter item,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? copyMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? copyMask = null)
         {
             return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -502,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             XElement node,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -515,8 +1045,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             XElement node,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -524,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Decal.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -543,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             string path,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -555,8 +1085,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             string path,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -570,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -583,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             Stream stream,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -595,8 +1125,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IDecal item,
             Stream stream,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -610,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -693,9 +1223,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(Decal_Mask<>);
+        public static readonly Type MaskType = typeof(Decal.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Decal_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Decal.ErrorMask);
 
         public static readonly Type ClassType = typeof(Decal);
 
@@ -1056,12 +1586,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly DecalCommon Instance = new DecalCommon();
 
-        public Decal_Mask<bool> GetEqualsMask(
+        public Decal.Mask<bool> GetEqualsMask(
             IDecalGetter item,
             IDecalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Decal_Mask<bool>(false);
+            var ret = new Decal.Mask<bool>(false);
             ((DecalCommon)((IDecalGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1073,7 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IDecalGetter item,
             IDecalGetter rhs,
-            Decal_Mask<bool> ret,
+            Decal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1093,7 +1623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IDecalGetter item,
             string? name = null,
-            Decal_Mask<bool>? printMask = null)
+            Decal.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1108,7 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecalGetter item,
             FileGeneration fg,
             string? name = null,
-            Decal_Mask<bool>? printMask = null)
+            Decal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1132,7 +1662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IDecalGetter item,
             FileGeneration fg,
-            Decal_Mask<bool>? printMask = null)
+            Decal.Mask<bool>? printMask = null)
         {
             if (printMask?.MinWidth ?? true)
             {
@@ -1182,14 +1712,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IDecalGetter item,
-            Decal_Mask<bool?> checkMask)
+            Decal.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IDecalGetter item,
-            Decal_Mask<bool> mask)
+            Decal.Mask<bool> mask)
         {
             mask.MinWidth = true;
             mask.MaxWidth = true;
@@ -1320,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Decal DeepCopy(
             IDecalGetter item,
-            Decal_TranslationMask? copyMask = null)
+            Decal.TranslationMask? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1331,8 +1861,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Decal DeepCopy(
             IDecalGetter item,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? copyMask = null)
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? copyMask = null)
         {
             Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1822,8 +2352,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             XElement node,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null,
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1833,14 +2363,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Decal.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IDecalGetter item,
             string path,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null,
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1873,8 +2403,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IDecalGetter item,
             Stream stream,
-            out Decal_ErrorMask errorMask,
-            Decal_TranslationMask? translationMask = null,
+            out Decal.ErrorMask errorMask,
+            Decal.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1923,7 +2453,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             XElement node,
             string? name = null,
-            Decal_TranslationMask? translationMask = null)
+            Decal.TranslationMask? translationMask = null)
         {
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1967,537 +2497,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class Decal_Mask<T> :
-        IMask<T>,
-        IEquatable<Decal_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Decal_Mask(T initialValue)
-        {
-            this.MinWidth = initialValue;
-            this.MaxWidth = initialValue;
-            this.MinHeight = initialValue;
-            this.MaxHeight = initialValue;
-            this.Depth = initialValue;
-            this.Shininess = initialValue;
-            this.ParallaxScale = initialValue;
-            this.ParallaxPasses = initialValue;
-            this.Flags = initialValue;
-            this.Unknown = initialValue;
-            this.Color = initialValue;
-        }
-
-        public Decal_Mask(
-            T MinWidth,
-            T MaxWidth,
-            T MinHeight,
-            T MaxHeight,
-            T Depth,
-            T Shininess,
-            T ParallaxScale,
-            T ParallaxPasses,
-            T Flags,
-            T Unknown,
-            T Color)
-        {
-            this.MinWidth = MinWidth;
-            this.MaxWidth = MaxWidth;
-            this.MinHeight = MinHeight;
-            this.MaxHeight = MaxHeight;
-            this.Depth = Depth;
-            this.Shininess = Shininess;
-            this.ParallaxScale = ParallaxScale;
-            this.ParallaxPasses = ParallaxPasses;
-            this.Flags = Flags;
-            this.Unknown = Unknown;
-            this.Color = Color;
-        }
-
-        #pragma warning disable CS8618
-        protected Decal_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T MinWidth;
-        public T MaxWidth;
-        public T MinHeight;
-        public T MaxHeight;
-        public T Depth;
-        public T Shininess;
-        public T ParallaxScale;
-        public T ParallaxPasses;
-        public T Flags;
-        public T Unknown;
-        public T Color;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Decal_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Decal_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.MinWidth, rhs.MinWidth)) return false;
-            if (!object.Equals(this.MaxWidth, rhs.MaxWidth)) return false;
-            if (!object.Equals(this.MinHeight, rhs.MinHeight)) return false;
-            if (!object.Equals(this.MaxHeight, rhs.MaxHeight)) return false;
-            if (!object.Equals(this.Depth, rhs.Depth)) return false;
-            if (!object.Equals(this.Shininess, rhs.Shininess)) return false;
-            if (!object.Equals(this.ParallaxScale, rhs.ParallaxScale)) return false;
-            if (!object.Equals(this.ParallaxPasses, rhs.ParallaxPasses)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-            if (!object.Equals(this.Color, rhs.Color)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.MinWidth?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaxWidth?.GetHashCode());
-            ret = ret.CombineHashCode(this.MinHeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaxHeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Depth?.GetHashCode());
-            ret = ret.CombineHashCode(this.Shininess?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParallaxScale?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParallaxPasses?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-            ret = ret.CombineHashCode(this.Color?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.MinWidth)) return false;
-            if (!eval(this.MaxWidth)) return false;
-            if (!eval(this.MinHeight)) return false;
-            if (!eval(this.MaxHeight)) return false;
-            if (!eval(this.Depth)) return false;
-            if (!eval(this.Shininess)) return false;
-            if (!eval(this.ParallaxScale)) return false;
-            if (!eval(this.ParallaxPasses)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Unknown)) return false;
-            if (!eval(this.Color)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Decal_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Decal_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Decal_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.MinWidth = eval(this.MinWidth);
-            obj.MaxWidth = eval(this.MaxWidth);
-            obj.MinHeight = eval(this.MinHeight);
-            obj.MaxHeight = eval(this.MaxHeight);
-            obj.Depth = eval(this.Depth);
-            obj.Shininess = eval(this.Shininess);
-            obj.ParallaxScale = eval(this.ParallaxScale);
-            obj.ParallaxPasses = eval(this.ParallaxPasses);
-            obj.Flags = eval(this.Flags);
-            obj.Unknown = eval(this.Unknown);
-            obj.Color = eval(this.Color);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Decal_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Decal_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Decal_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.MinWidth ?? true)
-                {
-                    fg.AppendLine($"MinWidth => {MinWidth}");
-                }
-                if (printMask?.MaxWidth ?? true)
-                {
-                    fg.AppendLine($"MaxWidth => {MaxWidth}");
-                }
-                if (printMask?.MinHeight ?? true)
-                {
-                    fg.AppendLine($"MinHeight => {MinHeight}");
-                }
-                if (printMask?.MaxHeight ?? true)
-                {
-                    fg.AppendLine($"MaxHeight => {MaxHeight}");
-                }
-                if (printMask?.Depth ?? true)
-                {
-                    fg.AppendLine($"Depth => {Depth}");
-                }
-                if (printMask?.Shininess ?? true)
-                {
-                    fg.AppendLine($"Shininess => {Shininess}");
-                }
-                if (printMask?.ParallaxScale ?? true)
-                {
-                    fg.AppendLine($"ParallaxScale => {ParallaxScale}");
-                }
-                if (printMask?.ParallaxPasses ?? true)
-                {
-                    fg.AppendLine($"ParallaxPasses => {ParallaxPasses}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {Unknown}");
-                }
-                if (printMask?.Color ?? true)
-                {
-                    fg.AppendLine($"Color => {Color}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Decal_ErrorMask : IErrorMask, IErrorMask<Decal_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? MinWidth;
-        public Exception? MaxWidth;
-        public Exception? MinHeight;
-        public Exception? MaxHeight;
-        public Exception? Depth;
-        public Exception? Shininess;
-        public Exception? ParallaxScale;
-        public Exception? ParallaxPasses;
-        public Exception? Flags;
-        public Exception? Unknown;
-        public Exception? Color;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Decal_FieldIndex enu = (Decal_FieldIndex)index;
-            switch (enu)
-            {
-                case Decal_FieldIndex.MinWidth:
-                    return MinWidth;
-                case Decal_FieldIndex.MaxWidth:
-                    return MaxWidth;
-                case Decal_FieldIndex.MinHeight:
-                    return MinHeight;
-                case Decal_FieldIndex.MaxHeight:
-                    return MaxHeight;
-                case Decal_FieldIndex.Depth:
-                    return Depth;
-                case Decal_FieldIndex.Shininess:
-                    return Shininess;
-                case Decal_FieldIndex.ParallaxScale:
-                    return ParallaxScale;
-                case Decal_FieldIndex.ParallaxPasses:
-                    return ParallaxPasses;
-                case Decal_FieldIndex.Flags:
-                    return Flags;
-                case Decal_FieldIndex.Unknown:
-                    return Unknown;
-                case Decal_FieldIndex.Color:
-                    return Color;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Decal_FieldIndex enu = (Decal_FieldIndex)index;
-            switch (enu)
-            {
-                case Decal_FieldIndex.MinWidth:
-                    this.MinWidth = ex;
-                    break;
-                case Decal_FieldIndex.MaxWidth:
-                    this.MaxWidth = ex;
-                    break;
-                case Decal_FieldIndex.MinHeight:
-                    this.MinHeight = ex;
-                    break;
-                case Decal_FieldIndex.MaxHeight:
-                    this.MaxHeight = ex;
-                    break;
-                case Decal_FieldIndex.Depth:
-                    this.Depth = ex;
-                    break;
-                case Decal_FieldIndex.Shininess:
-                    this.Shininess = ex;
-                    break;
-                case Decal_FieldIndex.ParallaxScale:
-                    this.ParallaxScale = ex;
-                    break;
-                case Decal_FieldIndex.ParallaxPasses:
-                    this.ParallaxPasses = ex;
-                    break;
-                case Decal_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Decal_FieldIndex.Unknown:
-                    this.Unknown = ex;
-                    break;
-                case Decal_FieldIndex.Color:
-                    this.Color = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Decal_FieldIndex enu = (Decal_FieldIndex)index;
-            switch (enu)
-            {
-                case Decal_FieldIndex.MinWidth:
-                    this.MinWidth = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.MaxWidth:
-                    this.MaxWidth = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.MinHeight:
-                    this.MinHeight = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.MaxHeight:
-                    this.MaxHeight = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.Depth:
-                    this.Depth = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.Shininess:
-                    this.Shininess = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.ParallaxScale:
-                    this.ParallaxScale = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.ParallaxPasses:
-                    this.ParallaxPasses = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.Unknown:
-                    this.Unknown = (Exception)obj;
-                    break;
-                case Decal_FieldIndex.Color:
-                    this.Color = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (MinWidth != null) return true;
-            if (MaxWidth != null) return true;
-            if (MinHeight != null) return true;
-            if (MaxHeight != null) return true;
-            if (Depth != null) return true;
-            if (Shininess != null) return true;
-            if (ParallaxScale != null) return true;
-            if (ParallaxPasses != null) return true;
-            if (Flags != null) return true;
-            if (Unknown != null) return true;
-            if (Color != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Decal_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"MinWidth => {MinWidth}");
-            fg.AppendLine($"MaxWidth => {MaxWidth}");
-            fg.AppendLine($"MinHeight => {MinHeight}");
-            fg.AppendLine($"MaxHeight => {MaxHeight}");
-            fg.AppendLine($"Depth => {Depth}");
-            fg.AppendLine($"Shininess => {Shininess}");
-            fg.AppendLine($"ParallaxScale => {ParallaxScale}");
-            fg.AppendLine($"ParallaxPasses => {ParallaxPasses}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Unknown => {Unknown}");
-            fg.AppendLine($"Color => {Color}");
-        }
-        #endregion
-
-        #region Combine
-        public Decal_ErrorMask Combine(Decal_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Decal_ErrorMask();
-            ret.MinWidth = this.MinWidth.Combine(rhs.MinWidth);
-            ret.MaxWidth = this.MaxWidth.Combine(rhs.MaxWidth);
-            ret.MinHeight = this.MinHeight.Combine(rhs.MinHeight);
-            ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight);
-            ret.Depth = this.Depth.Combine(rhs.Depth);
-            ret.Shininess = this.Shininess.Combine(rhs.Shininess);
-            ret.ParallaxScale = this.ParallaxScale.Combine(rhs.ParallaxScale);
-            ret.ParallaxPasses = this.ParallaxPasses.Combine(rhs.ParallaxPasses);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-            ret.Color = this.Color.Combine(rhs.Color);
-            return ret;
-        }
-        public static Decal_ErrorMask? Combine(Decal_ErrorMask? lhs, Decal_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Decal_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Decal_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Decal_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool MinWidth;
-        public bool MaxWidth;
-        public bool MinHeight;
-        public bool MaxHeight;
-        public bool Depth;
-        public bool Shininess;
-        public bool ParallaxScale;
-        public bool ParallaxPasses;
-        public bool Flags;
-        public bool Unknown;
-        public bool Color;
-        #endregion
-
-        #region Ctors
-        public Decal_TranslationMask(bool defaultOn)
-        {
-            this.MinWidth = defaultOn;
-            this.MaxWidth = defaultOn;
-            this.MinHeight = defaultOn;
-            this.MaxHeight = defaultOn;
-            this.Depth = defaultOn;
-            this.Shininess = defaultOn;
-            this.ParallaxScale = defaultOn;
-            this.ParallaxPasses = defaultOn;
-            this.Flags = defaultOn;
-            this.Unknown = defaultOn;
-            this.Color = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((MinWidth, null));
-            ret.Add((MaxWidth, null));
-            ret.Add((MinHeight, null));
-            ret.Add((MaxHeight, null));
-            ret.Add((Depth, null));
-            ret.Add((Shininess, null));
-            ret.Add((ParallaxScale, null));
-            ret.Add((ParallaxPasses, null));
-            ret.Add((Flags, null));
-            ret.Add((Unknown, null));
-            ret.Add((Color, null));
-        }
-    }
 }
 #endregion
 

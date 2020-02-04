@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BaseLayer CreateFromXml(
             XElement node,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -152,15 +152,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static BaseLayer CreateFromXml(
             XElement node,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer CreateFromXml(
             string path,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,8 +190,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer CreateFromXml(
             string path,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BaseLayer CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer CreateFromXml(
             Stream stream,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,8 +224,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer CreateFromXml(
             Stream stream,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static BaseLayer CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -248,6 +248,347 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Texture = initialValue;
+                this.Quadrant = initialValue;
+                this.LayerNumber = initialValue;
+                this.BTXTDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T Texture,
+                T Quadrant,
+                T LayerNumber,
+                T BTXTDataTypeState)
+            {
+                this.Texture = Texture;
+                this.Quadrant = Quadrant;
+                this.LayerNumber = LayerNumber;
+                this.BTXTDataTypeState = BTXTDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Texture;
+            public T Quadrant;
+            public T LayerNumber;
+            public T BTXTDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Texture, rhs.Texture)) return false;
+                if (!object.Equals(this.Quadrant, rhs.Quadrant)) return false;
+                if (!object.Equals(this.LayerNumber, rhs.LayerNumber)) return false;
+                if (!object.Equals(this.BTXTDataTypeState, rhs.BTXTDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Texture?.GetHashCode());
+                ret = ret.CombineHashCode(this.Quadrant?.GetHashCode());
+                ret = ret.CombineHashCode(this.LayerNumber?.GetHashCode());
+                ret = ret.CombineHashCode(this.BTXTDataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public virtual bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Texture)) return false;
+                if (!eval(this.Quadrant)) return false;
+                if (!eval(this.LayerNumber)) return false;
+                if (!eval(this.BTXTDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new BaseLayer.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Texture = eval(this.Texture);
+                obj.Quadrant = eval(this.Quadrant);
+                obj.LayerNumber = eval(this.LayerNumber);
+                obj.BTXTDataTypeState = eval(this.BTXTDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(BaseLayer.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, BaseLayer.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(BaseLayer.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Texture ?? true)
+                    {
+                        fg.AppendLine($"Texture => {Texture}");
+                    }
+                    if (printMask?.Quadrant ?? true)
+                    {
+                        fg.AppendLine($"Quadrant => {Quadrant}");
+                    }
+                    if (printMask?.LayerNumber ?? true)
+                    {
+                        fg.AppendLine($"LayerNumber => {LayerNumber}");
+                    }
+                    if (printMask?.BTXTDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Texture;
+            public Exception? Quadrant;
+            public Exception? LayerNumber;
+            public Exception? BTXTDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public virtual object? GetNthMask(int index)
+            {
+                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                switch (enu)
+                {
+                    case BaseLayer_FieldIndex.Texture:
+                        return Texture;
+                    case BaseLayer_FieldIndex.Quadrant:
+                        return Quadrant;
+                    case BaseLayer_FieldIndex.LayerNumber:
+                        return LayerNumber;
+                    case BaseLayer_FieldIndex.BTXTDataTypeState:
+                        return BTXTDataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthException(int index, Exception ex)
+            {
+                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                switch (enu)
+                {
+                    case BaseLayer_FieldIndex.Texture:
+                        this.Texture = ex;
+                        break;
+                    case BaseLayer_FieldIndex.Quadrant:
+                        this.Quadrant = ex;
+                        break;
+                    case BaseLayer_FieldIndex.LayerNumber:
+                        this.LayerNumber = ex;
+                        break;
+                    case BaseLayer_FieldIndex.BTXTDataTypeState:
+                        this.BTXTDataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthMask(int index, object obj)
+            {
+                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                switch (enu)
+                {
+                    case BaseLayer_FieldIndex.Texture:
+                        this.Texture = (Exception)obj;
+                        break;
+                    case BaseLayer_FieldIndex.Quadrant:
+                        this.Quadrant = (Exception)obj;
+                        break;
+                    case BaseLayer_FieldIndex.LayerNumber:
+                        this.LayerNumber = (Exception)obj;
+                        break;
+                    case BaseLayer_FieldIndex.BTXTDataTypeState:
+                        this.BTXTDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Texture != null) return true;
+                if (Quadrant != null) return true;
+                if (LayerNumber != null) return true;
+                if (BTXTDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public virtual void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected virtual void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Texture => {Texture}");
+                fg.AppendLine($"Quadrant => {Quadrant}");
+                fg.AppendLine($"LayerNumber => {LayerNumber}");
+                fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Texture = this.Texture.Combine(rhs.Texture);
+                ret.Quadrant = this.Quadrant.Combine(rhs.Quadrant);
+                ret.LayerNumber = this.LayerNumber.Combine(rhs.LayerNumber);
+                ret.BTXTDataTypeState = this.BTXTDataTypeState.Combine(rhs.BTXTDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Texture;
+            public bool Quadrant;
+            public bool LayerNumber;
+            public bool BTXTDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Texture = defaultOn;
+                this.Quadrant = defaultOn;
+                this.LayerNumber = defaultOn;
+                this.BTXTDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Texture, null));
+                ret.Add((Quadrant, null));
+                ret.Add((LayerNumber, null));
+                ret.Add((BTXTDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -370,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BaseLayer_Mask<bool> GetEqualsMask(
+        public static BaseLayer.Mask<bool> GetEqualsMask(
             this IBaseLayerGetter item,
             IBaseLayerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -384,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IBaseLayerGetter item,
             string? name = null,
-            BaseLayer_Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -396,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerGetter item,
             FileGeneration fg,
             string? name = null,
-            BaseLayer_Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -407,16 +748,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IBaseLayerGetter item,
-            BaseLayer_Mask<bool?> checkMask)
+            BaseLayer.Mask<bool?> checkMask)
         {
             return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static BaseLayer_Mask<bool> GetHasBeenSetMask(this IBaseLayerGetter item)
+        public static BaseLayer.Mask<bool> GetHasBeenSetMask(this IBaseLayerGetter item)
         {
-            var ret = new BaseLayer_Mask<bool>(false);
+            var ret = new BaseLayer.Mask<bool>(false);
             ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -435,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IBaseLayerInternal lhs,
             IBaseLayerGetter rhs,
-            BaseLayer_TranslationMask? copyMask = null)
+            BaseLayer.TranslationMask? copyMask = null)
         {
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -447,8 +788,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IBaseLayerInternal lhs,
             IBaseLayerGetter rhs,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? copyMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -456,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -474,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer DeepCopy(
             this IBaseLayerGetter item,
-            BaseLayer_TranslationMask? copyMask = null)
+            BaseLayer.TranslationMask? copyMask = null)
         {
             return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -483,8 +824,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static BaseLayer DeepCopy(
             this IBaseLayerGetter item,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? copyMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? copyMask = null)
         {
             return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -508,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             XElement node,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -521,8 +862,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             XElement node,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -530,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -549,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             string path,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -561,8 +902,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             string path,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -576,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -589,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             Stream stream,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -601,8 +942,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             Stream stream,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -616,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -692,9 +1033,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(BaseLayer_Mask<>);
+        public static readonly Type MaskType = typeof(BaseLayer.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BaseLayer_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(BaseLayer.ErrorMask);
 
         public static readonly Type ClassType = typeof(BaseLayer);
 
@@ -1043,12 +1384,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
 
-        public BaseLayer_Mask<bool> GetEqualsMask(
+        public BaseLayer.Mask<bool> GetEqualsMask(
             IBaseLayerGetter item,
             IBaseLayerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BaseLayer_Mask<bool>(false);
+            var ret = new BaseLayer.Mask<bool>(false);
             ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1060,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IBaseLayerGetter item,
             IBaseLayerGetter rhs,
-            BaseLayer_Mask<bool> ret,
+            BaseLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1073,7 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IBaseLayerGetter item,
             string? name = null,
-            BaseLayer_Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1088,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBaseLayerGetter item,
             FileGeneration fg,
             string? name = null,
-            BaseLayer_Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1112,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IBaseLayerGetter item,
             FileGeneration fg,
-            BaseLayer_Mask<bool>? printMask = null)
+            BaseLayer.Mask<bool>? printMask = null)
         {
             if (printMask?.Texture ?? true)
             {
@@ -1134,14 +1475,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IBaseLayerGetter item,
-            BaseLayer_Mask<bool?> checkMask)
+            BaseLayer.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IBaseLayerGetter item,
-            BaseLayer_Mask<bool> mask)
+            BaseLayer.Mask<bool> mask)
         {
             mask.Texture = true;
             mask.Quadrant = true;
@@ -1237,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public BaseLayer DeepCopy(
             IBaseLayerGetter item,
-            BaseLayer_TranslationMask? copyMask = null)
+            BaseLayer.TranslationMask? copyMask = null)
         {
             BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1248,8 +1589,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public BaseLayer DeepCopy(
             IBaseLayerGetter item,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? copyMask = null)
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? copyMask = null)
         {
             BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1537,8 +1878,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IBaseLayerGetter item,
             XElement node,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null,
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1548,14 +1889,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IBaseLayerGetter item,
             string path,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null,
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1588,8 +1929,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IBaseLayerGetter item,
             Stream stream,
-            out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask? translationMask = null,
+            out BaseLayer.ErrorMask errorMask,
+            BaseLayer.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1638,7 +1979,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerGetter item,
             XElement node,
             string? name = null,
-            BaseLayer_TranslationMask? translationMask = null)
+            BaseLayer.TranslationMask? translationMask = null)
         {
             ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1682,348 +2023,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class BaseLayer_Mask<T> :
-        IMask<T>,
-        IEquatable<BaseLayer_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public BaseLayer_Mask(T initialValue)
-        {
-            this.Texture = initialValue;
-            this.Quadrant = initialValue;
-            this.LayerNumber = initialValue;
-            this.BTXTDataTypeState = initialValue;
-        }
-
-        public BaseLayer_Mask(
-            T Texture,
-            T Quadrant,
-            T LayerNumber,
-            T BTXTDataTypeState)
-        {
-            this.Texture = Texture;
-            this.Quadrant = Quadrant;
-            this.LayerNumber = LayerNumber;
-            this.BTXTDataTypeState = BTXTDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected BaseLayer_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Texture;
-        public T Quadrant;
-        public T LayerNumber;
-        public T BTXTDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is BaseLayer_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(BaseLayer_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Texture, rhs.Texture)) return false;
-            if (!object.Equals(this.Quadrant, rhs.Quadrant)) return false;
-            if (!object.Equals(this.LayerNumber, rhs.LayerNumber)) return false;
-            if (!object.Equals(this.BTXTDataTypeState, rhs.BTXTDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Texture?.GetHashCode());
-            ret = ret.CombineHashCode(this.Quadrant?.GetHashCode());
-            ret = ret.CombineHashCode(this.LayerNumber?.GetHashCode());
-            ret = ret.CombineHashCode(this.BTXTDataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public virtual bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Texture)) return false;
-            if (!eval(this.Quadrant)) return false;
-            if (!eval(this.LayerNumber)) return false;
-            if (!eval(this.BTXTDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public BaseLayer_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new BaseLayer_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(BaseLayer_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Texture = eval(this.Texture);
-            obj.Quadrant = eval(this.Quadrant);
-            obj.LayerNumber = eval(this.LayerNumber);
-            obj.BTXTDataTypeState = eval(this.BTXTDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(BaseLayer_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, BaseLayer_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(BaseLayer_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Texture ?? true)
-                {
-                    fg.AppendLine($"Texture => {Texture}");
-                }
-                if (printMask?.Quadrant ?? true)
-                {
-                    fg.AppendLine($"Quadrant => {Quadrant}");
-                }
-                if (printMask?.LayerNumber ?? true)
-                {
-                    fg.AppendLine($"LayerNumber => {LayerNumber}");
-                }
-                if (printMask?.BTXTDataTypeState ?? true)
-                {
-                    fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class BaseLayer_ErrorMask : IErrorMask, IErrorMask<BaseLayer_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Texture;
-        public Exception? Quadrant;
-        public Exception? LayerNumber;
-        public Exception? BTXTDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public virtual object? GetNthMask(int index)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    return Texture;
-                case BaseLayer_FieldIndex.Quadrant:
-                    return Quadrant;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    return LayerNumber;
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    return BTXTDataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthException(int index, Exception ex)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    this.Texture = ex;
-                    break;
-                case BaseLayer_FieldIndex.Quadrant:
-                    this.Quadrant = ex;
-                    break;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    this.LayerNumber = ex;
-                    break;
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    this.BTXTDataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthMask(int index, object obj)
-        {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
-            switch (enu)
-            {
-                case BaseLayer_FieldIndex.Texture:
-                    this.Texture = (Exception)obj;
-                    break;
-                case BaseLayer_FieldIndex.Quadrant:
-                    this.Quadrant = (Exception)obj;
-                    break;
-                case BaseLayer_FieldIndex.LayerNumber:
-                    this.LayerNumber = (Exception)obj;
-                    break;
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
-                    this.BTXTDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Texture != null) return true;
-            if (Quadrant != null) return true;
-            if (LayerNumber != null) return true;
-            if (BTXTDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public virtual void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("BaseLayer_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected virtual void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Texture => {Texture}");
-            fg.AppendLine($"Quadrant => {Quadrant}");
-            fg.AppendLine($"LayerNumber => {LayerNumber}");
-            fg.AppendLine($"BTXTDataTypeState => {BTXTDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public BaseLayer_ErrorMask Combine(BaseLayer_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new BaseLayer_ErrorMask();
-            ret.Texture = this.Texture.Combine(rhs.Texture);
-            ret.Quadrant = this.Quadrant.Combine(rhs.Quadrant);
-            ret.LayerNumber = this.LayerNumber.Combine(rhs.LayerNumber);
-            ret.BTXTDataTypeState = this.BTXTDataTypeState.Combine(rhs.BTXTDataTypeState);
-            return ret;
-        }
-        public static BaseLayer_ErrorMask? Combine(BaseLayer_ErrorMask? lhs, BaseLayer_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static BaseLayer_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new BaseLayer_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class BaseLayer_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Texture;
-        public bool Quadrant;
-        public bool LayerNumber;
-        public bool BTXTDataTypeState;
-        #endregion
-
-        #region Ctors
-        public BaseLayer_TranslationMask(bool defaultOn)
-        {
-            this.Texture = defaultOn;
-            this.Quadrant = defaultOn;
-            this.LayerNumber = defaultOn;
-            this.BTXTDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Texture, null));
-            ret.Add((Quadrant, null));
-            ret.Add((LayerNumber, null));
-            ret.Add((BTXTDataTypeState, null));
-        }
-    }
 }
 #endregion
 

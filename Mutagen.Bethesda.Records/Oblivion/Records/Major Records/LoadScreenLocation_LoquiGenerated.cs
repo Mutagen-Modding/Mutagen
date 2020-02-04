@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LoadScreenLocation CreateFromXml(
             XElement node,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -127,15 +127,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LoadScreenLocation CreateFromXml(
             XElement node,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LoadScreenLocation.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation CreateFromXml(
             string path,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,8 +165,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation CreateFromXml(
             string path,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LoadScreenLocation CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation CreateFromXml(
             Stream stream,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation CreateFromXml(
             Stream stream,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LoadScreenLocation CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -223,6 +223,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Direct = initialValue;
+                this.Indirect = initialValue;
+                this.GridPoint = initialValue;
+            }
+
+            public Mask(
+                T Direct,
+                T Indirect,
+                T GridPoint)
+            {
+                this.Direct = Direct;
+                this.Indirect = Indirect;
+                this.GridPoint = GridPoint;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Direct;
+            public T Indirect;
+            public T GridPoint;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Direct, rhs.Direct)) return false;
+                if (!object.Equals(this.Indirect, rhs.Indirect)) return false;
+                if (!object.Equals(this.GridPoint, rhs.GridPoint)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Direct?.GetHashCode());
+                ret = ret.CombineHashCode(this.Indirect?.GetHashCode());
+                ret = ret.CombineHashCode(this.GridPoint?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Direct)) return false;
+                if (!eval(this.Indirect)) return false;
+                if (!eval(this.GridPoint)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new LoadScreenLocation.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Direct = eval(this.Direct);
+                obj.Indirect = eval(this.Indirect);
+                obj.GridPoint = eval(this.GridPoint);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(LoadScreenLocation.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, LoadScreenLocation.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(LoadScreenLocation.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Direct ?? true)
+                    {
+                        fg.AppendLine($"Direct => {Direct}");
+                    }
+                    if (printMask?.Indirect ?? true)
+                    {
+                        fg.AppendLine($"Indirect => {Indirect}");
+                    }
+                    if (printMask?.GridPoint ?? true)
+                    {
+                        fg.AppendLine($"GridPoint => {GridPoint}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Direct;
+            public Exception? Indirect;
+            public Exception? GridPoint;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case LoadScreenLocation_FieldIndex.Direct:
+                        return Direct;
+                    case LoadScreenLocation_FieldIndex.Indirect:
+                        return Indirect;
+                    case LoadScreenLocation_FieldIndex.GridPoint:
+                        return GridPoint;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case LoadScreenLocation_FieldIndex.Direct:
+                        this.Direct = ex;
+                        break;
+                    case LoadScreenLocation_FieldIndex.Indirect:
+                        this.Indirect = ex;
+                        break;
+                    case LoadScreenLocation_FieldIndex.GridPoint:
+                        this.GridPoint = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case LoadScreenLocation_FieldIndex.Direct:
+                        this.Direct = (Exception)obj;
+                        break;
+                    case LoadScreenLocation_FieldIndex.Indirect:
+                        this.Indirect = (Exception)obj;
+                        break;
+                    case LoadScreenLocation_FieldIndex.GridPoint:
+                        this.GridPoint = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Direct != null) return true;
+                if (Indirect != null) return true;
+                if (GridPoint != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Direct => {Direct}");
+                fg.AppendLine($"Indirect => {Indirect}");
+                fg.AppendLine($"GridPoint => {GridPoint}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Direct = this.Direct.Combine(rhs.Direct);
+                ret.Indirect = this.Indirect.Combine(rhs.Indirect);
+                ret.GridPoint = this.GridPoint.Combine(rhs.GridPoint);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Direct;
+            public bool Indirect;
+            public bool GridPoint;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Direct = defaultOn;
+                this.Indirect = defaultOn;
+                this.GridPoint = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Direct, null));
+                ret.Add((Indirect, null));
+                ret.Add((GridPoint, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -333,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LoadScreenLocation_Mask<bool> GetEqualsMask(
+        public static LoadScreenLocation.Mask<bool> GetEqualsMask(
             this ILoadScreenLocationGetter item,
             ILoadScreenLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -347,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILoadScreenLocationGetter item,
             string? name = null,
-            LoadScreenLocation_Mask<bool>? printMask = null)
+            LoadScreenLocation.Mask<bool>? printMask = null)
         {
             return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocationGetter item,
             FileGeneration fg,
             string? name = null,
-            LoadScreenLocation_Mask<bool>? printMask = null)
+            LoadScreenLocation.Mask<bool>? printMask = null)
         {
             ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -370,16 +684,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILoadScreenLocationGetter item,
-            LoadScreenLocation_Mask<bool?> checkMask)
+            LoadScreenLocation.Mask<bool?> checkMask)
         {
             return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LoadScreenLocation_Mask<bool> GetHasBeenSetMask(this ILoadScreenLocationGetter item)
+        public static LoadScreenLocation.Mask<bool> GetHasBeenSetMask(this ILoadScreenLocationGetter item)
         {
-            var ret = new LoadScreenLocation_Mask<bool>(false);
+            var ret = new LoadScreenLocation.Mask<bool>(false);
             ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -398,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
-            LoadScreenLocation_TranslationMask? copyMask = null)
+            LoadScreenLocation.TranslationMask? copyMask = null)
         {
             ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -410,8 +724,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? copyMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -419,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LoadScreenLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -437,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation DeepCopy(
             this ILoadScreenLocationGetter item,
-            LoadScreenLocation_TranslationMask? copyMask = null)
+            LoadScreenLocation.TranslationMask? copyMask = null)
         {
             return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -446,8 +760,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LoadScreenLocation DeepCopy(
             this ILoadScreenLocationGetter item,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? copyMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? copyMask = null)
         {
             return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -471,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             XElement node,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -484,8 +798,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             XElement node,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -493,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LoadScreenLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -512,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             string path,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -524,8 +838,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             string path,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -539,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocation item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -552,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             Stream stream,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -564,8 +878,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             Stream stream,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -579,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocation item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -654,9 +968,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(LoadScreenLocation_Mask<>);
+        public static readonly Type MaskType = typeof(LoadScreenLocation.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LoadScreenLocation_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LoadScreenLocation.ErrorMask);
 
         public static readonly Type ClassType = typeof(LoadScreenLocation);
 
@@ -917,12 +1231,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly LoadScreenLocationCommon Instance = new LoadScreenLocationCommon();
 
-        public LoadScreenLocation_Mask<bool> GetEqualsMask(
+        public LoadScreenLocation.Mask<bool> GetEqualsMask(
             ILoadScreenLocationGetter item,
             ILoadScreenLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LoadScreenLocation_Mask<bool>(false);
+            var ret = new LoadScreenLocation.Mask<bool>(false);
             ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -934,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILoadScreenLocationGetter item,
             ILoadScreenLocationGetter rhs,
-            LoadScreenLocation_Mask<bool> ret,
+            LoadScreenLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -946,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILoadScreenLocationGetter item,
             string? name = null,
-            LoadScreenLocation_Mask<bool>? printMask = null)
+            LoadScreenLocation.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -961,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocationGetter item,
             FileGeneration fg,
             string? name = null,
-            LoadScreenLocation_Mask<bool>? printMask = null)
+            LoadScreenLocation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -985,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILoadScreenLocationGetter item,
             FileGeneration fg,
-            LoadScreenLocation_Mask<bool>? printMask = null)
+            LoadScreenLocation.Mask<bool>? printMask = null)
         {
             if (printMask?.Direct ?? true)
             {
@@ -1003,14 +1317,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILoadScreenLocationGetter item,
-            LoadScreenLocation_Mask<bool?> checkMask)
+            LoadScreenLocation.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ILoadScreenLocationGetter item,
-            LoadScreenLocation_Mask<bool> mask)
+            LoadScreenLocation.Mask<bool> mask)
         {
             mask.Direct = true;
             mask.Indirect = true;
@@ -1087,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LoadScreenLocation DeepCopy(
             ILoadScreenLocationGetter item,
-            LoadScreenLocation_TranslationMask? copyMask = null)
+            LoadScreenLocation.TranslationMask? copyMask = null)
         {
             LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1098,8 +1412,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LoadScreenLocation DeepCopy(
             ILoadScreenLocationGetter item,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? copyMask = null)
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? copyMask = null)
         {
             LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1375,8 +1689,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILoadScreenLocationGetter item,
             XElement node,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null,
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1386,14 +1700,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LoadScreenLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILoadScreenLocationGetter item,
             string path,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null,
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1426,8 +1740,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILoadScreenLocationGetter item,
             Stream stream,
-            out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask? translationMask = null,
+            out LoadScreenLocation.ErrorMask errorMask,
+            LoadScreenLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1476,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocationGetter item,
             XElement node,
             string? name = null,
-            LoadScreenLocation_TranslationMask? translationMask = null)
+            LoadScreenLocation.TranslationMask? translationMask = null)
         {
             ((LoadScreenLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1520,321 +1834,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class LoadScreenLocation_Mask<T> :
-        IMask<T>,
-        IEquatable<LoadScreenLocation_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public LoadScreenLocation_Mask(T initialValue)
-        {
-            this.Direct = initialValue;
-            this.Indirect = initialValue;
-            this.GridPoint = initialValue;
-        }
-
-        public LoadScreenLocation_Mask(
-            T Direct,
-            T Indirect,
-            T GridPoint)
-        {
-            this.Direct = Direct;
-            this.Indirect = Indirect;
-            this.GridPoint = GridPoint;
-        }
-
-        #pragma warning disable CS8618
-        protected LoadScreenLocation_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Direct;
-        public T Indirect;
-        public T GridPoint;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LoadScreenLocation_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(LoadScreenLocation_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Direct, rhs.Direct)) return false;
-            if (!object.Equals(this.Indirect, rhs.Indirect)) return false;
-            if (!object.Equals(this.GridPoint, rhs.GridPoint)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Direct?.GetHashCode());
-            ret = ret.CombineHashCode(this.Indirect?.GetHashCode());
-            ret = ret.CombineHashCode(this.GridPoint?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Direct)) return false;
-            if (!eval(this.Indirect)) return false;
-            if (!eval(this.GridPoint)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public LoadScreenLocation_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new LoadScreenLocation_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(LoadScreenLocation_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Direct = eval(this.Direct);
-            obj.Indirect = eval(this.Indirect);
-            obj.GridPoint = eval(this.GridPoint);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(LoadScreenLocation_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, LoadScreenLocation_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(LoadScreenLocation_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Direct ?? true)
-                {
-                    fg.AppendLine($"Direct => {Direct}");
-                }
-                if (printMask?.Indirect ?? true)
-                {
-                    fg.AppendLine($"Indirect => {Indirect}");
-                }
-                if (printMask?.GridPoint ?? true)
-                {
-                    fg.AppendLine($"GridPoint => {GridPoint}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class LoadScreenLocation_ErrorMask : IErrorMask, IErrorMask<LoadScreenLocation_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Direct;
-        public Exception? Indirect;
-        public Exception? GridPoint;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    return Direct;
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    return Indirect;
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    return GridPoint;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    this.Direct = ex;
-                    break;
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    this.Indirect = ex;
-                    break;
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    this.GridPoint = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            LoadScreenLocation_FieldIndex enu = (LoadScreenLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case LoadScreenLocation_FieldIndex.Direct:
-                    this.Direct = (Exception)obj;
-                    break;
-                case LoadScreenLocation_FieldIndex.Indirect:
-                    this.Indirect = (Exception)obj;
-                    break;
-                case LoadScreenLocation_FieldIndex.GridPoint:
-                    this.GridPoint = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Direct != null) return true;
-            if (Indirect != null) return true;
-            if (GridPoint != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("LoadScreenLocation_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Direct => {Direct}");
-            fg.AppendLine($"Indirect => {Indirect}");
-            fg.AppendLine($"GridPoint => {GridPoint}");
-        }
-        #endregion
-
-        #region Combine
-        public LoadScreenLocation_ErrorMask Combine(LoadScreenLocation_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new LoadScreenLocation_ErrorMask();
-            ret.Direct = this.Direct.Combine(rhs.Direct);
-            ret.Indirect = this.Indirect.Combine(rhs.Indirect);
-            ret.GridPoint = this.GridPoint.Combine(rhs.GridPoint);
-            return ret;
-        }
-        public static LoadScreenLocation_ErrorMask? Combine(LoadScreenLocation_ErrorMask? lhs, LoadScreenLocation_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static LoadScreenLocation_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new LoadScreenLocation_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class LoadScreenLocation_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Direct;
-        public bool Indirect;
-        public bool GridPoint;
-        #endregion
-
-        #region Ctors
-        public LoadScreenLocation_TranslationMask(bool defaultOn)
-        {
-            this.Direct = defaultOn;
-            this.Indirect = defaultOn;
-            this.GridPoint = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Direct, null));
-            ret.Add((Indirect, null));
-            ret.Add((GridPoint, null));
-        }
-    }
 }
 #endregion
 

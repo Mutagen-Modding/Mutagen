@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "blic partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGette";
+            string testString = "ublic static async Task WriteToXmlFolder<T, T_ErrMask>(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

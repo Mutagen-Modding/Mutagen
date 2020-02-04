@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageSchedule CreateFromXml(
             XElement node,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -125,15 +125,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AIPackageSchedule CreateFromXml(
             XElement node,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageSchedule.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             string path,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -163,8 +163,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             string path,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             Stream stream,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -197,8 +197,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule CreateFromXml(
             Stream stream,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageSchedule CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -221,6 +221,374 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Month = initialValue;
+                this.DayOfWeek = initialValue;
+                this.Day = initialValue;
+                this.Time = initialValue;
+                this.Duration = initialValue;
+            }
+
+            public Mask(
+                T Month,
+                T DayOfWeek,
+                T Day,
+                T Time,
+                T Duration)
+            {
+                this.Month = Month;
+                this.DayOfWeek = DayOfWeek;
+                this.Day = Day;
+                this.Time = Time;
+                this.Duration = Duration;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Month;
+            public T DayOfWeek;
+            public T Day;
+            public T Time;
+            public T Duration;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Month, rhs.Month)) return false;
+                if (!object.Equals(this.DayOfWeek, rhs.DayOfWeek)) return false;
+                if (!object.Equals(this.Day, rhs.Day)) return false;
+                if (!object.Equals(this.Time, rhs.Time)) return false;
+                if (!object.Equals(this.Duration, rhs.Duration)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Month?.GetHashCode());
+                ret = ret.CombineHashCode(this.DayOfWeek?.GetHashCode());
+                ret = ret.CombineHashCode(this.Day?.GetHashCode());
+                ret = ret.CombineHashCode(this.Time?.GetHashCode());
+                ret = ret.CombineHashCode(this.Duration?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Month)) return false;
+                if (!eval(this.DayOfWeek)) return false;
+                if (!eval(this.Day)) return false;
+                if (!eval(this.Time)) return false;
+                if (!eval(this.Duration)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AIPackageSchedule.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Month = eval(this.Month);
+                obj.DayOfWeek = eval(this.DayOfWeek);
+                obj.Day = eval(this.Day);
+                obj.Time = eval(this.Time);
+                obj.Duration = eval(this.Duration);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AIPackageSchedule.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AIPackageSchedule.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AIPackageSchedule.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Month ?? true)
+                    {
+                        fg.AppendLine($"Month => {Month}");
+                    }
+                    if (printMask?.DayOfWeek ?? true)
+                    {
+                        fg.AppendLine($"DayOfWeek => {DayOfWeek}");
+                    }
+                    if (printMask?.Day ?? true)
+                    {
+                        fg.AppendLine($"Day => {Day}");
+                    }
+                    if (printMask?.Time ?? true)
+                    {
+                        fg.AppendLine($"Time => {Time}");
+                    }
+                    if (printMask?.Duration ?? true)
+                    {
+                        fg.AppendLine($"Duration => {Duration}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Month;
+            public Exception? DayOfWeek;
+            public Exception? Day;
+            public Exception? Time;
+            public Exception? Duration;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageSchedule_FieldIndex.Month:
+                        return Month;
+                    case AIPackageSchedule_FieldIndex.DayOfWeek:
+                        return DayOfWeek;
+                    case AIPackageSchedule_FieldIndex.Day:
+                        return Day;
+                    case AIPackageSchedule_FieldIndex.Time:
+                        return Time;
+                    case AIPackageSchedule_FieldIndex.Duration:
+                        return Duration;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageSchedule_FieldIndex.Month:
+                        this.Month = ex;
+                        break;
+                    case AIPackageSchedule_FieldIndex.DayOfWeek:
+                        this.DayOfWeek = ex;
+                        break;
+                    case AIPackageSchedule_FieldIndex.Day:
+                        this.Day = ex;
+                        break;
+                    case AIPackageSchedule_FieldIndex.Time:
+                        this.Time = ex;
+                        break;
+                    case AIPackageSchedule_FieldIndex.Duration:
+                        this.Duration = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
+                switch (enu)
+                {
+                    case AIPackageSchedule_FieldIndex.Month:
+                        this.Month = (Exception)obj;
+                        break;
+                    case AIPackageSchedule_FieldIndex.DayOfWeek:
+                        this.DayOfWeek = (Exception)obj;
+                        break;
+                    case AIPackageSchedule_FieldIndex.Day:
+                        this.Day = (Exception)obj;
+                        break;
+                    case AIPackageSchedule_FieldIndex.Time:
+                        this.Time = (Exception)obj;
+                        break;
+                    case AIPackageSchedule_FieldIndex.Duration:
+                        this.Duration = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Month != null) return true;
+                if (DayOfWeek != null) return true;
+                if (Day != null) return true;
+                if (Time != null) return true;
+                if (Duration != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Month => {Month}");
+                fg.AppendLine($"DayOfWeek => {DayOfWeek}");
+                fg.AppendLine($"Day => {Day}");
+                fg.AppendLine($"Time => {Time}");
+                fg.AppendLine($"Duration => {Duration}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Month = this.Month.Combine(rhs.Month);
+                ret.DayOfWeek = this.DayOfWeek.Combine(rhs.DayOfWeek);
+                ret.Day = this.Day.Combine(rhs.Day);
+                ret.Time = this.Time.Combine(rhs.Time);
+                ret.Duration = this.Duration.Combine(rhs.Duration);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Month;
+            public bool DayOfWeek;
+            public bool Day;
+            public bool Time;
+            public bool Duration;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Month = defaultOn;
+                this.DayOfWeek = defaultOn;
+                this.Day = defaultOn;
+                this.Time = defaultOn;
+                this.Duration = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Month, null));
+                ret.Add((DayOfWeek, null));
+                ret.Add((Day, null));
+                ret.Add((Time, null));
+                ret.Add((Duration, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -332,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AIPackageSchedule_Mask<bool> GetEqualsMask(
+        public static AIPackageSchedule.Mask<bool> GetEqualsMask(
             this IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -346,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAIPackageScheduleGetter item,
             string? name = null,
-            AIPackageSchedule_Mask<bool>? printMask = null)
+            AIPackageSchedule.Mask<bool>? printMask = null)
         {
             return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -358,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackageSchedule_Mask<bool>? printMask = null)
+            AIPackageSchedule.Mask<bool>? printMask = null)
         {
             ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,16 +737,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAIPackageScheduleGetter item,
-            AIPackageSchedule_Mask<bool?> checkMask)
+            AIPackageSchedule.Mask<bool?> checkMask)
         {
             return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AIPackageSchedule_Mask<bool> GetHasBeenSetMask(this IAIPackageScheduleGetter item)
+        public static AIPackageSchedule.Mask<bool> GetHasBeenSetMask(this IAIPackageScheduleGetter item)
         {
-            var ret = new AIPackageSchedule_Mask<bool>(false);
+            var ret = new AIPackageSchedule.Mask<bool>(false);
             ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -397,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageSchedule lhs,
             IAIPackageScheduleGetter rhs,
-            AIPackageSchedule_TranslationMask? copyMask = null)
+            AIPackageSchedule.TranslationMask? copyMask = null)
         {
             ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -409,8 +777,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAIPackageSchedule lhs,
             IAIPackageScheduleGetter rhs,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? copyMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -418,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageSchedule.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -436,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule DeepCopy(
             this IAIPackageScheduleGetter item,
-            AIPackageSchedule_TranslationMask? copyMask = null)
+            AIPackageSchedule.TranslationMask? copyMask = null)
         {
             return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -445,8 +813,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AIPackageSchedule DeepCopy(
             this IAIPackageScheduleGetter item,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? copyMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? copyMask = null)
         {
             return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -470,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             XElement node,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -483,8 +851,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             XElement node,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -492,7 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageSchedule.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -511,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             string path,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -523,8 +891,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             string path,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -538,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -551,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             Stream stream,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -563,8 +931,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAIPackageSchedule item,
             Stream stream,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -578,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -655,9 +1023,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(AIPackageSchedule_Mask<>);
+        public static readonly Type MaskType = typeof(AIPackageSchedule.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AIPackageSchedule_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AIPackageSchedule.ErrorMask);
 
         public static readonly Type ClassType = typeof(AIPackageSchedule);
 
@@ -938,12 +1306,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly AIPackageScheduleCommon Instance = new AIPackageScheduleCommon();
 
-        public AIPackageSchedule_Mask<bool> GetEqualsMask(
+        public AIPackageSchedule.Mask<bool> GetEqualsMask(
             IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AIPackageSchedule_Mask<bool>(false);
+            var ret = new AIPackageSchedule.Mask<bool>(false);
             ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -955,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAIPackageScheduleGetter item,
             IAIPackageScheduleGetter rhs,
-            AIPackageSchedule_Mask<bool> ret,
+            AIPackageSchedule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -969,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAIPackageScheduleGetter item,
             string? name = null,
-            AIPackageSchedule_Mask<bool>? printMask = null)
+            AIPackageSchedule.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -984,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             FileGeneration fg,
             string? name = null,
-            AIPackageSchedule_Mask<bool>? printMask = null)
+            AIPackageSchedule.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1008,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAIPackageScheduleGetter item,
             FileGeneration fg,
-            AIPackageSchedule_Mask<bool>? printMask = null)
+            AIPackageSchedule.Mask<bool>? printMask = null)
         {
             if (printMask?.Month ?? true)
             {
@@ -1034,14 +1402,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAIPackageScheduleGetter item,
-            AIPackageSchedule_Mask<bool?> checkMask)
+            AIPackageSchedule.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IAIPackageScheduleGetter item,
-            AIPackageSchedule_Mask<bool> mask)
+            AIPackageSchedule.Mask<bool> mask)
         {
             mask.Month = true;
             mask.DayOfWeek = true;
@@ -1130,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageSchedule DeepCopy(
             IAIPackageScheduleGetter item,
-            AIPackageSchedule_TranslationMask? copyMask = null)
+            AIPackageSchedule.TranslationMask? copyMask = null)
         {
             AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1141,8 +1509,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AIPackageSchedule DeepCopy(
             IAIPackageScheduleGetter item,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? copyMask = null)
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? copyMask = null)
         {
             AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1470,8 +1838,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             XElement node,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null,
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1481,14 +1849,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AIPackageSchedule.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             string path,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null,
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1521,8 +1889,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAIPackageScheduleGetter item,
             Stream stream,
-            out AIPackageSchedule_ErrorMask errorMask,
-            AIPackageSchedule_TranslationMask? translationMask = null,
+            out AIPackageSchedule.ErrorMask errorMask,
+            AIPackageSchedule.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1571,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageScheduleGetter item,
             XElement node,
             string? name = null,
-            AIPackageSchedule_TranslationMask? translationMask = null)
+            AIPackageSchedule.TranslationMask? translationMask = null)
         {
             ((AIPackageScheduleXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1615,375 +1983,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AIPackageSchedule_Mask<T> :
-        IMask<T>,
-        IEquatable<AIPackageSchedule_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AIPackageSchedule_Mask(T initialValue)
-        {
-            this.Month = initialValue;
-            this.DayOfWeek = initialValue;
-            this.Day = initialValue;
-            this.Time = initialValue;
-            this.Duration = initialValue;
-        }
-
-        public AIPackageSchedule_Mask(
-            T Month,
-            T DayOfWeek,
-            T Day,
-            T Time,
-            T Duration)
-        {
-            this.Month = Month;
-            this.DayOfWeek = DayOfWeek;
-            this.Day = Day;
-            this.Time = Time;
-            this.Duration = Duration;
-        }
-
-        #pragma warning disable CS8618
-        protected AIPackageSchedule_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Month;
-        public T DayOfWeek;
-        public T Day;
-        public T Time;
-        public T Duration;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AIPackageSchedule_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AIPackageSchedule_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Month, rhs.Month)) return false;
-            if (!object.Equals(this.DayOfWeek, rhs.DayOfWeek)) return false;
-            if (!object.Equals(this.Day, rhs.Day)) return false;
-            if (!object.Equals(this.Time, rhs.Time)) return false;
-            if (!object.Equals(this.Duration, rhs.Duration)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Month?.GetHashCode());
-            ret = ret.CombineHashCode(this.DayOfWeek?.GetHashCode());
-            ret = ret.CombineHashCode(this.Day?.GetHashCode());
-            ret = ret.CombineHashCode(this.Time?.GetHashCode());
-            ret = ret.CombineHashCode(this.Duration?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Month)) return false;
-            if (!eval(this.DayOfWeek)) return false;
-            if (!eval(this.Day)) return false;
-            if (!eval(this.Time)) return false;
-            if (!eval(this.Duration)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public AIPackageSchedule_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AIPackageSchedule_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AIPackageSchedule_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Month = eval(this.Month);
-            obj.DayOfWeek = eval(this.DayOfWeek);
-            obj.Day = eval(this.Day);
-            obj.Time = eval(this.Time);
-            obj.Duration = eval(this.Duration);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AIPackageSchedule_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AIPackageSchedule_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AIPackageSchedule_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Month ?? true)
-                {
-                    fg.AppendLine($"Month => {Month}");
-                }
-                if (printMask?.DayOfWeek ?? true)
-                {
-                    fg.AppendLine($"DayOfWeek => {DayOfWeek}");
-                }
-                if (printMask?.Day ?? true)
-                {
-                    fg.AppendLine($"Day => {Day}");
-                }
-                if (printMask?.Time ?? true)
-                {
-                    fg.AppendLine($"Time => {Time}");
-                }
-                if (printMask?.Duration ?? true)
-                {
-                    fg.AppendLine($"Duration => {Duration}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AIPackageSchedule_ErrorMask : IErrorMask, IErrorMask<AIPackageSchedule_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Month;
-        public Exception? DayOfWeek;
-        public Exception? Day;
-        public Exception? Time;
-        public Exception? Duration;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    return Month;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    return DayOfWeek;
-                case AIPackageSchedule_FieldIndex.Day:
-                    return Day;
-                case AIPackageSchedule_FieldIndex.Time:
-                    return Time;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    return Duration;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    this.Month = ex;
-                    break;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    this.DayOfWeek = ex;
-                    break;
-                case AIPackageSchedule_FieldIndex.Day:
-                    this.Day = ex;
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    this.Time = ex;
-                    break;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    this.Duration = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            AIPackageSchedule_FieldIndex enu = (AIPackageSchedule_FieldIndex)index;
-            switch (enu)
-            {
-                case AIPackageSchedule_FieldIndex.Month:
-                    this.Month = (Exception)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.DayOfWeek:
-                    this.DayOfWeek = (Exception)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.Day:
-                    this.Day = (Exception)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.Time:
-                    this.Time = (Exception)obj;
-                    break;
-                case AIPackageSchedule_FieldIndex.Duration:
-                    this.Duration = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Month != null) return true;
-            if (DayOfWeek != null) return true;
-            if (Day != null) return true;
-            if (Time != null) return true;
-            if (Duration != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AIPackageSchedule_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Month => {Month}");
-            fg.AppendLine($"DayOfWeek => {DayOfWeek}");
-            fg.AppendLine($"Day => {Day}");
-            fg.AppendLine($"Time => {Time}");
-            fg.AppendLine($"Duration => {Duration}");
-        }
-        #endregion
-
-        #region Combine
-        public AIPackageSchedule_ErrorMask Combine(AIPackageSchedule_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AIPackageSchedule_ErrorMask();
-            ret.Month = this.Month.Combine(rhs.Month);
-            ret.DayOfWeek = this.DayOfWeek.Combine(rhs.DayOfWeek);
-            ret.Day = this.Day.Combine(rhs.Day);
-            ret.Time = this.Time.Combine(rhs.Time);
-            ret.Duration = this.Duration.Combine(rhs.Duration);
-            return ret;
-        }
-        public static AIPackageSchedule_ErrorMask? Combine(AIPackageSchedule_ErrorMask? lhs, AIPackageSchedule_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static AIPackageSchedule_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AIPackageSchedule_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AIPackageSchedule_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Month;
-        public bool DayOfWeek;
-        public bool Day;
-        public bool Time;
-        public bool Duration;
-        #endregion
-
-        #region Ctors
-        public AIPackageSchedule_TranslationMask(bool defaultOn)
-        {
-            this.Month = defaultOn;
-            this.DayOfWeek = defaultOn;
-            this.Day = defaultOn;
-            this.Time = defaultOn;
-            this.Duration = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Month, null));
-            ret.Add((DayOfWeek, null));
-            ret.Add((Day, null));
-            ret.Add((Time, null));
-            ret.Add((Duration, null));
-        }
-    }
 }
 #endregion
 

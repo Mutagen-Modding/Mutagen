@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new LeveledCreature CreateFromXml(
             XElement node,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -159,15 +159,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LeveledCreature CreateFromXml(
             XElement node,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LeveledCreature.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledCreature CreateFromXml(
             string path,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -197,8 +197,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledCreature CreateFromXml(
             string path,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledCreature CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledCreature CreateFromXml(
             Stream stream,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -231,8 +231,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledCreature CreateFromXml(
             Stream stream,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LeveledCreature CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -255,6 +255,448 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            NPCSpawn.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.ChanceNone = initialValue;
+                this.Flags = initialValue;
+                this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>());
+                this.Script = initialValue;
+                this.Template = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T ChanceNone,
+                T Flags,
+                T Entries,
+                T Script,
+                T Template)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.ChanceNone = ChanceNone;
+                this.Flags = Flags;
+                this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>>(Entries, Enumerable.Empty<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>());
+                this.Script = Script;
+                this.Template = Template;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T ChanceNone;
+            public T Flags;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry.Mask<T>?>>>? Entries;
+            public T Script;
+            public T Template;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Entries, rhs.Entries)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Template, rhs.Template)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.ChanceNone?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Entries?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Template?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.ChanceNone)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Entries != null)
+                {
+                    if (!eval(this.Entries.Overall)) return false;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Template)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new LeveledCreature.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.ChanceNone = eval(this.ChanceNone);
+                obj.Flags = eval(this.Flags);
+                if (Entries != null)
+                {
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>());
+                    if (Entries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>();
+                        obj.Entries.Specific = l;
+                        foreach (var item in Entries.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LeveledEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Script = eval(this.Script);
+                obj.Template = eval(this.Template);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(LeveledCreature.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, LeveledCreature.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(LeveledCreature.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.ChanceNone ?? true)
+                    {
+                        fg.AppendLine($"ChanceNone => {ChanceNone}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Entries?.Overall ?? true)
+                    {
+                        fg.AppendLine("Entries =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Entries != null)
+                            {
+                                if (Entries.Overall != null)
+                                {
+                                    fg.AppendLine(Entries.Overall.ToString());
+                                }
+                                if (Entries.Specific != null)
+                                {
+                                    foreach (var subItem in Entries.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Template ?? true)
+                    {
+                        fg.AppendLine($"Template => {Template}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            NPCSpawn.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? ChanceNone;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NPCSpawn.ErrorMask>?>>?>? Entries;
+            public Exception? Script;
+            public Exception? Template;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
+                switch (enu)
+                {
+                    case LeveledCreature_FieldIndex.ChanceNone:
+                        return ChanceNone;
+                    case LeveledCreature_FieldIndex.Flags:
+                        return Flags;
+                    case LeveledCreature_FieldIndex.Entries:
+                        return Entries;
+                    case LeveledCreature_FieldIndex.Script:
+                        return Script;
+                    case LeveledCreature_FieldIndex.Template:
+                        return Template;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
+                switch (enu)
+                {
+                    case LeveledCreature_FieldIndex.ChanceNone:
+                        this.ChanceNone = ex;
+                        break;
+                    case LeveledCreature_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case LeveledCreature_FieldIndex.Entries:
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NPCSpawn.ErrorMask>?>>?>(ex, null);
+                        break;
+                    case LeveledCreature_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case LeveledCreature_FieldIndex.Template:
+                        this.Template = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
+                switch (enu)
+                {
+                    case LeveledCreature_FieldIndex.ChanceNone:
+                        this.ChanceNone = (Exception)obj;
+                        break;
+                    case LeveledCreature_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case LeveledCreature_FieldIndex.Entries:
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NPCSpawn.ErrorMask>?>>?>)obj;
+                        break;
+                    case LeveledCreature_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case LeveledCreature_FieldIndex.Template:
+                        this.Template = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (ChanceNone != null) return true;
+                if (Flags != null) return true;
+                if (Entries != null) return true;
+                if (Script != null) return true;
+                if (Template != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"ChanceNone => {ChanceNone}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine("Entries =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Entries != null)
+                    {
+                        if (Entries.Overall != null)
+                        {
+                            fg.AppendLine(Entries.Overall.ToString());
+                        }
+                        if (Entries.Specific != null)
+                        {
+                            foreach (var subItem in Entries.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Template => {Template}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NPCSpawn.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Template = this.Template.Combine(rhs.Template);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            NPCSpawn.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool ChanceNone;
+            public bool Flags;
+            public MaskItem<bool, LeveledEntry.TranslationMask<NPCSpawn.TranslationMask>?> Entries;
+            public bool Script;
+            public bool Template;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.ChanceNone = defaultOn;
+                this.Flags = defaultOn;
+                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<NPCSpawn.TranslationMask>?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.Template = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ChanceNone, null));
+                ret.Add((Flags, null));
+                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Template, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -380,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LeveledCreature_Mask<bool> GetEqualsMask(
+        public static LeveledCreature.Mask<bool> GetEqualsMask(
             this ILeveledCreatureGetter item,
             ILeveledCreatureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -394,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILeveledCreatureGetter item,
             string? name = null,
-            LeveledCreature_Mask<bool>? printMask = null)
+            LeveledCreature.Mask<bool>? printMask = null)
         {
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -406,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureGetter item,
             FileGeneration fg,
             string? name = null,
-            LeveledCreature_Mask<bool>? printMask = null)
+            LeveledCreature.Mask<bool>? printMask = null)
         {
             ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -417,16 +859,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILeveledCreatureGetter item,
-            LeveledCreature_Mask<bool?> checkMask)
+            LeveledCreature.Mask<bool?> checkMask)
         {
             return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LeveledCreature_Mask<bool> GetHasBeenSetMask(this ILeveledCreatureGetter item)
+        public static LeveledCreature.Mask<bool> GetHasBeenSetMask(this ILeveledCreatureGetter item)
         {
-            var ret = new LeveledCreature_Mask<bool>(false);
+            var ret = new LeveledCreature.Mask<bool>(false);
             ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -445,8 +887,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILeveledCreatureInternal lhs,
             ILeveledCreatureGetter rhs,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? copyMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -454,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LeveledCreature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -472,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledCreature DeepCopy(
             this ILeveledCreatureGetter item,
-            LeveledCreature_TranslationMask? copyMask = null)
+            LeveledCreature.TranslationMask? copyMask = null)
         {
             return ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -481,8 +923,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LeveledCreature DeepCopy(
             this ILeveledCreatureGetter item,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? copyMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? copyMask = null)
         {
             return ((LeveledCreatureSetterTranslationCommon)((ILeveledCreatureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -506,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             XElement node,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -519,8 +961,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             XElement node,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -528,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LeveledCreature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -547,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             string path,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -559,8 +1001,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             string path,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -574,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -587,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             Stream stream,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -599,8 +1041,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             Stream stream,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -614,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledCreatureInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LeveledCreature_TranslationMask? translationMask = null)
+            LeveledCreature.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -696,9 +1138,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 10;
 
-        public static readonly Type MaskType = typeof(LeveledCreature_Mask<>);
+        public static readonly Type MaskType = typeof(LeveledCreature.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LeveledCreature_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LeveledCreature.ErrorMask);
 
         public static readonly Type ClassType = typeof(LeveledCreature);
 
@@ -1094,12 +1536,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly LeveledCreatureCommon Instance = new LeveledCreatureCommon();
 
-        public LeveledCreature_Mask<bool> GetEqualsMask(
+        public LeveledCreature.Mask<bool> GetEqualsMask(
             ILeveledCreatureGetter item,
             ILeveledCreatureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LeveledCreature_Mask<bool>(false);
+            var ret = new LeveledCreature.Mask<bool>(false);
             ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1111,7 +1553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILeveledCreatureGetter item,
             ILeveledCreatureGetter rhs,
-            LeveledCreature_Mask<bool> ret,
+            LeveledCreature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1129,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILeveledCreatureGetter item,
             string? name = null,
-            LeveledCreature_Mask<bool>? printMask = null)
+            LeveledCreature.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1144,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureGetter item,
             FileGeneration fg,
             string? name = null,
-            LeveledCreature_Mask<bool>? printMask = null)
+            LeveledCreature.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1168,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILeveledCreatureGetter item,
             FileGeneration fg,
-            LeveledCreature_Mask<bool>? printMask = null)
+            LeveledCreature.Mask<bool>? printMask = null)
         {
             NPCSpawnCommon.ToStringFields(
                 item: item,
@@ -1212,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILeveledCreatureGetter item,
-            LeveledCreature_Mask<bool?> checkMask)
+            LeveledCreature.Mask<bool?> checkMask)
         {
             if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != (item.ChanceNone != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
@@ -1226,11 +1668,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ILeveledCreatureGetter item,
-            LeveledCreature_Mask<bool> mask)
+            LeveledCreature.Mask<bool> mask)
         {
             mask.ChanceNone = (item.ChanceNone != null);
             mask.Flags = (item.Flags != null);
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>?>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Script = item.Script.HasBeenSet;
             mask.Template = item.Template.HasBeenSet;
             base.FillHasBeenSetMask(
@@ -1461,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             items: rhs.Entries,
                             converter: (r) =>
                             {
-                                return r.DeepCopy<NPCSpawn, INPCSpawnGetter, NPCSpawn_TranslationMask>(
+                                return r.DeepCopy<NPCSpawn, INPCSpawnGetter, NPCSpawn.TranslationMask>(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             });
@@ -1573,7 +2015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LeveledCreature DeepCopy(
             ILeveledCreatureGetter item,
-            LeveledCreature_TranslationMask? copyMask = null)
+            LeveledCreature.TranslationMask? copyMask = null)
         {
             LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1584,8 +2026,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LeveledCreature DeepCopy(
             ILeveledCreatureGetter item,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? copyMask = null)
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? copyMask = null)
         {
             LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1964,8 +2406,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILeveledCreatureGetter item,
             XElement node,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null,
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1975,14 +2417,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LeveledCreature.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILeveledCreatureGetter item,
             string path,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null,
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1998,8 +2440,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILeveledCreatureGetter item,
             Stream stream,
-            out LeveledCreature_ErrorMask errorMask,
-            LeveledCreature_TranslationMask? translationMask = null,
+            out LeveledCreature.ErrorMask errorMask,
+            LeveledCreature.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2016,447 +2458,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class LeveledCreature_Mask<T> :
-        NPCSpawn_Mask<T>,
-        IMask<T>,
-        IEquatable<LeveledCreature_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public LeveledCreature_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.ChanceNone = initialValue;
-            this.Flags = initialValue;
-            this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, LeveledEntry_Mask<T>?>>());
-            this.Script = initialValue;
-            this.Template = initialValue;
-        }
-
-        public LeveledCreature_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T ChanceNone,
-            T Flags,
-            T Entries,
-            T Script,
-            T Template)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.ChanceNone = ChanceNone;
-            this.Flags = Flags;
-            this.Entries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry_Mask<T>?>>>(Entries, Enumerable.Empty<MaskItemIndexed<T, LeveledEntry_Mask<T>?>>());
-            this.Script = Script;
-            this.Template = Template;
-        }
-
-        #pragma warning disable CS8618
-        protected LeveledCreature_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T ChanceNone;
-        public T Flags;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, LeveledEntry_Mask<T>?>>>? Entries;
-        public T Script;
-        public T Template;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LeveledCreature_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(LeveledCreature_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Entries, rhs.Entries)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Template, rhs.Template)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ChanceNone?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Entries?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Template?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.ChanceNone)) return false;
-            if (!eval(this.Flags)) return false;
-            if (this.Entries != null)
-            {
-                if (!eval(this.Entries.Overall)) return false;
-                if (this.Entries.Specific != null)
-                {
-                    foreach (var item in this.Entries.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Template)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new LeveledCreature_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new LeveledCreature_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(LeveledCreature_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.ChanceNone = eval(this.ChanceNone);
-            obj.Flags = eval(this.Flags);
-            if (Entries != null)
-            {
-                obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledEntry_Mask<R>?>>>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledEntry_Mask<R>?>>());
-                if (Entries.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, LeveledEntry_Mask<R>?>>();
-                    obj.Entries.Specific = l;
-                    foreach (var item in Entries.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, LeveledEntry_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledEntry_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Script = eval(this.Script);
-            obj.Template = eval(this.Template);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(LeveledCreature_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, LeveledCreature_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(LeveledCreature_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ChanceNone ?? true)
-                {
-                    fg.AppendLine($"ChanceNone => {ChanceNone}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Entries?.Overall ?? true)
-                {
-                    fg.AppendLine("Entries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Entries != null)
-                        {
-                            if (Entries.Overall != null)
-                            {
-                                fg.AppendLine(Entries.Overall.ToString());
-                            }
-                            if (Entries.Specific != null)
-                            {
-                                foreach (var subItem in Entries.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Template ?? true)
-                {
-                    fg.AppendLine($"Template => {Template}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class LeveledCreature_ErrorMask : NPCSpawn_ErrorMask, IErrorMask<LeveledCreature_ErrorMask>
-    {
-        #region Members
-        public Exception? ChanceNone;
-        public Exception? Flags;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>?>>?>? Entries;
-        public Exception? Script;
-        public Exception? Template;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    return ChanceNone;
-                case LeveledCreature_FieldIndex.Flags:
-                    return Flags;
-                case LeveledCreature_FieldIndex.Entries:
-                    return Entries;
-                case LeveledCreature_FieldIndex.Script:
-                    return Script;
-                case LeveledCreature_FieldIndex.Template:
-                    return Template;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    this.ChanceNone = ex;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>?>>?>(ex, null);
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    this.Template = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            LeveledCreature_FieldIndex enu = (LeveledCreature_FieldIndex)index;
-            switch (enu)
-            {
-                case LeveledCreature_FieldIndex.ChanceNone:
-                    this.ChanceNone = (Exception)obj;
-                    break;
-                case LeveledCreature_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case LeveledCreature_FieldIndex.Entries:
-                    this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>?>>?>)obj;
-                    break;
-                case LeveledCreature_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case LeveledCreature_FieldIndex.Template:
-                    this.Template = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ChanceNone != null) return true;
-            if (Flags != null) return true;
-            if (Entries != null) return true;
-            if (Script != null) return true;
-            if (Template != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("LeveledCreature_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"ChanceNone => {ChanceNone}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("Entries =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Entries != null)
-                {
-                    if (Entries.Overall != null)
-                    {
-                        fg.AppendLine(Entries.Overall.ToString());
-                    }
-                    if (Entries.Specific != null)
-                    {
-                        foreach (var subItem in Entries.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Template => {Template}");
-        }
-        #endregion
-
-        #region Combine
-        public LeveledCreature_ErrorMask Combine(LeveledCreature_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new LeveledCreature_ErrorMask();
-            ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Template = this.Template.Combine(rhs.Template);
-            return ret;
-        }
-        public static LeveledCreature_ErrorMask? Combine(LeveledCreature_ErrorMask? lhs, LeveledCreature_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new LeveledCreature_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new LeveledCreature_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class LeveledCreature_TranslationMask : NPCSpawn_TranslationMask
-    {
-        #region Members
-        public bool ChanceNone;
-        public bool Flags;
-        public MaskItem<bool, LeveledEntry_TranslationMask<NPCSpawn_TranslationMask>?> Entries;
-        public bool Script;
-        public bool Template;
-        #endregion
-
-        #region Ctors
-        public LeveledCreature_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.ChanceNone = defaultOn;
-            this.Flags = defaultOn;
-            this.Entries = new MaskItem<bool, LeveledEntry_TranslationMask<NPCSpawn_TranslationMask>?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.Template = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((ChanceNone, null));
-            ret.Add((Flags, null));
-            ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((Template, null));
-        }
-    }
 }
 #endregion
 

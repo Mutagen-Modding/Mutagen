@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new FunctionConditionData CreateFromXml(
             XElement node,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -192,15 +192,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static FunctionConditionData CreateFromXml(
             XElement node,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FunctionConditionData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             string path,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -230,8 +230,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             string path,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static FunctionConditionData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             Stream stream,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -264,8 +264,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData CreateFromXml(
             Stream stream,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static FunctionConditionData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -288,6 +288,527 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ConditionData.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Function = initialValue;
+                this.Unknown2 = initialValue;
+                this.ParameterOneRecord = initialValue;
+                this.ParameterOneNumber = initialValue;
+                this.ParameterOneString = initialValue;
+                this.ParameterTwoRecord = initialValue;
+                this.ParameterTwoNumber = initialValue;
+                this.ParameterTwoString = initialValue;
+                this.Unknown3 = initialValue;
+                this.Unknown4 = initialValue;
+                this.Unknown5 = initialValue;
+            }
+
+            public Mask(
+                T Function,
+                T Unknown2,
+                T ParameterOneRecord,
+                T ParameterOneNumber,
+                T ParameterOneString,
+                T ParameterTwoRecord,
+                T ParameterTwoNumber,
+                T ParameterTwoString,
+                T Unknown3,
+                T Unknown4,
+                T Unknown5)
+            : base()
+            {
+                this.Function = Function;
+                this.Unknown2 = Unknown2;
+                this.ParameterOneRecord = ParameterOneRecord;
+                this.ParameterOneNumber = ParameterOneNumber;
+                this.ParameterOneString = ParameterOneString;
+                this.ParameterTwoRecord = ParameterTwoRecord;
+                this.ParameterTwoNumber = ParameterTwoNumber;
+                this.ParameterTwoString = ParameterTwoString;
+                this.Unknown3 = Unknown3;
+                this.Unknown4 = Unknown4;
+                this.Unknown5 = Unknown5;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Function;
+            public T Unknown2;
+            public T ParameterOneRecord;
+            public T ParameterOneNumber;
+            public T ParameterOneString;
+            public T ParameterTwoRecord;
+            public T ParameterTwoNumber;
+            public T ParameterTwoString;
+            public T Unknown3;
+            public T Unknown4;
+            public T Unknown5;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Function, rhs.Function)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.ParameterOneRecord, rhs.ParameterOneRecord)) return false;
+                if (!object.Equals(this.ParameterOneNumber, rhs.ParameterOneNumber)) return false;
+                if (!object.Equals(this.ParameterOneString, rhs.ParameterOneString)) return false;
+                if (!object.Equals(this.ParameterTwoRecord, rhs.ParameterTwoRecord)) return false;
+                if (!object.Equals(this.ParameterTwoNumber, rhs.ParameterTwoNumber)) return false;
+                if (!object.Equals(this.ParameterTwoString, rhs.ParameterTwoString)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Function?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParameterOneRecord?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParameterOneNumber?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParameterOneString?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParameterTwoRecord?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParameterTwoNumber?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParameterTwoString?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown3?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown4?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown5?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Function)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.ParameterOneRecord)) return false;
+                if (!eval(this.ParameterOneNumber)) return false;
+                if (!eval(this.ParameterOneString)) return false;
+                if (!eval(this.ParameterTwoRecord)) return false;
+                if (!eval(this.ParameterTwoNumber)) return false;
+                if (!eval(this.ParameterTwoString)) return false;
+                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.Unknown5)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new FunctionConditionData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Function = eval(this.Function);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.ParameterOneRecord = eval(this.ParameterOneRecord);
+                obj.ParameterOneNumber = eval(this.ParameterOneNumber);
+                obj.ParameterOneString = eval(this.ParameterOneString);
+                obj.ParameterTwoRecord = eval(this.ParameterTwoRecord);
+                obj.ParameterTwoNumber = eval(this.ParameterTwoNumber);
+                obj.ParameterTwoString = eval(this.ParameterTwoString);
+                obj.Unknown3 = eval(this.Unknown3);
+                obj.Unknown4 = eval(this.Unknown4);
+                obj.Unknown5 = eval(this.Unknown5);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(FunctionConditionData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, FunctionConditionData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(FunctionConditionData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Function ?? true)
+                    {
+                        fg.AppendLine($"Function => {Function}");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                    }
+                    if (printMask?.ParameterOneRecord ?? true)
+                    {
+                        fg.AppendLine($"ParameterOneRecord => {ParameterOneRecord}");
+                    }
+                    if (printMask?.ParameterOneNumber ?? true)
+                    {
+                        fg.AppendLine($"ParameterOneNumber => {ParameterOneNumber}");
+                    }
+                    if (printMask?.ParameterOneString ?? true)
+                    {
+                        fg.AppendLine($"ParameterOneString => {ParameterOneString}");
+                    }
+                    if (printMask?.ParameterTwoRecord ?? true)
+                    {
+                        fg.AppendLine($"ParameterTwoRecord => {ParameterTwoRecord}");
+                    }
+                    if (printMask?.ParameterTwoNumber ?? true)
+                    {
+                        fg.AppendLine($"ParameterTwoNumber => {ParameterTwoNumber}");
+                    }
+                    if (printMask?.ParameterTwoString ?? true)
+                    {
+                        fg.AppendLine($"ParameterTwoString => {ParameterTwoString}");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        fg.AppendLine($"Unknown3 => {Unknown3}");
+                    }
+                    if (printMask?.Unknown4 ?? true)
+                    {
+                        fg.AppendLine($"Unknown4 => {Unknown4}");
+                    }
+                    if (printMask?.Unknown5 ?? true)
+                    {
+                        fg.AppendLine($"Unknown5 => {Unknown5}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ConditionData.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Function;
+            public Exception? Unknown2;
+            public Exception? ParameterOneRecord;
+            public Exception? ParameterOneNumber;
+            public Exception? ParameterOneString;
+            public Exception? ParameterTwoRecord;
+            public Exception? ParameterTwoNumber;
+            public Exception? ParameterTwoString;
+            public Exception? Unknown3;
+            public Exception? Unknown4;
+            public Exception? Unknown5;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
+                switch (enu)
+                {
+                    case FunctionConditionData_FieldIndex.Function:
+                        return Function;
+                    case FunctionConditionData_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case FunctionConditionData_FieldIndex.ParameterOneRecord:
+                        return ParameterOneRecord;
+                    case FunctionConditionData_FieldIndex.ParameterOneNumber:
+                        return ParameterOneNumber;
+                    case FunctionConditionData_FieldIndex.ParameterOneString:
+                        return ParameterOneString;
+                    case FunctionConditionData_FieldIndex.ParameterTwoRecord:
+                        return ParameterTwoRecord;
+                    case FunctionConditionData_FieldIndex.ParameterTwoNumber:
+                        return ParameterTwoNumber;
+                    case FunctionConditionData_FieldIndex.ParameterTwoString:
+                        return ParameterTwoString;
+                    case FunctionConditionData_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case FunctionConditionData_FieldIndex.Unknown4:
+                        return Unknown4;
+                    case FunctionConditionData_FieldIndex.Unknown5:
+                        return Unknown5;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
+                switch (enu)
+                {
+                    case FunctionConditionData_FieldIndex.Function:
+                        this.Function = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterOneRecord:
+                        this.ParameterOneRecord = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterOneNumber:
+                        this.ParameterOneNumber = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterOneString:
+                        this.ParameterOneString = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterTwoRecord:
+                        this.ParameterTwoRecord = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterTwoNumber:
+                        this.ParameterTwoNumber = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterTwoString:
+                        this.ParameterTwoString = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown4:
+                        this.Unknown4 = ex;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown5:
+                        this.Unknown5 = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
+                switch (enu)
+                {
+                    case FunctionConditionData_FieldIndex.Function:
+                        this.Function = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterOneRecord:
+                        this.ParameterOneRecord = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterOneNumber:
+                        this.ParameterOneNumber = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterOneString:
+                        this.ParameterOneString = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterTwoRecord:
+                        this.ParameterTwoRecord = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterTwoNumber:
+                        this.ParameterTwoNumber = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.ParameterTwoString:
+                        this.ParameterTwoString = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown4:
+                        this.Unknown4 = (Exception)obj;
+                        break;
+                    case FunctionConditionData_FieldIndex.Unknown5:
+                        this.Unknown5 = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Function != null) return true;
+                if (Unknown2 != null) return true;
+                if (ParameterOneRecord != null) return true;
+                if (ParameterOneNumber != null) return true;
+                if (ParameterOneString != null) return true;
+                if (ParameterTwoRecord != null) return true;
+                if (ParameterTwoNumber != null) return true;
+                if (ParameterTwoString != null) return true;
+                if (Unknown3 != null) return true;
+                if (Unknown4 != null) return true;
+                if (Unknown5 != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Function => {Function}");
+                fg.AppendLine($"Unknown2 => {Unknown2}");
+                fg.AppendLine($"ParameterOneRecord => {ParameterOneRecord}");
+                fg.AppendLine($"ParameterOneNumber => {ParameterOneNumber}");
+                fg.AppendLine($"ParameterOneString => {ParameterOneString}");
+                fg.AppendLine($"ParameterTwoRecord => {ParameterTwoRecord}");
+                fg.AppendLine($"ParameterTwoNumber => {ParameterTwoNumber}");
+                fg.AppendLine($"ParameterTwoString => {ParameterTwoString}");
+                fg.AppendLine($"Unknown3 => {Unknown3}");
+                fg.AppendLine($"Unknown4 => {Unknown4}");
+                fg.AppendLine($"Unknown5 => {Unknown5}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Function = this.Function.Combine(rhs.Function);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.ParameterOneRecord = this.ParameterOneRecord.Combine(rhs.ParameterOneRecord);
+                ret.ParameterOneNumber = this.ParameterOneNumber.Combine(rhs.ParameterOneNumber);
+                ret.ParameterOneString = this.ParameterOneString.Combine(rhs.ParameterOneString);
+                ret.ParameterTwoRecord = this.ParameterTwoRecord.Combine(rhs.ParameterTwoRecord);
+                ret.ParameterTwoNumber = this.ParameterTwoNumber.Combine(rhs.ParameterTwoNumber);
+                ret.ParameterTwoString = this.ParameterTwoString.Combine(rhs.ParameterTwoString);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ConditionData.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Function;
+            public bool Unknown2;
+            public bool ParameterOneRecord;
+            public bool ParameterOneNumber;
+            public bool ParameterOneString;
+            public bool ParameterTwoRecord;
+            public bool ParameterTwoNumber;
+            public bool ParameterTwoString;
+            public bool Unknown3;
+            public bool Unknown4;
+            public bool Unknown5;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Function = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.ParameterOneRecord = defaultOn;
+                this.ParameterOneNumber = defaultOn;
+                this.ParameterOneString = defaultOn;
+                this.ParameterTwoRecord = defaultOn;
+                this.ParameterTwoNumber = defaultOn;
+                this.ParameterTwoString = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.Unknown4 = defaultOn;
+                this.Unknown5 = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Function, null));
+                ret.Add((Unknown2, null));
+                ret.Add((ParameterOneRecord, null));
+                ret.Add((ParameterOneNumber, null));
+                ret.Add((ParameterOneString, null));
+                ret.Add((ParameterTwoRecord, null));
+                ret.Add((ParameterTwoNumber, null));
+                ret.Add((ParameterTwoString, null));
+                ret.Add((Unknown3, null));
+                ret.Add((Unknown4, null));
+                ret.Add((Unknown5, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -412,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FunctionConditionData_Mask<bool> GetEqualsMask(
+        public static FunctionConditionData.Mask<bool> GetEqualsMask(
             this IFunctionConditionDataGetter item,
             IFunctionConditionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -426,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IFunctionConditionDataGetter item,
             string? name = null,
-            FunctionConditionData_Mask<bool>? printMask = null)
+            FunctionConditionData.Mask<bool>? printMask = null)
         {
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -438,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataGetter item,
             FileGeneration fg,
             string? name = null,
-            FunctionConditionData_Mask<bool>? printMask = null)
+            FunctionConditionData.Mask<bool>? printMask = null)
         {
             ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -449,16 +970,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IFunctionConditionDataGetter item,
-            FunctionConditionData_Mask<bool?> checkMask)
+            FunctionConditionData.Mask<bool?> checkMask)
         {
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static FunctionConditionData_Mask<bool> GetHasBeenSetMask(this IFunctionConditionDataGetter item)
+        public static FunctionConditionData.Mask<bool> GetHasBeenSetMask(this IFunctionConditionDataGetter item)
         {
-            var ret = new FunctionConditionData_Mask<bool>(false);
+            var ret = new FunctionConditionData.Mask<bool>(false);
             ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -477,8 +998,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IFunctionConditionDataInternal lhs,
             IFunctionConditionDataGetter rhs,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? copyMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -486,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FunctionConditionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -504,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData DeepCopy(
             this IFunctionConditionDataGetter item,
-            FunctionConditionData_TranslationMask? copyMask = null)
+            FunctionConditionData.TranslationMask? copyMask = null)
         {
             return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -513,8 +1034,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static FunctionConditionData DeepCopy(
             this IFunctionConditionDataGetter item,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? copyMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? copyMask = null)
         {
             return ((FunctionConditionDataSetterTranslationCommon)((IFunctionConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -538,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             XElement node,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -551,8 +1072,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             XElement node,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -560,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FunctionConditionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -579,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             string path,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -591,8 +1112,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             string path,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -606,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -619,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             Stream stream,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -631,8 +1152,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IFunctionConditionDataInternal item,
             Stream stream,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -646,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IFunctionConditionDataInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null)
+            FunctionConditionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -729,9 +1250,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(FunctionConditionData_Mask<>);
+        public static readonly Type MaskType = typeof(FunctionConditionData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FunctionConditionData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FunctionConditionData.ErrorMask);
 
         public static readonly Type ClassType = typeof(FunctionConditionData);
 
@@ -1082,12 +1603,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly FunctionConditionDataCommon Instance = new FunctionConditionDataCommon();
 
-        public FunctionConditionData_Mask<bool> GetEqualsMask(
+        public FunctionConditionData.Mask<bool> GetEqualsMask(
             IFunctionConditionDataGetter item,
             IFunctionConditionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FunctionConditionData_Mask<bool>(false);
+            var ret = new FunctionConditionData.Mask<bool>(false);
             ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1099,7 +1620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IFunctionConditionDataGetter item,
             IFunctionConditionDataGetter rhs,
-            FunctionConditionData_Mask<bool> ret,
+            FunctionConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1120,7 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IFunctionConditionDataGetter item,
             string? name = null,
-            FunctionConditionData_Mask<bool>? printMask = null)
+            FunctionConditionData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1135,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionDataGetter item,
             FileGeneration fg,
             string? name = null,
-            FunctionConditionData_Mask<bool>? printMask = null)
+            FunctionConditionData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1159,7 +1680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IFunctionConditionDataGetter item,
             FileGeneration fg,
-            FunctionConditionData_Mask<bool>? printMask = null)
+            FunctionConditionData.Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
@@ -1213,7 +1734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IFunctionConditionDataGetter item,
-            FunctionConditionData_Mask<bool?> checkMask)
+            FunctionConditionData.Mask<bool?> checkMask)
         {
             if (checkMask.ParameterOneString.HasValue && checkMask.ParameterOneString.Value != (item.ParameterOneString != null)) return false;
             if (checkMask.ParameterTwoString.HasValue && checkMask.ParameterTwoString.Value != (item.ParameterTwoString != null)) return false;
@@ -1224,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IFunctionConditionDataGetter item,
-            FunctionConditionData_Mask<bool> mask)
+            FunctionConditionData.Mask<bool> mask)
         {
             mask.Function = true;
             mask.Unknown2 = true;
@@ -1432,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public FunctionConditionData DeepCopy(
             IFunctionConditionDataGetter item,
-            FunctionConditionData_TranslationMask? copyMask = null)
+            FunctionConditionData.TranslationMask? copyMask = null)
         {
             FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1443,8 +1964,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public FunctionConditionData DeepCopy(
             IFunctionConditionDataGetter item,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? copyMask = null)
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? copyMask = null)
         {
             FunctionConditionData ret = (FunctionConditionData)((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1931,8 +2452,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IFunctionConditionDataGetter item,
             XElement node,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null,
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1942,14 +2463,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FunctionConditionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FunctionConditionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFunctionConditionDataGetter item,
             string path,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null,
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1965,8 +2486,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IFunctionConditionDataGetter item,
             Stream stream,
-            out FunctionConditionData_ErrorMask errorMask,
-            FunctionConditionData_TranslationMask? translationMask = null,
+            out FunctionConditionData.ErrorMask errorMask,
+            FunctionConditionData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1983,526 +2504,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class FunctionConditionData_Mask<T> :
-        ConditionData_Mask<T>,
-        IMask<T>,
-        IEquatable<FunctionConditionData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public FunctionConditionData_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Function = initialValue;
-            this.Unknown2 = initialValue;
-            this.ParameterOneRecord = initialValue;
-            this.ParameterOneNumber = initialValue;
-            this.ParameterOneString = initialValue;
-            this.ParameterTwoRecord = initialValue;
-            this.ParameterTwoNumber = initialValue;
-            this.ParameterTwoString = initialValue;
-            this.Unknown3 = initialValue;
-            this.Unknown4 = initialValue;
-            this.Unknown5 = initialValue;
-        }
-
-        public FunctionConditionData_Mask(
-            T Function,
-            T Unknown2,
-            T ParameterOneRecord,
-            T ParameterOneNumber,
-            T ParameterOneString,
-            T ParameterTwoRecord,
-            T ParameterTwoNumber,
-            T ParameterTwoString,
-            T Unknown3,
-            T Unknown4,
-            T Unknown5)
-        : base()
-        {
-            this.Function = Function;
-            this.Unknown2 = Unknown2;
-            this.ParameterOneRecord = ParameterOneRecord;
-            this.ParameterOneNumber = ParameterOneNumber;
-            this.ParameterOneString = ParameterOneString;
-            this.ParameterTwoRecord = ParameterTwoRecord;
-            this.ParameterTwoNumber = ParameterTwoNumber;
-            this.ParameterTwoString = ParameterTwoString;
-            this.Unknown3 = Unknown3;
-            this.Unknown4 = Unknown4;
-            this.Unknown5 = Unknown5;
-        }
-
-        #pragma warning disable CS8618
-        protected FunctionConditionData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Function;
-        public T Unknown2;
-        public T ParameterOneRecord;
-        public T ParameterOneNumber;
-        public T ParameterOneString;
-        public T ParameterTwoRecord;
-        public T ParameterTwoNumber;
-        public T ParameterTwoString;
-        public T Unknown3;
-        public T Unknown4;
-        public T Unknown5;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is FunctionConditionData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(FunctionConditionData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Function, rhs.Function)) return false;
-            if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-            if (!object.Equals(this.ParameterOneRecord, rhs.ParameterOneRecord)) return false;
-            if (!object.Equals(this.ParameterOneNumber, rhs.ParameterOneNumber)) return false;
-            if (!object.Equals(this.ParameterOneString, rhs.ParameterOneString)) return false;
-            if (!object.Equals(this.ParameterTwoRecord, rhs.ParameterTwoRecord)) return false;
-            if (!object.Equals(this.ParameterTwoNumber, rhs.ParameterTwoNumber)) return false;
-            if (!object.Equals(this.ParameterTwoString, rhs.ParameterTwoString)) return false;
-            if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-            if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
-            if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Function?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParameterOneRecord?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParameterOneNumber?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParameterOneString?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParameterTwoRecord?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParameterTwoNumber?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParameterTwoString?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown3?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown4?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown5?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Function)) return false;
-            if (!eval(this.Unknown2)) return false;
-            if (!eval(this.ParameterOneRecord)) return false;
-            if (!eval(this.ParameterOneNumber)) return false;
-            if (!eval(this.ParameterOneString)) return false;
-            if (!eval(this.ParameterTwoRecord)) return false;
-            if (!eval(this.ParameterTwoNumber)) return false;
-            if (!eval(this.ParameterTwoString)) return false;
-            if (!eval(this.Unknown3)) return false;
-            if (!eval(this.Unknown4)) return false;
-            if (!eval(this.Unknown5)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new FunctionConditionData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new FunctionConditionData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(FunctionConditionData_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Function = eval(this.Function);
-            obj.Unknown2 = eval(this.Unknown2);
-            obj.ParameterOneRecord = eval(this.ParameterOneRecord);
-            obj.ParameterOneNumber = eval(this.ParameterOneNumber);
-            obj.ParameterOneString = eval(this.ParameterOneString);
-            obj.ParameterTwoRecord = eval(this.ParameterTwoRecord);
-            obj.ParameterTwoNumber = eval(this.ParameterTwoNumber);
-            obj.ParameterTwoString = eval(this.ParameterTwoString);
-            obj.Unknown3 = eval(this.Unknown3);
-            obj.Unknown4 = eval(this.Unknown4);
-            obj.Unknown5 = eval(this.Unknown5);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(FunctionConditionData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, FunctionConditionData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(FunctionConditionData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Function ?? true)
-                {
-                    fg.AppendLine($"Function => {Function}");
-                }
-                if (printMask?.Unknown2 ?? true)
-                {
-                    fg.AppendLine($"Unknown2 => {Unknown2}");
-                }
-                if (printMask?.ParameterOneRecord ?? true)
-                {
-                    fg.AppendLine($"ParameterOneRecord => {ParameterOneRecord}");
-                }
-                if (printMask?.ParameterOneNumber ?? true)
-                {
-                    fg.AppendLine($"ParameterOneNumber => {ParameterOneNumber}");
-                }
-                if (printMask?.ParameterOneString ?? true)
-                {
-                    fg.AppendLine($"ParameterOneString => {ParameterOneString}");
-                }
-                if (printMask?.ParameterTwoRecord ?? true)
-                {
-                    fg.AppendLine($"ParameterTwoRecord => {ParameterTwoRecord}");
-                }
-                if (printMask?.ParameterTwoNumber ?? true)
-                {
-                    fg.AppendLine($"ParameterTwoNumber => {ParameterTwoNumber}");
-                }
-                if (printMask?.ParameterTwoString ?? true)
-                {
-                    fg.AppendLine($"ParameterTwoString => {ParameterTwoString}");
-                }
-                if (printMask?.Unknown3 ?? true)
-                {
-                    fg.AppendLine($"Unknown3 => {Unknown3}");
-                }
-                if (printMask?.Unknown4 ?? true)
-                {
-                    fg.AppendLine($"Unknown4 => {Unknown4}");
-                }
-                if (printMask?.Unknown5 ?? true)
-                {
-                    fg.AppendLine($"Unknown5 => {Unknown5}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class FunctionConditionData_ErrorMask : ConditionData_ErrorMask, IErrorMask<FunctionConditionData_ErrorMask>
-    {
-        #region Members
-        public Exception? Function;
-        public Exception? Unknown2;
-        public Exception? ParameterOneRecord;
-        public Exception? ParameterOneNumber;
-        public Exception? ParameterOneString;
-        public Exception? ParameterTwoRecord;
-        public Exception? ParameterTwoNumber;
-        public Exception? ParameterTwoString;
-        public Exception? Unknown3;
-        public Exception? Unknown4;
-        public Exception? Unknown5;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                    return Function;
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return Unknown2;
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                    return ParameterOneRecord;
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                    return ParameterOneNumber;
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    return ParameterOneString;
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                    return ParameterTwoRecord;
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                    return ParameterTwoNumber;
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                    return ParameterTwoString;
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return Unknown3;
-                case FunctionConditionData_FieldIndex.Unknown4:
-                    return Unknown4;
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    return Unknown5;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                    this.Function = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    this.Unknown2 = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                    this.ParameterOneRecord = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                    this.ParameterOneNumber = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    this.ParameterOneString = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                    this.ParameterTwoRecord = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                    this.ParameterTwoNumber = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                    this.ParameterTwoString = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    this.Unknown3 = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown4:
-                    this.Unknown4 = ex;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    this.Unknown5 = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            FunctionConditionData_FieldIndex enu = (FunctionConditionData_FieldIndex)index;
-            switch (enu)
-            {
-                case FunctionConditionData_FieldIndex.Function:
-                    this.Function = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    this.Unknown2 = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterOneRecord:
-                    this.ParameterOneRecord = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterOneNumber:
-                    this.ParameterOneNumber = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    this.ParameterOneString = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterTwoRecord:
-                    this.ParameterTwoRecord = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterTwoNumber:
-                    this.ParameterTwoNumber = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
-                    this.ParameterTwoString = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    this.Unknown3 = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown4:
-                    this.Unknown4 = (Exception)obj;
-                    break;
-                case FunctionConditionData_FieldIndex.Unknown5:
-                    this.Unknown5 = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Function != null) return true;
-            if (Unknown2 != null) return true;
-            if (ParameterOneRecord != null) return true;
-            if (ParameterOneNumber != null) return true;
-            if (ParameterOneString != null) return true;
-            if (ParameterTwoRecord != null) return true;
-            if (ParameterTwoNumber != null) return true;
-            if (ParameterTwoString != null) return true;
-            if (Unknown3 != null) return true;
-            if (Unknown4 != null) return true;
-            if (Unknown5 != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("FunctionConditionData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Function => {Function}");
-            fg.AppendLine($"Unknown2 => {Unknown2}");
-            fg.AppendLine($"ParameterOneRecord => {ParameterOneRecord}");
-            fg.AppendLine($"ParameterOneNumber => {ParameterOneNumber}");
-            fg.AppendLine($"ParameterOneString => {ParameterOneString}");
-            fg.AppendLine($"ParameterTwoRecord => {ParameterTwoRecord}");
-            fg.AppendLine($"ParameterTwoNumber => {ParameterTwoNumber}");
-            fg.AppendLine($"ParameterTwoString => {ParameterTwoString}");
-            fg.AppendLine($"Unknown3 => {Unknown3}");
-            fg.AppendLine($"Unknown4 => {Unknown4}");
-            fg.AppendLine($"Unknown5 => {Unknown5}");
-        }
-        #endregion
-
-        #region Combine
-        public FunctionConditionData_ErrorMask Combine(FunctionConditionData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new FunctionConditionData_ErrorMask();
-            ret.Function = this.Function.Combine(rhs.Function);
-            ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-            ret.ParameterOneRecord = this.ParameterOneRecord.Combine(rhs.ParameterOneRecord);
-            ret.ParameterOneNumber = this.ParameterOneNumber.Combine(rhs.ParameterOneNumber);
-            ret.ParameterOneString = this.ParameterOneString.Combine(rhs.ParameterOneString);
-            ret.ParameterTwoRecord = this.ParameterTwoRecord.Combine(rhs.ParameterTwoRecord);
-            ret.ParameterTwoNumber = this.ParameterTwoNumber.Combine(rhs.ParameterTwoNumber);
-            ret.ParameterTwoString = this.ParameterTwoString.Combine(rhs.ParameterTwoString);
-            ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-            ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
-            ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
-            return ret;
-        }
-        public static FunctionConditionData_ErrorMask? Combine(FunctionConditionData_ErrorMask? lhs, FunctionConditionData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new FunctionConditionData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new FunctionConditionData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class FunctionConditionData_TranslationMask : ConditionData_TranslationMask
-    {
-        #region Members
-        public bool Function;
-        public bool Unknown2;
-        public bool ParameterOneRecord;
-        public bool ParameterOneNumber;
-        public bool ParameterOneString;
-        public bool ParameterTwoRecord;
-        public bool ParameterTwoNumber;
-        public bool ParameterTwoString;
-        public bool Unknown3;
-        public bool Unknown4;
-        public bool Unknown5;
-        #endregion
-
-        #region Ctors
-        public FunctionConditionData_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Function = defaultOn;
-            this.Unknown2 = defaultOn;
-            this.ParameterOneRecord = defaultOn;
-            this.ParameterOneNumber = defaultOn;
-            this.ParameterOneString = defaultOn;
-            this.ParameterTwoRecord = defaultOn;
-            this.ParameterTwoNumber = defaultOn;
-            this.ParameterTwoString = defaultOn;
-            this.Unknown3 = defaultOn;
-            this.Unknown4 = defaultOn;
-            this.Unknown5 = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Function, null));
-            ret.Add((Unknown2, null));
-            ret.Add((ParameterOneRecord, null));
-            ret.Add((ParameterOneNumber, null));
-            ret.Add((ParameterOneString, null));
-            ret.Add((ParameterTwoRecord, null));
-            ret.Add((ParameterTwoNumber, null));
-            ret.Add((ParameterTwoString, null));
-            ret.Add((Unknown3, null));
-            ret.Add((Unknown4, null));
-            ret.Add((Unknown5, null));
-        }
-    }
 }
 #endregion
 

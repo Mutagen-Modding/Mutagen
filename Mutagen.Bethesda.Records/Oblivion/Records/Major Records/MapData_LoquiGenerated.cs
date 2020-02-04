@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MapData CreateFromXml(
             XElement node,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -119,15 +119,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MapData CreateFromXml(
             XElement node,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MapData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MapData CreateFromXml(
             string path,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MapData CreateFromXml(
             string path,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MapData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MapData CreateFromXml(
             Stream stream,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MapData CreateFromXml(
             Stream stream,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MapData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,6 +215,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.UsableDimensions = initialValue;
+                this.CellCoordinatesNWCell = initialValue;
+                this.CellCoordinatesSECell = initialValue;
+            }
+
+            public Mask(
+                T UsableDimensions,
+                T CellCoordinatesNWCell,
+                T CellCoordinatesSECell)
+            {
+                this.UsableDimensions = UsableDimensions;
+                this.CellCoordinatesNWCell = CellCoordinatesNWCell;
+                this.CellCoordinatesSECell = CellCoordinatesSECell;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T UsableDimensions;
+            public T CellCoordinatesNWCell;
+            public T CellCoordinatesSECell;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.UsableDimensions, rhs.UsableDimensions)) return false;
+                if (!object.Equals(this.CellCoordinatesNWCell, rhs.CellCoordinatesNWCell)) return false;
+                if (!object.Equals(this.CellCoordinatesSECell, rhs.CellCoordinatesSECell)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.UsableDimensions?.GetHashCode());
+                ret = ret.CombineHashCode(this.CellCoordinatesNWCell?.GetHashCode());
+                ret = ret.CombineHashCode(this.CellCoordinatesSECell?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.UsableDimensions)) return false;
+                if (!eval(this.CellCoordinatesNWCell)) return false;
+                if (!eval(this.CellCoordinatesSECell)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new MapData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.UsableDimensions = eval(this.UsableDimensions);
+                obj.CellCoordinatesNWCell = eval(this.CellCoordinatesNWCell);
+                obj.CellCoordinatesSECell = eval(this.CellCoordinatesSECell);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(MapData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, MapData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(MapData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.UsableDimensions ?? true)
+                    {
+                        fg.AppendLine($"UsableDimensions => {UsableDimensions}");
+                    }
+                    if (printMask?.CellCoordinatesNWCell ?? true)
+                    {
+                        fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
+                    }
+                    if (printMask?.CellCoordinatesSECell ?? true)
+                    {
+                        fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? UsableDimensions;
+            public Exception? CellCoordinatesNWCell;
+            public Exception? CellCoordinatesSECell;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                MapData_FieldIndex enu = (MapData_FieldIndex)index;
+                switch (enu)
+                {
+                    case MapData_FieldIndex.UsableDimensions:
+                        return UsableDimensions;
+                    case MapData_FieldIndex.CellCoordinatesNWCell:
+                        return CellCoordinatesNWCell;
+                    case MapData_FieldIndex.CellCoordinatesSECell:
+                        return CellCoordinatesSECell;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                MapData_FieldIndex enu = (MapData_FieldIndex)index;
+                switch (enu)
+                {
+                    case MapData_FieldIndex.UsableDimensions:
+                        this.UsableDimensions = ex;
+                        break;
+                    case MapData_FieldIndex.CellCoordinatesNWCell:
+                        this.CellCoordinatesNWCell = ex;
+                        break;
+                    case MapData_FieldIndex.CellCoordinatesSECell:
+                        this.CellCoordinatesSECell = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                MapData_FieldIndex enu = (MapData_FieldIndex)index;
+                switch (enu)
+                {
+                    case MapData_FieldIndex.UsableDimensions:
+                        this.UsableDimensions = (Exception)obj;
+                        break;
+                    case MapData_FieldIndex.CellCoordinatesNWCell:
+                        this.CellCoordinatesNWCell = (Exception)obj;
+                        break;
+                    case MapData_FieldIndex.CellCoordinatesSECell:
+                        this.CellCoordinatesSECell = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (UsableDimensions != null) return true;
+                if (CellCoordinatesNWCell != null) return true;
+                if (CellCoordinatesSECell != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"UsableDimensions => {UsableDimensions}");
+                fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
+                fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.UsableDimensions = this.UsableDimensions.Combine(rhs.UsableDimensions);
+                ret.CellCoordinatesNWCell = this.CellCoordinatesNWCell.Combine(rhs.CellCoordinatesNWCell);
+                ret.CellCoordinatesSECell = this.CellCoordinatesSECell.Combine(rhs.CellCoordinatesSECell);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool UsableDimensions;
+            public bool CellCoordinatesNWCell;
+            public bool CellCoordinatesSECell;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.UsableDimensions = defaultOn;
+                this.CellCoordinatesNWCell = defaultOn;
+                this.CellCoordinatesSECell = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((UsableDimensions, null));
+                ret.Add((CellCoordinatesNWCell, null));
+                ret.Add((CellCoordinatesSECell, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -322,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MapData_Mask<bool> GetEqualsMask(
+        public static MapData.Mask<bool> GetEqualsMask(
             this IMapDataGetter item,
             IMapDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -336,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IMapDataGetter item,
             string? name = null,
-            MapData_Mask<bool>? printMask = null)
+            MapData.Mask<bool>? printMask = null)
         {
             return ((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -348,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapDataGetter item,
             FileGeneration fg,
             string? name = null,
-            MapData_Mask<bool>? printMask = null)
+            MapData.Mask<bool>? printMask = null)
         {
             ((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -359,16 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IMapDataGetter item,
-            MapData_Mask<bool?> checkMask)
+            MapData.Mask<bool?> checkMask)
         {
             return ((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MapData_Mask<bool> GetHasBeenSetMask(this IMapDataGetter item)
+        public static MapData.Mask<bool> GetHasBeenSetMask(this IMapDataGetter item)
         {
-            var ret = new MapData_Mask<bool>(false);
+            var ret = new MapData.Mask<bool>(false);
             ((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -387,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IMapData lhs,
             IMapDataGetter rhs,
-            MapData_TranslationMask? copyMask = null)
+            MapData.TranslationMask? copyMask = null)
         {
             ((MapDataSetterTranslationCommon)((IMapDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -399,8 +713,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IMapData lhs,
             IMapDataGetter rhs,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? copyMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((MapDataSetterTranslationCommon)((IMapDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -408,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MapData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -426,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MapData DeepCopy(
             this IMapDataGetter item,
-            MapData_TranslationMask? copyMask = null)
+            MapData.TranslationMask? copyMask = null)
         {
             return ((MapDataSetterTranslationCommon)((IMapDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -435,8 +749,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MapData DeepCopy(
             this IMapDataGetter item,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? copyMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? copyMask = null)
         {
             return ((MapDataSetterTranslationCommon)((IMapDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -460,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMapData item,
             XElement node,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -473,8 +787,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMapData item,
             XElement node,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -482,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MapData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -501,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMapData item,
             string path,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,8 +827,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMapData item,
             string path,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -541,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMapData item,
             Stream stream,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,8 +867,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMapData item,
             Stream stream,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,9 +957,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(MapData_Mask<>);
+        public static readonly Type MaskType = typeof(MapData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MapData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MapData.ErrorMask);
 
         public static readonly Type ClassType = typeof(MapData);
 
@@ -900,12 +1214,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly MapDataCommon Instance = new MapDataCommon();
 
-        public MapData_Mask<bool> GetEqualsMask(
+        public MapData.Mask<bool> GetEqualsMask(
             IMapDataGetter item,
             IMapDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MapData_Mask<bool>(false);
+            var ret = new MapData.Mask<bool>(false);
             ((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -917,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IMapDataGetter item,
             IMapDataGetter rhs,
-            MapData_Mask<bool> ret,
+            MapData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -929,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IMapDataGetter item,
             string? name = null,
-            MapData_Mask<bool>? printMask = null)
+            MapData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -944,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapDataGetter item,
             FileGeneration fg,
             string? name = null,
-            MapData_Mask<bool>? printMask = null)
+            MapData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -968,7 +1282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IMapDataGetter item,
             FileGeneration fg,
-            MapData_Mask<bool>? printMask = null)
+            MapData.Mask<bool>? printMask = null)
         {
             if (printMask?.UsableDimensions ?? true)
             {
@@ -986,14 +1300,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IMapDataGetter item,
-            MapData_Mask<bool?> checkMask)
+            MapData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IMapDataGetter item,
-            MapData_Mask<bool> mask)
+            MapData.Mask<bool> mask)
         {
             mask.UsableDimensions = true;
             mask.CellCoordinatesNWCell = true;
@@ -1068,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MapData DeepCopy(
             IMapDataGetter item,
-            MapData_TranslationMask? copyMask = null)
+            MapData.TranslationMask? copyMask = null)
         {
             MapData ret = (MapData)((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1079,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MapData DeepCopy(
             IMapDataGetter item,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? copyMask = null)
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? copyMask = null)
         {
             MapData ret = (MapData)((MapDataCommon)((IMapDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1354,8 +1668,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMapDataGetter item,
             XElement node,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null,
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1365,14 +1679,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MapData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IMapDataGetter item,
             string path,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null,
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1405,8 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMapDataGetter item,
             Stream stream,
-            out MapData_ErrorMask errorMask,
-            MapData_TranslationMask? translationMask = null,
+            out MapData.ErrorMask errorMask,
+            MapData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1455,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapDataGetter item,
             XElement node,
             string? name = null,
-            MapData_TranslationMask? translationMask = null)
+            MapData.TranslationMask? translationMask = null)
         {
             ((MapDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1499,321 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class MapData_Mask<T> :
-        IMask<T>,
-        IEquatable<MapData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public MapData_Mask(T initialValue)
-        {
-            this.UsableDimensions = initialValue;
-            this.CellCoordinatesNWCell = initialValue;
-            this.CellCoordinatesSECell = initialValue;
-        }
-
-        public MapData_Mask(
-            T UsableDimensions,
-            T CellCoordinatesNWCell,
-            T CellCoordinatesSECell)
-        {
-            this.UsableDimensions = UsableDimensions;
-            this.CellCoordinatesNWCell = CellCoordinatesNWCell;
-            this.CellCoordinatesSECell = CellCoordinatesSECell;
-        }
-
-        #pragma warning disable CS8618
-        protected MapData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T UsableDimensions;
-        public T CellCoordinatesNWCell;
-        public T CellCoordinatesSECell;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is MapData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(MapData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.UsableDimensions, rhs.UsableDimensions)) return false;
-            if (!object.Equals(this.CellCoordinatesNWCell, rhs.CellCoordinatesNWCell)) return false;
-            if (!object.Equals(this.CellCoordinatesSECell, rhs.CellCoordinatesSECell)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.UsableDimensions?.GetHashCode());
-            ret = ret.CombineHashCode(this.CellCoordinatesNWCell?.GetHashCode());
-            ret = ret.CombineHashCode(this.CellCoordinatesSECell?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.UsableDimensions)) return false;
-            if (!eval(this.CellCoordinatesNWCell)) return false;
-            if (!eval(this.CellCoordinatesSECell)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public MapData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new MapData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(MapData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.UsableDimensions = eval(this.UsableDimensions);
-            obj.CellCoordinatesNWCell = eval(this.CellCoordinatesNWCell);
-            obj.CellCoordinatesSECell = eval(this.CellCoordinatesSECell);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(MapData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, MapData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(MapData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.UsableDimensions ?? true)
-                {
-                    fg.AppendLine($"UsableDimensions => {UsableDimensions}");
-                }
-                if (printMask?.CellCoordinatesNWCell ?? true)
-                {
-                    fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
-                }
-                if (printMask?.CellCoordinatesSECell ?? true)
-                {
-                    fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class MapData_ErrorMask : IErrorMask, IErrorMask<MapData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? UsableDimensions;
-        public Exception? CellCoordinatesNWCell;
-        public Exception? CellCoordinatesSECell;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    return UsableDimensions;
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    return CellCoordinatesNWCell;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    return CellCoordinatesSECell;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    this.UsableDimensions = ex;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    this.CellCoordinatesNWCell = ex;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    this.CellCoordinatesSECell = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            MapData_FieldIndex enu = (MapData_FieldIndex)index;
-            switch (enu)
-            {
-                case MapData_FieldIndex.UsableDimensions:
-                    this.UsableDimensions = (Exception)obj;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesNWCell:
-                    this.CellCoordinatesNWCell = (Exception)obj;
-                    break;
-                case MapData_FieldIndex.CellCoordinatesSECell:
-                    this.CellCoordinatesSECell = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (UsableDimensions != null) return true;
-            if (CellCoordinatesNWCell != null) return true;
-            if (CellCoordinatesSECell != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("MapData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"UsableDimensions => {UsableDimensions}");
-            fg.AppendLine($"CellCoordinatesNWCell => {CellCoordinatesNWCell}");
-            fg.AppendLine($"CellCoordinatesSECell => {CellCoordinatesSECell}");
-        }
-        #endregion
-
-        #region Combine
-        public MapData_ErrorMask Combine(MapData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new MapData_ErrorMask();
-            ret.UsableDimensions = this.UsableDimensions.Combine(rhs.UsableDimensions);
-            ret.CellCoordinatesNWCell = this.CellCoordinatesNWCell.Combine(rhs.CellCoordinatesNWCell);
-            ret.CellCoordinatesSECell = this.CellCoordinatesSECell.Combine(rhs.CellCoordinatesSECell);
-            return ret;
-        }
-        public static MapData_ErrorMask? Combine(MapData_ErrorMask? lhs, MapData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static MapData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new MapData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class MapData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool UsableDimensions;
-        public bool CellCoordinatesNWCell;
-        public bool CellCoordinatesSECell;
-        #endregion
-
-        #region Ctors
-        public MapData_TranslationMask(bool defaultOn)
-        {
-            this.UsableDimensions = defaultOn;
-            this.CellCoordinatesNWCell = defaultOn;
-            this.CellCoordinatesSECell = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((UsableDimensions, null));
-            ret.Add((CellCoordinatesNWCell, null));
-            ret.Add((CellCoordinatesSECell, null));
-        }
-    }
 }
 #endregion
 

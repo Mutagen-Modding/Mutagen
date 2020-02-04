@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionSound CreateFromXml(
             XElement node,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -124,15 +124,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionSound CreateFromXml(
             XElement node,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionSound.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             string path,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             string path,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             Stream stream,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,8 +196,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound CreateFromXml(
             Stream stream,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionSound CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -220,6 +220,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Sound = initialValue;
+                this.Flags = initialValue;
+                this.Chance = initialValue;
+            }
+
+            public Mask(
+                T Sound,
+                T Flags,
+                T Chance)
+            {
+                this.Sound = Sound;
+                this.Flags = Flags;
+                this.Chance = Chance;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Sound;
+            public T Flags;
+            public T Chance;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Chance, rhs.Chance)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Chance?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Chance)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RegionSound.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Sound = eval(this.Sound);
+                obj.Flags = eval(this.Flags);
+                obj.Chance = eval(this.Chance);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RegionSound.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RegionSound.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RegionSound.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Sound ?? true)
+                    {
+                        fg.AppendLine($"Sound => {Sound}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Chance ?? true)
+                    {
+                        fg.AppendLine($"Chance => {Chance}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Sound;
+            public Exception? Flags;
+            public Exception? Chance;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionSound_FieldIndex.Sound:
+                        return Sound;
+                    case RegionSound_FieldIndex.Flags:
+                        return Flags;
+                    case RegionSound_FieldIndex.Chance:
+                        return Chance;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionSound_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case RegionSound_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case RegionSound_FieldIndex.Chance:
+                        this.Chance = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionSound_FieldIndex.Sound:
+                        this.Sound = (Exception)obj;
+                        break;
+                    case RegionSound_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case RegionSound_FieldIndex.Chance:
+                        this.Chance = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Sound != null) return true;
+                if (Flags != null) return true;
+                if (Chance != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Sound => {Sound}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Chance => {Chance}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Chance = this.Chance.Combine(rhs.Chance);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Sound;
+            public bool Flags;
+            public bool Chance;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Sound = defaultOn;
+                this.Flags = defaultOn;
+                this.Chance = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Sound, null));
+                ret.Add((Flags, null));
+                ret.Add((Chance, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -329,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionSound_Mask<bool> GetEqualsMask(
+        public static RegionSound.Mask<bool> GetEqualsMask(
             this IRegionSoundGetter item,
             IRegionSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -343,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionSoundGetter item,
             string? name = null,
-            RegionSound_Mask<bool>? printMask = null)
+            RegionSound.Mask<bool>? printMask = null)
         {
             return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -355,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionSound_Mask<bool>? printMask = null)
+            RegionSound.Mask<bool>? printMask = null)
         {
             ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -366,16 +680,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionSoundGetter item,
-            RegionSound_Mask<bool?> checkMask)
+            RegionSound.Mask<bool?> checkMask)
         {
             return ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionSound_Mask<bool> GetHasBeenSetMask(this IRegionSoundGetter item)
+        public static RegionSound.Mask<bool> GetHasBeenSetMask(this IRegionSoundGetter item)
         {
-            var ret = new RegionSound_Mask<bool>(false);
+            var ret = new RegionSound.Mask<bool>(false);
             ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -394,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionSound lhs,
             IRegionSoundGetter rhs,
-            RegionSound_TranslationMask? copyMask = null)
+            RegionSound.TranslationMask? copyMask = null)
         {
             ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -406,8 +720,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionSound lhs,
             IRegionSoundGetter rhs,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? copyMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -415,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionSound.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -433,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound DeepCopy(
             this IRegionSoundGetter item,
-            RegionSound_TranslationMask? copyMask = null)
+            RegionSound.TranslationMask? copyMask = null)
         {
             return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -442,8 +756,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionSound DeepCopy(
             this IRegionSoundGetter item,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? copyMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? copyMask = null)
         {
             return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             XElement node,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -480,8 +794,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             XElement node,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -489,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionSound.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -508,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             string path,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -520,8 +834,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             string path,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -535,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -548,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             Stream stream,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -560,8 +874,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionSound item,
             Stream stream,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -575,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(RegionSound_Mask<>);
+        public static readonly Type MaskType = typeof(RegionSound.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionSound_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionSound.ErrorMask);
 
         public static readonly Type ClassType = typeof(RegionSound);
 
@@ -905,12 +1219,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RegionSoundCommon Instance = new RegionSoundCommon();
 
-        public RegionSound_Mask<bool> GetEqualsMask(
+        public RegionSound.Mask<bool> GetEqualsMask(
             IRegionSoundGetter item,
             IRegionSoundGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionSound_Mask<bool>(false);
+            var ret = new RegionSound.Mask<bool>(false);
             ((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -922,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionSoundGetter item,
             IRegionSoundGetter rhs,
-            RegionSound_Mask<bool> ret,
+            RegionSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -934,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionSoundGetter item,
             string? name = null,
-            RegionSound_Mask<bool>? printMask = null)
+            RegionSound.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -949,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSoundGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionSound_Mask<bool>? printMask = null)
+            RegionSound.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -973,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionSoundGetter item,
             FileGeneration fg,
-            RegionSound_Mask<bool>? printMask = null)
+            RegionSound.Mask<bool>? printMask = null)
         {
             if (printMask?.Sound ?? true)
             {
@@ -991,14 +1305,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionSoundGetter item,
-            RegionSound_Mask<bool?> checkMask)
+            RegionSound.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRegionSoundGetter item,
-            RegionSound_Mask<bool> mask)
+            RegionSound.Mask<bool> mask)
         {
             mask.Sound = true;
             mask.Flags = true;
@@ -1074,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionSound DeepCopy(
             IRegionSoundGetter item,
-            RegionSound_TranslationMask? copyMask = null)
+            RegionSound.TranslationMask? copyMask = null)
         {
             RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1085,8 +1399,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionSound DeepCopy(
             IRegionSoundGetter item,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? copyMask = null)
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? copyMask = null)
         {
             RegionSound ret = (RegionSound)((RegionSoundCommon)((IRegionSoundGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1361,8 +1675,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             XElement node,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null,
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1372,14 +1686,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionSound.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionSoundGetter item,
             string path,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null,
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1412,8 +1726,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionSoundGetter item,
             Stream stream,
-            out RegionSound_ErrorMask errorMask,
-            RegionSound_TranslationMask? translationMask = null,
+            out RegionSound.ErrorMask errorMask,
+            RegionSound.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1462,7 +1776,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSoundGetter item,
             XElement node,
             string? name = null,
-            RegionSound_TranslationMask? translationMask = null)
+            RegionSound.TranslationMask? translationMask = null)
         {
             ((RegionSoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1506,321 +1820,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RegionSound_Mask<T> :
-        IMask<T>,
-        IEquatable<RegionSound_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RegionSound_Mask(T initialValue)
-        {
-            this.Sound = initialValue;
-            this.Flags = initialValue;
-            this.Chance = initialValue;
-        }
-
-        public RegionSound_Mask(
-            T Sound,
-            T Flags,
-            T Chance)
-        {
-            this.Sound = Sound;
-            this.Flags = Flags;
-            this.Chance = Chance;
-        }
-
-        #pragma warning disable CS8618
-        protected RegionSound_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Sound;
-        public T Flags;
-        public T Chance;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RegionSound_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RegionSound_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Sound, rhs.Sound)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Chance, rhs.Chance)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Chance?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Sound)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Chance)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RegionSound_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RegionSound_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RegionSound_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Sound = eval(this.Sound);
-            obj.Flags = eval(this.Flags);
-            obj.Chance = eval(this.Chance);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RegionSound_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RegionSound_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RegionSound_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {Sound}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Chance ?? true)
-                {
-                    fg.AppendLine($"Chance => {Chance}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RegionSound_ErrorMask : IErrorMask, IErrorMask<RegionSound_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Sound;
-        public Exception? Flags;
-        public Exception? Chance;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    return Sound;
-                case RegionSound_FieldIndex.Flags:
-                    return Flags;
-                case RegionSound_FieldIndex.Chance:
-                    return Chance;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    this.Sound = ex;
-                    break;
-                case RegionSound_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case RegionSound_FieldIndex.Chance:
-                    this.Chance = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RegionSound_FieldIndex enu = (RegionSound_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionSound_FieldIndex.Sound:
-                    this.Sound = (Exception)obj;
-                    break;
-                case RegionSound_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case RegionSound_FieldIndex.Chance:
-                    this.Chance = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Sound != null) return true;
-            if (Flags != null) return true;
-            if (Chance != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RegionSound_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Sound => {Sound}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Chance => {Chance}");
-        }
-        #endregion
-
-        #region Combine
-        public RegionSound_ErrorMask Combine(RegionSound_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RegionSound_ErrorMask();
-            ret.Sound = this.Sound.Combine(rhs.Sound);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Chance = this.Chance.Combine(rhs.Chance);
-            return ret;
-        }
-        public static RegionSound_ErrorMask? Combine(RegionSound_ErrorMask? lhs, RegionSound_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RegionSound_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RegionSound_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RegionSound_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Sound;
-        public bool Flags;
-        public bool Chance;
-        #endregion
-
-        #region Ctors
-        public RegionSound_TranslationMask(bool defaultOn)
-        {
-            this.Sound = defaultOn;
-            this.Flags = defaultOn;
-            this.Chance = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Sound, null));
-            ret.Add((Flags, null));
-            ret.Add((Chance, null));
-        }
-    }
 }
 #endregion
 

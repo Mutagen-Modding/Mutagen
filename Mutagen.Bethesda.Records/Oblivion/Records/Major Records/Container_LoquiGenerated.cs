@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Container CreateFromXml(
             XElement node,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -196,15 +196,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Container CreateFromXml(
             XElement node,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Container.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Container CreateFromXml(
             string path,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Container CreateFromXml(
             string path,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Container CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Container CreateFromXml(
             Stream stream,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Container CreateFromXml(
             Stream stream,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Container CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -292,6 +292,560 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Script = initialValue;
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ContainerItem.Mask<T>?>>());
+                this.Flags = initialValue;
+                this.Weight = initialValue;
+                this.OpenSound = initialValue;
+                this.CloseSound = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Script,
+                T Items,
+                T Flags,
+                T Weight,
+                T OpenSound,
+                T CloseSound,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Script = Script;
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem.Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ContainerItem.Mask<T>?>>());
+                this.Flags = Flags;
+                this.Weight = Weight;
+                this.OpenSound = OpenSound;
+                this.CloseSound = CloseSound;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Script;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem.Mask<T>?>>>? Items;
+            public T Flags;
+            public T Weight;
+            public T OpenSound;
+            public T CloseSound;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
+                if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Items?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.OpenSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.CloseSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.OpenSound)) return false;
+                if (!eval(this.CloseSound)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Container.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerItem.Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerItem.Mask<R>?>>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ContainerItem.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ContainerItem.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ContainerItem.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Flags = eval(this.Flags);
+                obj.Weight = eval(this.Weight);
+                obj.OpenSound = eval(this.OpenSound);
+                obj.CloseSound = eval(this.CloseSound);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Container.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Container.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Container.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Items?.Overall ?? true)
+                    {
+                        fg.AppendLine("Items =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Items != null)
+                            {
+                                if (Items.Overall != null)
+                                {
+                                    fg.AppendLine(Items.Overall.ToString());
+                                }
+                                if (Items.Specific != null)
+                                {
+                                    foreach (var subItem in Items.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.OpenSound ?? true)
+                    {
+                        fg.AppendLine($"OpenSound => {OpenSound}");
+                    }
+                    if (printMask?.CloseSound ?? true)
+                    {
+                        fg.AppendLine($"CloseSound => {CloseSound}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Script;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem.ErrorMask?>>?>? Items;
+            public Exception? Flags;
+            public Exception? Weight;
+            public Exception? OpenSound;
+            public Exception? CloseSound;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Container_FieldIndex enu = (Container_FieldIndex)index;
+                switch (enu)
+                {
+                    case Container_FieldIndex.Name:
+                        return Name;
+                    case Container_FieldIndex.Model:
+                        return Model;
+                    case Container_FieldIndex.Script:
+                        return Script;
+                    case Container_FieldIndex.Items:
+                        return Items;
+                    case Container_FieldIndex.Flags:
+                        return Flags;
+                    case Container_FieldIndex.Weight:
+                        return Weight;
+                    case Container_FieldIndex.OpenSound:
+                        return OpenSound;
+                    case Container_FieldIndex.CloseSound:
+                        return CloseSound;
+                    case Container_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Container_FieldIndex enu = (Container_FieldIndex)index;
+                switch (enu)
+                {
+                    case Container_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Container_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Container_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Container_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Container_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Container_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Container_FieldIndex.OpenSound:
+                        this.OpenSound = ex;
+                        break;
+                    case Container_FieldIndex.CloseSound:
+                        this.CloseSound = ex;
+                        break;
+                    case Container_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Container_FieldIndex enu = (Container_FieldIndex)index;
+                switch (enu)
+                {
+                    case Container_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Container_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Container_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Container_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem.ErrorMask?>>?>)obj;
+                        break;
+                    case Container_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Container_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case Container_FieldIndex.OpenSound:
+                        this.OpenSound = (Exception)obj;
+                        break;
+                    case Container_FieldIndex.CloseSound:
+                        this.CloseSound = (Exception)obj;
+                        break;
+                    case Container_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Script != null) return true;
+                if (Items != null) return true;
+                if (Flags != null) return true;
+                if (Weight != null) return true;
+                if (OpenSound != null) return true;
+                if (CloseSound != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Items != null)
+                    {
+                        if (Items.Overall != null)
+                        {
+                            fg.AppendLine(Items.Overall.ToString());
+                        }
+                        if (Items.Specific != null)
+                        {
+                            foreach (var subItem in Items.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"OpenSound => {OpenSound}");
+                fg.AppendLine($"CloseSound => {CloseSound}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
+                ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Script;
+            public MaskItem<bool, ContainerItem.TranslationMask?> Items;
+            public bool Flags;
+            public bool Weight;
+            public bool OpenSound;
+            public bool CloseSound;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Script = defaultOn;
+                this.Items = new MaskItem<bool, ContainerItem.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.Weight = defaultOn;
+                this.OpenSound = defaultOn;
+                this.CloseSound = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Weight, null));
+                ret.Add((OpenSound, null));
+                ret.Add((CloseSound, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -430,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ContainerSetterCommon)((IContainerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Container_Mask<bool> GetEqualsMask(
+        public static Container.Mask<bool> GetEqualsMask(
             this IContainerGetter item,
             IContainerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -444,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IContainerGetter item,
             string? name = null,
-            Container_Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -456,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerGetter item,
             FileGeneration fg,
             string? name = null,
-            Container_Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -467,16 +1021,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IContainerGetter item,
-            Container_Mask<bool?> checkMask)
+            Container.Mask<bool?> checkMask)
         {
             return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Container_Mask<bool> GetHasBeenSetMask(this IContainerGetter item)
+        public static Container.Mask<bool> GetHasBeenSetMask(this IContainerGetter item)
         {
-            var ret = new Container_Mask<bool>(false);
+            var ret = new Container.Mask<bool>(false);
             ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -495,8 +1049,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IContainerInternal lhs,
             IContainerGetter rhs,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? copyMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -504,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Container.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -522,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Container DeepCopy(
             this IContainerGetter item,
-            Container_TranslationMask? copyMask = null)
+            Container.TranslationMask? copyMask = null)
         {
             return ((ContainerSetterTranslationCommon)((IContainerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -531,8 +1085,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Container DeepCopy(
             this IContainerGetter item,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? copyMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? copyMask = null)
         {
             return ((ContainerSetterTranslationCommon)((IContainerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -556,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IContainerInternal item,
             XElement node,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -569,8 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IContainerInternal item,
             XElement node,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -578,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Container.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -597,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IContainerInternal item,
             string path,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -609,8 +1163,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IContainerInternal item,
             string path,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -624,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -637,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IContainerInternal item,
             Stream stream,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -649,8 +1203,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IContainerInternal item,
             Stream stream,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -664,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Container_TranslationMask? translationMask = null)
+            Container.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -750,9 +1304,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(Container_Mask<>);
+        public static readonly Type MaskType = typeof(Container.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Container_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Container.ErrorMask);
 
         public static readonly Type ClassType = typeof(Container);
 
@@ -1221,12 +1775,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ContainerCommon Instance = new ContainerCommon();
 
-        public Container_Mask<bool> GetEqualsMask(
+        public Container.Mask<bool> GetEqualsMask(
             IContainerGetter item,
             IContainerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Container_Mask<bool>(false);
+            var ret = new Container.Mask<bool>(false);
             ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1238,7 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IContainerGetter item,
             IContainerGetter rhs,
-            Container_Mask<bool> ret,
+            Container.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1264,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IContainerGetter item,
             string? name = null,
-            Container_Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1279,7 +1833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerGetter item,
             FileGeneration fg,
             string? name = null,
-            Container_Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1303,7 +1857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IContainerGetter item,
             FileGeneration fg,
-            Container_Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1363,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IContainerGetter item,
-            Container_Mask<bool?> checkMask)
+            Container.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1379,13 +1933,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IContainerGetter item,
-            Container_Mask<bool> mask)
+            Container.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Script = item.Script.HasBeenSet;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerItem_Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerItem_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerItem.Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerItem.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Flags = true;
             mask.Weight = true;
             mask.OpenSound = item.OpenSound.HasBeenSet;
@@ -1722,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Container DeepCopy(
             IContainerGetter item,
-            Container_TranslationMask? copyMask = null)
+            Container.TranslationMask? copyMask = null)
         {
             Container ret = (Container)((ContainerCommon)((IContainerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1733,8 +2287,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Container DeepCopy(
             IContainerGetter item,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? copyMask = null)
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? copyMask = null)
         {
             Container ret = (Container)((ContainerCommon)((IContainerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2215,8 +2769,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IContainerGetter item,
             XElement node,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null,
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2226,14 +2780,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Container.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IContainerGetter item,
             string path,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null,
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2249,8 +2803,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IContainerGetter item,
             Stream stream,
-            out Container_ErrorMask errorMask,
-            Container_TranslationMask? translationMask = null,
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2267,559 +2821,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Container_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Container_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Container_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Script = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ContainerItem_Mask<T>?>>());
-            this.Flags = initialValue;
-            this.Weight = initialValue;
-            this.OpenSound = initialValue;
-            this.CloseSound = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Container_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Script,
-            T Items,
-            T Flags,
-            T Weight,
-            T OpenSound,
-            T CloseSound,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Script = Script;
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem_Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ContainerItem_Mask<T>?>>());
-            this.Flags = Flags;
-            this.Weight = Weight;
-            this.OpenSound = OpenSound;
-            this.CloseSound = CloseSound;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Container_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Script;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem_Mask<T>?>>>? Items;
-        public T Flags;
-        public T Weight;
-        public T OpenSound;
-        public T CloseSound;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Container_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Container_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Items, rhs.Items)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
-            if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Items?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.OpenSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.CloseSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Script)) return false;
-            if (this.Items != null)
-            {
-                if (!eval(this.Items.Overall)) return false;
-                if (this.Items.Specific != null)
-                {
-                    foreach (var item in this.Items.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.OpenSound)) return false;
-            if (!eval(this.CloseSound)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Container_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Container_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Container_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Script = eval(this.Script);
-            if (Items != null)
-            {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerItem_Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerItem_Mask<R>?>>());
-                if (Items.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, ContainerItem_Mask<R>?>>();
-                    obj.Items.Specific = l;
-                    foreach (var item in Items.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, ContainerItem_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ContainerItem_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Flags = eval(this.Flags);
-            obj.Weight = eval(this.Weight);
-            obj.OpenSound = eval(this.OpenSound);
-            obj.CloseSound = eval(this.CloseSound);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Container_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Container_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Container_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Items?.Overall ?? true)
-                {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Items != null)
-                        {
-                            if (Items.Overall != null)
-                            {
-                                fg.AppendLine(Items.Overall.ToString());
-                            }
-                            if (Items.Specific != null)
-                            {
-                                foreach (var subItem in Items.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.OpenSound ?? true)
-                {
-                    fg.AppendLine($"OpenSound => {OpenSound}");
-                }
-                if (printMask?.CloseSound ?? true)
-                {
-                    fg.AppendLine($"CloseSound => {CloseSound}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Container_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Container_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Script;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem_ErrorMask?>>?>? Items;
-        public Exception? Flags;
-        public Exception? Weight;
-        public Exception? OpenSound;
-        public Exception? CloseSound;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    return Name;
-                case Container_FieldIndex.Model:
-                    return Model;
-                case Container_FieldIndex.Script:
-                    return Script;
-                case Container_FieldIndex.Items:
-                    return Items;
-                case Container_FieldIndex.Flags:
-                    return Flags;
-                case Container_FieldIndex.Weight:
-                    return Weight;
-                case Container_FieldIndex.OpenSound:
-                    return OpenSound;
-                case Container_FieldIndex.CloseSound:
-                    return CloseSound;
-                case Container_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Container_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Container_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Container_FieldIndex.Items:
-                    this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem_ErrorMask?>>?>(ex, null);
-                    break;
-                case Container_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Container_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    this.OpenSound = ex;
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    this.CloseSound = ex;
-                    break;
-                case Container_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Container_FieldIndex enu = (Container_FieldIndex)index;
-            switch (enu)
-            {
-                case Container_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Container_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Container_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Container_FieldIndex.Items:
-                    this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem_ErrorMask?>>?>)obj;
-                    break;
-                case Container_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Container_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Container_FieldIndex.OpenSound:
-                    this.OpenSound = (Exception)obj;
-                    break;
-                case Container_FieldIndex.CloseSound:
-                    this.CloseSound = (Exception)obj;
-                    break;
-                case Container_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Script != null) return true;
-            if (Items != null) return true;
-            if (Flags != null) return true;
-            if (Weight != null) return true;
-            if (OpenSound != null) return true;
-            if (CloseSound != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Container_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine("Items =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Items != null)
-                {
-                    if (Items.Overall != null)
-                    {
-                        fg.AppendLine(Items.Overall.ToString());
-                    }
-                    if (Items.Specific != null)
-                    {
-                        foreach (var subItem in Items.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"OpenSound => {OpenSound}");
-            fg.AppendLine($"CloseSound => {CloseSound}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Container_ErrorMask Combine(Container_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Container_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerItem_ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
-            ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Container_ErrorMask? Combine(Container_ErrorMask? lhs, Container_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Container_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Container_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Container_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Script;
-        public MaskItem<bool, ContainerItem_TranslationMask?> Items;
-        public bool Flags;
-        public bool Weight;
-        public bool OpenSound;
-        public bool CloseSound;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Container_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Script = defaultOn;
-            this.Items = new MaskItem<bool, ContainerItem_TranslationMask?>(defaultOn, null);
-            this.Flags = defaultOn;
-            this.Weight = defaultOn;
-            this.OpenSound = defaultOn;
-            this.CloseSound = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Script, null));
-            ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-            ret.Add((Flags, null));
-            ret.Add((Weight, null));
-            ret.Add((OpenSound, null));
-            ret.Add((CloseSound, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

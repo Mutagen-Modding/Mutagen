@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Landscape CreateFromXml(
             XElement node,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -183,15 +183,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Landscape CreateFromXml(
             XElement node,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Landscape CreateFromXml(
             string path,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -221,8 +221,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Landscape CreateFromXml(
             string path,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Landscape CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Landscape CreateFromXml(
             Stream stream,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -255,8 +255,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Landscape CreateFromXml(
             Stream stream,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Landscape CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -279,6 +279,546 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Unknown = initialValue;
+                this.VertexNormals = initialValue;
+                this.VertexHeightMap = initialValue;
+                this.VertexColors = initialValue;
+                this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, BaseLayer.Mask<T>?>>());
+                this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Unknown,
+                T VertexNormals,
+                T VertexHeightMap,
+                T VertexColors,
+                T Layers,
+                T Textures)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Unknown = Unknown;
+                this.VertexNormals = VertexNormals;
+                this.VertexHeightMap = VertexHeightMap;
+                this.VertexColors = VertexColors;
+                this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer.Mask<T>?>>>(Layers, Enumerable.Empty<MaskItemIndexed<T, BaseLayer.Mask<T>?>>());
+                this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Textures, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Unknown;
+            public T VertexNormals;
+            public T VertexHeightMap;
+            public T VertexColors;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer.Mask<T>?>>>? Layers;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Textures;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.VertexNormals, rhs.VertexNormals)) return false;
+                if (!object.Equals(this.VertexHeightMap, rhs.VertexHeightMap)) return false;
+                if (!object.Equals(this.VertexColors, rhs.VertexColors)) return false;
+                if (!object.Equals(this.Layers, rhs.Layers)) return false;
+                if (!object.Equals(this.Textures, rhs.Textures)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
+                ret = ret.CombineHashCode(this.VertexNormals?.GetHashCode());
+                ret = ret.CombineHashCode(this.VertexHeightMap?.GetHashCode());
+                ret = ret.CombineHashCode(this.VertexColors?.GetHashCode());
+                ret = ret.CombineHashCode(this.Layers?.GetHashCode());
+                ret = ret.CombineHashCode(this.Textures?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.VertexNormals)) return false;
+                if (!eval(this.VertexHeightMap)) return false;
+                if (!eval(this.VertexColors)) return false;
+                if (this.Layers != null)
+                {
+                    if (!eval(this.Layers.Overall)) return false;
+                    if (this.Layers.Specific != null)
+                    {
+                        foreach (var item in this.Layers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Textures != null)
+                {
+                    if (!eval(this.Textures.Overall)) return false;
+                    if (this.Textures.Specific != null)
+                    {
+                        foreach (var item in this.Textures.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Landscape.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Unknown = eval(this.Unknown);
+                obj.VertexNormals = eval(this.VertexNormals);
+                obj.VertexHeightMap = eval(this.VertexHeightMap);
+                obj.VertexColors = eval(this.VertexColors);
+                if (Layers != null)
+                {
+                    obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>>(eval(this.Layers.Overall), Enumerable.Empty<MaskItemIndexed<R, BaseLayer.Mask<R>?>>());
+                    if (Layers.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, BaseLayer.Mask<R>?>>();
+                        obj.Layers.Specific = l;
+                        foreach (var item in Layers.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, BaseLayer.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, BaseLayer.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Textures != null)
+                {
+                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Textures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Textures.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Textures.Specific = l;
+                        foreach (var item in Textures.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Landscape.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Landscape.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Landscape.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendLine($"Unknown => {Unknown}");
+                    }
+                    if (printMask?.VertexNormals ?? true)
+                    {
+                        fg.AppendLine($"VertexNormals => {VertexNormals}");
+                    }
+                    if (printMask?.VertexHeightMap ?? true)
+                    {
+                        fg.AppendLine($"VertexHeightMap => {VertexHeightMap}");
+                    }
+                    if (printMask?.VertexColors ?? true)
+                    {
+                        fg.AppendLine($"VertexColors => {VertexColors}");
+                    }
+                    if (printMask?.Layers?.Overall ?? true)
+                    {
+                        fg.AppendLine("Layers =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Layers != null)
+                            {
+                                if (Layers.Overall != null)
+                                {
+                                    fg.AppendLine(Layers.Overall.ToString());
+                                }
+                                if (Layers.Specific != null)
+                                {
+                                    foreach (var subItem in Layers.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Textures?.Overall ?? true)
+                    {
+                        fg.AppendLine("Textures =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Textures != null)
+                            {
+                                if (Textures.Overall != null)
+                                {
+                                    fg.AppendLine(Textures.Overall.ToString());
+                                }
+                                if (Textures.Specific != null)
+                                {
+                                    foreach (var subItem in Textures.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Unknown;
+            public Exception? VertexNormals;
+            public Exception? VertexHeightMap;
+            public Exception? VertexColors;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>? Layers;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Textures;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
+                switch (enu)
+                {
+                    case Landscape_FieldIndex.Unknown:
+                        return Unknown;
+                    case Landscape_FieldIndex.VertexNormals:
+                        return VertexNormals;
+                    case Landscape_FieldIndex.VertexHeightMap:
+                        return VertexHeightMap;
+                    case Landscape_FieldIndex.VertexColors:
+                        return VertexColors;
+                    case Landscape_FieldIndex.Layers:
+                        return Layers;
+                    case Landscape_FieldIndex.Textures:
+                        return Textures;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
+                switch (enu)
+                {
+                    case Landscape_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Landscape_FieldIndex.VertexNormals:
+                        this.VertexNormals = ex;
+                        break;
+                    case Landscape_FieldIndex.VertexHeightMap:
+                        this.VertexHeightMap = ex;
+                        break;
+                    case Landscape_FieldIndex.VertexColors:
+                        this.VertexColors = ex;
+                        break;
+                    case Landscape_FieldIndex.Layers:
+                        this.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Landscape_FieldIndex.Textures:
+                        this.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
+                switch (enu)
+                {
+                    case Landscape_FieldIndex.Unknown:
+                        this.Unknown = (Exception)obj;
+                        break;
+                    case Landscape_FieldIndex.VertexNormals:
+                        this.VertexNormals = (Exception)obj;
+                        break;
+                    case Landscape_FieldIndex.VertexHeightMap:
+                        this.VertexHeightMap = (Exception)obj;
+                        break;
+                    case Landscape_FieldIndex.VertexColors:
+                        this.VertexColors = (Exception)obj;
+                        break;
+                    case Landscape_FieldIndex.Layers:
+                        this.Layers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>)obj;
+                        break;
+                    case Landscape_FieldIndex.Textures:
+                        this.Textures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Unknown != null) return true;
+                if (VertexNormals != null) return true;
+                if (VertexHeightMap != null) return true;
+                if (VertexColors != null) return true;
+                if (Layers != null) return true;
+                if (Textures != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Unknown => {Unknown}");
+                fg.AppendLine($"VertexNormals => {VertexNormals}");
+                fg.AppendLine($"VertexHeightMap => {VertexHeightMap}");
+                fg.AppendLine($"VertexColors => {VertexColors}");
+                fg.AppendLine("Layers =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Layers != null)
+                    {
+                        if (Layers.Overall != null)
+                        {
+                            fg.AppendLine(Layers.Overall.ToString());
+                        }
+                        if (Layers.Specific != null)
+                        {
+                            foreach (var subItem in Layers.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("Textures =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Textures != null)
+                    {
+                        if (Textures.Overall != null)
+                        {
+                            fg.AppendLine(Textures.Overall.ToString());
+                        }
+                        if (Textures.Specific != null)
+                        {
+                            foreach (var subItem in Textures.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.VertexNormals = this.VertexNormals.Combine(rhs.VertexNormals);
+                ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap);
+                ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
+                ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
+                ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Unknown;
+            public bool VertexNormals;
+            public bool VertexHeightMap;
+            public bool VertexColors;
+            public MaskItem<bool, BaseLayer.TranslationMask?> Layers;
+            public bool Textures;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Unknown = defaultOn;
+                this.VertexNormals = defaultOn;
+                this.VertexHeightMap = defaultOn;
+                this.VertexColors = defaultOn;
+                this.Layers = new MaskItem<bool, BaseLayer.TranslationMask?>(defaultOn, null);
+                this.Textures = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Unknown, null));
+                ret.Add((VertexNormals, null));
+                ret.Add((VertexHeightMap, null));
+                ret.Add((VertexColors, null));
+                ret.Add((Layers?.Overall ?? true, Layers?.Specific?.GetCrystal()));
+                ret.Add((Textures, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -420,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Landscape_Mask<bool> GetEqualsMask(
+        public static Landscape.Mask<bool> GetEqualsMask(
             this ILandscapeGetter item,
             ILandscapeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -434,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILandscapeGetter item,
             string? name = null,
-            Landscape_Mask<bool>? printMask = null)
+            Landscape.Mask<bool>? printMask = null)
         {
             return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -446,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeGetter item,
             FileGeneration fg,
             string? name = null,
-            Landscape_Mask<bool>? printMask = null)
+            Landscape.Mask<bool>? printMask = null)
         {
             ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -457,16 +997,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILandscapeGetter item,
-            Landscape_Mask<bool?> checkMask)
+            Landscape.Mask<bool?> checkMask)
         {
             return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Landscape_Mask<bool> GetHasBeenSetMask(this ILandscapeGetter item)
+        public static Landscape.Mask<bool> GetHasBeenSetMask(this ILandscapeGetter item)
         {
-            var ret = new Landscape_Mask<bool>(false);
+            var ret = new Landscape.Mask<bool>(false);
             ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -485,8 +1025,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILandscapeInternal lhs,
             ILandscapeGetter rhs,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? copyMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LandscapeSetterTranslationCommon)((ILandscapeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -494,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -512,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Landscape DeepCopy(
             this ILandscapeGetter item,
-            Landscape_TranslationMask? copyMask = null)
+            Landscape.TranslationMask? copyMask = null)
         {
             return ((LandscapeSetterTranslationCommon)((ILandscapeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -521,8 +1061,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Landscape DeepCopy(
             this ILandscapeGetter item,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? copyMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? copyMask = null)
         {
             return ((LandscapeSetterTranslationCommon)((ILandscapeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -546,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             XElement node,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -559,8 +1099,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             XElement node,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -568,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -587,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             string path,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -599,8 +1139,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             string path,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -614,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -627,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             Stream stream,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -639,8 +1179,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             Stream stream,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -654,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Landscape_TranslationMask? translationMask = null)
+            Landscape.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -737,9 +1277,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(Landscape_Mask<>);
+        public static readonly Type MaskType = typeof(Landscape.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Landscape_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Landscape.ErrorMask);
 
         public static readonly Type ClassType = typeof(Landscape);
 
@@ -1160,12 +1700,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly LandscapeCommon Instance = new LandscapeCommon();
 
-        public Landscape_Mask<bool> GetEqualsMask(
+        public Landscape.Mask<bool> GetEqualsMask(
             ILandscapeGetter item,
             ILandscapeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Landscape_Mask<bool>(false);
+            var ret = new Landscape.Mask<bool>(false);
             ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1177,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILandscapeGetter item,
             ILandscapeGetter rhs,
-            Landscape_Mask<bool> ret,
+            Landscape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1199,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILandscapeGetter item,
             string? name = null,
-            Landscape_Mask<bool>? printMask = null)
+            Landscape.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1214,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter item,
             FileGeneration fg,
             string? name = null,
-            Landscape_Mask<bool>? printMask = null)
+            Landscape.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1238,7 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILandscapeGetter item,
             FileGeneration fg,
-            Landscape_Mask<bool>? printMask = null)
+            Landscape.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1300,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILandscapeGetter item,
-            Landscape_Mask<bool?> checkMask)
+            Landscape.Mask<bool?> checkMask)
         {
             if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
             if (checkMask.VertexNormals.HasValue && checkMask.VertexNormals.Value != item.VertexNormals_IsSet) return false;
@@ -1315,13 +1855,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ILandscapeGetter item,
-            Landscape_Mask<bool> mask)
+            Landscape.Mask<bool> mask)
         {
             mask.Unknown = item.Unknown_IsSet;
             mask.VertexNormals = item.VertexNormals_IsSet;
             mask.VertexHeightMap = item.VertexHeightMap_IsSet;
             mask.VertexColors = item.VertexColors_IsSet;
-            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer_Mask<bool>?>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Layers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, BaseLayer.Mask<bool>?>>>(item.Layers.HasBeenSet, item.Layers.WithIndex().Select((i) => new MaskItemIndexed<bool, BaseLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Textures = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Textures.HasBeenSet, Enumerable.Empty<(int, bool)>());
             base.FillHasBeenSetMask(
                 item: item,
@@ -1662,7 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Landscape DeepCopy(
             ILandscapeGetter item,
-            Landscape_TranslationMask? copyMask = null)
+            Landscape.TranslationMask? copyMask = null)
         {
             Landscape ret = (Landscape)((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1673,8 +2213,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Landscape DeepCopy(
             ILandscapeGetter item,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? copyMask = null)
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? copyMask = null)
         {
             Landscape ret = (Landscape)((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2083,8 +2623,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILandscapeGetter item,
             XElement node,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null,
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2094,14 +2634,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILandscapeGetter item,
             string path,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null,
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2117,8 +2657,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILandscapeGetter item,
             Stream stream,
-            out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask? translationMask = null,
+            out Landscape.ErrorMask errorMask,
+            Landscape.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2135,545 +2675,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Landscape_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Landscape_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Landscape_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Unknown = initialValue;
-            this.VertexNormals = initialValue;
-            this.VertexHeightMap = initialValue;
-            this.VertexColors = initialValue;
-            this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, BaseLayer_Mask<T>?>>());
-            this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public Landscape_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Unknown,
-            T VertexNormals,
-            T VertexHeightMap,
-            T VertexColors,
-            T Layers,
-            T Textures)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Unknown = Unknown;
-            this.VertexNormals = VertexNormals;
-            this.VertexHeightMap = VertexHeightMap;
-            this.VertexColors = VertexColors;
-            this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>?>>>(Layers, Enumerable.Empty<MaskItemIndexed<T, BaseLayer_Mask<T>?>>());
-            this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Textures, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected Landscape_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Unknown;
-        public T VertexNormals;
-        public T VertexHeightMap;
-        public T VertexColors;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>?>>>? Layers;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Textures;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Landscape_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Landscape_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-            if (!object.Equals(this.VertexNormals, rhs.VertexNormals)) return false;
-            if (!object.Equals(this.VertexHeightMap, rhs.VertexHeightMap)) return false;
-            if (!object.Equals(this.VertexColors, rhs.VertexColors)) return false;
-            if (!object.Equals(this.Layers, rhs.Layers)) return false;
-            if (!object.Equals(this.Textures, rhs.Textures)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-            ret = ret.CombineHashCode(this.VertexNormals?.GetHashCode());
-            ret = ret.CombineHashCode(this.VertexHeightMap?.GetHashCode());
-            ret = ret.CombineHashCode(this.VertexColors?.GetHashCode());
-            ret = ret.CombineHashCode(this.Layers?.GetHashCode());
-            ret = ret.CombineHashCode(this.Textures?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Unknown)) return false;
-            if (!eval(this.VertexNormals)) return false;
-            if (!eval(this.VertexHeightMap)) return false;
-            if (!eval(this.VertexColors)) return false;
-            if (this.Layers != null)
-            {
-                if (!eval(this.Layers.Overall)) return false;
-                if (this.Layers.Specific != null)
-                {
-                    foreach (var item in this.Layers.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (this.Textures != null)
-            {
-                if (!eval(this.Textures.Overall)) return false;
-                if (this.Textures.Specific != null)
-                {
-                    foreach (var item in this.Textures.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Landscape_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Landscape_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Landscape_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Unknown = eval(this.Unknown);
-            obj.VertexNormals = eval(this.VertexNormals);
-            obj.VertexHeightMap = eval(this.VertexHeightMap);
-            obj.VertexColors = eval(this.VertexColors);
-            if (Layers != null)
-            {
-                obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer_Mask<R>?>>>(eval(this.Layers.Overall), Enumerable.Empty<MaskItemIndexed<R, BaseLayer_Mask<R>?>>());
-                if (Layers.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, BaseLayer_Mask<R>?>>();
-                    obj.Layers.Specific = l;
-                    foreach (var item in Layers.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, BaseLayer_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, BaseLayer_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            if (Textures != null)
-            {
-                obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Textures.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Textures.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Textures.Specific = l;
-                    foreach (var item in Textures.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Landscape_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Landscape_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Landscape_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {Unknown}");
-                }
-                if (printMask?.VertexNormals ?? true)
-                {
-                    fg.AppendLine($"VertexNormals => {VertexNormals}");
-                }
-                if (printMask?.VertexHeightMap ?? true)
-                {
-                    fg.AppendLine($"VertexHeightMap => {VertexHeightMap}");
-                }
-                if (printMask?.VertexColors ?? true)
-                {
-                    fg.AppendLine($"VertexColors => {VertexColors}");
-                }
-                if (printMask?.Layers?.Overall ?? true)
-                {
-                    fg.AppendLine("Layers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Layers != null)
-                        {
-                            if (Layers.Overall != null)
-                            {
-                                fg.AppendLine(Layers.Overall.ToString());
-                            }
-                            if (Layers.Specific != null)
-                            {
-                                foreach (var subItem in Layers.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Textures?.Overall ?? true)
-                {
-                    fg.AppendLine("Textures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Textures != null)
-                        {
-                            if (Textures.Overall != null)
-                            {
-                                fg.AppendLine(Textures.Overall.ToString());
-                            }
-                            if (Textures.Specific != null)
-                            {
-                                foreach (var subItem in Textures.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Landscape_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Landscape_ErrorMask>
-    {
-        #region Members
-        public Exception? Unknown;
-        public Exception? VertexNormals;
-        public Exception? VertexHeightMap;
-        public Exception? VertexColors;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer_ErrorMask?>>?>? Layers;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Textures;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    return Unknown;
-                case Landscape_FieldIndex.VertexNormals:
-                    return VertexNormals;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    return VertexHeightMap;
-                case Landscape_FieldIndex.VertexColors:
-                    return VertexColors;
-                case Landscape_FieldIndex.Layers:
-                    return Layers;
-                case Landscape_FieldIndex.Textures:
-                    return Textures;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    this.Unknown = ex;
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    this.VertexNormals = ex;
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    this.VertexHeightMap = ex;
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    this.VertexColors = ex;
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    this.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer_ErrorMask?>>?>(ex, null);
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    this.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
-            switch (enu)
-            {
-                case Landscape_FieldIndex.Unknown:
-                    this.Unknown = (Exception)obj;
-                    break;
-                case Landscape_FieldIndex.VertexNormals:
-                    this.VertexNormals = (Exception)obj;
-                    break;
-                case Landscape_FieldIndex.VertexHeightMap:
-                    this.VertexHeightMap = (Exception)obj;
-                    break;
-                case Landscape_FieldIndex.VertexColors:
-                    this.VertexColors = (Exception)obj;
-                    break;
-                case Landscape_FieldIndex.Layers:
-                    this.Layers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer_ErrorMask?>>?>)obj;
-                    break;
-                case Landscape_FieldIndex.Textures:
-                    this.Textures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Unknown != null) return true;
-            if (VertexNormals != null) return true;
-            if (VertexHeightMap != null) return true;
-            if (VertexColors != null) return true;
-            if (Layers != null) return true;
-            if (Textures != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Landscape_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Unknown => {Unknown}");
-            fg.AppendLine($"VertexNormals => {VertexNormals}");
-            fg.AppendLine($"VertexHeightMap => {VertexHeightMap}");
-            fg.AppendLine($"VertexColors => {VertexColors}");
-            fg.AppendLine("Layers =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Layers != null)
-                {
-                    if (Layers.Overall != null)
-                    {
-                        fg.AppendLine(Layers.Overall.ToString());
-                    }
-                    if (Layers.Specific != null)
-                    {
-                        foreach (var subItem in Layers.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("Textures =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Textures != null)
-                {
-                    if (Textures.Overall != null)
-                    {
-                        fg.AppendLine(Textures.Overall.ToString());
-                    }
-                    if (Textures.Specific != null)
-                    {
-                        foreach (var subItem in Textures.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public Landscape_ErrorMask Combine(Landscape_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Landscape_ErrorMask();
-            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-            ret.VertexNormals = this.VertexNormals.Combine(rhs.VertexNormals);
-            ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap);
-            ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
-            ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer_ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
-            ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
-            return ret;
-        }
-        public static Landscape_ErrorMask? Combine(Landscape_ErrorMask? lhs, Landscape_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Landscape_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Landscape_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Landscape_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Unknown;
-        public bool VertexNormals;
-        public bool VertexHeightMap;
-        public bool VertexColors;
-        public MaskItem<bool, BaseLayer_TranslationMask?> Layers;
-        public bool Textures;
-        #endregion
-
-        #region Ctors
-        public Landscape_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Unknown = defaultOn;
-            this.VertexNormals = defaultOn;
-            this.VertexHeightMap = defaultOn;
-            this.VertexColors = defaultOn;
-            this.Layers = new MaskItem<bool, BaseLayer_TranslationMask?>(defaultOn, null);
-            this.Textures = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Unknown, null));
-            ret.Add((VertexNormals, null));
-            ret.Add((VertexHeightMap, null));
-            ret.Add((VertexColors, null));
-            ret.Add((Layers?.Overall ?? true, Layers?.Specific?.GetCrystal()));
-            ret.Add((Textures, null));
-        }
-    }
 }
 #endregion
 

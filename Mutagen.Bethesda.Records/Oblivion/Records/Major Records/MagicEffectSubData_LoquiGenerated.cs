@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MagicEffectSubData CreateFromXml(
             XElement node,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -151,15 +151,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MagicEffectSubData CreateFromXml(
             XElement node,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectSubData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffectSubData CreateFromXml(
             string path,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffectSubData CreateFromXml(
             string path,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffectSubData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffectSubData CreateFromXml(
             Stream stream,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -223,8 +223,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffectSubData CreateFromXml(
             Stream stream,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffectSubData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -247,6 +247,428 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.EnchantEffect = initialValue;
+                this.CastingSound = initialValue;
+                this.BoltSound = initialValue;
+                this.HitSound = initialValue;
+                this.AreaSound = initialValue;
+                this.ConstantEffectEnchantmentFactor = initialValue;
+                this.ConstantEffectBarterFactor = initialValue;
+            }
+
+            public Mask(
+                T EnchantEffect,
+                T CastingSound,
+                T BoltSound,
+                T HitSound,
+                T AreaSound,
+                T ConstantEffectEnchantmentFactor,
+                T ConstantEffectBarterFactor)
+            {
+                this.EnchantEffect = EnchantEffect;
+                this.CastingSound = CastingSound;
+                this.BoltSound = BoltSound;
+                this.HitSound = HitSound;
+                this.AreaSound = AreaSound;
+                this.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactor;
+                this.ConstantEffectBarterFactor = ConstantEffectBarterFactor;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T EnchantEffect;
+            public T CastingSound;
+            public T BoltSound;
+            public T HitSound;
+            public T AreaSound;
+            public T ConstantEffectEnchantmentFactor;
+            public T ConstantEffectBarterFactor;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.EnchantEffect, rhs.EnchantEffect)) return false;
+                if (!object.Equals(this.CastingSound, rhs.CastingSound)) return false;
+                if (!object.Equals(this.BoltSound, rhs.BoltSound)) return false;
+                if (!object.Equals(this.HitSound, rhs.HitSound)) return false;
+                if (!object.Equals(this.AreaSound, rhs.AreaSound)) return false;
+                if (!object.Equals(this.ConstantEffectEnchantmentFactor, rhs.ConstantEffectEnchantmentFactor)) return false;
+                if (!object.Equals(this.ConstantEffectBarterFactor, rhs.ConstantEffectBarterFactor)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.EnchantEffect?.GetHashCode());
+                ret = ret.CombineHashCode(this.CastingSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.BoltSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.HitSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.AreaSound?.GetHashCode());
+                ret = ret.CombineHashCode(this.ConstantEffectEnchantmentFactor?.GetHashCode());
+                ret = ret.CombineHashCode(this.ConstantEffectBarterFactor?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.EnchantEffect)) return false;
+                if (!eval(this.CastingSound)) return false;
+                if (!eval(this.BoltSound)) return false;
+                if (!eval(this.HitSound)) return false;
+                if (!eval(this.AreaSound)) return false;
+                if (!eval(this.ConstantEffectEnchantmentFactor)) return false;
+                if (!eval(this.ConstantEffectBarterFactor)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new MagicEffectSubData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.EnchantEffect = eval(this.EnchantEffect);
+                obj.CastingSound = eval(this.CastingSound);
+                obj.BoltSound = eval(this.BoltSound);
+                obj.HitSound = eval(this.HitSound);
+                obj.AreaSound = eval(this.AreaSound);
+                obj.ConstantEffectEnchantmentFactor = eval(this.ConstantEffectEnchantmentFactor);
+                obj.ConstantEffectBarterFactor = eval(this.ConstantEffectBarterFactor);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(MagicEffectSubData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, MagicEffectSubData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(MagicEffectSubData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.EnchantEffect ?? true)
+                    {
+                        fg.AppendLine($"EnchantEffect => {EnchantEffect}");
+                    }
+                    if (printMask?.CastingSound ?? true)
+                    {
+                        fg.AppendLine($"CastingSound => {CastingSound}");
+                    }
+                    if (printMask?.BoltSound ?? true)
+                    {
+                        fg.AppendLine($"BoltSound => {BoltSound}");
+                    }
+                    if (printMask?.HitSound ?? true)
+                    {
+                        fg.AppendLine($"HitSound => {HitSound}");
+                    }
+                    if (printMask?.AreaSound ?? true)
+                    {
+                        fg.AppendLine($"AreaSound => {AreaSound}");
+                    }
+                    if (printMask?.ConstantEffectEnchantmentFactor ?? true)
+                    {
+                        fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
+                    }
+                    if (printMask?.ConstantEffectBarterFactor ?? true)
+                    {
+                        fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? EnchantEffect;
+            public Exception? CastingSound;
+            public Exception? BoltSound;
+            public Exception? HitSound;
+            public Exception? AreaSound;
+            public Exception? ConstantEffectEnchantmentFactor;
+            public Exception? ConstantEffectBarterFactor;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
+                switch (enu)
+                {
+                    case MagicEffectSubData_FieldIndex.EnchantEffect:
+                        return EnchantEffect;
+                    case MagicEffectSubData_FieldIndex.CastingSound:
+                        return CastingSound;
+                    case MagicEffectSubData_FieldIndex.BoltSound:
+                        return BoltSound;
+                    case MagicEffectSubData_FieldIndex.HitSound:
+                        return HitSound;
+                    case MagicEffectSubData_FieldIndex.AreaSound:
+                        return AreaSound;
+                    case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                        return ConstantEffectEnchantmentFactor;
+                    case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
+                        return ConstantEffectBarterFactor;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
+                switch (enu)
+                {
+                    case MagicEffectSubData_FieldIndex.EnchantEffect:
+                        this.EnchantEffect = ex;
+                        break;
+                    case MagicEffectSubData_FieldIndex.CastingSound:
+                        this.CastingSound = ex;
+                        break;
+                    case MagicEffectSubData_FieldIndex.BoltSound:
+                        this.BoltSound = ex;
+                        break;
+                    case MagicEffectSubData_FieldIndex.HitSound:
+                        this.HitSound = ex;
+                        break;
+                    case MagicEffectSubData_FieldIndex.AreaSound:
+                        this.AreaSound = ex;
+                        break;
+                    case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                        this.ConstantEffectEnchantmentFactor = ex;
+                        break;
+                    case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
+                        this.ConstantEffectBarterFactor = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
+                switch (enu)
+                {
+                    case MagicEffectSubData_FieldIndex.EnchantEffect:
+                        this.EnchantEffect = (Exception)obj;
+                        break;
+                    case MagicEffectSubData_FieldIndex.CastingSound:
+                        this.CastingSound = (Exception)obj;
+                        break;
+                    case MagicEffectSubData_FieldIndex.BoltSound:
+                        this.BoltSound = (Exception)obj;
+                        break;
+                    case MagicEffectSubData_FieldIndex.HitSound:
+                        this.HitSound = (Exception)obj;
+                        break;
+                    case MagicEffectSubData_FieldIndex.AreaSound:
+                        this.AreaSound = (Exception)obj;
+                        break;
+                    case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                        this.ConstantEffectEnchantmentFactor = (Exception)obj;
+                        break;
+                    case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
+                        this.ConstantEffectBarterFactor = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (EnchantEffect != null) return true;
+                if (CastingSound != null) return true;
+                if (BoltSound != null) return true;
+                if (HitSound != null) return true;
+                if (AreaSound != null) return true;
+                if (ConstantEffectEnchantmentFactor != null) return true;
+                if (ConstantEffectBarterFactor != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"EnchantEffect => {EnchantEffect}");
+                fg.AppendLine($"CastingSound => {CastingSound}");
+                fg.AppendLine($"BoltSound => {BoltSound}");
+                fg.AppendLine($"HitSound => {HitSound}");
+                fg.AppendLine($"AreaSound => {AreaSound}");
+                fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
+                fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.EnchantEffect = this.EnchantEffect.Combine(rhs.EnchantEffect);
+                ret.CastingSound = this.CastingSound.Combine(rhs.CastingSound);
+                ret.BoltSound = this.BoltSound.Combine(rhs.BoltSound);
+                ret.HitSound = this.HitSound.Combine(rhs.HitSound);
+                ret.AreaSound = this.AreaSound.Combine(rhs.AreaSound);
+                ret.ConstantEffectEnchantmentFactor = this.ConstantEffectEnchantmentFactor.Combine(rhs.ConstantEffectEnchantmentFactor);
+                ret.ConstantEffectBarterFactor = this.ConstantEffectBarterFactor.Combine(rhs.ConstantEffectBarterFactor);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool EnchantEffect;
+            public bool CastingSound;
+            public bool BoltSound;
+            public bool HitSound;
+            public bool AreaSound;
+            public bool ConstantEffectEnchantmentFactor;
+            public bool ConstantEffectBarterFactor;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.EnchantEffect = defaultOn;
+                this.CastingSound = defaultOn;
+                this.BoltSound = defaultOn;
+                this.HitSound = defaultOn;
+                this.AreaSound = defaultOn;
+                this.ConstantEffectEnchantmentFactor = defaultOn;
+                this.ConstantEffectBarterFactor = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((EnchantEffect, null));
+                ret.Add((CastingSound, null));
+                ret.Add((BoltSound, null));
+                ret.Add((HitSound, null));
+                ret.Add((AreaSound, null));
+                ret.Add((ConstantEffectEnchantmentFactor, null));
+                ret.Add((ConstantEffectBarterFactor, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -364,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MagicEffectSubData_Mask<bool> GetEqualsMask(
+        public static MagicEffectSubData.Mask<bool> GetEqualsMask(
             this IMagicEffectSubDataGetter item,
             IMagicEffectSubDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -378,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IMagicEffectSubDataGetter item,
             string? name = null,
-            MagicEffectSubData_Mask<bool>? printMask = null)
+            MagicEffectSubData.Mask<bool>? printMask = null)
         {
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -390,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubDataGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectSubData_Mask<bool>? printMask = null)
+            MagicEffectSubData.Mask<bool>? printMask = null)
         {
             ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -401,16 +823,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IMagicEffectSubDataGetter item,
-            MagicEffectSubData_Mask<bool?> checkMask)
+            MagicEffectSubData.Mask<bool?> checkMask)
         {
             return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MagicEffectSubData_Mask<bool> GetHasBeenSetMask(this IMagicEffectSubDataGetter item)
+        public static MagicEffectSubData.Mask<bool> GetHasBeenSetMask(this IMagicEffectSubDataGetter item)
         {
-            var ret = new MagicEffectSubData_Mask<bool>(false);
+            var ret = new MagicEffectSubData.Mask<bool>(false);
             ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -429,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
-            MagicEffectSubData_TranslationMask? copyMask = null)
+            MagicEffectSubData.TranslationMask? copyMask = null)
         {
             ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -441,8 +863,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? copyMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -450,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectSubData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -468,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffectSubData DeepCopy(
             this IMagicEffectSubDataGetter item,
-            MagicEffectSubData_TranslationMask? copyMask = null)
+            MagicEffectSubData.TranslationMask? copyMask = null)
         {
             return ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -477,8 +899,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffectSubData DeepCopy(
             this IMagicEffectSubDataGetter item,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? copyMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? copyMask = null)
         {
             return ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -502,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             XElement node,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -515,8 +937,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             XElement node,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -524,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectSubData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -543,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             string path,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -555,8 +977,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             string path,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -570,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -583,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             Stream stream,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -595,8 +1017,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             Stream stream,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -610,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -689,9 +1111,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(MagicEffectSubData_Mask<>);
+        public static readonly Type MaskType = typeof(MagicEffectSubData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MagicEffectSubData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MagicEffectSubData.ErrorMask);
 
         public static readonly Type ClassType = typeof(MagicEffectSubData);
 
@@ -1008,12 +1430,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly MagicEffectSubDataCommon Instance = new MagicEffectSubDataCommon();
 
-        public MagicEffectSubData_Mask<bool> GetEqualsMask(
+        public MagicEffectSubData.Mask<bool> GetEqualsMask(
             IMagicEffectSubDataGetter item,
             IMagicEffectSubDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffectSubData_Mask<bool>(false);
+            var ret = new MagicEffectSubData.Mask<bool>(false);
             ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1025,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IMagicEffectSubDataGetter item,
             IMagicEffectSubDataGetter rhs,
-            MagicEffectSubData_Mask<bool> ret,
+            MagicEffectSubData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1041,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IMagicEffectSubDataGetter item,
             string? name = null,
-            MagicEffectSubData_Mask<bool>? printMask = null)
+            MagicEffectSubData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1056,7 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubDataGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectSubData_Mask<bool>? printMask = null)
+            MagicEffectSubData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1080,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IMagicEffectSubDataGetter item,
             FileGeneration fg,
-            MagicEffectSubData_Mask<bool>? printMask = null)
+            MagicEffectSubData.Mask<bool>? printMask = null)
         {
             if (printMask?.EnchantEffect ?? true)
             {
@@ -1114,14 +1536,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IMagicEffectSubDataGetter item,
-            MagicEffectSubData_Mask<bool?> checkMask)
+            MagicEffectSubData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IMagicEffectSubDataGetter item,
-            MagicEffectSubData_Mask<bool> mask)
+            MagicEffectSubData.Mask<bool> mask)
         {
             mask.EnchantEffect = true;
             mask.CastingSound = true;
@@ -1229,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MagicEffectSubData DeepCopy(
             IMagicEffectSubDataGetter item,
-            MagicEffectSubData_TranslationMask? copyMask = null)
+            MagicEffectSubData.TranslationMask? copyMask = null)
         {
             MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1240,8 +1662,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MagicEffectSubData DeepCopy(
             IMagicEffectSubDataGetter item,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? copyMask = null)
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? copyMask = null)
         {
             MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1628,8 +2050,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMagicEffectSubDataGetter item,
             XElement node,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null,
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1639,14 +2061,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffectSubData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IMagicEffectSubDataGetter item,
             string path,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null,
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1679,8 +2101,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMagicEffectSubDataGetter item,
             Stream stream,
-            out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask? translationMask = null,
+            out MagicEffectSubData.ErrorMask errorMask,
+            MagicEffectSubData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1729,7 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubDataGetter item,
             XElement node,
             string? name = null,
-            MagicEffectSubData_TranslationMask? translationMask = null)
+            MagicEffectSubData.TranslationMask? translationMask = null)
         {
             ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1773,429 +2195,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class MagicEffectSubData_Mask<T> :
-        IMask<T>,
-        IEquatable<MagicEffectSubData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public MagicEffectSubData_Mask(T initialValue)
-        {
-            this.EnchantEffect = initialValue;
-            this.CastingSound = initialValue;
-            this.BoltSound = initialValue;
-            this.HitSound = initialValue;
-            this.AreaSound = initialValue;
-            this.ConstantEffectEnchantmentFactor = initialValue;
-            this.ConstantEffectBarterFactor = initialValue;
-        }
-
-        public MagicEffectSubData_Mask(
-            T EnchantEffect,
-            T CastingSound,
-            T BoltSound,
-            T HitSound,
-            T AreaSound,
-            T ConstantEffectEnchantmentFactor,
-            T ConstantEffectBarterFactor)
-        {
-            this.EnchantEffect = EnchantEffect;
-            this.CastingSound = CastingSound;
-            this.BoltSound = BoltSound;
-            this.HitSound = HitSound;
-            this.AreaSound = AreaSound;
-            this.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactor;
-            this.ConstantEffectBarterFactor = ConstantEffectBarterFactor;
-        }
-
-        #pragma warning disable CS8618
-        protected MagicEffectSubData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T EnchantEffect;
-        public T CastingSound;
-        public T BoltSound;
-        public T HitSound;
-        public T AreaSound;
-        public T ConstantEffectEnchantmentFactor;
-        public T ConstantEffectBarterFactor;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is MagicEffectSubData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(MagicEffectSubData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.EnchantEffect, rhs.EnchantEffect)) return false;
-            if (!object.Equals(this.CastingSound, rhs.CastingSound)) return false;
-            if (!object.Equals(this.BoltSound, rhs.BoltSound)) return false;
-            if (!object.Equals(this.HitSound, rhs.HitSound)) return false;
-            if (!object.Equals(this.AreaSound, rhs.AreaSound)) return false;
-            if (!object.Equals(this.ConstantEffectEnchantmentFactor, rhs.ConstantEffectEnchantmentFactor)) return false;
-            if (!object.Equals(this.ConstantEffectBarterFactor, rhs.ConstantEffectBarterFactor)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.EnchantEffect?.GetHashCode());
-            ret = ret.CombineHashCode(this.CastingSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.BoltSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.HitSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.AreaSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.ConstantEffectEnchantmentFactor?.GetHashCode());
-            ret = ret.CombineHashCode(this.ConstantEffectBarterFactor?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.EnchantEffect)) return false;
-            if (!eval(this.CastingSound)) return false;
-            if (!eval(this.BoltSound)) return false;
-            if (!eval(this.HitSound)) return false;
-            if (!eval(this.AreaSound)) return false;
-            if (!eval(this.ConstantEffectEnchantmentFactor)) return false;
-            if (!eval(this.ConstantEffectBarterFactor)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public MagicEffectSubData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new MagicEffectSubData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(MagicEffectSubData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.EnchantEffect = eval(this.EnchantEffect);
-            obj.CastingSound = eval(this.CastingSound);
-            obj.BoltSound = eval(this.BoltSound);
-            obj.HitSound = eval(this.HitSound);
-            obj.AreaSound = eval(this.AreaSound);
-            obj.ConstantEffectEnchantmentFactor = eval(this.ConstantEffectEnchantmentFactor);
-            obj.ConstantEffectBarterFactor = eval(this.ConstantEffectBarterFactor);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(MagicEffectSubData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, MagicEffectSubData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(MagicEffectSubData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.EnchantEffect ?? true)
-                {
-                    fg.AppendLine($"EnchantEffect => {EnchantEffect}");
-                }
-                if (printMask?.CastingSound ?? true)
-                {
-                    fg.AppendLine($"CastingSound => {CastingSound}");
-                }
-                if (printMask?.BoltSound ?? true)
-                {
-                    fg.AppendLine($"BoltSound => {BoltSound}");
-                }
-                if (printMask?.HitSound ?? true)
-                {
-                    fg.AppendLine($"HitSound => {HitSound}");
-                }
-                if (printMask?.AreaSound ?? true)
-                {
-                    fg.AppendLine($"AreaSound => {AreaSound}");
-                }
-                if (printMask?.ConstantEffectEnchantmentFactor ?? true)
-                {
-                    fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
-                }
-                if (printMask?.ConstantEffectBarterFactor ?? true)
-                {
-                    fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class MagicEffectSubData_ErrorMask : IErrorMask, IErrorMask<MagicEffectSubData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? EnchantEffect;
-        public Exception? CastingSound;
-        public Exception? BoltSound;
-        public Exception? HitSound;
-        public Exception? AreaSound;
-        public Exception? ConstantEffectEnchantmentFactor;
-        public Exception? ConstantEffectBarterFactor;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    return EnchantEffect;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    return CastingSound;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    return BoltSound;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    return HitSound;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    return AreaSound;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return ConstantEffectEnchantmentFactor;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return ConstantEffectBarterFactor;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    this.EnchantEffect = ex;
-                    break;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    this.CastingSound = ex;
-                    break;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    this.BoltSound = ex;
-                    break;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    this.HitSound = ex;
-                    break;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    this.AreaSound = ex;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this.ConstantEffectEnchantmentFactor = ex;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    this.ConstantEffectBarterFactor = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            MagicEffectSubData_FieldIndex enu = (MagicEffectSubData_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    this.EnchantEffect = (Exception)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.CastingSound:
-                    this.CastingSound = (Exception)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.BoltSound:
-                    this.BoltSound = (Exception)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.HitSound:
-                    this.HitSound = (Exception)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.AreaSound:
-                    this.AreaSound = (Exception)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this.ConstantEffectEnchantmentFactor = (Exception)obj;
-                    break;
-                case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    this.ConstantEffectBarterFactor = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (EnchantEffect != null) return true;
-            if (CastingSound != null) return true;
-            if (BoltSound != null) return true;
-            if (HitSound != null) return true;
-            if (AreaSound != null) return true;
-            if (ConstantEffectEnchantmentFactor != null) return true;
-            if (ConstantEffectBarterFactor != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("MagicEffectSubData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"EnchantEffect => {EnchantEffect}");
-            fg.AppendLine($"CastingSound => {CastingSound}");
-            fg.AppendLine($"BoltSound => {BoltSound}");
-            fg.AppendLine($"HitSound => {HitSound}");
-            fg.AppendLine($"AreaSound => {AreaSound}");
-            fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
-            fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
-        }
-        #endregion
-
-        #region Combine
-        public MagicEffectSubData_ErrorMask Combine(MagicEffectSubData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new MagicEffectSubData_ErrorMask();
-            ret.EnchantEffect = this.EnchantEffect.Combine(rhs.EnchantEffect);
-            ret.CastingSound = this.CastingSound.Combine(rhs.CastingSound);
-            ret.BoltSound = this.BoltSound.Combine(rhs.BoltSound);
-            ret.HitSound = this.HitSound.Combine(rhs.HitSound);
-            ret.AreaSound = this.AreaSound.Combine(rhs.AreaSound);
-            ret.ConstantEffectEnchantmentFactor = this.ConstantEffectEnchantmentFactor.Combine(rhs.ConstantEffectEnchantmentFactor);
-            ret.ConstantEffectBarterFactor = this.ConstantEffectBarterFactor.Combine(rhs.ConstantEffectBarterFactor);
-            return ret;
-        }
-        public static MagicEffectSubData_ErrorMask? Combine(MagicEffectSubData_ErrorMask? lhs, MagicEffectSubData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static MagicEffectSubData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new MagicEffectSubData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class MagicEffectSubData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool EnchantEffect;
-        public bool CastingSound;
-        public bool BoltSound;
-        public bool HitSound;
-        public bool AreaSound;
-        public bool ConstantEffectEnchantmentFactor;
-        public bool ConstantEffectBarterFactor;
-        #endregion
-
-        #region Ctors
-        public MagicEffectSubData_TranslationMask(bool defaultOn)
-        {
-            this.EnchantEffect = defaultOn;
-            this.CastingSound = defaultOn;
-            this.BoltSound = defaultOn;
-            this.HitSound = defaultOn;
-            this.AreaSound = defaultOn;
-            this.ConstantEffectEnchantmentFactor = defaultOn;
-            this.ConstantEffectBarterFactor = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((EnchantEffect, null));
-            ret.Add((CastingSound, null));
-            ret.Add((BoltSound, null));
-            ret.Add((HitSound, null));
-            ret.Add((AreaSound, null));
-            ret.Add((ConstantEffectEnchantmentFactor, null));
-            ret.Add((ConstantEffectBarterFactor, null));
-        }
-    }
 }
 #endregion
 

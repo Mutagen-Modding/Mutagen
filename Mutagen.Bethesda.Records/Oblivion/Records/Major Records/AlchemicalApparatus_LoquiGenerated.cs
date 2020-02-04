@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new AlchemicalApparatus CreateFromXml(
             XElement node,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -208,15 +208,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static AlchemicalApparatus CreateFromXml(
             XElement node,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlchemicalApparatus.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus CreateFromXml(
             string path,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -246,8 +246,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus CreateFromXml(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AlchemicalApparatus CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus CreateFromXml(
             Stream stream,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -280,8 +280,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus CreateFromXml(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static AlchemicalApparatus CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -304,6 +304,487 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ItemAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+                this.Script = initialValue;
+                this.Type = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.Quality = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Icon,
+                T Script,
+                T Type,
+                T Value,
+                T Weight,
+                T Quality,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+                this.Script = Script;
+                this.Type = Type;
+                this.Value = Value;
+                this.Weight = Weight;
+                this.Quality = Quality;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            public T Script;
+            public T Type;
+            public T Value;
+            public T Weight;
+            public T Quality;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Quality, rhs.Quality)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Quality?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.Quality)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new AlchemicalApparatus.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+                obj.Script = eval(this.Script);
+                obj.Type = eval(this.Type);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.Quality = eval(this.Quality);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(AlchemicalApparatus.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, AlchemicalApparatus.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(AlchemicalApparatus.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.Quality ?? true)
+                    {
+                        fg.AppendLine($"Quality => {Quality}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ItemAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            public Exception? Script;
+            public Exception? Type;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? Quality;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+                switch (enu)
+                {
+                    case AlchemicalApparatus_FieldIndex.Name:
+                        return Name;
+                    case AlchemicalApparatus_FieldIndex.Model:
+                        return Model;
+                    case AlchemicalApparatus_FieldIndex.Icon:
+                        return Icon;
+                    case AlchemicalApparatus_FieldIndex.Script:
+                        return Script;
+                    case AlchemicalApparatus_FieldIndex.Type:
+                        return Type;
+                    case AlchemicalApparatus_FieldIndex.Value:
+                        return Value;
+                    case AlchemicalApparatus_FieldIndex.Weight:
+                        return Weight;
+                    case AlchemicalApparatus_FieldIndex.Quality:
+                        return Quality;
+                    case AlchemicalApparatus_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+                switch (enu)
+                {
+                    case AlchemicalApparatus_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Quality:
+                        this.Quality = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+                switch (enu)
+                {
+                    case AlchemicalApparatus_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Quality:
+                        this.Quality = (Exception)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                if (Script != null) return true;
+                if (Type != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (Quality != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"Quality => {Quality}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Quality = this.Quality.Combine(rhs.Quality);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ItemAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            public bool Script;
+            public bool Type;
+            public bool Value;
+            public bool Weight;
+            public bool Quality;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+                this.Script = defaultOn;
+                this.Type = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.Quality = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+                ret.Add((Script, null));
+                ret.Add((Type, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((Quality, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -442,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AlchemicalApparatus_Mask<bool> GetEqualsMask(
+        public static AlchemicalApparatus.Mask<bool> GetEqualsMask(
             this IAlchemicalApparatusGetter item,
             IAlchemicalApparatusGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -456,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IAlchemicalApparatusGetter item,
             string? name = null,
-            AlchemicalApparatus_Mask<bool>? printMask = null)
+            AlchemicalApparatus.Mask<bool>? printMask = null)
         {
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -468,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlchemicalApparatusGetter item,
             FileGeneration fg,
             string? name = null,
-            AlchemicalApparatus_Mask<bool>? printMask = null)
+            AlchemicalApparatus.Mask<bool>? printMask = null)
         {
             ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -479,16 +960,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_Mask<bool?> checkMask)
+            AlchemicalApparatus.Mask<bool?> checkMask)
         {
             return ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static AlchemicalApparatus_Mask<bool> GetHasBeenSetMask(this IAlchemicalApparatusGetter item)
+        public static AlchemicalApparatus.Mask<bool> GetHasBeenSetMask(this IAlchemicalApparatusGetter item)
         {
-            var ret = new AlchemicalApparatus_Mask<bool>(false);
+            var ret = new AlchemicalApparatus.Mask<bool>(false);
             ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -507,8 +988,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IAlchemicalApparatusInternal lhs,
             IAlchemicalApparatusGetter rhs,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? copyMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -516,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlchemicalApparatus.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -534,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus DeepCopy(
             this IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_TranslationMask? copyMask = null)
+            AlchemicalApparatus.TranslationMask? copyMask = null)
         {
             return ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -543,8 +1024,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static AlchemicalApparatus DeepCopy(
             this IAlchemicalApparatusGetter item,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? copyMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? copyMask = null)
         {
             return ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -568,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             XElement node,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -581,8 +1062,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             XElement node,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -590,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlchemicalApparatus.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -609,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             string path,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -621,8 +1102,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -636,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlchemicalApparatusInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -649,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             Stream stream,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -661,8 +1142,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -676,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlchemicalApparatusInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null)
+            AlchemicalApparatus.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -762,9 +1243,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(AlchemicalApparatus_Mask<>);
+        public static readonly Type MaskType = typeof(AlchemicalApparatus.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AlchemicalApparatus_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AlchemicalApparatus.ErrorMask);
 
         public static readonly Type ClassType = typeof(AlchemicalApparatus);
 
@@ -1211,12 +1692,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly AlchemicalApparatusCommon Instance = new AlchemicalApparatusCommon();
 
-        public AlchemicalApparatus_Mask<bool> GetEqualsMask(
+        public AlchemicalApparatus.Mask<bool> GetEqualsMask(
             IAlchemicalApparatusGetter item,
             IAlchemicalApparatusGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AlchemicalApparatus_Mask<bool>(false);
+            var ret = new AlchemicalApparatus.Mask<bool>(false);
             ((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1228,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IAlchemicalApparatusGetter item,
             IAlchemicalApparatusGetter rhs,
-            AlchemicalApparatus_Mask<bool> ret,
+            AlchemicalApparatus.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1251,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IAlchemicalApparatusGetter item,
             string? name = null,
-            AlchemicalApparatus_Mask<bool>? printMask = null)
+            AlchemicalApparatus.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1266,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusGetter item,
             FileGeneration fg,
             string? name = null,
-            AlchemicalApparatus_Mask<bool>? printMask = null)
+            AlchemicalApparatus.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1290,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IAlchemicalApparatusGetter item,
             FileGeneration fg,
-            AlchemicalApparatus_Mask<bool>? printMask = null)
+            AlchemicalApparatus.Mask<bool>? printMask = null)
         {
             ItemAbstractCommon.ToStringFields(
                 item: item,
@@ -1336,7 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_Mask<bool?> checkMask)
+            AlchemicalApparatus.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1350,11 +1831,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_Mask<bool> mask)
+            AlchemicalApparatus.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.Script = item.Script.HasBeenSet;
             mask.Type = true;
@@ -1716,7 +2197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AlchemicalApparatus DeepCopy(
             IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_TranslationMask? copyMask = null)
+            AlchemicalApparatus.TranslationMask? copyMask = null)
         {
             AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1727,8 +2208,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public AlchemicalApparatus DeepCopy(
             IAlchemicalApparatusGetter item,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? copyMask = null)
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? copyMask = null)
         {
             AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2199,8 +2680,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAlchemicalApparatusGetter item,
             XElement node,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null,
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2210,14 +2691,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AlchemicalApparatus.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IAlchemicalApparatusGetter item,
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null,
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2233,8 +2714,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IAlchemicalApparatusGetter item,
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_TranslationMask? translationMask = null,
+            out AlchemicalApparatus.ErrorMask errorMask,
+            AlchemicalApparatus.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2251,486 +2732,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class AlchemicalApparatus_Mask<T> :
-        ItemAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<AlchemicalApparatus_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public AlchemicalApparatus_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Script = initialValue;
-            this.Type = initialValue;
-            this.Value = initialValue;
-            this.Weight = initialValue;
-            this.Quality = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public AlchemicalApparatus_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Icon,
-            T Script,
-            T Type,
-            T Value,
-            T Weight,
-            T Quality,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-            this.Script = Script;
-            this.Type = Type;
-            this.Value = Value;
-            this.Weight = Weight;
-            this.Quality = Quality;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected AlchemicalApparatus_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        public T Script;
-        public T Type;
-        public T Value;
-        public T Weight;
-        public T Quality;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AlchemicalApparatus_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(AlchemicalApparatus_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.Quality, rhs.Quality)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Quality?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Type)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.Quality)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new AlchemicalApparatus_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new AlchemicalApparatus_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(AlchemicalApparatus_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-            obj.Script = eval(this.Script);
-            obj.Type = eval(this.Type);
-            obj.Value = eval(this.Value);
-            obj.Weight = eval(this.Weight);
-            obj.Quality = eval(this.Quality);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(AlchemicalApparatus_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, AlchemicalApparatus_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(AlchemicalApparatus_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.Quality ?? true)
-                {
-                    fg.AppendLine($"Quality => {Quality}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class AlchemicalApparatus_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<AlchemicalApparatus_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        public Exception? Script;
-        public Exception? Type;
-        public Exception? Value;
-        public Exception? Weight;
-        public Exception? Quality;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    return Name;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    return Model;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    return Icon;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    return Script;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return Type;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    return Value;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    return Weight;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return Quality;
-                case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    this.Quality = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
-            switch (enu)
-            {
-                case AlchemicalApparatus_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    this.Quality = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (Script != null) return true;
-            if (Type != null) return true;
-            if (Value != null) return true;
-            if (Weight != null) return true;
-            if (Quality != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("AlchemicalApparatus_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"Quality => {Quality}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public AlchemicalApparatus_ErrorMask Combine(AlchemicalApparatus_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new AlchemicalApparatus_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.Quality = this.Quality.Combine(rhs.Quality);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static AlchemicalApparatus_ErrorMask? Combine(AlchemicalApparatus_ErrorMask? lhs, AlchemicalApparatus_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new AlchemicalApparatus_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new AlchemicalApparatus_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class AlchemicalApparatus_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Type;
-        public bool Value;
-        public bool Weight;
-        public bool Quality;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public AlchemicalApparatus_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Type = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.Quality = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((Script, null));
-            ret.Add((Type, null));
-            ret.Add((Value, null));
-            ret.Add((Weight, null));
-            ret.Add((Quality, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

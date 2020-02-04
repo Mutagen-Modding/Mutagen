@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new SoundDataExtended CreateFromXml(
             XElement node,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SoundDataExtended CreateFromXml(
             XElement node,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundDataExtended.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundDataExtended CreateFromXml(
             string path,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundDataExtended CreateFromXml(
             string path,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundDataExtended CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundDataExtended CreateFromXml(
             Stream stream,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundDataExtended CreateFromXml(
             Stream stream,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundDataExtended CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,6 +218,319 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            SoundData.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.StaticAttenuation = initialValue;
+                this.StopTime = initialValue;
+                this.StartTime = initialValue;
+            }
+
+            public Mask(
+                T MinimumAttenuationDistance,
+                T MaximumAttenuationDistance,
+                T FrequencyAdjustment,
+                T Flags,
+                T StaticAttenuation,
+                T StopTime,
+                T StartTime)
+            : base(
+                MinimumAttenuationDistance: MinimumAttenuationDistance,
+                MaximumAttenuationDistance: MaximumAttenuationDistance,
+                FrequencyAdjustment: FrequencyAdjustment,
+                Flags: Flags)
+            {
+                this.StaticAttenuation = StaticAttenuation;
+                this.StopTime = StopTime;
+                this.StartTime = StartTime;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T StaticAttenuation;
+            public T StopTime;
+            public T StartTime;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.StaticAttenuation, rhs.StaticAttenuation)) return false;
+                if (!object.Equals(this.StopTime, rhs.StopTime)) return false;
+                if (!object.Equals(this.StartTime, rhs.StartTime)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.StaticAttenuation?.GetHashCode());
+                ret = ret.CombineHashCode(this.StopTime?.GetHashCode());
+                ret = ret.CombineHashCode(this.StartTime?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.StaticAttenuation)) return false;
+                if (!eval(this.StopTime)) return false;
+                if (!eval(this.StartTime)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SoundDataExtended.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.StaticAttenuation = eval(this.StaticAttenuation);
+                obj.StopTime = eval(this.StopTime);
+                obj.StartTime = eval(this.StartTime);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SoundDataExtended.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SoundDataExtended.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SoundDataExtended.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.StaticAttenuation ?? true)
+                    {
+                        fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
+                    }
+                    if (printMask?.StopTime ?? true)
+                    {
+                        fg.AppendLine($"StopTime => {StopTime}");
+                    }
+                    if (printMask?.StartTime ?? true)
+                    {
+                        fg.AppendLine($"StartTime => {StartTime}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            SoundData.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? StaticAttenuation;
+            public Exception? StopTime;
+            public Exception? StartTime;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundDataExtended_FieldIndex.StaticAttenuation:
+                        return StaticAttenuation;
+                    case SoundDataExtended_FieldIndex.StopTime:
+                        return StopTime;
+                    case SoundDataExtended_FieldIndex.StartTime:
+                        return StartTime;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundDataExtended_FieldIndex.StaticAttenuation:
+                        this.StaticAttenuation = ex;
+                        break;
+                    case SoundDataExtended_FieldIndex.StopTime:
+                        this.StopTime = ex;
+                        break;
+                    case SoundDataExtended_FieldIndex.StartTime:
+                        this.StartTime = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundDataExtended_FieldIndex.StaticAttenuation:
+                        this.StaticAttenuation = (Exception)obj;
+                        break;
+                    case SoundDataExtended_FieldIndex.StopTime:
+                        this.StopTime = (Exception)obj;
+                        break;
+                    case SoundDataExtended_FieldIndex.StartTime:
+                        this.StartTime = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (StaticAttenuation != null) return true;
+                if (StopTime != null) return true;
+                if (StartTime != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
+                fg.AppendLine($"StopTime => {StopTime}");
+                fg.AppendLine($"StartTime => {StartTime}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.StaticAttenuation = this.StaticAttenuation.Combine(rhs.StaticAttenuation);
+                ret.StopTime = this.StopTime.Combine(rhs.StopTime);
+                ret.StartTime = this.StartTime.Combine(rhs.StartTime);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            SoundData.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool StaticAttenuation;
+            public bool StopTime;
+            public bool StartTime;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.StaticAttenuation = defaultOn;
+                this.StopTime = defaultOn;
+                this.StartTime = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((StaticAttenuation, null));
+                ret.Add((StopTime, null));
+                ret.Add((StartTime, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -332,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SoundDataExtended_Mask<bool> GetEqualsMask(
+        public static SoundDataExtended.Mask<bool> GetEqualsMask(
             this ISoundDataExtendedInternalGetter item,
             ISoundDataExtendedInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -346,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISoundDataExtendedInternalGetter item,
             string? name = null,
-            SoundDataExtended_Mask<bool>? printMask = null)
+            SoundDataExtended.Mask<bool>? printMask = null)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -358,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataExtendedInternalGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundDataExtended_Mask<bool>? printMask = null)
+            SoundDataExtended.Mask<bool>? printMask = null)
         {
             ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,16 +682,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISoundDataExtendedInternalGetter item,
-            SoundDataExtended_Mask<bool?> checkMask)
+            SoundDataExtended.Mask<bool?> checkMask)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SoundDataExtended_Mask<bool> GetHasBeenSetMask(this ISoundDataExtendedInternalGetter item)
+        public static SoundDataExtended.Mask<bool> GetHasBeenSetMask(this ISoundDataExtendedInternalGetter item)
         {
-            var ret = new SoundDataExtended_Mask<bool>(false);
+            var ret = new SoundDataExtended.Mask<bool>(false);
             ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -397,8 +710,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISoundDataExtendedInternal lhs,
             ISoundDataExtendedInternalGetter rhs,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? copyMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -406,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundDataExtended.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -424,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundDataExtended DeepCopy(
             this ISoundDataExtendedInternalGetter item,
-            SoundDataExtended_TranslationMask? copyMask = null)
+            SoundDataExtended.TranslationMask? copyMask = null)
         {
             return ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -433,8 +746,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundDataExtended DeepCopy(
             this ISoundDataExtendedInternalGetter item,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? copyMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? copyMask = null)
         {
             return ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -458,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             XElement node,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -471,8 +784,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             XElement node,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -480,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundDataExtended.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -499,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             string path,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -511,8 +824,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             string path,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -526,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataExtendedInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -539,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             Stream stream,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -551,8 +864,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             Stream stream,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -566,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataExtendedInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null)
+            SoundDataExtended.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -645,9 +958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(SoundDataExtended_Mask<>);
+        public static readonly Type MaskType = typeof(SoundDataExtended.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SoundDataExtended_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SoundDataExtended.ErrorMask);
 
         public static readonly Type ClassType = typeof(SoundDataExtended);
 
@@ -921,12 +1234,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly SoundDataExtendedCommon Instance = new SoundDataExtendedCommon();
 
-        public SoundDataExtended_Mask<bool> GetEqualsMask(
+        public SoundDataExtended.Mask<bool> GetEqualsMask(
             ISoundDataExtendedInternalGetter item,
             ISoundDataExtendedInternalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SoundDataExtended_Mask<bool>(false);
+            var ret = new SoundDataExtended.Mask<bool>(false);
             ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -938,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISoundDataExtendedInternalGetter item,
             ISoundDataExtendedInternalGetter rhs,
-            SoundDataExtended_Mask<bool> ret,
+            SoundDataExtended.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -951,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISoundDataExtendedInternalGetter item,
             string? name = null,
-            SoundDataExtended_Mask<bool>? printMask = null)
+            SoundDataExtended.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -966,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedInternalGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundDataExtended_Mask<bool>? printMask = null)
+            SoundDataExtended.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -990,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISoundDataExtendedInternalGetter item,
             FileGeneration fg,
-            SoundDataExtended_Mask<bool>? printMask = null)
+            SoundDataExtended.Mask<bool>? printMask = null)
         {
             SoundDataCommon.ToStringFields(
                 item: item,
@@ -1012,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISoundDataExtendedInternalGetter item,
-            SoundDataExtended_Mask<bool?> checkMask)
+            SoundDataExtended.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1021,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ISoundDataExtendedInternalGetter item,
-            SoundDataExtended_Mask<bool> mask)
+            SoundDataExtended.Mask<bool> mask)
         {
             mask.StaticAttenuation = true;
             mask.StopTime = true;
@@ -1176,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundDataExtended DeepCopy(
             ISoundDataExtendedInternalGetter item,
-            SoundDataExtended_TranslationMask? copyMask = null)
+            SoundDataExtended.TranslationMask? copyMask = null)
         {
             SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1187,8 +1500,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundDataExtended DeepCopy(
             ISoundDataExtendedInternalGetter item,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? copyMask = null)
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? copyMask = null)
         {
             SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1455,8 +1768,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISoundDataExtendedInternalGetter item,
             XElement node,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null,
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1466,14 +1779,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundDataExtended.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISoundDataExtendedInternalGetter item,
             string path,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null,
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1489,8 +1802,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISoundDataExtendedInternalGetter item,
             Stream stream,
-            out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_TranslationMask? translationMask = null,
+            out SoundDataExtended.ErrorMask errorMask,
+            SoundDataExtended.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1507,318 +1820,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class SoundDataExtended_Mask<T> :
-        SoundData_Mask<T>,
-        IMask<T>,
-        IEquatable<SoundDataExtended_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SoundDataExtended_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.StaticAttenuation = initialValue;
-            this.StopTime = initialValue;
-            this.StartTime = initialValue;
-        }
-
-        public SoundDataExtended_Mask(
-            T MinimumAttenuationDistance,
-            T MaximumAttenuationDistance,
-            T FrequencyAdjustment,
-            T Flags,
-            T StaticAttenuation,
-            T StopTime,
-            T StartTime)
-        : base(
-            MinimumAttenuationDistance: MinimumAttenuationDistance,
-            MaximumAttenuationDistance: MaximumAttenuationDistance,
-            FrequencyAdjustment: FrequencyAdjustment,
-            Flags: Flags)
-        {
-            this.StaticAttenuation = StaticAttenuation;
-            this.StopTime = StopTime;
-            this.StartTime = StartTime;
-        }
-
-        #pragma warning disable CS8618
-        protected SoundDataExtended_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T StaticAttenuation;
-        public T StopTime;
-        public T StartTime;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SoundDataExtended_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SoundDataExtended_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.StaticAttenuation, rhs.StaticAttenuation)) return false;
-            if (!object.Equals(this.StopTime, rhs.StopTime)) return false;
-            if (!object.Equals(this.StartTime, rhs.StartTime)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.StaticAttenuation?.GetHashCode());
-            ret = ret.CombineHashCode(this.StopTime?.GetHashCode());
-            ret = ret.CombineHashCode(this.StartTime?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.StaticAttenuation)) return false;
-            if (!eval(this.StopTime)) return false;
-            if (!eval(this.StartTime)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new SoundDataExtended_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SoundDataExtended_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SoundDataExtended_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.StaticAttenuation = eval(this.StaticAttenuation);
-            obj.StopTime = eval(this.StopTime);
-            obj.StartTime = eval(this.StartTime);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SoundDataExtended_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SoundDataExtended_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SoundDataExtended_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.StaticAttenuation ?? true)
-                {
-                    fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
-                }
-                if (printMask?.StopTime ?? true)
-                {
-                    fg.AppendLine($"StopTime => {StopTime}");
-                }
-                if (printMask?.StartTime ?? true)
-                {
-                    fg.AppendLine($"StartTime => {StartTime}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SoundDataExtended_ErrorMask : SoundData_ErrorMask, IErrorMask<SoundDataExtended_ErrorMask>
-    {
-        #region Members
-        public Exception? StaticAttenuation;
-        public Exception? StopTime;
-        public Exception? StartTime;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    return StaticAttenuation;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    return StopTime;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    return StartTime;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    this.StaticAttenuation = ex;
-                    break;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    this.StopTime = ex;
-                    break;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    this.StartTime = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            SoundDataExtended_FieldIndex enu = (SoundDataExtended_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    this.StaticAttenuation = (Exception)obj;
-                    break;
-                case SoundDataExtended_FieldIndex.StopTime:
-                    this.StopTime = (Exception)obj;
-                    break;
-                case SoundDataExtended_FieldIndex.StartTime:
-                    this.StartTime = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (StaticAttenuation != null) return true;
-            if (StopTime != null) return true;
-            if (StartTime != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SoundDataExtended_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
-            fg.AppendLine($"StopTime => {StopTime}");
-            fg.AppendLine($"StartTime => {StartTime}");
-        }
-        #endregion
-
-        #region Combine
-        public SoundDataExtended_ErrorMask Combine(SoundDataExtended_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SoundDataExtended_ErrorMask();
-            ret.StaticAttenuation = this.StaticAttenuation.Combine(rhs.StaticAttenuation);
-            ret.StopTime = this.StopTime.Combine(rhs.StopTime);
-            ret.StartTime = this.StartTime.Combine(rhs.StartTime);
-            return ret;
-        }
-        public static SoundDataExtended_ErrorMask? Combine(SoundDataExtended_ErrorMask? lhs, SoundDataExtended_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new SoundDataExtended_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SoundDataExtended_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SoundDataExtended_TranslationMask : SoundData_TranslationMask
-    {
-        #region Members
-        public bool StaticAttenuation;
-        public bool StopTime;
-        public bool StartTime;
-        #endregion
-
-        #region Ctors
-        public SoundDataExtended_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.StaticAttenuation = defaultOn;
-            this.StopTime = defaultOn;
-            this.StartTime = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((StaticAttenuation, null));
-            ret.Add((StopTime, null));
-            ret.Add((StartTime, null));
-        }
-    }
 }
 #endregion
 

@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Script CreateFromXml(
             XElement node,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -118,15 +118,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Script CreateFromXml(
             XElement node,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Script.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             string path,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -156,8 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             string path,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             Stream stream,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -190,8 +190,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script CreateFromXml(
             Stream stream,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Script CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -214,6 +214,271 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Fields = new MaskItem<T, ScriptFields.Mask<T>?>(initialValue, new ScriptFields.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Fields)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Fields = new MaskItem<T, ScriptFields.Mask<T>?>(Fields, new ScriptFields.Mask<T>(Fields));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, ScriptFields.Mask<T>?>? Fields { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Fields, rhs.Fields)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Fields?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (Fields != null)
+                {
+                    if (!eval(this.Fields.Overall)) return false;
+                    if (this.Fields.Specific != null && !this.Fields.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Script.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Fields = this.Fields == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.Fields.Overall), this.Fields.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Script.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Script.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Script.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Fields?.Overall ?? true)
+                    {
+                        Fields?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, ScriptFields.ErrorMask?>? Fields;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Script_FieldIndex enu = (Script_FieldIndex)index;
+                switch (enu)
+                {
+                    case Script_FieldIndex.Fields:
+                        return Fields;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Script_FieldIndex enu = (Script_FieldIndex)index;
+                switch (enu)
+                {
+                    case Script_FieldIndex.Fields:
+                        this.Fields = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Script_FieldIndex enu = (Script_FieldIndex)index;
+                switch (enu)
+                {
+                    case Script_FieldIndex.Fields:
+                        this.Fields = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Fields != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                Fields?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Fields = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ExceptionExt.Combine(this.Fields?.Overall, rhs.Fields?.Overall), (this.Fields?.Specific as IErrorMask<ScriptFields.ErrorMask>)?.Combine(rhs.Fields?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, ScriptFields.TranslationMask?> Fields;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Fields = new MaskItem<bool, ScriptFields.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Fields?.Overall ?? true, Fields?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -332,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Script_Mask<bool> GetEqualsMask(
+        public static Script.Mask<bool> GetEqualsMask(
             this IScriptGetter item,
             IScriptGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -346,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IScriptGetter item,
             string? name = null,
-            Script_Mask<bool>? printMask = null)
+            Script.Mask<bool>? printMask = null)
         {
             return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -358,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptGetter item,
             FileGeneration fg,
             string? name = null,
-            Script_Mask<bool>? printMask = null)
+            Script.Mask<bool>? printMask = null)
         {
             ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,16 +634,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IScriptGetter item,
-            Script_Mask<bool?> checkMask)
+            Script.Mask<bool?> checkMask)
         {
             return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Script_Mask<bool> GetHasBeenSetMask(this IScriptGetter item)
+        public static Script.Mask<bool> GetHasBeenSetMask(this IScriptGetter item)
         {
-            var ret = new Script_Mask<bool>(false);
+            var ret = new Script.Mask<bool>(false);
             ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -397,8 +662,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IScriptInternal lhs,
             IScriptGetter rhs,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? copyMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptSetterTranslationCommon)((IScriptGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -406,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Script.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -424,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script DeepCopy(
             this IScriptGetter item,
-            Script_TranslationMask? copyMask = null)
+            Script.TranslationMask? copyMask = null)
         {
             return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -433,8 +698,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Script DeepCopy(
             this IScriptGetter item,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? copyMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? copyMask = null)
         {
             return ((ScriptSetterTranslationCommon)((IScriptGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -458,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             XElement node,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -471,8 +736,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             XElement node,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -480,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Script.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -499,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             string path,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -511,8 +776,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             string path,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -526,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -539,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             Stream stream,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -551,8 +816,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptInternal item,
             Stream stream,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -566,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Script_TranslationMask? translationMask = null)
+            Script.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -644,9 +909,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Script_Mask<>);
+        public static readonly Type MaskType = typeof(Script.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Script_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Script.ErrorMask);
 
         public static readonly Type ClassType = typeof(Script);
 
@@ -965,12 +1230,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ScriptCommon Instance = new ScriptCommon();
 
-        public Script_Mask<bool> GetEqualsMask(
+        public Script.Mask<bool> GetEqualsMask(
             IScriptGetter item,
             IScriptGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Script_Mask<bool>(false);
+            var ret = new Script.Mask<bool>(false);
             ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -982,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IScriptGetter item,
             IScriptGetter rhs,
-            Script_Mask<bool> ret,
+            Script.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -993,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IScriptGetter item,
             string? name = null,
-            Script_Mask<bool>? printMask = null)
+            Script.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1008,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter item,
             FileGeneration fg,
             string? name = null,
-            Script_Mask<bool>? printMask = null)
+            Script.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1032,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IScriptGetter item,
             FileGeneration fg,
-            Script_Mask<bool>? printMask = null)
+            Script.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1046,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IScriptGetter item,
-            Script_Mask<bool?> checkMask)
+            Script.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1055,9 +1320,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IScriptGetter item,
-            Script_Mask<bool> mask)
+            Script.Mask<bool> mask)
         {
-            mask.Fields = new MaskItem<bool, ScriptFields_Mask<bool>?>(true, item.Fields?.GetHasBeenSetMask());
+            mask.Fields = new MaskItem<bool, ScriptFields.Mask<bool>?>(true, item.Fields?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1293,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Script DeepCopy(
             IScriptGetter item,
-            Script_TranslationMask? copyMask = null)
+            Script.TranslationMask? copyMask = null)
         {
             Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1304,8 +1569,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Script DeepCopy(
             IScriptGetter item,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? copyMask = null)
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? copyMask = null)
         {
             Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1517,8 +1782,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptGetter item,
             XElement node,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null,
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1528,14 +1793,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Script_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Script.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IScriptGetter item,
             string path,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null,
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1551,8 +1816,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptGetter item,
             Stream stream,
-            out Script_ErrorMask errorMask,
-            Script_TranslationMask? translationMask = null,
+            out Script.ErrorMask errorMask,
+            Script.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1569,270 +1834,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Script_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Script_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Script_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Fields = new MaskItem<T, ScriptFields_Mask<T>?>(initialValue, new ScriptFields_Mask<T>(initialValue));
-        }
-
-        public Script_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Fields)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Fields = new MaskItem<T, ScriptFields_Mask<T>?>(Fields, new ScriptFields_Mask<T>(Fields));
-        }
-
-        #pragma warning disable CS8618
-        protected Script_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, ScriptFields_Mask<T>?>? Fields { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Script_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Script_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Fields, rhs.Fields)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Fields?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (Fields != null)
-            {
-                if (!eval(this.Fields.Overall)) return false;
-                if (this.Fields.Specific != null && !this.Fields.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Script_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Script_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Script_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Fields = this.Fields == null ? null : new MaskItem<R, ScriptFields_Mask<R>?>(eval(this.Fields.Overall), this.Fields.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Script_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Script_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Script_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Fields?.Overall ?? true)
-                {
-                    Fields?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Script_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Script_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, ScriptFields_ErrorMask?>? Fields;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    return Fields;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    this.Fields = new MaskItem<Exception?, ScriptFields_ErrorMask?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Script_FieldIndex enu = (Script_FieldIndex)index;
-            switch (enu)
-            {
-                case Script_FieldIndex.Fields:
-                    this.Fields = (MaskItem<Exception?, ScriptFields_ErrorMask?>?)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Fields != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Script_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            Fields?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public Script_ErrorMask Combine(Script_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Script_ErrorMask();
-            ret.Fields = new MaskItem<Exception?, ScriptFields_ErrorMask?>(ExceptionExt.Combine(this.Fields?.Overall, rhs.Fields?.Overall), (this.Fields?.Specific as IErrorMask<ScriptFields_ErrorMask>)?.Combine(rhs.Fields?.Specific));
-            return ret;
-        }
-        public static Script_ErrorMask? Combine(Script_ErrorMask? lhs, Script_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Script_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Script_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Script_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, ScriptFields_TranslationMask?> Fields;
-        #endregion
-
-        #region Ctors
-        public Script_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Fields = new MaskItem<bool, ScriptFields_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Fields?.Overall ?? true, Fields?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

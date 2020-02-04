@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CombatStyleAdvanced CreateFromXml(
             XElement node,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -173,15 +173,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CombatStyleAdvanced CreateFromXml(
             XElement node,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyleAdvanced.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             string path,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -211,8 +211,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             string path,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             Stream stream,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -245,8 +245,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced CreateFromXml(
             Stream stream,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyleAdvanced CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -269,6 +269,806 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.DodgeFatigueModMult = initialValue;
+                this.DodgeFatigueModBase = initialValue;
+                this.EncumbSpeedModBase = initialValue;
+                this.EncumbSpeedModMult = initialValue;
+                this.DodgeWhileUnderAttackMult = initialValue;
+                this.DodgeNotUnderAttackMult = initialValue;
+                this.DodgeBackWhileUnderAttackMult = initialValue;
+                this.DodgeBackNotUnderAttackMult = initialValue;
+                this.DodgeForwardWhileUnderAttackMult = initialValue;
+                this.DodgeForwardNotUnderAttackMult = initialValue;
+                this.BlockSkillModifierMult = initialValue;
+                this.BlockSkillModifierBase = initialValue;
+                this.BlockWhileUnderAttackMult = initialValue;
+                this.BlockNotUnderAttackMult = initialValue;
+                this.AttackSkillModifierMult = initialValue;
+                this.AttackSkillModifierBase = initialValue;
+                this.AttackWhileUnderAttackMult = initialValue;
+                this.AttackNotUnderAttackMult = initialValue;
+                this.AttackDuringBlockMult = initialValue;
+                this.PowerAttackFatigueModBase = initialValue;
+                this.PowerAttackFatigueModMult = initialValue;
+            }
+
+            public Mask(
+                T DodgeFatigueModMult,
+                T DodgeFatigueModBase,
+                T EncumbSpeedModBase,
+                T EncumbSpeedModMult,
+                T DodgeWhileUnderAttackMult,
+                T DodgeNotUnderAttackMult,
+                T DodgeBackWhileUnderAttackMult,
+                T DodgeBackNotUnderAttackMult,
+                T DodgeForwardWhileUnderAttackMult,
+                T DodgeForwardNotUnderAttackMult,
+                T BlockSkillModifierMult,
+                T BlockSkillModifierBase,
+                T BlockWhileUnderAttackMult,
+                T BlockNotUnderAttackMult,
+                T AttackSkillModifierMult,
+                T AttackSkillModifierBase,
+                T AttackWhileUnderAttackMult,
+                T AttackNotUnderAttackMult,
+                T AttackDuringBlockMult,
+                T PowerAttackFatigueModBase,
+                T PowerAttackFatigueModMult)
+            {
+                this.DodgeFatigueModMult = DodgeFatigueModMult;
+                this.DodgeFatigueModBase = DodgeFatigueModBase;
+                this.EncumbSpeedModBase = EncumbSpeedModBase;
+                this.EncumbSpeedModMult = EncumbSpeedModMult;
+                this.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMult;
+                this.DodgeNotUnderAttackMult = DodgeNotUnderAttackMult;
+                this.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMult;
+                this.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMult;
+                this.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMult;
+                this.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMult;
+                this.BlockSkillModifierMult = BlockSkillModifierMult;
+                this.BlockSkillModifierBase = BlockSkillModifierBase;
+                this.BlockWhileUnderAttackMult = BlockWhileUnderAttackMult;
+                this.BlockNotUnderAttackMult = BlockNotUnderAttackMult;
+                this.AttackSkillModifierMult = AttackSkillModifierMult;
+                this.AttackSkillModifierBase = AttackSkillModifierBase;
+                this.AttackWhileUnderAttackMult = AttackWhileUnderAttackMult;
+                this.AttackNotUnderAttackMult = AttackNotUnderAttackMult;
+                this.AttackDuringBlockMult = AttackDuringBlockMult;
+                this.PowerAttackFatigueModBase = PowerAttackFatigueModBase;
+                this.PowerAttackFatigueModMult = PowerAttackFatigueModMult;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T DodgeFatigueModMult;
+            public T DodgeFatigueModBase;
+            public T EncumbSpeedModBase;
+            public T EncumbSpeedModMult;
+            public T DodgeWhileUnderAttackMult;
+            public T DodgeNotUnderAttackMult;
+            public T DodgeBackWhileUnderAttackMult;
+            public T DodgeBackNotUnderAttackMult;
+            public T DodgeForwardWhileUnderAttackMult;
+            public T DodgeForwardNotUnderAttackMult;
+            public T BlockSkillModifierMult;
+            public T BlockSkillModifierBase;
+            public T BlockWhileUnderAttackMult;
+            public T BlockNotUnderAttackMult;
+            public T AttackSkillModifierMult;
+            public T AttackSkillModifierBase;
+            public T AttackWhileUnderAttackMult;
+            public T AttackNotUnderAttackMult;
+            public T AttackDuringBlockMult;
+            public T PowerAttackFatigueModBase;
+            public T PowerAttackFatigueModMult;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.DodgeFatigueModMult, rhs.DodgeFatigueModMult)) return false;
+                if (!object.Equals(this.DodgeFatigueModBase, rhs.DodgeFatigueModBase)) return false;
+                if (!object.Equals(this.EncumbSpeedModBase, rhs.EncumbSpeedModBase)) return false;
+                if (!object.Equals(this.EncumbSpeedModMult, rhs.EncumbSpeedModMult)) return false;
+                if (!object.Equals(this.DodgeWhileUnderAttackMult, rhs.DodgeWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.DodgeNotUnderAttackMult, rhs.DodgeNotUnderAttackMult)) return false;
+                if (!object.Equals(this.DodgeBackWhileUnderAttackMult, rhs.DodgeBackWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.DodgeBackNotUnderAttackMult, rhs.DodgeBackNotUnderAttackMult)) return false;
+                if (!object.Equals(this.DodgeForwardWhileUnderAttackMult, rhs.DodgeForwardWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.DodgeForwardNotUnderAttackMult, rhs.DodgeForwardNotUnderAttackMult)) return false;
+                if (!object.Equals(this.BlockSkillModifierMult, rhs.BlockSkillModifierMult)) return false;
+                if (!object.Equals(this.BlockSkillModifierBase, rhs.BlockSkillModifierBase)) return false;
+                if (!object.Equals(this.BlockWhileUnderAttackMult, rhs.BlockWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.BlockNotUnderAttackMult, rhs.BlockNotUnderAttackMult)) return false;
+                if (!object.Equals(this.AttackSkillModifierMult, rhs.AttackSkillModifierMult)) return false;
+                if (!object.Equals(this.AttackSkillModifierBase, rhs.AttackSkillModifierBase)) return false;
+                if (!object.Equals(this.AttackWhileUnderAttackMult, rhs.AttackWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.AttackNotUnderAttackMult, rhs.AttackNotUnderAttackMult)) return false;
+                if (!object.Equals(this.AttackDuringBlockMult, rhs.AttackDuringBlockMult)) return false;
+                if (!object.Equals(this.PowerAttackFatigueModBase, rhs.PowerAttackFatigueModBase)) return false;
+                if (!object.Equals(this.PowerAttackFatigueModMult, rhs.PowerAttackFatigueModMult)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.DodgeFatigueModMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeFatigueModBase?.GetHashCode());
+                ret = ret.CombineHashCode(this.EncumbSpeedModBase?.GetHashCode());
+                ret = ret.CombineHashCode(this.EncumbSpeedModMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeWhileUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeNotUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeBackWhileUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeBackNotUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeForwardWhileUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeForwardNotUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.BlockSkillModifierMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.BlockSkillModifierBase?.GetHashCode());
+                ret = ret.CombineHashCode(this.BlockWhileUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.BlockNotUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackSkillModifierMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackSkillModifierBase?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackWhileUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackNotUnderAttackMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackDuringBlockMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackFatigueModBase?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackFatigueModMult?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.DodgeFatigueModMult)) return false;
+                if (!eval(this.DodgeFatigueModBase)) return false;
+                if (!eval(this.EncumbSpeedModBase)) return false;
+                if (!eval(this.EncumbSpeedModMult)) return false;
+                if (!eval(this.DodgeWhileUnderAttackMult)) return false;
+                if (!eval(this.DodgeNotUnderAttackMult)) return false;
+                if (!eval(this.DodgeBackWhileUnderAttackMult)) return false;
+                if (!eval(this.DodgeBackNotUnderAttackMult)) return false;
+                if (!eval(this.DodgeForwardWhileUnderAttackMult)) return false;
+                if (!eval(this.DodgeForwardNotUnderAttackMult)) return false;
+                if (!eval(this.BlockSkillModifierMult)) return false;
+                if (!eval(this.BlockSkillModifierBase)) return false;
+                if (!eval(this.BlockWhileUnderAttackMult)) return false;
+                if (!eval(this.BlockNotUnderAttackMult)) return false;
+                if (!eval(this.AttackSkillModifierMult)) return false;
+                if (!eval(this.AttackSkillModifierBase)) return false;
+                if (!eval(this.AttackWhileUnderAttackMult)) return false;
+                if (!eval(this.AttackNotUnderAttackMult)) return false;
+                if (!eval(this.AttackDuringBlockMult)) return false;
+                if (!eval(this.PowerAttackFatigueModBase)) return false;
+                if (!eval(this.PowerAttackFatigueModMult)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new CombatStyleAdvanced.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.DodgeFatigueModMult = eval(this.DodgeFatigueModMult);
+                obj.DodgeFatigueModBase = eval(this.DodgeFatigueModBase);
+                obj.EncumbSpeedModBase = eval(this.EncumbSpeedModBase);
+                obj.EncumbSpeedModMult = eval(this.EncumbSpeedModMult);
+                obj.DodgeWhileUnderAttackMult = eval(this.DodgeWhileUnderAttackMult);
+                obj.DodgeNotUnderAttackMult = eval(this.DodgeNotUnderAttackMult);
+                obj.DodgeBackWhileUnderAttackMult = eval(this.DodgeBackWhileUnderAttackMult);
+                obj.DodgeBackNotUnderAttackMult = eval(this.DodgeBackNotUnderAttackMult);
+                obj.DodgeForwardWhileUnderAttackMult = eval(this.DodgeForwardWhileUnderAttackMult);
+                obj.DodgeForwardNotUnderAttackMult = eval(this.DodgeForwardNotUnderAttackMult);
+                obj.BlockSkillModifierMult = eval(this.BlockSkillModifierMult);
+                obj.BlockSkillModifierBase = eval(this.BlockSkillModifierBase);
+                obj.BlockWhileUnderAttackMult = eval(this.BlockWhileUnderAttackMult);
+                obj.BlockNotUnderAttackMult = eval(this.BlockNotUnderAttackMult);
+                obj.AttackSkillModifierMult = eval(this.AttackSkillModifierMult);
+                obj.AttackSkillModifierBase = eval(this.AttackSkillModifierBase);
+                obj.AttackWhileUnderAttackMult = eval(this.AttackWhileUnderAttackMult);
+                obj.AttackNotUnderAttackMult = eval(this.AttackNotUnderAttackMult);
+                obj.AttackDuringBlockMult = eval(this.AttackDuringBlockMult);
+                obj.PowerAttackFatigueModBase = eval(this.PowerAttackFatigueModBase);
+                obj.PowerAttackFatigueModMult = eval(this.PowerAttackFatigueModMult);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(CombatStyleAdvanced.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, CombatStyleAdvanced.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(CombatStyleAdvanced.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.DodgeFatigueModMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeFatigueModMult => {DodgeFatigueModMult}");
+                    }
+                    if (printMask?.DodgeFatigueModBase ?? true)
+                    {
+                        fg.AppendLine($"DodgeFatigueModBase => {DodgeFatigueModBase}");
+                    }
+                    if (printMask?.EncumbSpeedModBase ?? true)
+                    {
+                        fg.AppendLine($"EncumbSpeedModBase => {EncumbSpeedModBase}");
+                    }
+                    if (printMask?.EncumbSpeedModMult ?? true)
+                    {
+                        fg.AppendLine($"EncumbSpeedModMult => {EncumbSpeedModMult}");
+                    }
+                    if (printMask?.DodgeWhileUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeWhileUnderAttackMult => {DodgeWhileUnderAttackMult}");
+                    }
+                    if (printMask?.DodgeNotUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeNotUnderAttackMult => {DodgeNotUnderAttackMult}");
+                    }
+                    if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeBackWhileUnderAttackMult => {DodgeBackWhileUnderAttackMult}");
+                    }
+                    if (printMask?.DodgeBackNotUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeBackNotUnderAttackMult => {DodgeBackNotUnderAttackMult}");
+                    }
+                    if (printMask?.DodgeForwardWhileUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {DodgeForwardWhileUnderAttackMult}");
+                    }
+                    if (printMask?.DodgeForwardNotUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"DodgeForwardNotUnderAttackMult => {DodgeForwardNotUnderAttackMult}");
+                    }
+                    if (printMask?.BlockSkillModifierMult ?? true)
+                    {
+                        fg.AppendLine($"BlockSkillModifierMult => {BlockSkillModifierMult}");
+                    }
+                    if (printMask?.BlockSkillModifierBase ?? true)
+                    {
+                        fg.AppendLine($"BlockSkillModifierBase => {BlockSkillModifierBase}");
+                    }
+                    if (printMask?.BlockWhileUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"BlockWhileUnderAttackMult => {BlockWhileUnderAttackMult}");
+                    }
+                    if (printMask?.BlockNotUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"BlockNotUnderAttackMult => {BlockNotUnderAttackMult}");
+                    }
+                    if (printMask?.AttackSkillModifierMult ?? true)
+                    {
+                        fg.AppendLine($"AttackSkillModifierMult => {AttackSkillModifierMult}");
+                    }
+                    if (printMask?.AttackSkillModifierBase ?? true)
+                    {
+                        fg.AppendLine($"AttackSkillModifierBase => {AttackSkillModifierBase}");
+                    }
+                    if (printMask?.AttackWhileUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"AttackWhileUnderAttackMult => {AttackWhileUnderAttackMult}");
+                    }
+                    if (printMask?.AttackNotUnderAttackMult ?? true)
+                    {
+                        fg.AppendLine($"AttackNotUnderAttackMult => {AttackNotUnderAttackMult}");
+                    }
+                    if (printMask?.AttackDuringBlockMult ?? true)
+                    {
+                        fg.AppendLine($"AttackDuringBlockMult => {AttackDuringBlockMult}");
+                    }
+                    if (printMask?.PowerAttackFatigueModBase ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackFatigueModBase => {PowerAttackFatigueModBase}");
+                    }
+                    if (printMask?.PowerAttackFatigueModMult ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackFatigueModMult => {PowerAttackFatigueModMult}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? DodgeFatigueModMult;
+            public Exception? DodgeFatigueModBase;
+            public Exception? EncumbSpeedModBase;
+            public Exception? EncumbSpeedModMult;
+            public Exception? DodgeWhileUnderAttackMult;
+            public Exception? DodgeNotUnderAttackMult;
+            public Exception? DodgeBackWhileUnderAttackMult;
+            public Exception? DodgeBackNotUnderAttackMult;
+            public Exception? DodgeForwardWhileUnderAttackMult;
+            public Exception? DodgeForwardNotUnderAttackMult;
+            public Exception? BlockSkillModifierMult;
+            public Exception? BlockSkillModifierBase;
+            public Exception? BlockWhileUnderAttackMult;
+            public Exception? BlockNotUnderAttackMult;
+            public Exception? AttackSkillModifierMult;
+            public Exception? AttackSkillModifierBase;
+            public Exception? AttackWhileUnderAttackMult;
+            public Exception? AttackNotUnderAttackMult;
+            public Exception? AttackDuringBlockMult;
+            public Exception? PowerAttackFatigueModBase;
+            public Exception? PowerAttackFatigueModMult;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
+                switch (enu)
+                {
+                    case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
+                        return DodgeFatigueModMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
+                        return DodgeFatigueModBase;
+                    case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
+                        return EncumbSpeedModBase;
+                    case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
+                        return EncumbSpeedModMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
+                        return DodgeWhileUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
+                        return DodgeNotUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
+                        return DodgeBackWhileUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
+                        return DodgeBackNotUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
+                        return DodgeForwardWhileUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
+                        return DodgeForwardNotUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
+                        return BlockSkillModifierMult;
+                    case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
+                        return BlockSkillModifierBase;
+                    case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
+                        return BlockWhileUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
+                        return BlockNotUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
+                        return AttackSkillModifierMult;
+                    case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
+                        return AttackSkillModifierBase;
+                    case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
+                        return AttackWhileUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
+                        return AttackNotUnderAttackMult;
+                    case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
+                        return AttackDuringBlockMult;
+                    case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
+                        return PowerAttackFatigueModBase;
+                    case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
+                        return PowerAttackFatigueModMult;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
+                switch (enu)
+                {
+                    case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
+                        this.DodgeFatigueModMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
+                        this.DodgeFatigueModBase = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
+                        this.EncumbSpeedModBase = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
+                        this.EncumbSpeedModMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
+                        this.DodgeWhileUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
+                        this.DodgeNotUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
+                        this.DodgeBackWhileUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
+                        this.DodgeBackNotUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
+                        this.DodgeForwardWhileUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
+                        this.DodgeForwardNotUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
+                        this.BlockSkillModifierMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
+                        this.BlockSkillModifierBase = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
+                        this.BlockWhileUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
+                        this.BlockNotUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
+                        this.AttackSkillModifierMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
+                        this.AttackSkillModifierBase = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
+                        this.AttackWhileUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
+                        this.AttackNotUnderAttackMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
+                        this.AttackDuringBlockMult = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
+                        this.PowerAttackFatigueModBase = ex;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
+                        this.PowerAttackFatigueModMult = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
+                switch (enu)
+                {
+                    case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
+                        this.DodgeFatigueModMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
+                        this.DodgeFatigueModBase = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
+                        this.EncumbSpeedModBase = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
+                        this.EncumbSpeedModMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
+                        this.DodgeWhileUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
+                        this.DodgeNotUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
+                        this.DodgeBackWhileUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
+                        this.DodgeBackNotUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
+                        this.DodgeForwardWhileUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
+                        this.DodgeForwardNotUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
+                        this.BlockSkillModifierMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
+                        this.BlockSkillModifierBase = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
+                        this.BlockWhileUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
+                        this.BlockNotUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
+                        this.AttackSkillModifierMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
+                        this.AttackSkillModifierBase = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
+                        this.AttackWhileUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
+                        this.AttackNotUnderAttackMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
+                        this.AttackDuringBlockMult = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
+                        this.PowerAttackFatigueModBase = (Exception)obj;
+                        break;
+                    case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
+                        this.PowerAttackFatigueModMult = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (DodgeFatigueModMult != null) return true;
+                if (DodgeFatigueModBase != null) return true;
+                if (EncumbSpeedModBase != null) return true;
+                if (EncumbSpeedModMult != null) return true;
+                if (DodgeWhileUnderAttackMult != null) return true;
+                if (DodgeNotUnderAttackMult != null) return true;
+                if (DodgeBackWhileUnderAttackMult != null) return true;
+                if (DodgeBackNotUnderAttackMult != null) return true;
+                if (DodgeForwardWhileUnderAttackMult != null) return true;
+                if (DodgeForwardNotUnderAttackMult != null) return true;
+                if (BlockSkillModifierMult != null) return true;
+                if (BlockSkillModifierBase != null) return true;
+                if (BlockWhileUnderAttackMult != null) return true;
+                if (BlockNotUnderAttackMult != null) return true;
+                if (AttackSkillModifierMult != null) return true;
+                if (AttackSkillModifierBase != null) return true;
+                if (AttackWhileUnderAttackMult != null) return true;
+                if (AttackNotUnderAttackMult != null) return true;
+                if (AttackDuringBlockMult != null) return true;
+                if (PowerAttackFatigueModBase != null) return true;
+                if (PowerAttackFatigueModMult != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"DodgeFatigueModMult => {DodgeFatigueModMult}");
+                fg.AppendLine($"DodgeFatigueModBase => {DodgeFatigueModBase}");
+                fg.AppendLine($"EncumbSpeedModBase => {EncumbSpeedModBase}");
+                fg.AppendLine($"EncumbSpeedModMult => {EncumbSpeedModMult}");
+                fg.AppendLine($"DodgeWhileUnderAttackMult => {DodgeWhileUnderAttackMult}");
+                fg.AppendLine($"DodgeNotUnderAttackMult => {DodgeNotUnderAttackMult}");
+                fg.AppendLine($"DodgeBackWhileUnderAttackMult => {DodgeBackWhileUnderAttackMult}");
+                fg.AppendLine($"DodgeBackNotUnderAttackMult => {DodgeBackNotUnderAttackMult}");
+                fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {DodgeForwardWhileUnderAttackMult}");
+                fg.AppendLine($"DodgeForwardNotUnderAttackMult => {DodgeForwardNotUnderAttackMult}");
+                fg.AppendLine($"BlockSkillModifierMult => {BlockSkillModifierMult}");
+                fg.AppendLine($"BlockSkillModifierBase => {BlockSkillModifierBase}");
+                fg.AppendLine($"BlockWhileUnderAttackMult => {BlockWhileUnderAttackMult}");
+                fg.AppendLine($"BlockNotUnderAttackMult => {BlockNotUnderAttackMult}");
+                fg.AppendLine($"AttackSkillModifierMult => {AttackSkillModifierMult}");
+                fg.AppendLine($"AttackSkillModifierBase => {AttackSkillModifierBase}");
+                fg.AppendLine($"AttackWhileUnderAttackMult => {AttackWhileUnderAttackMult}");
+                fg.AppendLine($"AttackNotUnderAttackMult => {AttackNotUnderAttackMult}");
+                fg.AppendLine($"AttackDuringBlockMult => {AttackDuringBlockMult}");
+                fg.AppendLine($"PowerAttackFatigueModBase => {PowerAttackFatigueModBase}");
+                fg.AppendLine($"PowerAttackFatigueModMult => {PowerAttackFatigueModMult}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.DodgeFatigueModMult = this.DodgeFatigueModMult.Combine(rhs.DodgeFatigueModMult);
+                ret.DodgeFatigueModBase = this.DodgeFatigueModBase.Combine(rhs.DodgeFatigueModBase);
+                ret.EncumbSpeedModBase = this.EncumbSpeedModBase.Combine(rhs.EncumbSpeedModBase);
+                ret.EncumbSpeedModMult = this.EncumbSpeedModMult.Combine(rhs.EncumbSpeedModMult);
+                ret.DodgeWhileUnderAttackMult = this.DodgeWhileUnderAttackMult.Combine(rhs.DodgeWhileUnderAttackMult);
+                ret.DodgeNotUnderAttackMult = this.DodgeNotUnderAttackMult.Combine(rhs.DodgeNotUnderAttackMult);
+                ret.DodgeBackWhileUnderAttackMult = this.DodgeBackWhileUnderAttackMult.Combine(rhs.DodgeBackWhileUnderAttackMult);
+                ret.DodgeBackNotUnderAttackMult = this.DodgeBackNotUnderAttackMult.Combine(rhs.DodgeBackNotUnderAttackMult);
+                ret.DodgeForwardWhileUnderAttackMult = this.DodgeForwardWhileUnderAttackMult.Combine(rhs.DodgeForwardWhileUnderAttackMult);
+                ret.DodgeForwardNotUnderAttackMult = this.DodgeForwardNotUnderAttackMult.Combine(rhs.DodgeForwardNotUnderAttackMult);
+                ret.BlockSkillModifierMult = this.BlockSkillModifierMult.Combine(rhs.BlockSkillModifierMult);
+                ret.BlockSkillModifierBase = this.BlockSkillModifierBase.Combine(rhs.BlockSkillModifierBase);
+                ret.BlockWhileUnderAttackMult = this.BlockWhileUnderAttackMult.Combine(rhs.BlockWhileUnderAttackMult);
+                ret.BlockNotUnderAttackMult = this.BlockNotUnderAttackMult.Combine(rhs.BlockNotUnderAttackMult);
+                ret.AttackSkillModifierMult = this.AttackSkillModifierMult.Combine(rhs.AttackSkillModifierMult);
+                ret.AttackSkillModifierBase = this.AttackSkillModifierBase.Combine(rhs.AttackSkillModifierBase);
+                ret.AttackWhileUnderAttackMult = this.AttackWhileUnderAttackMult.Combine(rhs.AttackWhileUnderAttackMult);
+                ret.AttackNotUnderAttackMult = this.AttackNotUnderAttackMult.Combine(rhs.AttackNotUnderAttackMult);
+                ret.AttackDuringBlockMult = this.AttackDuringBlockMult.Combine(rhs.AttackDuringBlockMult);
+                ret.PowerAttackFatigueModBase = this.PowerAttackFatigueModBase.Combine(rhs.PowerAttackFatigueModBase);
+                ret.PowerAttackFatigueModMult = this.PowerAttackFatigueModMult.Combine(rhs.PowerAttackFatigueModMult);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool DodgeFatigueModMult;
+            public bool DodgeFatigueModBase;
+            public bool EncumbSpeedModBase;
+            public bool EncumbSpeedModMult;
+            public bool DodgeWhileUnderAttackMult;
+            public bool DodgeNotUnderAttackMult;
+            public bool DodgeBackWhileUnderAttackMult;
+            public bool DodgeBackNotUnderAttackMult;
+            public bool DodgeForwardWhileUnderAttackMult;
+            public bool DodgeForwardNotUnderAttackMult;
+            public bool BlockSkillModifierMult;
+            public bool BlockSkillModifierBase;
+            public bool BlockWhileUnderAttackMult;
+            public bool BlockNotUnderAttackMult;
+            public bool AttackSkillModifierMult;
+            public bool AttackSkillModifierBase;
+            public bool AttackWhileUnderAttackMult;
+            public bool AttackNotUnderAttackMult;
+            public bool AttackDuringBlockMult;
+            public bool PowerAttackFatigueModBase;
+            public bool PowerAttackFatigueModMult;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.DodgeFatigueModMult = defaultOn;
+                this.DodgeFatigueModBase = defaultOn;
+                this.EncumbSpeedModBase = defaultOn;
+                this.EncumbSpeedModMult = defaultOn;
+                this.DodgeWhileUnderAttackMult = defaultOn;
+                this.DodgeNotUnderAttackMult = defaultOn;
+                this.DodgeBackWhileUnderAttackMult = defaultOn;
+                this.DodgeBackNotUnderAttackMult = defaultOn;
+                this.DodgeForwardWhileUnderAttackMult = defaultOn;
+                this.DodgeForwardNotUnderAttackMult = defaultOn;
+                this.BlockSkillModifierMult = defaultOn;
+                this.BlockSkillModifierBase = defaultOn;
+                this.BlockWhileUnderAttackMult = defaultOn;
+                this.BlockNotUnderAttackMult = defaultOn;
+                this.AttackSkillModifierMult = defaultOn;
+                this.AttackSkillModifierBase = defaultOn;
+                this.AttackWhileUnderAttackMult = defaultOn;
+                this.AttackNotUnderAttackMult = defaultOn;
+                this.AttackDuringBlockMult = defaultOn;
+                this.PowerAttackFatigueModBase = defaultOn;
+                this.PowerAttackFatigueModMult = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((DodgeFatigueModMult, null));
+                ret.Add((DodgeFatigueModBase, null));
+                ret.Add((EncumbSpeedModBase, null));
+                ret.Add((EncumbSpeedModMult, null));
+                ret.Add((DodgeWhileUnderAttackMult, null));
+                ret.Add((DodgeNotUnderAttackMult, null));
+                ret.Add((DodgeBackWhileUnderAttackMult, null));
+                ret.Add((DodgeBackNotUnderAttackMult, null));
+                ret.Add((DodgeForwardWhileUnderAttackMult, null));
+                ret.Add((DodgeForwardNotUnderAttackMult, null));
+                ret.Add((BlockSkillModifierMult, null));
+                ret.Add((BlockSkillModifierBase, null));
+                ret.Add((BlockWhileUnderAttackMult, null));
+                ret.Add((BlockNotUnderAttackMult, null));
+                ret.Add((AttackSkillModifierMult, null));
+                ret.Add((AttackSkillModifierBase, null));
+                ret.Add((AttackWhileUnderAttackMult, null));
+                ret.Add((AttackNotUnderAttackMult, null));
+                ret.Add((AttackDuringBlockMult, null));
+                ret.Add((PowerAttackFatigueModBase, null));
+                ret.Add((PowerAttackFatigueModMult, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -412,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CombatStyleAdvanced_Mask<bool> GetEqualsMask(
+        public static CombatStyleAdvanced.Mask<bool> GetEqualsMask(
             this ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -426,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ICombatStyleAdvancedGetter item,
             string? name = null,
-            CombatStyleAdvanced_Mask<bool>? printMask = null)
+            CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -438,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             FileGeneration fg,
             string? name = null,
-            CombatStyleAdvanced_Mask<bool>? printMask = null)
+            CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -449,16 +1249,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_Mask<bool?> checkMask)
+            CombatStyleAdvanced.Mask<bool?> checkMask)
         {
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static CombatStyleAdvanced_Mask<bool> GetHasBeenSetMask(this ICombatStyleAdvancedGetter item)
+        public static CombatStyleAdvanced.Mask<bool> GetHasBeenSetMask(this ICombatStyleAdvancedGetter item)
         {
-            var ret = new CombatStyleAdvanced_Mask<bool>(false);
+            var ret = new CombatStyleAdvanced.Mask<bool>(false);
             ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -477,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
-            CombatStyleAdvanced_TranslationMask? copyMask = null)
+            CombatStyleAdvanced.TranslationMask? copyMask = null)
         {
             ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -489,8 +1289,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? copyMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -498,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyleAdvanced.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -516,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced DeepCopy(
             this ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_TranslationMask? copyMask = null)
+            CombatStyleAdvanced.TranslationMask? copyMask = null)
         {
             return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -525,8 +1325,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyleAdvanced DeepCopy(
             this ICombatStyleAdvancedGetter item,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? copyMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? copyMask = null)
         {
             return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -550,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             XElement node,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -563,8 +1363,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             XElement node,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -572,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyleAdvanced.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -591,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             string path,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -603,8 +1403,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             string path,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -618,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced item,
             string path,
             ErrorMaskBuilder? errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -631,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             Stream stream,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,8 +1443,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             Stream stream,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -658,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -751,9 +1551,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 21;
 
-        public static readonly Type MaskType = typeof(CombatStyleAdvanced_Mask<>);
+        public static readonly Type MaskType = typeof(CombatStyleAdvanced.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CombatStyleAdvanced_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CombatStyleAdvanced.ErrorMask);
 
         public static readonly Type ClassType = typeof(CombatStyleAdvanced);
 
@@ -1242,12 +2042,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly CombatStyleAdvancedCommon Instance = new CombatStyleAdvancedCommon();
 
-        public CombatStyleAdvanced_Mask<bool> GetEqualsMask(
+        public CombatStyleAdvanced.Mask<bool> GetEqualsMask(
             ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CombatStyleAdvanced_Mask<bool>(false);
+            var ret = new CombatStyleAdvanced.Mask<bool>(false);
             ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1259,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs,
-            CombatStyleAdvanced_Mask<bool> ret,
+            CombatStyleAdvanced.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1289,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ICombatStyleAdvancedGetter item,
             string? name = null,
-            CombatStyleAdvanced_Mask<bool>? printMask = null)
+            CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1304,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvancedGetter item,
             FileGeneration fg,
             string? name = null,
-            CombatStyleAdvanced_Mask<bool>? printMask = null)
+            CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1328,7 +2128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICombatStyleAdvancedGetter item,
             FileGeneration fg,
-            CombatStyleAdvanced_Mask<bool>? printMask = null)
+            CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             if (printMask?.DodgeFatigueModMult ?? true)
             {
@@ -1418,14 +2218,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_Mask<bool?> checkMask)
+            CombatStyleAdvanced.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_Mask<bool> mask)
+            CombatStyleAdvanced.Mask<bool> mask)
         {
             mask.DodgeFatigueModMult = true;
             mask.DodgeFatigueModBase = true;
@@ -1626,7 +2426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyleAdvanced DeepCopy(
             ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_TranslationMask? copyMask = null)
+            CombatStyleAdvanced.TranslationMask? copyMask = null)
         {
             CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1637,8 +2437,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyleAdvanced DeepCopy(
             ICombatStyleAdvancedGetter item,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? copyMask = null)
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? copyMask = null)
         {
             CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2398,8 +3198,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             XElement node,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null,
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2409,14 +3209,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyleAdvanced.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             string path,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null,
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2449,8 +3249,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleAdvancedGetter item,
             Stream stream,
-            out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_TranslationMask? translationMask = null,
+            out CombatStyleAdvanced.ErrorMask errorMask,
+            CombatStyleAdvanced.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2499,7 +3299,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvancedGetter item,
             XElement node,
             string? name = null,
-            CombatStyleAdvanced_TranslationMask? translationMask = null)
+            CombatStyleAdvanced.TranslationMask? translationMask = null)
         {
             ((CombatStyleAdvancedXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -2543,807 +3343,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class CombatStyleAdvanced_Mask<T> :
-        IMask<T>,
-        IEquatable<CombatStyleAdvanced_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public CombatStyleAdvanced_Mask(T initialValue)
-        {
-            this.DodgeFatigueModMult = initialValue;
-            this.DodgeFatigueModBase = initialValue;
-            this.EncumbSpeedModBase = initialValue;
-            this.EncumbSpeedModMult = initialValue;
-            this.DodgeWhileUnderAttackMult = initialValue;
-            this.DodgeNotUnderAttackMult = initialValue;
-            this.DodgeBackWhileUnderAttackMult = initialValue;
-            this.DodgeBackNotUnderAttackMult = initialValue;
-            this.DodgeForwardWhileUnderAttackMult = initialValue;
-            this.DodgeForwardNotUnderAttackMult = initialValue;
-            this.BlockSkillModifierMult = initialValue;
-            this.BlockSkillModifierBase = initialValue;
-            this.BlockWhileUnderAttackMult = initialValue;
-            this.BlockNotUnderAttackMult = initialValue;
-            this.AttackSkillModifierMult = initialValue;
-            this.AttackSkillModifierBase = initialValue;
-            this.AttackWhileUnderAttackMult = initialValue;
-            this.AttackNotUnderAttackMult = initialValue;
-            this.AttackDuringBlockMult = initialValue;
-            this.PowerAttackFatigueModBase = initialValue;
-            this.PowerAttackFatigueModMult = initialValue;
-        }
-
-        public CombatStyleAdvanced_Mask(
-            T DodgeFatigueModMult,
-            T DodgeFatigueModBase,
-            T EncumbSpeedModBase,
-            T EncumbSpeedModMult,
-            T DodgeWhileUnderAttackMult,
-            T DodgeNotUnderAttackMult,
-            T DodgeBackWhileUnderAttackMult,
-            T DodgeBackNotUnderAttackMult,
-            T DodgeForwardWhileUnderAttackMult,
-            T DodgeForwardNotUnderAttackMult,
-            T BlockSkillModifierMult,
-            T BlockSkillModifierBase,
-            T BlockWhileUnderAttackMult,
-            T BlockNotUnderAttackMult,
-            T AttackSkillModifierMult,
-            T AttackSkillModifierBase,
-            T AttackWhileUnderAttackMult,
-            T AttackNotUnderAttackMult,
-            T AttackDuringBlockMult,
-            T PowerAttackFatigueModBase,
-            T PowerAttackFatigueModMult)
-        {
-            this.DodgeFatigueModMult = DodgeFatigueModMult;
-            this.DodgeFatigueModBase = DodgeFatigueModBase;
-            this.EncumbSpeedModBase = EncumbSpeedModBase;
-            this.EncumbSpeedModMult = EncumbSpeedModMult;
-            this.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMult;
-            this.DodgeNotUnderAttackMult = DodgeNotUnderAttackMult;
-            this.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMult;
-            this.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMult;
-            this.DodgeForwardWhileUnderAttackMult = DodgeForwardWhileUnderAttackMult;
-            this.DodgeForwardNotUnderAttackMult = DodgeForwardNotUnderAttackMult;
-            this.BlockSkillModifierMult = BlockSkillModifierMult;
-            this.BlockSkillModifierBase = BlockSkillModifierBase;
-            this.BlockWhileUnderAttackMult = BlockWhileUnderAttackMult;
-            this.BlockNotUnderAttackMult = BlockNotUnderAttackMult;
-            this.AttackSkillModifierMult = AttackSkillModifierMult;
-            this.AttackSkillModifierBase = AttackSkillModifierBase;
-            this.AttackWhileUnderAttackMult = AttackWhileUnderAttackMult;
-            this.AttackNotUnderAttackMult = AttackNotUnderAttackMult;
-            this.AttackDuringBlockMult = AttackDuringBlockMult;
-            this.PowerAttackFatigueModBase = PowerAttackFatigueModBase;
-            this.PowerAttackFatigueModMult = PowerAttackFatigueModMult;
-        }
-
-        #pragma warning disable CS8618
-        protected CombatStyleAdvanced_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T DodgeFatigueModMult;
-        public T DodgeFatigueModBase;
-        public T EncumbSpeedModBase;
-        public T EncumbSpeedModMult;
-        public T DodgeWhileUnderAttackMult;
-        public T DodgeNotUnderAttackMult;
-        public T DodgeBackWhileUnderAttackMult;
-        public T DodgeBackNotUnderAttackMult;
-        public T DodgeForwardWhileUnderAttackMult;
-        public T DodgeForwardNotUnderAttackMult;
-        public T BlockSkillModifierMult;
-        public T BlockSkillModifierBase;
-        public T BlockWhileUnderAttackMult;
-        public T BlockNotUnderAttackMult;
-        public T AttackSkillModifierMult;
-        public T AttackSkillModifierBase;
-        public T AttackWhileUnderAttackMult;
-        public T AttackNotUnderAttackMult;
-        public T AttackDuringBlockMult;
-        public T PowerAttackFatigueModBase;
-        public T PowerAttackFatigueModMult;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is CombatStyleAdvanced_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(CombatStyleAdvanced_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.DodgeFatigueModMult, rhs.DodgeFatigueModMult)) return false;
-            if (!object.Equals(this.DodgeFatigueModBase, rhs.DodgeFatigueModBase)) return false;
-            if (!object.Equals(this.EncumbSpeedModBase, rhs.EncumbSpeedModBase)) return false;
-            if (!object.Equals(this.EncumbSpeedModMult, rhs.EncumbSpeedModMult)) return false;
-            if (!object.Equals(this.DodgeWhileUnderAttackMult, rhs.DodgeWhileUnderAttackMult)) return false;
-            if (!object.Equals(this.DodgeNotUnderAttackMult, rhs.DodgeNotUnderAttackMult)) return false;
-            if (!object.Equals(this.DodgeBackWhileUnderAttackMult, rhs.DodgeBackWhileUnderAttackMult)) return false;
-            if (!object.Equals(this.DodgeBackNotUnderAttackMult, rhs.DodgeBackNotUnderAttackMult)) return false;
-            if (!object.Equals(this.DodgeForwardWhileUnderAttackMult, rhs.DodgeForwardWhileUnderAttackMult)) return false;
-            if (!object.Equals(this.DodgeForwardNotUnderAttackMult, rhs.DodgeForwardNotUnderAttackMult)) return false;
-            if (!object.Equals(this.BlockSkillModifierMult, rhs.BlockSkillModifierMult)) return false;
-            if (!object.Equals(this.BlockSkillModifierBase, rhs.BlockSkillModifierBase)) return false;
-            if (!object.Equals(this.BlockWhileUnderAttackMult, rhs.BlockWhileUnderAttackMult)) return false;
-            if (!object.Equals(this.BlockNotUnderAttackMult, rhs.BlockNotUnderAttackMult)) return false;
-            if (!object.Equals(this.AttackSkillModifierMult, rhs.AttackSkillModifierMult)) return false;
-            if (!object.Equals(this.AttackSkillModifierBase, rhs.AttackSkillModifierBase)) return false;
-            if (!object.Equals(this.AttackWhileUnderAttackMult, rhs.AttackWhileUnderAttackMult)) return false;
-            if (!object.Equals(this.AttackNotUnderAttackMult, rhs.AttackNotUnderAttackMult)) return false;
-            if (!object.Equals(this.AttackDuringBlockMult, rhs.AttackDuringBlockMult)) return false;
-            if (!object.Equals(this.PowerAttackFatigueModBase, rhs.PowerAttackFatigueModBase)) return false;
-            if (!object.Equals(this.PowerAttackFatigueModMult, rhs.PowerAttackFatigueModMult)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.DodgeFatigueModMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeFatigueModBase?.GetHashCode());
-            ret = ret.CombineHashCode(this.EncumbSpeedModBase?.GetHashCode());
-            ret = ret.CombineHashCode(this.EncumbSpeedModMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeWhileUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeNotUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeBackWhileUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeBackNotUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeForwardWhileUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeForwardNotUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.BlockSkillModifierMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.BlockSkillModifierBase?.GetHashCode());
-            ret = ret.CombineHashCode(this.BlockWhileUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.BlockNotUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackSkillModifierMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackSkillModifierBase?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackWhileUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackNotUnderAttackMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackDuringBlockMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackFatigueModBase?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackFatigueModMult?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.DodgeFatigueModMult)) return false;
-            if (!eval(this.DodgeFatigueModBase)) return false;
-            if (!eval(this.EncumbSpeedModBase)) return false;
-            if (!eval(this.EncumbSpeedModMult)) return false;
-            if (!eval(this.DodgeWhileUnderAttackMult)) return false;
-            if (!eval(this.DodgeNotUnderAttackMult)) return false;
-            if (!eval(this.DodgeBackWhileUnderAttackMult)) return false;
-            if (!eval(this.DodgeBackNotUnderAttackMult)) return false;
-            if (!eval(this.DodgeForwardWhileUnderAttackMult)) return false;
-            if (!eval(this.DodgeForwardNotUnderAttackMult)) return false;
-            if (!eval(this.BlockSkillModifierMult)) return false;
-            if (!eval(this.BlockSkillModifierBase)) return false;
-            if (!eval(this.BlockWhileUnderAttackMult)) return false;
-            if (!eval(this.BlockNotUnderAttackMult)) return false;
-            if (!eval(this.AttackSkillModifierMult)) return false;
-            if (!eval(this.AttackSkillModifierBase)) return false;
-            if (!eval(this.AttackWhileUnderAttackMult)) return false;
-            if (!eval(this.AttackNotUnderAttackMult)) return false;
-            if (!eval(this.AttackDuringBlockMult)) return false;
-            if (!eval(this.PowerAttackFatigueModBase)) return false;
-            if (!eval(this.PowerAttackFatigueModMult)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public CombatStyleAdvanced_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new CombatStyleAdvanced_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(CombatStyleAdvanced_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.DodgeFatigueModMult = eval(this.DodgeFatigueModMult);
-            obj.DodgeFatigueModBase = eval(this.DodgeFatigueModBase);
-            obj.EncumbSpeedModBase = eval(this.EncumbSpeedModBase);
-            obj.EncumbSpeedModMult = eval(this.EncumbSpeedModMult);
-            obj.DodgeWhileUnderAttackMult = eval(this.DodgeWhileUnderAttackMult);
-            obj.DodgeNotUnderAttackMult = eval(this.DodgeNotUnderAttackMult);
-            obj.DodgeBackWhileUnderAttackMult = eval(this.DodgeBackWhileUnderAttackMult);
-            obj.DodgeBackNotUnderAttackMult = eval(this.DodgeBackNotUnderAttackMult);
-            obj.DodgeForwardWhileUnderAttackMult = eval(this.DodgeForwardWhileUnderAttackMult);
-            obj.DodgeForwardNotUnderAttackMult = eval(this.DodgeForwardNotUnderAttackMult);
-            obj.BlockSkillModifierMult = eval(this.BlockSkillModifierMult);
-            obj.BlockSkillModifierBase = eval(this.BlockSkillModifierBase);
-            obj.BlockWhileUnderAttackMult = eval(this.BlockWhileUnderAttackMult);
-            obj.BlockNotUnderAttackMult = eval(this.BlockNotUnderAttackMult);
-            obj.AttackSkillModifierMult = eval(this.AttackSkillModifierMult);
-            obj.AttackSkillModifierBase = eval(this.AttackSkillModifierBase);
-            obj.AttackWhileUnderAttackMult = eval(this.AttackWhileUnderAttackMult);
-            obj.AttackNotUnderAttackMult = eval(this.AttackNotUnderAttackMult);
-            obj.AttackDuringBlockMult = eval(this.AttackDuringBlockMult);
-            obj.PowerAttackFatigueModBase = eval(this.PowerAttackFatigueModBase);
-            obj.PowerAttackFatigueModMult = eval(this.PowerAttackFatigueModMult);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(CombatStyleAdvanced_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, CombatStyleAdvanced_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(CombatStyleAdvanced_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.DodgeFatigueModMult ?? true)
-                {
-                    fg.AppendLine($"DodgeFatigueModMult => {DodgeFatigueModMult}");
-                }
-                if (printMask?.DodgeFatigueModBase ?? true)
-                {
-                    fg.AppendLine($"DodgeFatigueModBase => {DodgeFatigueModBase}");
-                }
-                if (printMask?.EncumbSpeedModBase ?? true)
-                {
-                    fg.AppendLine($"EncumbSpeedModBase => {EncumbSpeedModBase}");
-                }
-                if (printMask?.EncumbSpeedModMult ?? true)
-                {
-                    fg.AppendLine($"EncumbSpeedModMult => {EncumbSpeedModMult}");
-                }
-                if (printMask?.DodgeWhileUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"DodgeWhileUnderAttackMult => {DodgeWhileUnderAttackMult}");
-                }
-                if (printMask?.DodgeNotUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"DodgeNotUnderAttackMult => {DodgeNotUnderAttackMult}");
-                }
-                if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"DodgeBackWhileUnderAttackMult => {DodgeBackWhileUnderAttackMult}");
-                }
-                if (printMask?.DodgeBackNotUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"DodgeBackNotUnderAttackMult => {DodgeBackNotUnderAttackMult}");
-                }
-                if (printMask?.DodgeForwardWhileUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {DodgeForwardWhileUnderAttackMult}");
-                }
-                if (printMask?.DodgeForwardNotUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"DodgeForwardNotUnderAttackMult => {DodgeForwardNotUnderAttackMult}");
-                }
-                if (printMask?.BlockSkillModifierMult ?? true)
-                {
-                    fg.AppendLine($"BlockSkillModifierMult => {BlockSkillModifierMult}");
-                }
-                if (printMask?.BlockSkillModifierBase ?? true)
-                {
-                    fg.AppendLine($"BlockSkillModifierBase => {BlockSkillModifierBase}");
-                }
-                if (printMask?.BlockWhileUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"BlockWhileUnderAttackMult => {BlockWhileUnderAttackMult}");
-                }
-                if (printMask?.BlockNotUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"BlockNotUnderAttackMult => {BlockNotUnderAttackMult}");
-                }
-                if (printMask?.AttackSkillModifierMult ?? true)
-                {
-                    fg.AppendLine($"AttackSkillModifierMult => {AttackSkillModifierMult}");
-                }
-                if (printMask?.AttackSkillModifierBase ?? true)
-                {
-                    fg.AppendLine($"AttackSkillModifierBase => {AttackSkillModifierBase}");
-                }
-                if (printMask?.AttackWhileUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"AttackWhileUnderAttackMult => {AttackWhileUnderAttackMult}");
-                }
-                if (printMask?.AttackNotUnderAttackMult ?? true)
-                {
-                    fg.AppendLine($"AttackNotUnderAttackMult => {AttackNotUnderAttackMult}");
-                }
-                if (printMask?.AttackDuringBlockMult ?? true)
-                {
-                    fg.AppendLine($"AttackDuringBlockMult => {AttackDuringBlockMult}");
-                }
-                if (printMask?.PowerAttackFatigueModBase ?? true)
-                {
-                    fg.AppendLine($"PowerAttackFatigueModBase => {PowerAttackFatigueModBase}");
-                }
-                if (printMask?.PowerAttackFatigueModMult ?? true)
-                {
-                    fg.AppendLine($"PowerAttackFatigueModMult => {PowerAttackFatigueModMult}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class CombatStyleAdvanced_ErrorMask : IErrorMask, IErrorMask<CombatStyleAdvanced_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? DodgeFatigueModMult;
-        public Exception? DodgeFatigueModBase;
-        public Exception? EncumbSpeedModBase;
-        public Exception? EncumbSpeedModMult;
-        public Exception? DodgeWhileUnderAttackMult;
-        public Exception? DodgeNotUnderAttackMult;
-        public Exception? DodgeBackWhileUnderAttackMult;
-        public Exception? DodgeBackNotUnderAttackMult;
-        public Exception? DodgeForwardWhileUnderAttackMult;
-        public Exception? DodgeForwardNotUnderAttackMult;
-        public Exception? BlockSkillModifierMult;
-        public Exception? BlockSkillModifierBase;
-        public Exception? BlockWhileUnderAttackMult;
-        public Exception? BlockNotUnderAttackMult;
-        public Exception? AttackSkillModifierMult;
-        public Exception? AttackSkillModifierBase;
-        public Exception? AttackWhileUnderAttackMult;
-        public Exception? AttackNotUnderAttackMult;
-        public Exception? AttackDuringBlockMult;
-        public Exception? PowerAttackFatigueModBase;
-        public Exception? PowerAttackFatigueModMult;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    return DodgeFatigueModMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    return DodgeFatigueModBase;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    return EncumbSpeedModBase;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    return EncumbSpeedModMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    return DodgeWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    return DodgeNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    return DodgeBackWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    return DodgeBackNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    return DodgeForwardWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    return DodgeForwardNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    return BlockSkillModifierMult;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    return BlockSkillModifierBase;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    return BlockWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    return BlockNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    return AttackSkillModifierMult;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    return AttackSkillModifierBase;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    return AttackWhileUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    return AttackNotUnderAttackMult;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    return AttackDuringBlockMult;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    return PowerAttackFatigueModBase;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    return PowerAttackFatigueModMult;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    this.DodgeFatigueModMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    this.DodgeFatigueModBase = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    this.EncumbSpeedModBase = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    this.EncumbSpeedModMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    this.DodgeWhileUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    this.DodgeNotUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    this.DodgeBackWhileUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    this.DodgeBackNotUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    this.DodgeForwardWhileUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    this.DodgeForwardNotUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    this.BlockSkillModifierMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    this.BlockSkillModifierBase = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    this.BlockWhileUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    this.BlockNotUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    this.AttackSkillModifierMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    this.AttackSkillModifierBase = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    this.AttackWhileUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    this.AttackNotUnderAttackMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    this.AttackDuringBlockMult = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    this.PowerAttackFatigueModBase = ex;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    this.PowerAttackFatigueModMult = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            CombatStyleAdvanced_FieldIndex enu = (CombatStyleAdvanced_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult:
-                    this.DodgeFatigueModMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase:
-                    this.DodgeFatigueModBase = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase:
-                    this.EncumbSpeedModBase = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult:
-                    this.EncumbSpeedModMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult:
-                    this.DodgeWhileUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult:
-                    this.DodgeNotUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult:
-                    this.DodgeBackWhileUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult:
-                    this.DodgeBackNotUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult:
-                    this.DodgeForwardWhileUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult:
-                    this.DodgeForwardNotUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult:
-                    this.BlockSkillModifierMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase:
-                    this.BlockSkillModifierBase = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult:
-                    this.BlockWhileUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult:
-                    this.BlockNotUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult:
-                    this.AttackSkillModifierMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase:
-                    this.AttackSkillModifierBase = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult:
-                    this.AttackWhileUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult:
-                    this.AttackNotUnderAttackMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult:
-                    this.AttackDuringBlockMult = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase:
-                    this.PowerAttackFatigueModBase = (Exception)obj;
-                    break;
-                case CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult:
-                    this.PowerAttackFatigueModMult = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (DodgeFatigueModMult != null) return true;
-            if (DodgeFatigueModBase != null) return true;
-            if (EncumbSpeedModBase != null) return true;
-            if (EncumbSpeedModMult != null) return true;
-            if (DodgeWhileUnderAttackMult != null) return true;
-            if (DodgeNotUnderAttackMult != null) return true;
-            if (DodgeBackWhileUnderAttackMult != null) return true;
-            if (DodgeBackNotUnderAttackMult != null) return true;
-            if (DodgeForwardWhileUnderAttackMult != null) return true;
-            if (DodgeForwardNotUnderAttackMult != null) return true;
-            if (BlockSkillModifierMult != null) return true;
-            if (BlockSkillModifierBase != null) return true;
-            if (BlockWhileUnderAttackMult != null) return true;
-            if (BlockNotUnderAttackMult != null) return true;
-            if (AttackSkillModifierMult != null) return true;
-            if (AttackSkillModifierBase != null) return true;
-            if (AttackWhileUnderAttackMult != null) return true;
-            if (AttackNotUnderAttackMult != null) return true;
-            if (AttackDuringBlockMult != null) return true;
-            if (PowerAttackFatigueModBase != null) return true;
-            if (PowerAttackFatigueModMult != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("CombatStyleAdvanced_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"DodgeFatigueModMult => {DodgeFatigueModMult}");
-            fg.AppendLine($"DodgeFatigueModBase => {DodgeFatigueModBase}");
-            fg.AppendLine($"EncumbSpeedModBase => {EncumbSpeedModBase}");
-            fg.AppendLine($"EncumbSpeedModMult => {EncumbSpeedModMult}");
-            fg.AppendLine($"DodgeWhileUnderAttackMult => {DodgeWhileUnderAttackMult}");
-            fg.AppendLine($"DodgeNotUnderAttackMult => {DodgeNotUnderAttackMult}");
-            fg.AppendLine($"DodgeBackWhileUnderAttackMult => {DodgeBackWhileUnderAttackMult}");
-            fg.AppendLine($"DodgeBackNotUnderAttackMult => {DodgeBackNotUnderAttackMult}");
-            fg.AppendLine($"DodgeForwardWhileUnderAttackMult => {DodgeForwardWhileUnderAttackMult}");
-            fg.AppendLine($"DodgeForwardNotUnderAttackMult => {DodgeForwardNotUnderAttackMult}");
-            fg.AppendLine($"BlockSkillModifierMult => {BlockSkillModifierMult}");
-            fg.AppendLine($"BlockSkillModifierBase => {BlockSkillModifierBase}");
-            fg.AppendLine($"BlockWhileUnderAttackMult => {BlockWhileUnderAttackMult}");
-            fg.AppendLine($"BlockNotUnderAttackMult => {BlockNotUnderAttackMult}");
-            fg.AppendLine($"AttackSkillModifierMult => {AttackSkillModifierMult}");
-            fg.AppendLine($"AttackSkillModifierBase => {AttackSkillModifierBase}");
-            fg.AppendLine($"AttackWhileUnderAttackMult => {AttackWhileUnderAttackMult}");
-            fg.AppendLine($"AttackNotUnderAttackMult => {AttackNotUnderAttackMult}");
-            fg.AppendLine($"AttackDuringBlockMult => {AttackDuringBlockMult}");
-            fg.AppendLine($"PowerAttackFatigueModBase => {PowerAttackFatigueModBase}");
-            fg.AppendLine($"PowerAttackFatigueModMult => {PowerAttackFatigueModMult}");
-        }
-        #endregion
-
-        #region Combine
-        public CombatStyleAdvanced_ErrorMask Combine(CombatStyleAdvanced_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new CombatStyleAdvanced_ErrorMask();
-            ret.DodgeFatigueModMult = this.DodgeFatigueModMult.Combine(rhs.DodgeFatigueModMult);
-            ret.DodgeFatigueModBase = this.DodgeFatigueModBase.Combine(rhs.DodgeFatigueModBase);
-            ret.EncumbSpeedModBase = this.EncumbSpeedModBase.Combine(rhs.EncumbSpeedModBase);
-            ret.EncumbSpeedModMult = this.EncumbSpeedModMult.Combine(rhs.EncumbSpeedModMult);
-            ret.DodgeWhileUnderAttackMult = this.DodgeWhileUnderAttackMult.Combine(rhs.DodgeWhileUnderAttackMult);
-            ret.DodgeNotUnderAttackMult = this.DodgeNotUnderAttackMult.Combine(rhs.DodgeNotUnderAttackMult);
-            ret.DodgeBackWhileUnderAttackMult = this.DodgeBackWhileUnderAttackMult.Combine(rhs.DodgeBackWhileUnderAttackMult);
-            ret.DodgeBackNotUnderAttackMult = this.DodgeBackNotUnderAttackMult.Combine(rhs.DodgeBackNotUnderAttackMult);
-            ret.DodgeForwardWhileUnderAttackMult = this.DodgeForwardWhileUnderAttackMult.Combine(rhs.DodgeForwardWhileUnderAttackMult);
-            ret.DodgeForwardNotUnderAttackMult = this.DodgeForwardNotUnderAttackMult.Combine(rhs.DodgeForwardNotUnderAttackMult);
-            ret.BlockSkillModifierMult = this.BlockSkillModifierMult.Combine(rhs.BlockSkillModifierMult);
-            ret.BlockSkillModifierBase = this.BlockSkillModifierBase.Combine(rhs.BlockSkillModifierBase);
-            ret.BlockWhileUnderAttackMult = this.BlockWhileUnderAttackMult.Combine(rhs.BlockWhileUnderAttackMult);
-            ret.BlockNotUnderAttackMult = this.BlockNotUnderAttackMult.Combine(rhs.BlockNotUnderAttackMult);
-            ret.AttackSkillModifierMult = this.AttackSkillModifierMult.Combine(rhs.AttackSkillModifierMult);
-            ret.AttackSkillModifierBase = this.AttackSkillModifierBase.Combine(rhs.AttackSkillModifierBase);
-            ret.AttackWhileUnderAttackMult = this.AttackWhileUnderAttackMult.Combine(rhs.AttackWhileUnderAttackMult);
-            ret.AttackNotUnderAttackMult = this.AttackNotUnderAttackMult.Combine(rhs.AttackNotUnderAttackMult);
-            ret.AttackDuringBlockMult = this.AttackDuringBlockMult.Combine(rhs.AttackDuringBlockMult);
-            ret.PowerAttackFatigueModBase = this.PowerAttackFatigueModBase.Combine(rhs.PowerAttackFatigueModBase);
-            ret.PowerAttackFatigueModMult = this.PowerAttackFatigueModMult.Combine(rhs.PowerAttackFatigueModMult);
-            return ret;
-        }
-        public static CombatStyleAdvanced_ErrorMask? Combine(CombatStyleAdvanced_ErrorMask? lhs, CombatStyleAdvanced_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static CombatStyleAdvanced_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new CombatStyleAdvanced_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class CombatStyleAdvanced_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool DodgeFatigueModMult;
-        public bool DodgeFatigueModBase;
-        public bool EncumbSpeedModBase;
-        public bool EncumbSpeedModMult;
-        public bool DodgeWhileUnderAttackMult;
-        public bool DodgeNotUnderAttackMult;
-        public bool DodgeBackWhileUnderAttackMult;
-        public bool DodgeBackNotUnderAttackMult;
-        public bool DodgeForwardWhileUnderAttackMult;
-        public bool DodgeForwardNotUnderAttackMult;
-        public bool BlockSkillModifierMult;
-        public bool BlockSkillModifierBase;
-        public bool BlockWhileUnderAttackMult;
-        public bool BlockNotUnderAttackMult;
-        public bool AttackSkillModifierMult;
-        public bool AttackSkillModifierBase;
-        public bool AttackWhileUnderAttackMult;
-        public bool AttackNotUnderAttackMult;
-        public bool AttackDuringBlockMult;
-        public bool PowerAttackFatigueModBase;
-        public bool PowerAttackFatigueModMult;
-        #endregion
-
-        #region Ctors
-        public CombatStyleAdvanced_TranslationMask(bool defaultOn)
-        {
-            this.DodgeFatigueModMult = defaultOn;
-            this.DodgeFatigueModBase = defaultOn;
-            this.EncumbSpeedModBase = defaultOn;
-            this.EncumbSpeedModMult = defaultOn;
-            this.DodgeWhileUnderAttackMult = defaultOn;
-            this.DodgeNotUnderAttackMult = defaultOn;
-            this.DodgeBackWhileUnderAttackMult = defaultOn;
-            this.DodgeBackNotUnderAttackMult = defaultOn;
-            this.DodgeForwardWhileUnderAttackMult = defaultOn;
-            this.DodgeForwardNotUnderAttackMult = defaultOn;
-            this.BlockSkillModifierMult = defaultOn;
-            this.BlockSkillModifierBase = defaultOn;
-            this.BlockWhileUnderAttackMult = defaultOn;
-            this.BlockNotUnderAttackMult = defaultOn;
-            this.AttackSkillModifierMult = defaultOn;
-            this.AttackSkillModifierBase = defaultOn;
-            this.AttackWhileUnderAttackMult = defaultOn;
-            this.AttackNotUnderAttackMult = defaultOn;
-            this.AttackDuringBlockMult = defaultOn;
-            this.PowerAttackFatigueModBase = defaultOn;
-            this.PowerAttackFatigueModMult = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((DodgeFatigueModMult, null));
-            ret.Add((DodgeFatigueModBase, null));
-            ret.Add((EncumbSpeedModBase, null));
-            ret.Add((EncumbSpeedModMult, null));
-            ret.Add((DodgeWhileUnderAttackMult, null));
-            ret.Add((DodgeNotUnderAttackMult, null));
-            ret.Add((DodgeBackWhileUnderAttackMult, null));
-            ret.Add((DodgeBackNotUnderAttackMult, null));
-            ret.Add((DodgeForwardWhileUnderAttackMult, null));
-            ret.Add((DodgeForwardNotUnderAttackMult, null));
-            ret.Add((BlockSkillModifierMult, null));
-            ret.Add((BlockSkillModifierBase, null));
-            ret.Add((BlockWhileUnderAttackMult, null));
-            ret.Add((BlockNotUnderAttackMult, null));
-            ret.Add((AttackSkillModifierMult, null));
-            ret.Add((AttackSkillModifierBase, null));
-            ret.Add((AttackWhileUnderAttackMult, null));
-            ret.Add((AttackNotUnderAttackMult, null));
-            ret.Add((AttackDuringBlockMult, null));
-            ret.Add((PowerAttackFatigueModBase, null));
-            ret.Add((PowerAttackFatigueModMult, null));
-        }
-    }
 }
 #endregion
 

@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LocalVariable CreateFromXml(
             XElement node,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -172,15 +172,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LocalVariable CreateFromXml(
             XElement node,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LocalVariable CreateFromXml(
             string path,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -210,8 +210,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LocalVariable CreateFromXml(
             string path,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LocalVariable CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LocalVariable CreateFromXml(
             Stream stream,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LocalVariable CreateFromXml(
             Stream stream,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LocalVariable CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -268,6 +268,401 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Index = initialValue;
+                this.Fluff = initialValue;
+                this.Flags = initialValue;
+                this.Fluff2 = initialValue;
+                this.Name = initialValue;
+                this.SLSDDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T Index,
+                T Fluff,
+                T Flags,
+                T Fluff2,
+                T Name,
+                T SLSDDataTypeState)
+            {
+                this.Index = Index;
+                this.Fluff = Fluff;
+                this.Flags = Flags;
+                this.Fluff2 = Fluff2;
+                this.Name = Name;
+                this.SLSDDataTypeState = SLSDDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Index;
+            public T Fluff;
+            public T Flags;
+            public T Fluff2;
+            public T Name;
+            public T SLSDDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.SLSDDataTypeState, rhs.SLSDDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Index?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.SLSDDataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Index)) return false;
+                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Fluff2)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.SLSDDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new LocalVariable.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Index = eval(this.Index);
+                obj.Fluff = eval(this.Fluff);
+                obj.Flags = eval(this.Flags);
+                obj.Fluff2 = eval(this.Fluff2);
+                obj.Name = eval(this.Name);
+                obj.SLSDDataTypeState = eval(this.SLSDDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(LocalVariable.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, LocalVariable.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(LocalVariable.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Index ?? true)
+                    {
+                        fg.AppendLine($"Index => {Index}");
+                    }
+                    if (printMask?.Fluff ?? true)
+                    {
+                        fg.AppendLine($"Fluff => {Fluff}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Fluff2 ?? true)
+                    {
+                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.SLSDDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Index;
+            public Exception? Fluff;
+            public Exception? Flags;
+            public Exception? Fluff2;
+            public Exception? Name;
+            public Exception? SLSDDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                switch (enu)
+                {
+                    case LocalVariable_FieldIndex.Index:
+                        return Index;
+                    case LocalVariable_FieldIndex.Fluff:
+                        return Fluff;
+                    case LocalVariable_FieldIndex.Flags:
+                        return Flags;
+                    case LocalVariable_FieldIndex.Fluff2:
+                        return Fluff2;
+                    case LocalVariable_FieldIndex.Name:
+                        return Name;
+                    case LocalVariable_FieldIndex.SLSDDataTypeState:
+                        return SLSDDataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                switch (enu)
+                {
+                    case LocalVariable_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case LocalVariable_FieldIndex.Fluff:
+                        this.Fluff = ex;
+                        break;
+                    case LocalVariable_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case LocalVariable_FieldIndex.Fluff2:
+                        this.Fluff2 = ex;
+                        break;
+                    case LocalVariable_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case LocalVariable_FieldIndex.SLSDDataTypeState:
+                        this.SLSDDataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                switch (enu)
+                {
+                    case LocalVariable_FieldIndex.Index:
+                        this.Index = (Exception)obj;
+                        break;
+                    case LocalVariable_FieldIndex.Fluff:
+                        this.Fluff = (Exception)obj;
+                        break;
+                    case LocalVariable_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case LocalVariable_FieldIndex.Fluff2:
+                        this.Fluff2 = (Exception)obj;
+                        break;
+                    case LocalVariable_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case LocalVariable_FieldIndex.SLSDDataTypeState:
+                        this.SLSDDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Index != null) return true;
+                if (Fluff != null) return true;
+                if (Flags != null) return true;
+                if (Fluff2 != null) return true;
+                if (Name != null) return true;
+                if (SLSDDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Index => {Index}");
+                fg.AppendLine($"Fluff => {Fluff}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Fluff2 => {Fluff2}");
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Index = this.Index.Combine(rhs.Index);
+                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.SLSDDataTypeState = this.SLSDDataTypeState.Combine(rhs.SLSDDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Index;
+            public bool Fluff;
+            public bool Flags;
+            public bool Fluff2;
+            public bool Name;
+            public bool SLSDDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Index = defaultOn;
+                this.Fluff = defaultOn;
+                this.Flags = defaultOn;
+                this.Fluff2 = defaultOn;
+                this.Name = defaultOn;
+                this.SLSDDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Index, null));
+                ret.Add((Fluff, null));
+                ret.Add((Flags, null));
+                ret.Add((Fluff2, null));
+                ret.Add((Name, null));
+                ret.Add((SLSDDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -386,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocalVariable_Mask<bool> GetEqualsMask(
+        public static LocalVariable.Mask<bool> GetEqualsMask(
             this ILocalVariableGetter item,
             ILocalVariableGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -400,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILocalVariableGetter item,
             string? name = null,
-            LocalVariable_Mask<bool>? printMask = null)
+            LocalVariable.Mask<bool>? printMask = null)
         {
             return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -412,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILocalVariableGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable_Mask<bool>? printMask = null)
+            LocalVariable.Mask<bool>? printMask = null)
         {
             ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -423,16 +818,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILocalVariableGetter item,
-            LocalVariable_Mask<bool?> checkMask)
+            LocalVariable.Mask<bool?> checkMask)
         {
             return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LocalVariable_Mask<bool> GetHasBeenSetMask(this ILocalVariableGetter item)
+        public static LocalVariable.Mask<bool> GetHasBeenSetMask(this ILocalVariableGetter item)
         {
-            var ret = new LocalVariable_Mask<bool>(false);
+            var ret = new LocalVariable.Mask<bool>(false);
             ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -451,7 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILocalVariable lhs,
             ILocalVariableGetter rhs,
-            LocalVariable_TranslationMask? copyMask = null)
+            LocalVariable.TranslationMask? copyMask = null)
         {
             ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -463,8 +858,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILocalVariable lhs,
             ILocalVariableGetter rhs,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? copyMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -472,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -490,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LocalVariable DeepCopy(
             this ILocalVariableGetter item,
-            LocalVariable_TranslationMask? copyMask = null)
+            LocalVariable.TranslationMask? copyMask = null)
         {
             return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -499,8 +894,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LocalVariable DeepCopy(
             this ILocalVariableGetter item,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? copyMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? copyMask = null)
         {
             return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -524,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILocalVariable item,
             XElement node,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -537,8 +932,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILocalVariable item,
             XElement node,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -546,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -565,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILocalVariable item,
             string path,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -577,8 +972,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILocalVariable item,
             string path,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -592,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILocalVariable item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -605,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILocalVariable item,
             Stream stream,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -617,8 +1012,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILocalVariable item,
             Stream stream,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -632,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILocalVariable item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -710,9 +1105,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(LocalVariable_Mask<>);
+        public static readonly Type MaskType = typeof(LocalVariable.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocalVariable_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LocalVariable.ErrorMask);
 
         public static readonly Type ClassType = typeof(LocalVariable);
 
@@ -1039,12 +1434,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly LocalVariableCommon Instance = new LocalVariableCommon();
 
-        public LocalVariable_Mask<bool> GetEqualsMask(
+        public LocalVariable.Mask<bool> GetEqualsMask(
             ILocalVariableGetter item,
             ILocalVariableGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocalVariable_Mask<bool>(false);
+            var ret = new LocalVariable.Mask<bool>(false);
             ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1056,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILocalVariableGetter item,
             ILocalVariableGetter rhs,
-            LocalVariable_Mask<bool> ret,
+            LocalVariable.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1071,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILocalVariableGetter item,
             string? name = null,
-            LocalVariable_Mask<bool>? printMask = null)
+            LocalVariable.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1086,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocalVariableGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable_Mask<bool>? printMask = null)
+            LocalVariable.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1110,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILocalVariableGetter item,
             FileGeneration fg,
-            LocalVariable_Mask<bool>? printMask = null)
+            LocalVariable.Mask<bool>? printMask = null)
         {
             if (printMask?.Index ?? true)
             {
@@ -1140,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILocalVariableGetter item,
-            LocalVariable_Mask<bool?> checkMask)
+            LocalVariable.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return true;
@@ -1148,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ILocalVariableGetter item,
-            LocalVariable_Mask<bool> mask)
+            LocalVariable.Mask<bool> mask)
         {
             mask.Index = true;
             mask.Fluff = true;
@@ -1247,7 +1642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LocalVariable DeepCopy(
             ILocalVariableGetter item,
-            LocalVariable_TranslationMask? copyMask = null)
+            LocalVariable.TranslationMask? copyMask = null)
         {
             LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1258,8 +1653,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LocalVariable DeepCopy(
             ILocalVariableGetter item,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? copyMask = null)
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? copyMask = null)
         {
             LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1621,8 +2016,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILocalVariableGetter item,
             XElement node,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null,
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1632,14 +2027,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILocalVariableGetter item,
             string path,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null,
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1672,8 +2067,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILocalVariableGetter item,
             Stream stream,
-            out LocalVariable_ErrorMask errorMask,
-            LocalVariable_TranslationMask? translationMask = null,
+            out LocalVariable.ErrorMask errorMask,
+            LocalVariable.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1722,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILocalVariableGetter item,
             XElement node,
             string? name = null,
-            LocalVariable_TranslationMask? translationMask = null)
+            LocalVariable.TranslationMask? translationMask = null)
         {
             ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1766,402 +2161,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class LocalVariable_Mask<T> :
-        IMask<T>,
-        IEquatable<LocalVariable_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public LocalVariable_Mask(T initialValue)
-        {
-            this.Index = initialValue;
-            this.Fluff = initialValue;
-            this.Flags = initialValue;
-            this.Fluff2 = initialValue;
-            this.Name = initialValue;
-            this.SLSDDataTypeState = initialValue;
-        }
-
-        public LocalVariable_Mask(
-            T Index,
-            T Fluff,
-            T Flags,
-            T Fluff2,
-            T Name,
-            T SLSDDataTypeState)
-        {
-            this.Index = Index;
-            this.Fluff = Fluff;
-            this.Flags = Flags;
-            this.Fluff2 = Fluff2;
-            this.Name = Name;
-            this.SLSDDataTypeState = SLSDDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected LocalVariable_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Index;
-        public T Fluff;
-        public T Flags;
-        public T Fluff2;
-        public T Name;
-        public T SLSDDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LocalVariable_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(LocalVariable_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Index, rhs.Index)) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.SLSDDataTypeState, rhs.SLSDDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Index?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.SLSDDataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Index)) return false;
-            if (!eval(this.Fluff)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Fluff2)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.SLSDDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public LocalVariable_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new LocalVariable_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(LocalVariable_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Index = eval(this.Index);
-            obj.Fluff = eval(this.Fluff);
-            obj.Flags = eval(this.Flags);
-            obj.Fluff2 = eval(this.Fluff2);
-            obj.Name = eval(this.Name);
-            obj.SLSDDataTypeState = eval(this.SLSDDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(LocalVariable_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, LocalVariable_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(LocalVariable_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Index ?? true)
-                {
-                    fg.AppendLine($"Index => {Index}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Fluff2 ?? true)
-                {
-                    fg.AppendLine($"Fluff2 => {Fluff2}");
-                }
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.SLSDDataTypeState ?? true)
-                {
-                    fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class LocalVariable_ErrorMask : IErrorMask, IErrorMask<LocalVariable_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Index;
-        public Exception? Fluff;
-        public Exception? Flags;
-        public Exception? Fluff2;
-        public Exception? Name;
-        public Exception? SLSDDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    return Index;
-                case LocalVariable_FieldIndex.Fluff:
-                    return Fluff;
-                case LocalVariable_FieldIndex.Flags:
-                    return Flags;
-                case LocalVariable_FieldIndex.Fluff2:
-                    return Fluff2;
-                case LocalVariable_FieldIndex.Name:
-                    return Name;
-                case LocalVariable_FieldIndex.SLSDDataTypeState:
-                    return SLSDDataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    this.Index = ex;
-                    break;
-                case LocalVariable_FieldIndex.Fluff:
-                    this.Fluff = ex;
-                    break;
-                case LocalVariable_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case LocalVariable_FieldIndex.Fluff2:
-                    this.Fluff2 = ex;
-                    break;
-                case LocalVariable_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case LocalVariable_FieldIndex.SLSDDataTypeState:
-                    this.SLSDDataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
-            switch (enu)
-            {
-                case LocalVariable_FieldIndex.Index:
-                    this.Index = (Exception)obj;
-                    break;
-                case LocalVariable_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
-                    break;
-                case LocalVariable_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case LocalVariable_FieldIndex.Fluff2:
-                    this.Fluff2 = (Exception)obj;
-                    break;
-                case LocalVariable_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case LocalVariable_FieldIndex.SLSDDataTypeState:
-                    this.SLSDDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Index != null) return true;
-            if (Fluff != null) return true;
-            if (Flags != null) return true;
-            if (Fluff2 != null) return true;
-            if (Name != null) return true;
-            if (SLSDDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("LocalVariable_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Index => {Index}");
-            fg.AppendLine($"Fluff => {Fluff}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Fluff2 => {Fluff2}");
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"SLSDDataTypeState => {SLSDDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public LocalVariable_ErrorMask Combine(LocalVariable_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new LocalVariable_ErrorMask();
-            ret.Index = this.Index.Combine(rhs.Index);
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.SLSDDataTypeState = this.SLSDDataTypeState.Combine(rhs.SLSDDataTypeState);
-            return ret;
-        }
-        public static LocalVariable_ErrorMask? Combine(LocalVariable_ErrorMask? lhs, LocalVariable_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static LocalVariable_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new LocalVariable_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class LocalVariable_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Index;
-        public bool Fluff;
-        public bool Flags;
-        public bool Fluff2;
-        public bool Name;
-        public bool SLSDDataTypeState;
-        #endregion
-
-        #region Ctors
-        public LocalVariable_TranslationMask(bool defaultOn)
-        {
-            this.Index = defaultOn;
-            this.Fluff = defaultOn;
-            this.Flags = defaultOn;
-            this.Fluff2 = defaultOn;
-            this.Name = defaultOn;
-            this.SLSDDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Index, null));
-            ret.Add((Fluff, null));
-            ret.Add((Flags, null));
-            ret.Add((Fluff2, null));
-            ret.Add((Name, null));
-            ret.Add((SLSDDataTypeState, null));
-        }
-    }
 }
 #endregion
 

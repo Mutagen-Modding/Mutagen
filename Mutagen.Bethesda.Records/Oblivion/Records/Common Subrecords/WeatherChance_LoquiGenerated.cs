@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherChance CreateFromXml(
             XElement node,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -120,15 +120,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static WeatherChance CreateFromXml(
             XElement node,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherChance.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherChance CreateFromXml(
             string path,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -158,8 +158,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherChance CreateFromXml(
             string path,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherChance CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherChance CreateFromXml(
             Stream stream,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherChance CreateFromXml(
             Stream stream,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherChance CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,6 +216,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Weather = initialValue;
+                this.Chance = initialValue;
+            }
+
+            public Mask(
+                T Weather,
+                T Chance)
+            {
+                this.Weather = Weather;
+                this.Chance = Chance;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Weather;
+            public T Chance;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Weather, rhs.Weather)) return false;
+                if (!object.Equals(this.Chance, rhs.Chance)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Weather?.GetHashCode());
+                ret = ret.CombineHashCode(this.Chance?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Weather)) return false;
+                if (!eval(this.Chance)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new WeatherChance.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Weather = eval(this.Weather);
+                obj.Chance = eval(this.Chance);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(WeatherChance.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, WeatherChance.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(WeatherChance.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Weather ?? true)
+                    {
+                        fg.AppendLine($"Weather => {Weather}");
+                    }
+                    if (printMask?.Chance ?? true)
+                    {
+                        fg.AppendLine($"Chance => {Chance}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Weather;
+            public Exception? Chance;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeatherChance_FieldIndex.Weather:
+                        return Weather;
+                    case WeatherChance_FieldIndex.Chance:
+                        return Chance;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeatherChance_FieldIndex.Weather:
+                        this.Weather = ex;
+                        break;
+                    case WeatherChance_FieldIndex.Chance:
+                        this.Chance = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeatherChance_FieldIndex.Weather:
+                        this.Weather = (Exception)obj;
+                        break;
+                    case WeatherChance_FieldIndex.Chance:
+                        this.Chance = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Weather != null) return true;
+                if (Chance != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Weather => {Weather}");
+                fg.AppendLine($"Chance => {Chance}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Weather = this.Weather.Combine(rhs.Weather);
+                ret.Chance = this.Chance.Combine(rhs.Chance);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Weather;
+            public bool Chance;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Weather = defaultOn;
+                this.Chance = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Weather, null));
+                ret.Add((Chance, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -323,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static WeatherChance_Mask<bool> GetEqualsMask(
+        public static WeatherChance.Mask<bool> GetEqualsMask(
             this IWeatherChanceGetter item,
             IWeatherChanceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -337,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IWeatherChanceGetter item,
             string? name = null,
-            WeatherChance_Mask<bool>? printMask = null)
+            WeatherChance.Mask<bool>? printMask = null)
         {
             return ((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -349,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChanceGetter item,
             FileGeneration fg,
             string? name = null,
-            WeatherChance_Mask<bool>? printMask = null)
+            WeatherChance.Mask<bool>? printMask = null)
         {
             ((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -360,16 +647,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IWeatherChanceGetter item,
-            WeatherChance_Mask<bool?> checkMask)
+            WeatherChance.Mask<bool?> checkMask)
         {
             return ((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static WeatherChance_Mask<bool> GetHasBeenSetMask(this IWeatherChanceGetter item)
+        public static WeatherChance.Mask<bool> GetHasBeenSetMask(this IWeatherChanceGetter item)
         {
-            var ret = new WeatherChance_Mask<bool>(false);
+            var ret = new WeatherChance.Mask<bool>(false);
             ((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -388,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs,
-            WeatherChance_TranslationMask? copyMask = null)
+            WeatherChance.TranslationMask? copyMask = null)
         {
             ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -400,8 +687,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? copyMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -409,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherChance.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -427,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherChance DeepCopy(
             this IWeatherChanceGetter item,
-            WeatherChance_TranslationMask? copyMask = null)
+            WeatherChance.TranslationMask? copyMask = null)
         {
             return ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -436,8 +723,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static WeatherChance DeepCopy(
             this IWeatherChanceGetter item,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? copyMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? copyMask = null)
         {
             return ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -461,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherChance item,
             XElement node,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -474,8 +761,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherChance item,
             XElement node,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -483,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherChance.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -502,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherChance item,
             string path,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -514,8 +801,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherChance item,
             string path,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -529,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChance item,
             string path,
             ErrorMaskBuilder? errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -542,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherChance item,
             Stream stream,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -554,8 +841,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeatherChance item,
             Stream stream,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -569,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChance item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -643,9 +930,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(WeatherChance_Mask<>);
+        public static readonly Type MaskType = typeof(WeatherChance.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(WeatherChance_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeatherChance.ErrorMask);
 
         public static readonly Type ClassType = typeof(WeatherChance);
 
@@ -885,12 +1172,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly WeatherChanceCommon Instance = new WeatherChanceCommon();
 
-        public WeatherChance_Mask<bool> GetEqualsMask(
+        public WeatherChance.Mask<bool> GetEqualsMask(
             IWeatherChanceGetter item,
             IWeatherChanceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WeatherChance_Mask<bool>(false);
+            var ret = new WeatherChance.Mask<bool>(false);
             ((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -902,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IWeatherChanceGetter item,
             IWeatherChanceGetter rhs,
-            WeatherChance_Mask<bool> ret,
+            WeatherChance.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -913,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IWeatherChanceGetter item,
             string? name = null,
-            WeatherChance_Mask<bool>? printMask = null)
+            WeatherChance.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -928,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChanceGetter item,
             FileGeneration fg,
             string? name = null,
-            WeatherChance_Mask<bool>? printMask = null)
+            WeatherChance.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -952,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWeatherChanceGetter item,
             FileGeneration fg,
-            WeatherChance_Mask<bool>? printMask = null)
+            WeatherChance.Mask<bool>? printMask = null)
         {
             if (printMask?.Weather ?? true)
             {
@@ -966,14 +1253,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IWeatherChanceGetter item,
-            WeatherChance_Mask<bool?> checkMask)
+            WeatherChance.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IWeatherChanceGetter item,
-            WeatherChance_Mask<bool> mask)
+            WeatherChance.Mask<bool> mask)
         {
             mask.Weather = true;
             mask.Chance = true;
@@ -1042,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherChance DeepCopy(
             IWeatherChanceGetter item,
-            WeatherChance_TranslationMask? copyMask = null)
+            WeatherChance.TranslationMask? copyMask = null)
         {
             WeatherChance ret = (WeatherChance)((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1053,8 +1340,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherChance DeepCopy(
             IWeatherChanceGetter item,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? copyMask = null)
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? copyMask = null)
         {
             WeatherChance ret = (WeatherChance)((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1302,8 +1589,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherChanceGetter item,
             XElement node,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null,
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1313,14 +1600,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeatherChance.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IWeatherChanceGetter item,
             string path,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null,
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1353,8 +1640,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeatherChanceGetter item,
             Stream stream,
-            out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask? translationMask = null,
+            out WeatherChance.ErrorMask errorMask,
+            WeatherChance.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1403,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChanceGetter item,
             XElement node,
             string? name = null,
-            WeatherChance_TranslationMask? translationMask = null)
+            WeatherChance.TranslationMask? translationMask = null)
         {
             ((WeatherChanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1447,294 +1734,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class WeatherChance_Mask<T> :
-        IMask<T>,
-        IEquatable<WeatherChance_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public WeatherChance_Mask(T initialValue)
-        {
-            this.Weather = initialValue;
-            this.Chance = initialValue;
-        }
-
-        public WeatherChance_Mask(
-            T Weather,
-            T Chance)
-        {
-            this.Weather = Weather;
-            this.Chance = Chance;
-        }
-
-        #pragma warning disable CS8618
-        protected WeatherChance_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Weather;
-        public T Chance;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is WeatherChance_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(WeatherChance_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Weather, rhs.Weather)) return false;
-            if (!object.Equals(this.Chance, rhs.Chance)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Weather?.GetHashCode());
-            ret = ret.CombineHashCode(this.Chance?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Weather)) return false;
-            if (!eval(this.Chance)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public WeatherChance_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new WeatherChance_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(WeatherChance_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Weather = eval(this.Weather);
-            obj.Chance = eval(this.Chance);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(WeatherChance_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, WeatherChance_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(WeatherChance_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Weather ?? true)
-                {
-                    fg.AppendLine($"Weather => {Weather}");
-                }
-                if (printMask?.Chance ?? true)
-                {
-                    fg.AppendLine($"Chance => {Chance}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class WeatherChance_ErrorMask : IErrorMask, IErrorMask<WeatherChance_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Weather;
-        public Exception? Chance;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherChance_FieldIndex.Weather:
-                    return Weather;
-                case WeatherChance_FieldIndex.Chance:
-                    return Chance;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherChance_FieldIndex.Weather:
-                    this.Weather = ex;
-                    break;
-                case WeatherChance_FieldIndex.Chance:
-                    this.Chance = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            WeatherChance_FieldIndex enu = (WeatherChance_FieldIndex)index;
-            switch (enu)
-            {
-                case WeatherChance_FieldIndex.Weather:
-                    this.Weather = (Exception)obj;
-                    break;
-                case WeatherChance_FieldIndex.Chance:
-                    this.Chance = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Weather != null) return true;
-            if (Chance != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("WeatherChance_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Weather => {Weather}");
-            fg.AppendLine($"Chance => {Chance}");
-        }
-        #endregion
-
-        #region Combine
-        public WeatherChance_ErrorMask Combine(WeatherChance_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new WeatherChance_ErrorMask();
-            ret.Weather = this.Weather.Combine(rhs.Weather);
-            ret.Chance = this.Chance.Combine(rhs.Chance);
-            return ret;
-        }
-        public static WeatherChance_ErrorMask? Combine(WeatherChance_ErrorMask? lhs, WeatherChance_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static WeatherChance_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new WeatherChance_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class WeatherChance_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Weather;
-        public bool Chance;
-        #endregion
-
-        #region Ctors
-        public WeatherChance_TranslationMask(bool defaultOn)
-        {
-            this.Weather = defaultOn;
-            this.Chance = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Weather, null));
-            ret.Add((Chance, null));
-        }
-    }
 }
 #endregion
 

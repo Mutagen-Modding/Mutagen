@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Tree CreateFromXml(
             XElement node,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -281,15 +281,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Tree CreateFromXml(
             XElement node,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Tree CreateFromXml(
             string path,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Tree CreateFromXml(
             string path,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Tree CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Tree CreateFromXml(
             Stream stream,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -353,8 +353,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Tree CreateFromXml(
             Stream stream,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Tree CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -377,6 +377,720 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+                this.SpeedTreeSeeds = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.LeafCurvature = initialValue;
+                this.MinimumLeafAngle = initialValue;
+                this.MaximumLeafAngle = initialValue;
+                this.BranchDimmingValue = initialValue;
+                this.LeafDimmingValue = initialValue;
+                this.ShadowRadius = initialValue;
+                this.RockingSpeed = initialValue;
+                this.RustleSpeed = initialValue;
+                this.BillboardWidth = initialValue;
+                this.BillboardHeight = initialValue;
+                this.CNAMDataTypeState = initialValue;
+                this.BNAMDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Model,
+                T Icon,
+                T SpeedTreeSeeds,
+                T LeafCurvature,
+                T MinimumLeafAngle,
+                T MaximumLeafAngle,
+                T BranchDimmingValue,
+                T LeafDimmingValue,
+                T ShadowRadius,
+                T RockingSpeed,
+                T RustleSpeed,
+                T BillboardWidth,
+                T BillboardHeight,
+                T CNAMDataTypeState,
+                T BNAMDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+                this.SpeedTreeSeeds = new MaskItem<T, IEnumerable<(int Index, T Value)>>(SpeedTreeSeeds, Enumerable.Empty<(int Index, T Value)>());
+                this.LeafCurvature = LeafCurvature;
+                this.MinimumLeafAngle = MinimumLeafAngle;
+                this.MaximumLeafAngle = MaximumLeafAngle;
+                this.BranchDimmingValue = BranchDimmingValue;
+                this.LeafDimmingValue = LeafDimmingValue;
+                this.ShadowRadius = ShadowRadius;
+                this.RockingSpeed = RockingSpeed;
+                this.RustleSpeed = RustleSpeed;
+                this.BillboardWidth = BillboardWidth;
+                this.BillboardHeight = BillboardHeight;
+                this.CNAMDataTypeState = CNAMDataTypeState;
+                this.BNAMDataTypeState = BNAMDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? SpeedTreeSeeds;
+            public T LeafCurvature;
+            public T MinimumLeafAngle;
+            public T MaximumLeafAngle;
+            public T BranchDimmingValue;
+            public T LeafDimmingValue;
+            public T ShadowRadius;
+            public T RockingSpeed;
+            public T RustleSpeed;
+            public T BillboardWidth;
+            public T BillboardHeight;
+            public T CNAMDataTypeState;
+            public T BNAMDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.SpeedTreeSeeds, rhs.SpeedTreeSeeds)) return false;
+                if (!object.Equals(this.LeafCurvature, rhs.LeafCurvature)) return false;
+                if (!object.Equals(this.MinimumLeafAngle, rhs.MinimumLeafAngle)) return false;
+                if (!object.Equals(this.MaximumLeafAngle, rhs.MaximumLeafAngle)) return false;
+                if (!object.Equals(this.BranchDimmingValue, rhs.BranchDimmingValue)) return false;
+                if (!object.Equals(this.LeafDimmingValue, rhs.LeafDimmingValue)) return false;
+                if (!object.Equals(this.ShadowRadius, rhs.ShadowRadius)) return false;
+                if (!object.Equals(this.RockingSpeed, rhs.RockingSpeed)) return false;
+                if (!object.Equals(this.RustleSpeed, rhs.RustleSpeed)) return false;
+                if (!object.Equals(this.BillboardWidth, rhs.BillboardWidth)) return false;
+                if (!object.Equals(this.BillboardHeight, rhs.BillboardHeight)) return false;
+                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
+                if (!object.Equals(this.BNAMDataTypeState, rhs.BNAMDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.SpeedTreeSeeds?.GetHashCode());
+                ret = ret.CombineHashCode(this.LeafCurvature?.GetHashCode());
+                ret = ret.CombineHashCode(this.MinimumLeafAngle?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaximumLeafAngle?.GetHashCode());
+                ret = ret.CombineHashCode(this.BranchDimmingValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.LeafDimmingValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.ShadowRadius?.GetHashCode());
+                ret = ret.CombineHashCode(this.RockingSpeed?.GetHashCode());
+                ret = ret.CombineHashCode(this.RustleSpeed?.GetHashCode());
+                ret = ret.CombineHashCode(this.BillboardWidth?.GetHashCode());
+                ret = ret.CombineHashCode(this.BillboardHeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.CNAMDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(this.BNAMDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                if (this.SpeedTreeSeeds != null)
+                {
+                    if (!eval(this.SpeedTreeSeeds.Overall)) return false;
+                    if (this.SpeedTreeSeeds.Specific != null)
+                    {
+                        foreach (var item in this.SpeedTreeSeeds.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.LeafCurvature)) return false;
+                if (!eval(this.MinimumLeafAngle)) return false;
+                if (!eval(this.MaximumLeafAngle)) return false;
+                if (!eval(this.BranchDimmingValue)) return false;
+                if (!eval(this.LeafDimmingValue)) return false;
+                if (!eval(this.ShadowRadius)) return false;
+                if (!eval(this.RockingSpeed)) return false;
+                if (!eval(this.RustleSpeed)) return false;
+                if (!eval(this.BillboardWidth)) return false;
+                if (!eval(this.BillboardHeight)) return false;
+                if (!eval(this.CNAMDataTypeState)) return false;
+                if (!eval(this.BNAMDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Tree.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+                if (SpeedTreeSeeds != null)
+                {
+                    obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SpeedTreeSeeds.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SpeedTreeSeeds.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SpeedTreeSeeds.Specific = l;
+                        foreach (var item in SpeedTreeSeeds.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.LeafCurvature = eval(this.LeafCurvature);
+                obj.MinimumLeafAngle = eval(this.MinimumLeafAngle);
+                obj.MaximumLeafAngle = eval(this.MaximumLeafAngle);
+                obj.BranchDimmingValue = eval(this.BranchDimmingValue);
+                obj.LeafDimmingValue = eval(this.LeafDimmingValue);
+                obj.ShadowRadius = eval(this.ShadowRadius);
+                obj.RockingSpeed = eval(this.RockingSpeed);
+                obj.RustleSpeed = eval(this.RustleSpeed);
+                obj.BillboardWidth = eval(this.BillboardWidth);
+                obj.BillboardHeight = eval(this.BillboardHeight);
+                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
+                obj.BNAMDataTypeState = eval(this.BNAMDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Tree.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Tree.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Tree.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.SpeedTreeSeeds?.Overall ?? true)
+                    {
+                        fg.AppendLine("SpeedTreeSeeds =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (SpeedTreeSeeds != null)
+                            {
+                                if (SpeedTreeSeeds.Overall != null)
+                                {
+                                    fg.AppendLine(SpeedTreeSeeds.Overall.ToString());
+                                }
+                                if (SpeedTreeSeeds.Specific != null)
+                                {
+                                    foreach (var subItem in SpeedTreeSeeds.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.LeafCurvature ?? true)
+                    {
+                        fg.AppendLine($"LeafCurvature => {LeafCurvature}");
+                    }
+                    if (printMask?.MinimumLeafAngle ?? true)
+                    {
+                        fg.AppendLine($"MinimumLeafAngle => {MinimumLeafAngle}");
+                    }
+                    if (printMask?.MaximumLeafAngle ?? true)
+                    {
+                        fg.AppendLine($"MaximumLeafAngle => {MaximumLeafAngle}");
+                    }
+                    if (printMask?.BranchDimmingValue ?? true)
+                    {
+                        fg.AppendLine($"BranchDimmingValue => {BranchDimmingValue}");
+                    }
+                    if (printMask?.LeafDimmingValue ?? true)
+                    {
+                        fg.AppendLine($"LeafDimmingValue => {LeafDimmingValue}");
+                    }
+                    if (printMask?.ShadowRadius ?? true)
+                    {
+                        fg.AppendLine($"ShadowRadius => {ShadowRadius}");
+                    }
+                    if (printMask?.RockingSpeed ?? true)
+                    {
+                        fg.AppendLine($"RockingSpeed => {RockingSpeed}");
+                    }
+                    if (printMask?.RustleSpeed ?? true)
+                    {
+                        fg.AppendLine($"RustleSpeed => {RustleSpeed}");
+                    }
+                    if (printMask?.BillboardWidth ?? true)
+                    {
+                        fg.AppendLine($"BillboardWidth => {BillboardWidth}");
+                    }
+                    if (printMask?.BillboardHeight ?? true)
+                    {
+                        fg.AppendLine($"BillboardHeight => {BillboardHeight}");
+                    }
+                    if (printMask?.CNAMDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
+                    }
+                    if (printMask?.BNAMDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SpeedTreeSeeds;
+            public Exception? LeafCurvature;
+            public Exception? MinimumLeafAngle;
+            public Exception? MaximumLeafAngle;
+            public Exception? BranchDimmingValue;
+            public Exception? LeafDimmingValue;
+            public Exception? ShadowRadius;
+            public Exception? RockingSpeed;
+            public Exception? RustleSpeed;
+            public Exception? BillboardWidth;
+            public Exception? BillboardHeight;
+            public Exception? CNAMDataTypeState;
+            public Exception? BNAMDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Tree_FieldIndex enu = (Tree_FieldIndex)index;
+                switch (enu)
+                {
+                    case Tree_FieldIndex.Model:
+                        return Model;
+                    case Tree_FieldIndex.Icon:
+                        return Icon;
+                    case Tree_FieldIndex.SpeedTreeSeeds:
+                        return SpeedTreeSeeds;
+                    case Tree_FieldIndex.LeafCurvature:
+                        return LeafCurvature;
+                    case Tree_FieldIndex.MinimumLeafAngle:
+                        return MinimumLeafAngle;
+                    case Tree_FieldIndex.MaximumLeafAngle:
+                        return MaximumLeafAngle;
+                    case Tree_FieldIndex.BranchDimmingValue:
+                        return BranchDimmingValue;
+                    case Tree_FieldIndex.LeafDimmingValue:
+                        return LeafDimmingValue;
+                    case Tree_FieldIndex.ShadowRadius:
+                        return ShadowRadius;
+                    case Tree_FieldIndex.RockingSpeed:
+                        return RockingSpeed;
+                    case Tree_FieldIndex.RustleSpeed:
+                        return RustleSpeed;
+                    case Tree_FieldIndex.BillboardWidth:
+                        return BillboardWidth;
+                    case Tree_FieldIndex.BillboardHeight:
+                        return BillboardHeight;
+                    case Tree_FieldIndex.CNAMDataTypeState:
+                        return CNAMDataTypeState;
+                    case Tree_FieldIndex.BNAMDataTypeState:
+                        return BNAMDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Tree_FieldIndex enu = (Tree_FieldIndex)index;
+                switch (enu)
+                {
+                    case Tree_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Tree_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Tree_FieldIndex.SpeedTreeSeeds:
+                        this.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Tree_FieldIndex.LeafCurvature:
+                        this.LeafCurvature = ex;
+                        break;
+                    case Tree_FieldIndex.MinimumLeafAngle:
+                        this.MinimumLeafAngle = ex;
+                        break;
+                    case Tree_FieldIndex.MaximumLeafAngle:
+                        this.MaximumLeafAngle = ex;
+                        break;
+                    case Tree_FieldIndex.BranchDimmingValue:
+                        this.BranchDimmingValue = ex;
+                        break;
+                    case Tree_FieldIndex.LeafDimmingValue:
+                        this.LeafDimmingValue = ex;
+                        break;
+                    case Tree_FieldIndex.ShadowRadius:
+                        this.ShadowRadius = ex;
+                        break;
+                    case Tree_FieldIndex.RockingSpeed:
+                        this.RockingSpeed = ex;
+                        break;
+                    case Tree_FieldIndex.RustleSpeed:
+                        this.RustleSpeed = ex;
+                        break;
+                    case Tree_FieldIndex.BillboardWidth:
+                        this.BillboardWidth = ex;
+                        break;
+                    case Tree_FieldIndex.BillboardHeight:
+                        this.BillboardHeight = ex;
+                        break;
+                    case Tree_FieldIndex.CNAMDataTypeState:
+                        this.CNAMDataTypeState = ex;
+                        break;
+                    case Tree_FieldIndex.BNAMDataTypeState:
+                        this.BNAMDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Tree_FieldIndex enu = (Tree_FieldIndex)index;
+                switch (enu)
+                {
+                    case Tree_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Tree_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.SpeedTreeSeeds:
+                        this.SpeedTreeSeeds = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Tree_FieldIndex.LeafCurvature:
+                        this.LeafCurvature = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.MinimumLeafAngle:
+                        this.MinimumLeafAngle = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.MaximumLeafAngle:
+                        this.MaximumLeafAngle = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.BranchDimmingValue:
+                        this.BranchDimmingValue = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.LeafDimmingValue:
+                        this.LeafDimmingValue = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.ShadowRadius:
+                        this.ShadowRadius = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.RockingSpeed:
+                        this.RockingSpeed = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.RustleSpeed:
+                        this.RustleSpeed = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.BillboardWidth:
+                        this.BillboardWidth = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.BillboardHeight:
+                        this.BillboardHeight = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.CNAMDataTypeState:
+                        this.CNAMDataTypeState = (Exception)obj;
+                        break;
+                    case Tree_FieldIndex.BNAMDataTypeState:
+                        this.BNAMDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                if (SpeedTreeSeeds != null) return true;
+                if (LeafCurvature != null) return true;
+                if (MinimumLeafAngle != null) return true;
+                if (MaximumLeafAngle != null) return true;
+                if (BranchDimmingValue != null) return true;
+                if (LeafDimmingValue != null) return true;
+                if (ShadowRadius != null) return true;
+                if (RockingSpeed != null) return true;
+                if (RustleSpeed != null) return true;
+                if (BillboardWidth != null) return true;
+                if (BillboardHeight != null) return true;
+                if (CNAMDataTypeState != null) return true;
+                if (BNAMDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine("SpeedTreeSeeds =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (SpeedTreeSeeds != null)
+                    {
+                        if (SpeedTreeSeeds.Overall != null)
+                        {
+                            fg.AppendLine(SpeedTreeSeeds.Overall.ToString());
+                        }
+                        if (SpeedTreeSeeds.Specific != null)
+                        {
+                            foreach (var subItem in SpeedTreeSeeds.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"LeafCurvature => {LeafCurvature}");
+                fg.AppendLine($"MinimumLeafAngle => {MinimumLeafAngle}");
+                fg.AppendLine($"MaximumLeafAngle => {MaximumLeafAngle}");
+                fg.AppendLine($"BranchDimmingValue => {BranchDimmingValue}");
+                fg.AppendLine($"LeafDimmingValue => {LeafDimmingValue}");
+                fg.AppendLine($"ShadowRadius => {ShadowRadius}");
+                fg.AppendLine($"RockingSpeed => {RockingSpeed}");
+                fg.AppendLine($"RustleSpeed => {RustleSpeed}");
+                fg.AppendLine($"BillboardWidth => {BillboardWidth}");
+                fg.AppendLine($"BillboardHeight => {BillboardHeight}");
+                fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
+                fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
+                ret.LeafCurvature = this.LeafCurvature.Combine(rhs.LeafCurvature);
+                ret.MinimumLeafAngle = this.MinimumLeafAngle.Combine(rhs.MinimumLeafAngle);
+                ret.MaximumLeafAngle = this.MaximumLeafAngle.Combine(rhs.MaximumLeafAngle);
+                ret.BranchDimmingValue = this.BranchDimmingValue.Combine(rhs.BranchDimmingValue);
+                ret.LeafDimmingValue = this.LeafDimmingValue.Combine(rhs.LeafDimmingValue);
+                ret.ShadowRadius = this.ShadowRadius.Combine(rhs.ShadowRadius);
+                ret.RockingSpeed = this.RockingSpeed.Combine(rhs.RockingSpeed);
+                ret.RustleSpeed = this.RustleSpeed.Combine(rhs.RustleSpeed);
+                ret.BillboardWidth = this.BillboardWidth.Combine(rhs.BillboardWidth);
+                ret.BillboardHeight = this.BillboardHeight.Combine(rhs.BillboardHeight);
+                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
+                ret.BNAMDataTypeState = this.BNAMDataTypeState.Combine(rhs.BNAMDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            public bool SpeedTreeSeeds;
+            public bool LeafCurvature;
+            public bool MinimumLeafAngle;
+            public bool MaximumLeafAngle;
+            public bool BranchDimmingValue;
+            public bool LeafDimmingValue;
+            public bool ShadowRadius;
+            public bool RockingSpeed;
+            public bool RustleSpeed;
+            public bool BillboardWidth;
+            public bool BillboardHeight;
+            public bool CNAMDataTypeState;
+            public bool BNAMDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+                this.SpeedTreeSeeds = defaultOn;
+                this.LeafCurvature = defaultOn;
+                this.MinimumLeafAngle = defaultOn;
+                this.MaximumLeafAngle = defaultOn;
+                this.BranchDimmingValue = defaultOn;
+                this.LeafDimmingValue = defaultOn;
+                this.ShadowRadius = defaultOn;
+                this.RockingSpeed = defaultOn;
+                this.RustleSpeed = defaultOn;
+                this.BillboardWidth = defaultOn;
+                this.BillboardHeight = defaultOn;
+                this.CNAMDataTypeState = defaultOn;
+                this.BNAMDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+                ret.Add((SpeedTreeSeeds, null));
+                ret.Add((LeafCurvature, null));
+                ret.Add((MinimumLeafAngle, null));
+                ret.Add((MaximumLeafAngle, null));
+                ret.Add((BranchDimmingValue, null));
+                ret.Add((LeafDimmingValue, null));
+                ret.Add((ShadowRadius, null));
+                ret.Add((RockingSpeed, null));
+                ret.Add((RustleSpeed, null));
+                ret.Add((BillboardWidth, null));
+                ret.Add((BillboardHeight, null));
+                ret.Add((CNAMDataTypeState, null));
+                ret.Add((BNAMDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -529,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Tree_Mask<bool> GetEqualsMask(
+        public static Tree.Mask<bool> GetEqualsMask(
             this ITreeGetter item,
             ITreeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -543,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ITreeGetter item,
             string? name = null,
-            Tree_Mask<bool>? printMask = null)
+            Tree.Mask<bool>? printMask = null)
         {
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -555,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeGetter item,
             FileGeneration fg,
             string? name = null,
-            Tree_Mask<bool>? printMask = null)
+            Tree.Mask<bool>? printMask = null)
         {
             ((TreeCommon)((ITreeGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -566,16 +1280,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ITreeGetter item,
-            Tree_Mask<bool?> checkMask)
+            Tree.Mask<bool?> checkMask)
         {
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Tree_Mask<bool> GetHasBeenSetMask(this ITreeGetter item)
+        public static Tree.Mask<bool> GetHasBeenSetMask(this ITreeGetter item)
         {
-            var ret = new Tree_Mask<bool>(false);
+            var ret = new Tree.Mask<bool>(false);
             ((TreeCommon)((ITreeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -594,8 +1308,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ITreeInternal lhs,
             ITreeGetter rhs,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? copyMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -603,7 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -621,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Tree DeepCopy(
             this ITreeGetter item,
-            Tree_TranslationMask? copyMask = null)
+            Tree.TranslationMask? copyMask = null)
         {
             return ((TreeSetterTranslationCommon)((ITreeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -630,8 +1344,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Tree DeepCopy(
             this ITreeGetter item,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? copyMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? copyMask = null)
         {
             return ((TreeSetterTranslationCommon)((ITreeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -655,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITreeInternal item,
             XElement node,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -668,8 +1382,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITreeInternal item,
             XElement node,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -677,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -696,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITreeInternal item,
             string path,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -708,8 +1422,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITreeInternal item,
             string path,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -723,7 +1437,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -736,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITreeInternal item,
             Stream stream,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -748,8 +1462,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ITreeInternal item,
             Stream stream,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -763,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Tree_TranslationMask? translationMask = null)
+            Tree.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -855,9 +1569,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 20;
 
-        public static readonly Type MaskType = typeof(Tree_Mask<>);
+        public static readonly Type MaskType = typeof(Tree.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Tree_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Tree.ErrorMask);
 
         public static readonly Type ClassType = typeof(Tree);
 
@@ -1383,12 +2097,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly TreeCommon Instance = new TreeCommon();
 
-        public Tree_Mask<bool> GetEqualsMask(
+        public Tree.Mask<bool> GetEqualsMask(
             ITreeGetter item,
             ITreeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Tree_Mask<bool>(false);
+            var ret = new Tree.Mask<bool>(false);
             ((TreeCommon)((ITreeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1400,7 +2114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ITreeGetter item,
             ITreeGetter rhs,
-            Tree_Mask<bool> ret,
+            Tree.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1432,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ITreeGetter item,
             string? name = null,
-            Tree_Mask<bool>? printMask = null)
+            Tree.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1447,7 +2161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITreeGetter item,
             FileGeneration fg,
             string? name = null,
-            Tree_Mask<bool>? printMask = null)
+            Tree.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1471,7 +2185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ITreeGetter item,
             FileGeneration fg,
-            Tree_Mask<bool>? printMask = null)
+            Tree.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1555,7 +2269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ITreeGetter item,
-            Tree_Mask<bool?> checkMask)
+            Tree.Mask<bool?> checkMask)
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
@@ -1568,10 +2282,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ITreeGetter item,
-            Tree_Mask<bool> mask)
+            Tree.Mask<bool> mask)
         {
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int, bool)>>(item.SpeedTreeSeeds.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.LeafCurvature = true;
@@ -1930,7 +2644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Tree DeepCopy(
             ITreeGetter item,
-            Tree_TranslationMask? copyMask = null)
+            Tree.TranslationMask? copyMask = null)
         {
             Tree ret = (Tree)((TreeCommon)((ITreeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1941,8 +2655,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Tree DeepCopy(
             ITreeGetter item,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? copyMask = null)
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? copyMask = null)
         {
             Tree ret = (Tree)((TreeCommon)((ITreeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2581,8 +3295,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ITreeGetter item,
             XElement node,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null,
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2592,14 +3306,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ITreeGetter item,
             string path,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null,
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2615,8 +3329,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ITreeGetter item,
             Stream stream,
-            out Tree_ErrorMask errorMask,
-            Tree_TranslationMask? translationMask = null,
+            out Tree.ErrorMask errorMask,
+            Tree.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2633,719 +3347,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Tree_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Tree_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Tree_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.SpeedTreeSeeds = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.LeafCurvature = initialValue;
-            this.MinimumLeafAngle = initialValue;
-            this.MaximumLeafAngle = initialValue;
-            this.BranchDimmingValue = initialValue;
-            this.LeafDimmingValue = initialValue;
-            this.ShadowRadius = initialValue;
-            this.RockingSpeed = initialValue;
-            this.RustleSpeed = initialValue;
-            this.BillboardWidth = initialValue;
-            this.BillboardHeight = initialValue;
-            this.CNAMDataTypeState = initialValue;
-            this.BNAMDataTypeState = initialValue;
-        }
-
-        public Tree_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Model,
-            T Icon,
-            T SpeedTreeSeeds,
-            T LeafCurvature,
-            T MinimumLeafAngle,
-            T MaximumLeafAngle,
-            T BranchDimmingValue,
-            T LeafDimmingValue,
-            T ShadowRadius,
-            T RockingSpeed,
-            T RustleSpeed,
-            T BillboardWidth,
-            T BillboardHeight,
-            T CNAMDataTypeState,
-            T BNAMDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-            this.SpeedTreeSeeds = new MaskItem<T, IEnumerable<(int Index, T Value)>>(SpeedTreeSeeds, Enumerable.Empty<(int Index, T Value)>());
-            this.LeafCurvature = LeafCurvature;
-            this.MinimumLeafAngle = MinimumLeafAngle;
-            this.MaximumLeafAngle = MaximumLeafAngle;
-            this.BranchDimmingValue = BranchDimmingValue;
-            this.LeafDimmingValue = LeafDimmingValue;
-            this.ShadowRadius = ShadowRadius;
-            this.RockingSpeed = RockingSpeed;
-            this.RustleSpeed = RustleSpeed;
-            this.BillboardWidth = BillboardWidth;
-            this.BillboardHeight = BillboardHeight;
-            this.CNAMDataTypeState = CNAMDataTypeState;
-            this.BNAMDataTypeState = BNAMDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Tree_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? SpeedTreeSeeds;
-        public T LeafCurvature;
-        public T MinimumLeafAngle;
-        public T MaximumLeafAngle;
-        public T BranchDimmingValue;
-        public T LeafDimmingValue;
-        public T ShadowRadius;
-        public T RockingSpeed;
-        public T RustleSpeed;
-        public T BillboardWidth;
-        public T BillboardHeight;
-        public T CNAMDataTypeState;
-        public T BNAMDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Tree_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Tree_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.SpeedTreeSeeds, rhs.SpeedTreeSeeds)) return false;
-            if (!object.Equals(this.LeafCurvature, rhs.LeafCurvature)) return false;
-            if (!object.Equals(this.MinimumLeafAngle, rhs.MinimumLeafAngle)) return false;
-            if (!object.Equals(this.MaximumLeafAngle, rhs.MaximumLeafAngle)) return false;
-            if (!object.Equals(this.BranchDimmingValue, rhs.BranchDimmingValue)) return false;
-            if (!object.Equals(this.LeafDimmingValue, rhs.LeafDimmingValue)) return false;
-            if (!object.Equals(this.ShadowRadius, rhs.ShadowRadius)) return false;
-            if (!object.Equals(this.RockingSpeed, rhs.RockingSpeed)) return false;
-            if (!object.Equals(this.RustleSpeed, rhs.RustleSpeed)) return false;
-            if (!object.Equals(this.BillboardWidth, rhs.BillboardWidth)) return false;
-            if (!object.Equals(this.BillboardHeight, rhs.BillboardHeight)) return false;
-            if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
-            if (!object.Equals(this.BNAMDataTypeState, rhs.BNAMDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.SpeedTreeSeeds?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeafCurvature?.GetHashCode());
-            ret = ret.CombineHashCode(this.MinimumLeafAngle?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumLeafAngle?.GetHashCode());
-            ret = ret.CombineHashCode(this.BranchDimmingValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeafDimmingValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.ShadowRadius?.GetHashCode());
-            ret = ret.CombineHashCode(this.RockingSpeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.RustleSpeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.BillboardWidth?.GetHashCode());
-            ret = ret.CombineHashCode(this.BillboardHeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.CNAMDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(this.BNAMDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (this.SpeedTreeSeeds != null)
-            {
-                if (!eval(this.SpeedTreeSeeds.Overall)) return false;
-                if (this.SpeedTreeSeeds.Specific != null)
-                {
-                    foreach (var item in this.SpeedTreeSeeds.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.LeafCurvature)) return false;
-            if (!eval(this.MinimumLeafAngle)) return false;
-            if (!eval(this.MaximumLeafAngle)) return false;
-            if (!eval(this.BranchDimmingValue)) return false;
-            if (!eval(this.LeafDimmingValue)) return false;
-            if (!eval(this.ShadowRadius)) return false;
-            if (!eval(this.RockingSpeed)) return false;
-            if (!eval(this.RustleSpeed)) return false;
-            if (!eval(this.BillboardWidth)) return false;
-            if (!eval(this.BillboardHeight)) return false;
-            if (!eval(this.CNAMDataTypeState)) return false;
-            if (!eval(this.BNAMDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Tree_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Tree_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Tree_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-            if (SpeedTreeSeeds != null)
-            {
-                obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SpeedTreeSeeds.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (SpeedTreeSeeds.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.SpeedTreeSeeds.Specific = l;
-                    foreach (var item in SpeedTreeSeeds.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.LeafCurvature = eval(this.LeafCurvature);
-            obj.MinimumLeafAngle = eval(this.MinimumLeafAngle);
-            obj.MaximumLeafAngle = eval(this.MaximumLeafAngle);
-            obj.BranchDimmingValue = eval(this.BranchDimmingValue);
-            obj.LeafDimmingValue = eval(this.LeafDimmingValue);
-            obj.ShadowRadius = eval(this.ShadowRadius);
-            obj.RockingSpeed = eval(this.RockingSpeed);
-            obj.RustleSpeed = eval(this.RustleSpeed);
-            obj.BillboardWidth = eval(this.BillboardWidth);
-            obj.BillboardHeight = eval(this.BillboardHeight);
-            obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
-            obj.BNAMDataTypeState = eval(this.BNAMDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Tree_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Tree_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Tree_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.SpeedTreeSeeds?.Overall ?? true)
-                {
-                    fg.AppendLine("SpeedTreeSeeds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (SpeedTreeSeeds != null)
-                        {
-                            if (SpeedTreeSeeds.Overall != null)
-                            {
-                                fg.AppendLine(SpeedTreeSeeds.Overall.ToString());
-                            }
-                            if (SpeedTreeSeeds.Specific != null)
-                            {
-                                foreach (var subItem in SpeedTreeSeeds.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.LeafCurvature ?? true)
-                {
-                    fg.AppendLine($"LeafCurvature => {LeafCurvature}");
-                }
-                if (printMask?.MinimumLeafAngle ?? true)
-                {
-                    fg.AppendLine($"MinimumLeafAngle => {MinimumLeafAngle}");
-                }
-                if (printMask?.MaximumLeafAngle ?? true)
-                {
-                    fg.AppendLine($"MaximumLeafAngle => {MaximumLeafAngle}");
-                }
-                if (printMask?.BranchDimmingValue ?? true)
-                {
-                    fg.AppendLine($"BranchDimmingValue => {BranchDimmingValue}");
-                }
-                if (printMask?.LeafDimmingValue ?? true)
-                {
-                    fg.AppendLine($"LeafDimmingValue => {LeafDimmingValue}");
-                }
-                if (printMask?.ShadowRadius ?? true)
-                {
-                    fg.AppendLine($"ShadowRadius => {ShadowRadius}");
-                }
-                if (printMask?.RockingSpeed ?? true)
-                {
-                    fg.AppendLine($"RockingSpeed => {RockingSpeed}");
-                }
-                if (printMask?.RustleSpeed ?? true)
-                {
-                    fg.AppendLine($"RustleSpeed => {RustleSpeed}");
-                }
-                if (printMask?.BillboardWidth ?? true)
-                {
-                    fg.AppendLine($"BillboardWidth => {BillboardWidth}");
-                }
-                if (printMask?.BillboardHeight ?? true)
-                {
-                    fg.AppendLine($"BillboardHeight => {BillboardHeight}");
-                }
-                if (printMask?.CNAMDataTypeState ?? true)
-                {
-                    fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
-                }
-                if (printMask?.BNAMDataTypeState ?? true)
-                {
-                    fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Tree_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Tree_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SpeedTreeSeeds;
-        public Exception? LeafCurvature;
-        public Exception? MinimumLeafAngle;
-        public Exception? MaximumLeafAngle;
-        public Exception? BranchDimmingValue;
-        public Exception? LeafDimmingValue;
-        public Exception? ShadowRadius;
-        public Exception? RockingSpeed;
-        public Exception? RustleSpeed;
-        public Exception? BillboardWidth;
-        public Exception? BillboardHeight;
-        public Exception? CNAMDataTypeState;
-        public Exception? BNAMDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    return Model;
-                case Tree_FieldIndex.Icon:
-                    return Icon;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    return SpeedTreeSeeds;
-                case Tree_FieldIndex.LeafCurvature:
-                    return LeafCurvature;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    return MinimumLeafAngle;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    return MaximumLeafAngle;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    return BranchDimmingValue;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    return LeafDimmingValue;
-                case Tree_FieldIndex.ShadowRadius:
-                    return ShadowRadius;
-                case Tree_FieldIndex.RockingSpeed:
-                    return RockingSpeed;
-                case Tree_FieldIndex.RustleSpeed:
-                    return RustleSpeed;
-                case Tree_FieldIndex.BillboardWidth:
-                    return BillboardWidth;
-                case Tree_FieldIndex.BillboardHeight:
-                    return BillboardHeight;
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return CNAMDataTypeState;
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    return BNAMDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Tree_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    this.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case Tree_FieldIndex.LeafCurvature:
-                    this.LeafCurvature = ex;
-                    break;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    this.MinimumLeafAngle = ex;
-                    break;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    this.MaximumLeafAngle = ex;
-                    break;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    this.BranchDimmingValue = ex;
-                    break;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    this.LeafDimmingValue = ex;
-                    break;
-                case Tree_FieldIndex.ShadowRadius:
-                    this.ShadowRadius = ex;
-                    break;
-                case Tree_FieldIndex.RockingSpeed:
-                    this.RockingSpeed = ex;
-                    break;
-                case Tree_FieldIndex.RustleSpeed:
-                    this.RustleSpeed = ex;
-                    break;
-                case Tree_FieldIndex.BillboardWidth:
-                    this.BillboardWidth = ex;
-                    break;
-                case Tree_FieldIndex.BillboardHeight:
-                    this.BillboardHeight = ex;
-                    break;
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    this.CNAMDataTypeState = ex;
-                    break;
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    this.BNAMDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Tree_FieldIndex enu = (Tree_FieldIndex)index;
-            switch (enu)
-            {
-                case Tree_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Tree_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.SpeedTreeSeeds:
-                    this.SpeedTreeSeeds = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case Tree_FieldIndex.LeafCurvature:
-                    this.LeafCurvature = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    this.MinimumLeafAngle = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    this.MaximumLeafAngle = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.BranchDimmingValue:
-                    this.BranchDimmingValue = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.LeafDimmingValue:
-                    this.LeafDimmingValue = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.ShadowRadius:
-                    this.ShadowRadius = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.RockingSpeed:
-                    this.RockingSpeed = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.RustleSpeed:
-                    this.RustleSpeed = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.BillboardWidth:
-                    this.BillboardWidth = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.BillboardHeight:
-                    this.BillboardHeight = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    this.CNAMDataTypeState = (Exception)obj;
-                    break;
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    this.BNAMDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (SpeedTreeSeeds != null) return true;
-            if (LeafCurvature != null) return true;
-            if (MinimumLeafAngle != null) return true;
-            if (MaximumLeafAngle != null) return true;
-            if (BranchDimmingValue != null) return true;
-            if (LeafDimmingValue != null) return true;
-            if (ShadowRadius != null) return true;
-            if (RockingSpeed != null) return true;
-            if (RustleSpeed != null) return true;
-            if (BillboardWidth != null) return true;
-            if (BillboardHeight != null) return true;
-            if (CNAMDataTypeState != null) return true;
-            if (BNAMDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Tree_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine("SpeedTreeSeeds =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (SpeedTreeSeeds != null)
-                {
-                    if (SpeedTreeSeeds.Overall != null)
-                    {
-                        fg.AppendLine(SpeedTreeSeeds.Overall.ToString());
-                    }
-                    if (SpeedTreeSeeds.Specific != null)
-                    {
-                        foreach (var subItem in SpeedTreeSeeds.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"LeafCurvature => {LeafCurvature}");
-            fg.AppendLine($"MinimumLeafAngle => {MinimumLeafAngle}");
-            fg.AppendLine($"MaximumLeafAngle => {MaximumLeafAngle}");
-            fg.AppendLine($"BranchDimmingValue => {BranchDimmingValue}");
-            fg.AppendLine($"LeafDimmingValue => {LeafDimmingValue}");
-            fg.AppendLine($"ShadowRadius => {ShadowRadius}");
-            fg.AppendLine($"RockingSpeed => {RockingSpeed}");
-            fg.AppendLine($"RustleSpeed => {RustleSpeed}");
-            fg.AppendLine($"BillboardWidth => {BillboardWidth}");
-            fg.AppendLine($"BillboardHeight => {BillboardHeight}");
-            fg.AppendLine($"CNAMDataTypeState => {CNAMDataTypeState}");
-            fg.AppendLine($"BNAMDataTypeState => {BNAMDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Tree_ErrorMask Combine(Tree_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Tree_ErrorMask();
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
-            ret.LeafCurvature = this.LeafCurvature.Combine(rhs.LeafCurvature);
-            ret.MinimumLeafAngle = this.MinimumLeafAngle.Combine(rhs.MinimumLeafAngle);
-            ret.MaximumLeafAngle = this.MaximumLeafAngle.Combine(rhs.MaximumLeafAngle);
-            ret.BranchDimmingValue = this.BranchDimmingValue.Combine(rhs.BranchDimmingValue);
-            ret.LeafDimmingValue = this.LeafDimmingValue.Combine(rhs.LeafDimmingValue);
-            ret.ShadowRadius = this.ShadowRadius.Combine(rhs.ShadowRadius);
-            ret.RockingSpeed = this.RockingSpeed.Combine(rhs.RockingSpeed);
-            ret.RustleSpeed = this.RustleSpeed.Combine(rhs.RustleSpeed);
-            ret.BillboardWidth = this.BillboardWidth.Combine(rhs.BillboardWidth);
-            ret.BillboardHeight = this.BillboardHeight.Combine(rhs.BillboardHeight);
-            ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
-            ret.BNAMDataTypeState = this.BNAMDataTypeState.Combine(rhs.BNAMDataTypeState);
-            return ret;
-        }
-        public static Tree_ErrorMask? Combine(Tree_ErrorMask? lhs, Tree_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Tree_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Tree_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Tree_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        public bool SpeedTreeSeeds;
-        public bool LeafCurvature;
-        public bool MinimumLeafAngle;
-        public bool MaximumLeafAngle;
-        public bool BranchDimmingValue;
-        public bool LeafDimmingValue;
-        public bool ShadowRadius;
-        public bool RockingSpeed;
-        public bool RustleSpeed;
-        public bool BillboardWidth;
-        public bool BillboardHeight;
-        public bool CNAMDataTypeState;
-        public bool BNAMDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Tree_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.SpeedTreeSeeds = defaultOn;
-            this.LeafCurvature = defaultOn;
-            this.MinimumLeafAngle = defaultOn;
-            this.MaximumLeafAngle = defaultOn;
-            this.BranchDimmingValue = defaultOn;
-            this.LeafDimmingValue = defaultOn;
-            this.ShadowRadius = defaultOn;
-            this.RockingSpeed = defaultOn;
-            this.RustleSpeed = defaultOn;
-            this.BillboardWidth = defaultOn;
-            this.BillboardHeight = defaultOn;
-            this.CNAMDataTypeState = defaultOn;
-            this.BNAMDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((SpeedTreeSeeds, null));
-            ret.Add((LeafCurvature, null));
-            ret.Add((MinimumLeafAngle, null));
-            ret.Add((MaximumLeafAngle, null));
-            ret.Add((BranchDimmingValue, null));
-            ret.Add((LeafDimmingValue, null));
-            ret.Add((ShadowRadius, null));
-            ret.Add((RockingSpeed, null));
-            ret.Add((RustleSpeed, null));
-            ret.Add((BillboardWidth, null));
-            ret.Add((BillboardHeight, null));
-            ret.Add((CNAMDataTypeState, null));
-            ret.Add((BNAMDataTypeState, null));
-        }
-    }
 }
 #endregion
 

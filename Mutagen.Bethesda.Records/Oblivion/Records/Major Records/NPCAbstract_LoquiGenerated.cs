@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new NPCAbstract CreateFromXml(
             XElement node,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -111,15 +111,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static NPCAbstract CreateFromXml(
             XElement node,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPCAbstract.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPCAbstract CreateFromXml(
             string path,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPCAbstract CreateFromXml(
             string path,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPCAbstract CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPCAbstract CreateFromXml(
             Stream stream,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -186,8 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPCAbstract CreateFromXml(
             Stream stream,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPCAbstract CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -210,6 +210,227 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            NPCSpawn.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new NPCAbstract.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(NPCAbstract.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, NPCAbstract.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(NPCAbstract.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            NPCSpawn.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            NPCSpawn.TranslationMask,
+            ITranslationMask
+        {
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+            }
+
+            #endregion
+
+        }
         #endregion
 
         #region Mutagen
@@ -296,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((NPCAbstractSetterCommon)((INPCAbstractGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static NPCAbstract_Mask<bool> GetEqualsMask(
+        public static NPCAbstract.Mask<bool> GetEqualsMask(
             this INPCAbstractGetter item,
             INPCAbstractGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -310,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this INPCAbstractGetter item,
             string? name = null,
-            NPCAbstract_Mask<bool>? printMask = null)
+            NPCAbstract.Mask<bool>? printMask = null)
         {
             return ((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -322,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractGetter item,
             FileGeneration fg,
             string? name = null,
-            NPCAbstract_Mask<bool>? printMask = null)
+            NPCAbstract.Mask<bool>? printMask = null)
         {
             ((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -333,16 +554,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this INPCAbstractGetter item,
-            NPCAbstract_Mask<bool?> checkMask)
+            NPCAbstract.Mask<bool?> checkMask)
         {
             return ((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static NPCAbstract_Mask<bool> GetHasBeenSetMask(this INPCAbstractGetter item)
+        public static NPCAbstract.Mask<bool> GetHasBeenSetMask(this INPCAbstractGetter item)
         {
-            var ret = new NPCAbstract_Mask<bool>(false);
+            var ret = new NPCAbstract.Mask<bool>(false);
             ((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -361,8 +582,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this INPCAbstractInternal lhs,
             INPCAbstractGetter rhs,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? copyMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -370,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPCAbstract.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -388,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPCAbstract DeepCopy(
             this INPCAbstractGetter item,
-            NPCAbstract_TranslationMask? copyMask = null)
+            NPCAbstract.TranslationMask? copyMask = null)
         {
             return ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -397,8 +618,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPCAbstract DeepCopy(
             this INPCAbstractGetter item,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? copyMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? copyMask = null)
         {
             return ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -422,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCAbstractInternal item,
             XElement node,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -435,8 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCAbstractInternal item,
             XElement node,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -444,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPCAbstract.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -463,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCAbstractInternal item,
             string path,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -475,8 +696,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCAbstractInternal item,
             string path,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -490,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -503,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCAbstractInternal item,
             Stream stream,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -515,8 +736,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCAbstractInternal item,
             Stream stream,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -530,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NPCAbstract_TranslationMask? translationMask = null)
+            NPCAbstract.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -607,9 +828,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(NPCAbstract_Mask<>);
+        public static readonly Type MaskType = typeof(NPCAbstract.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NPCAbstract_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NPCAbstract.ErrorMask);
 
         public static readonly Type ClassType = typeof(NPCAbstract);
 
@@ -858,12 +1079,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly NPCAbstractCommon Instance = new NPCAbstractCommon();
 
-        public NPCAbstract_Mask<bool> GetEqualsMask(
+        public NPCAbstract.Mask<bool> GetEqualsMask(
             INPCAbstractGetter item,
             INPCAbstractGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new NPCAbstract_Mask<bool>(false);
+            var ret = new NPCAbstract.Mask<bool>(false);
             ((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -875,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             INPCAbstractGetter item,
             INPCAbstractGetter rhs,
-            NPCAbstract_Mask<bool> ret,
+            NPCAbstract.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -885,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             INPCAbstractGetter item,
             string? name = null,
-            NPCAbstract_Mask<bool>? printMask = null)
+            NPCAbstract.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -900,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPCAbstractGetter item,
             FileGeneration fg,
             string? name = null,
-            NPCAbstract_Mask<bool>? printMask = null)
+            NPCAbstract.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -924,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             INPCAbstractGetter item,
             FileGeneration fg,
-            NPCAbstract_Mask<bool>? printMask = null)
+            NPCAbstract.Mask<bool>? printMask = null)
         {
             NPCSpawnCommon.ToStringFields(
                 item: item,
@@ -934,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             INPCAbstractGetter item,
-            NPCAbstract_Mask<bool?> checkMask)
+            NPCAbstract.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -943,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             INPCAbstractGetter item,
-            NPCAbstract_Mask<bool> mask)
+            NPCAbstract.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
@@ -1206,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public NPCAbstract DeepCopy(
             INPCAbstractGetter item,
-            NPCAbstract_TranslationMask? copyMask = null)
+            NPCAbstract.TranslationMask? copyMask = null)
         {
             NPCAbstract ret = (NPCAbstract)((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1217,8 +1438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public NPCAbstract DeepCopy(
             INPCAbstractGetter item,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? copyMask = null)
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? copyMask = null)
         {
             NPCAbstract ret = (NPCAbstract)((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1434,8 +1655,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this INPCAbstractGetter item,
             XElement node,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null,
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1445,14 +1666,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPCAbstract.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this INPCAbstractGetter item,
             string path,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null,
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1468,8 +1689,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this INPCAbstractGetter item,
             Stream stream,
-            out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask? translationMask = null,
+            out NPCAbstract.ErrorMask errorMask,
+            NPCAbstract.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1486,226 +1707,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class NPCAbstract_Mask<T> :
-        NPCSpawn_Mask<T>,
-        IMask<T>,
-        IEquatable<NPCAbstract_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public NPCAbstract_Mask(T initialValue)
-        : base(initialValue)
-        {
-        }
-
-        public NPCAbstract_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-        }
-
-        #pragma warning disable CS8618
-        protected NPCAbstract_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is NPCAbstract_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(NPCAbstract_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new NPCAbstract_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new NPCAbstract_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(NPCAbstract_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(NPCAbstract_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, NPCAbstract_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(NPCAbstract_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class NPCAbstract_ErrorMask : NPCSpawn_ErrorMask, IErrorMask<NPCAbstract_ErrorMask>
-    {
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            NPCAbstract_FieldIndex enu = (NPCAbstract_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("NPCAbstract_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-        }
-        #endregion
-
-        #region Combine
-        public NPCAbstract_ErrorMask Combine(NPCAbstract_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new NPCAbstract_ErrorMask();
-            return ret;
-        }
-        public static NPCAbstract_ErrorMask? Combine(NPCAbstract_ErrorMask? lhs, NPCAbstract_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new NPCAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new NPCAbstract_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class NPCAbstract_TranslationMask : NPCSpawn_TranslationMask
-    {
-        #region Ctors
-        public NPCAbstract_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-        }
-
-        #endregion
-
-    }
 }
 #endregion
 

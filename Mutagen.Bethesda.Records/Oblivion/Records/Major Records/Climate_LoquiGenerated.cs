@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Climate CreateFromXml(
             XElement node,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -251,15 +251,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Climate CreateFromXml(
             XElement node,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Climate.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate CreateFromXml(
             string path,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -289,8 +289,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate CreateFromXml(
             string path,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate CreateFromXml(
             Stream stream,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate CreateFromXml(
             Stream stream,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -347,6 +347,641 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+                this.SunTexture = initialValue;
+                this.SunGlareTexture = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.SunriseBegin = initialValue;
+                this.SunriseEnd = initialValue;
+                this.SunsetBegin = initialValue;
+                this.SunsetEnd = initialValue;
+                this.Volatility = initialValue;
+                this.Phase = initialValue;
+                this.PhaseLength = initialValue;
+                this.TNAMDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Weathers,
+                T SunTexture,
+                T SunGlareTexture,
+                T Model,
+                T SunriseBegin,
+                T SunriseEnd,
+                T SunsetBegin,
+                T SunsetEnd,
+                T Volatility,
+                T Phase,
+                T PhaseLength,
+                T TNAMDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+                this.SunTexture = SunTexture;
+                this.SunGlareTexture = SunGlareTexture;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.SunriseBegin = SunriseBegin;
+                this.SunriseEnd = SunriseEnd;
+                this.SunsetBegin = SunsetBegin;
+                this.SunsetEnd = SunsetEnd;
+                this.Volatility = Volatility;
+                this.Phase = Phase;
+                this.PhaseLength = PhaseLength;
+                this.TNAMDataTypeState = TNAMDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>? Weathers;
+            public T SunTexture;
+            public T SunGlareTexture;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T SunriseBegin;
+            public T SunriseEnd;
+            public T SunsetBegin;
+            public T SunsetEnd;
+            public T Volatility;
+            public T Phase;
+            public T PhaseLength;
+            public T TNAMDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
+                if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
+                if (!object.Equals(this.SunriseEnd, rhs.SunriseEnd)) return false;
+                if (!object.Equals(this.SunsetBegin, rhs.SunsetBegin)) return false;
+                if (!object.Equals(this.SunsetEnd, rhs.SunsetEnd)) return false;
+                if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
+                if (!object.Equals(this.Phase, rhs.Phase)) return false;
+                if (!object.Equals(this.PhaseLength, rhs.PhaseLength)) return false;
+                if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunTexture?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunGlareTexture?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunriseBegin?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunriseEnd?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunsetBegin?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunsetEnd?.GetHashCode());
+                ret = ret.CombineHashCode(this.Volatility?.GetHashCode());
+                ret = ret.CombineHashCode(this.Phase?.GetHashCode());
+                ret = ret.CombineHashCode(this.PhaseLength?.GetHashCode());
+                ret = ret.CombineHashCode(this.TNAMDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (this.Weathers != null)
+                {
+                    if (!eval(this.Weathers.Overall)) return false;
+                    if (this.Weathers.Specific != null)
+                    {
+                        foreach (var item in this.Weathers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SunTexture)) return false;
+                if (!eval(this.SunGlareTexture)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.SunriseBegin)) return false;
+                if (!eval(this.SunriseEnd)) return false;
+                if (!eval(this.SunsetBegin)) return false;
+                if (!eval(this.SunsetEnd)) return false;
+                if (!eval(this.Volatility)) return false;
+                if (!eval(this.Phase)) return false;
+                if (!eval(this.PhaseLength)) return false;
+                if (!eval(this.TNAMDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Climate.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                if (Weathers != null)
+                {
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance.Mask<R>?>>>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance.Mask<R>?>>());
+                    if (Weathers.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WeatherChance.Mask<R>?>>();
+                        obj.Weathers.Specific = l;
+                        foreach (var item in Weathers.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, WeatherChance.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherChance.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.SunTexture = eval(this.SunTexture);
+                obj.SunGlareTexture = eval(this.SunGlareTexture);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.SunriseBegin = eval(this.SunriseBegin);
+                obj.SunriseEnd = eval(this.SunriseEnd);
+                obj.SunsetBegin = eval(this.SunsetBegin);
+                obj.SunsetEnd = eval(this.SunsetEnd);
+                obj.Volatility = eval(this.Volatility);
+                obj.Phase = eval(this.Phase);
+                obj.PhaseLength = eval(this.PhaseLength);
+                obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Climate.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Climate.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Climate.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Weathers?.Overall ?? true)
+                    {
+                        fg.AppendLine("Weathers =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Weathers != null)
+                            {
+                                if (Weathers.Overall != null)
+                                {
+                                    fg.AppendLine(Weathers.Overall.ToString());
+                                }
+                                if (Weathers.Specific != null)
+                                {
+                                    foreach (var subItem in Weathers.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.SunTexture ?? true)
+                    {
+                        fg.AppendLine($"SunTexture => {SunTexture}");
+                    }
+                    if (printMask?.SunGlareTexture ?? true)
+                    {
+                        fg.AppendLine($"SunGlareTexture => {SunGlareTexture}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.SunriseBegin ?? true)
+                    {
+                        fg.AppendLine($"SunriseBegin => {SunriseBegin}");
+                    }
+                    if (printMask?.SunriseEnd ?? true)
+                    {
+                        fg.AppendLine($"SunriseEnd => {SunriseEnd}");
+                    }
+                    if (printMask?.SunsetBegin ?? true)
+                    {
+                        fg.AppendLine($"SunsetBegin => {SunsetBegin}");
+                    }
+                    if (printMask?.SunsetEnd ?? true)
+                    {
+                        fg.AppendLine($"SunsetEnd => {SunsetEnd}");
+                    }
+                    if (printMask?.Volatility ?? true)
+                    {
+                        fg.AppendLine($"Volatility => {Volatility}");
+                    }
+                    if (printMask?.Phase ?? true)
+                    {
+                        fg.AppendLine($"Phase => {Phase}");
+                    }
+                    if (printMask?.PhaseLength ?? true)
+                    {
+                        fg.AppendLine($"PhaseLength => {PhaseLength}");
+                    }
+                    if (printMask?.TNAMDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"TNAMDataTypeState => {TNAMDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>? Weathers;
+            public Exception? SunTexture;
+            public Exception? SunGlareTexture;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? SunriseBegin;
+            public Exception? SunriseEnd;
+            public Exception? SunsetBegin;
+            public Exception? SunsetEnd;
+            public Exception? Volatility;
+            public Exception? Phase;
+            public Exception? PhaseLength;
+            public Exception? TNAMDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Climate_FieldIndex enu = (Climate_FieldIndex)index;
+                switch (enu)
+                {
+                    case Climate_FieldIndex.Weathers:
+                        return Weathers;
+                    case Climate_FieldIndex.SunTexture:
+                        return SunTexture;
+                    case Climate_FieldIndex.SunGlareTexture:
+                        return SunGlareTexture;
+                    case Climate_FieldIndex.Model:
+                        return Model;
+                    case Climate_FieldIndex.SunriseBegin:
+                        return SunriseBegin;
+                    case Climate_FieldIndex.SunriseEnd:
+                        return SunriseEnd;
+                    case Climate_FieldIndex.SunsetBegin:
+                        return SunsetBegin;
+                    case Climate_FieldIndex.SunsetEnd:
+                        return SunsetEnd;
+                    case Climate_FieldIndex.Volatility:
+                        return Volatility;
+                    case Climate_FieldIndex.Phase:
+                        return Phase;
+                    case Climate_FieldIndex.PhaseLength:
+                        return PhaseLength;
+                    case Climate_FieldIndex.TNAMDataTypeState:
+                        return TNAMDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Climate_FieldIndex enu = (Climate_FieldIndex)index;
+                switch (enu)
+                {
+                    case Climate_FieldIndex.Weathers:
+                        this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Climate_FieldIndex.SunTexture:
+                        this.SunTexture = ex;
+                        break;
+                    case Climate_FieldIndex.SunGlareTexture:
+                        this.SunGlareTexture = ex;
+                        break;
+                    case Climate_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Climate_FieldIndex.SunriseBegin:
+                        this.SunriseBegin = ex;
+                        break;
+                    case Climate_FieldIndex.SunriseEnd:
+                        this.SunriseEnd = ex;
+                        break;
+                    case Climate_FieldIndex.SunsetBegin:
+                        this.SunsetBegin = ex;
+                        break;
+                    case Climate_FieldIndex.SunsetEnd:
+                        this.SunsetEnd = ex;
+                        break;
+                    case Climate_FieldIndex.Volatility:
+                        this.Volatility = ex;
+                        break;
+                    case Climate_FieldIndex.Phase:
+                        this.Phase = ex;
+                        break;
+                    case Climate_FieldIndex.PhaseLength:
+                        this.PhaseLength = ex;
+                        break;
+                    case Climate_FieldIndex.TNAMDataTypeState:
+                        this.TNAMDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Climate_FieldIndex enu = (Climate_FieldIndex)index;
+                switch (enu)
+                {
+                    case Climate_FieldIndex.Weathers:
+                        this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>)obj;
+                        break;
+                    case Climate_FieldIndex.SunTexture:
+                        this.SunTexture = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.SunGlareTexture:
+                        this.SunGlareTexture = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Climate_FieldIndex.SunriseBegin:
+                        this.SunriseBegin = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.SunriseEnd:
+                        this.SunriseEnd = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.SunsetBegin:
+                        this.SunsetBegin = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.SunsetEnd:
+                        this.SunsetEnd = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.Volatility:
+                        this.Volatility = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.Phase:
+                        this.Phase = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.PhaseLength:
+                        this.PhaseLength = (Exception)obj;
+                        break;
+                    case Climate_FieldIndex.TNAMDataTypeState:
+                        this.TNAMDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Weathers != null) return true;
+                if (SunTexture != null) return true;
+                if (SunGlareTexture != null) return true;
+                if (Model != null) return true;
+                if (SunriseBegin != null) return true;
+                if (SunriseEnd != null) return true;
+                if (SunsetBegin != null) return true;
+                if (SunsetEnd != null) return true;
+                if (Volatility != null) return true;
+                if (Phase != null) return true;
+                if (PhaseLength != null) return true;
+                if (TNAMDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine("Weathers =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Weathers != null)
+                    {
+                        if (Weathers.Overall != null)
+                        {
+                            fg.AppendLine(Weathers.Overall.ToString());
+                        }
+                        if (Weathers.Specific != null)
+                        {
+                            foreach (var subItem in Weathers.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"SunTexture => {SunTexture}");
+                fg.AppendLine($"SunGlareTexture => {SunGlareTexture}");
+                Model?.ToString(fg);
+                fg.AppendLine($"SunriseBegin => {SunriseBegin}");
+                fg.AppendLine($"SunriseEnd => {SunriseEnd}");
+                fg.AppendLine($"SunsetBegin => {SunsetBegin}");
+                fg.AppendLine($"SunsetEnd => {SunsetEnd}");
+                fg.AppendLine($"Volatility => {Volatility}");
+                fg.AppendLine($"Phase => {Phase}");
+                fg.AppendLine($"PhaseLength => {PhaseLength}");
+                fg.AppendLine($"TNAMDataTypeState => {TNAMDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
+                ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
+                ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
+                ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
+                ret.SunsetEnd = this.SunsetEnd.Combine(rhs.SunsetEnd);
+                ret.Volatility = this.Volatility.Combine(rhs.Volatility);
+                ret.Phase = this.Phase.Combine(rhs.Phase);
+                ret.PhaseLength = this.PhaseLength.Combine(rhs.PhaseLength);
+                ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, WeatherChance.TranslationMask?> Weathers;
+            public bool SunTexture;
+            public bool SunGlareTexture;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool SunriseBegin;
+            public bool SunriseEnd;
+            public bool SunsetBegin;
+            public bool SunsetEnd;
+            public bool Volatility;
+            public bool Phase;
+            public bool PhaseLength;
+            public bool TNAMDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Weathers = new MaskItem<bool, WeatherChance.TranslationMask?>(defaultOn, null);
+                this.SunTexture = defaultOn;
+                this.SunGlareTexture = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.SunriseBegin = defaultOn;
+                this.SunriseEnd = defaultOn;
+                this.SunsetBegin = defaultOn;
+                this.SunsetEnd = defaultOn;
+                this.Volatility = defaultOn;
+                this.Phase = defaultOn;
+                this.PhaseLength = defaultOn;
+                this.TNAMDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
+                ret.Add((SunTexture, null));
+                ret.Add((SunGlareTexture, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((SunriseBegin, null));
+                ret.Add((SunriseEnd, null));
+                ret.Add((SunsetBegin, null));
+                ret.Add((SunsetEnd, null));
+                ret.Add((Volatility, null));
+                ret.Add((Phase, null));
+                ret.Add((PhaseLength, null));
+                ret.Add((TNAMDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -491,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Climate_Mask<bool> GetEqualsMask(
+        public static Climate.Mask<bool> GetEqualsMask(
             this IClimateGetter item,
             IClimateGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -505,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IClimateGetter item,
             string? name = null,
-            Climate_Mask<bool>? printMask = null)
+            Climate.Mask<bool>? printMask = null)
         {
             return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -517,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateGetter item,
             FileGeneration fg,
             string? name = null,
-            Climate_Mask<bool>? printMask = null)
+            Climate.Mask<bool>? printMask = null)
         {
             ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -528,16 +1163,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IClimateGetter item,
-            Climate_Mask<bool?> checkMask)
+            Climate.Mask<bool?> checkMask)
         {
             return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Climate_Mask<bool> GetHasBeenSetMask(this IClimateGetter item)
+        public static Climate.Mask<bool> GetHasBeenSetMask(this IClimateGetter item)
         {
-            var ret = new Climate_Mask<bool>(false);
+            var ret = new Climate.Mask<bool>(false);
             ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -556,8 +1191,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IClimateInternal lhs,
             IClimateGetter rhs,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? copyMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -565,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Climate.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -583,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate DeepCopy(
             this IClimateGetter item,
-            Climate_TranslationMask? copyMask = null)
+            Climate.TranslationMask? copyMask = null)
         {
             return ((ClimateSetterTranslationCommon)((IClimateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -592,8 +1227,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Climate DeepCopy(
             this IClimateGetter item,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? copyMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? copyMask = null)
         {
             return ((ClimateSetterTranslationCommon)((IClimateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -617,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClimateInternal item,
             XElement node,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -630,8 +1265,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClimateInternal item,
             XElement node,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -639,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Climate.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -658,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClimateInternal item,
             string path,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -670,8 +1305,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClimateInternal item,
             string path,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -685,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -698,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClimateInternal item,
             Stream stream,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -710,8 +1345,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IClimateInternal item,
             Stream stream,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -725,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Climate_TranslationMask? translationMask = null)
+            Climate.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -814,9 +1449,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 17;
 
-        public static readonly Type MaskType = typeof(Climate_Mask<>);
+        public static readonly Type MaskType = typeof(Climate.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Climate_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Climate.ErrorMask);
 
         public static readonly Type ClassType = typeof(Climate);
 
@@ -1322,12 +1957,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ClimateCommon Instance = new ClimateCommon();
 
-        public Climate_Mask<bool> GetEqualsMask(
+        public Climate.Mask<bool> GetEqualsMask(
             IClimateGetter item,
             IClimateGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Climate_Mask<bool>(false);
+            var ret = new Climate.Mask<bool>(false);
             ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1339,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IClimateGetter item,
             IClimateGetter rhs,
-            Climate_Mask<bool> ret,
+            Climate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1368,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IClimateGetter item,
             string? name = null,
-            Climate_Mask<bool>? printMask = null)
+            Climate.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1383,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             FileGeneration fg,
             string? name = null,
-            Climate_Mask<bool>? printMask = null)
+            Climate.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1407,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IClimateGetter item,
             FileGeneration fg,
-            Climate_Mask<bool>? printMask = null)
+            Climate.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1479,7 +2114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IClimateGetter item,
-            Climate_Mask<bool?> checkMask)
+            Climate.Mask<bool?> checkMask)
         {
             if (checkMask.Weathers?.Overall.HasValue ?? false && checkMask.Weathers!.Overall.Value != item.Weathers.HasBeenSet) return false;
             if (checkMask.SunTexture.HasValue && checkMask.SunTexture.Value != (item.SunTexture != null)) return false;
@@ -1493,13 +2128,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IClimateGetter item,
-            Climate_Mask<bool> mask)
+            Climate.Mask<bool> mask)
         {
-            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance_Mask<bool>?>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.SunTexture = (item.SunTexture != null);
             mask.SunGlareTexture = (item.SunGlareTexture != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.SunriseBegin = true;
             mask.SunriseEnd = true;
             mask.SunsetBegin = true;
@@ -1848,7 +2483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Climate DeepCopy(
             IClimateGetter item,
-            Climate_TranslationMask? copyMask = null)
+            Climate.TranslationMask? copyMask = null)
         {
             Climate ret = (Climate)((ClimateCommon)((IClimateGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1859,8 +2494,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Climate DeepCopy(
             IClimateGetter item,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? copyMask = null)
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? copyMask = null)
         {
             Climate ret = (Climate)((ClimateCommon)((IClimateGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2417,8 +3052,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IClimateGetter item,
             XElement node,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null,
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2428,14 +3063,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Climate.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IClimateGetter item,
             string path,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null,
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2451,8 +3086,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IClimateGetter item,
             Stream stream,
-            out Climate_ErrorMask errorMask,
-            Climate_TranslationMask? translationMask = null,
+            out Climate.ErrorMask errorMask,
+            Climate.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2469,640 +3104,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Climate_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Climate_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Climate_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance_Mask<T>?>>());
-            this.SunTexture = initialValue;
-            this.SunGlareTexture = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.SunriseBegin = initialValue;
-            this.SunriseEnd = initialValue;
-            this.SunsetBegin = initialValue;
-            this.SunsetEnd = initialValue;
-            this.Volatility = initialValue;
-            this.Phase = initialValue;
-            this.PhaseLength = initialValue;
-            this.TNAMDataTypeState = initialValue;
-        }
-
-        public Climate_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Weathers,
-            T SunTexture,
-            T SunGlareTexture,
-            T Model,
-            T SunriseBegin,
-            T SunriseEnd,
-            T SunsetBegin,
-            T SunsetEnd,
-            T Volatility,
-            T Phase,
-            T PhaseLength,
-            T TNAMDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance_Mask<T>?>>());
-            this.SunTexture = SunTexture;
-            this.SunGlareTexture = SunGlareTexture;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.SunriseBegin = SunriseBegin;
-            this.SunriseEnd = SunriseEnd;
-            this.SunsetBegin = SunsetBegin;
-            this.SunsetEnd = SunsetEnd;
-            this.Volatility = Volatility;
-            this.Phase = Phase;
-            this.PhaseLength = PhaseLength;
-            this.TNAMDataTypeState = TNAMDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Climate_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>?>>>? Weathers;
-        public T SunTexture;
-        public T SunGlareTexture;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T SunriseBegin;
-        public T SunriseEnd;
-        public T SunsetBegin;
-        public T SunsetEnd;
-        public T Volatility;
-        public T Phase;
-        public T PhaseLength;
-        public T TNAMDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Climate_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Climate_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
-            if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
-            if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
-            if (!object.Equals(this.SunriseEnd, rhs.SunriseEnd)) return false;
-            if (!object.Equals(this.SunsetBegin, rhs.SunsetBegin)) return false;
-            if (!object.Equals(this.SunsetEnd, rhs.SunsetEnd)) return false;
-            if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
-            if (!object.Equals(this.Phase, rhs.Phase)) return false;
-            if (!object.Equals(this.PhaseLength, rhs.PhaseLength)) return false;
-            if (!object.Equals(this.TNAMDataTypeState, rhs.TNAMDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunTexture?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunGlareTexture?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunriseBegin?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunriseEnd?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunsetBegin?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunsetEnd?.GetHashCode());
-            ret = ret.CombineHashCode(this.Volatility?.GetHashCode());
-            ret = ret.CombineHashCode(this.Phase?.GetHashCode());
-            ret = ret.CombineHashCode(this.PhaseLength?.GetHashCode());
-            ret = ret.CombineHashCode(this.TNAMDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (this.Weathers != null)
-            {
-                if (!eval(this.Weathers.Overall)) return false;
-                if (this.Weathers.Specific != null)
-                {
-                    foreach (var item in this.Weathers.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.SunTexture)) return false;
-            if (!eval(this.SunGlareTexture)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.SunriseBegin)) return false;
-            if (!eval(this.SunriseEnd)) return false;
-            if (!eval(this.SunsetBegin)) return false;
-            if (!eval(this.SunsetEnd)) return false;
-            if (!eval(this.Volatility)) return false;
-            if (!eval(this.Phase)) return false;
-            if (!eval(this.PhaseLength)) return false;
-            if (!eval(this.TNAMDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Climate_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Climate_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Climate_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            if (Weathers != null)
-            {
-                obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance_Mask<R>?>>>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance_Mask<R>?>>());
-                if (Weathers.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, WeatherChance_Mask<R>?>>();
-                    obj.Weathers.Specific = l;
-                    foreach (var item in Weathers.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, WeatherChance_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherChance_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.SunTexture = eval(this.SunTexture);
-            obj.SunGlareTexture = eval(this.SunGlareTexture);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.SunriseBegin = eval(this.SunriseBegin);
-            obj.SunriseEnd = eval(this.SunriseEnd);
-            obj.SunsetBegin = eval(this.SunsetBegin);
-            obj.SunsetEnd = eval(this.SunsetEnd);
-            obj.Volatility = eval(this.Volatility);
-            obj.Phase = eval(this.Phase);
-            obj.PhaseLength = eval(this.PhaseLength);
-            obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Climate_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Climate_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Climate_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Weathers?.Overall ?? true)
-                {
-                    fg.AppendLine("Weathers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Weathers != null)
-                        {
-                            if (Weathers.Overall != null)
-                            {
-                                fg.AppendLine(Weathers.Overall.ToString());
-                            }
-                            if (Weathers.Specific != null)
-                            {
-                                foreach (var subItem in Weathers.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.SunTexture ?? true)
-                {
-                    fg.AppendLine($"SunTexture => {SunTexture}");
-                }
-                if (printMask?.SunGlareTexture ?? true)
-                {
-                    fg.AppendLine($"SunGlareTexture => {SunGlareTexture}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.SunriseBegin ?? true)
-                {
-                    fg.AppendLine($"SunriseBegin => {SunriseBegin}");
-                }
-                if (printMask?.SunriseEnd ?? true)
-                {
-                    fg.AppendLine($"SunriseEnd => {SunriseEnd}");
-                }
-                if (printMask?.SunsetBegin ?? true)
-                {
-                    fg.AppendLine($"SunsetBegin => {SunsetBegin}");
-                }
-                if (printMask?.SunsetEnd ?? true)
-                {
-                    fg.AppendLine($"SunsetEnd => {SunsetEnd}");
-                }
-                if (printMask?.Volatility ?? true)
-                {
-                    fg.AppendLine($"Volatility => {Volatility}");
-                }
-                if (printMask?.Phase ?? true)
-                {
-                    fg.AppendLine($"Phase => {Phase}");
-                }
-                if (printMask?.PhaseLength ?? true)
-                {
-                    fg.AppendLine($"PhaseLength => {PhaseLength}");
-                }
-                if (printMask?.TNAMDataTypeState ?? true)
-                {
-                    fg.AppendLine($"TNAMDataTypeState => {TNAMDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Climate_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Climate_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>? Weathers;
-        public Exception? SunTexture;
-        public Exception? SunGlareTexture;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? SunriseBegin;
-        public Exception? SunriseEnd;
-        public Exception? SunsetBegin;
-        public Exception? SunsetEnd;
-        public Exception? Volatility;
-        public Exception? Phase;
-        public Exception? PhaseLength;
-        public Exception? TNAMDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    return Weathers;
-                case Climate_FieldIndex.SunTexture:
-                    return SunTexture;
-                case Climate_FieldIndex.SunGlareTexture:
-                    return SunGlareTexture;
-                case Climate_FieldIndex.Model:
-                    return Model;
-                case Climate_FieldIndex.SunriseBegin:
-                    return SunriseBegin;
-                case Climate_FieldIndex.SunriseEnd:
-                    return SunriseEnd;
-                case Climate_FieldIndex.SunsetBegin:
-                    return SunsetBegin;
-                case Climate_FieldIndex.SunsetEnd:
-                    return SunsetEnd;
-                case Climate_FieldIndex.Volatility:
-                    return Volatility;
-                case Climate_FieldIndex.Phase:
-                    return Phase;
-                case Climate_FieldIndex.PhaseLength:
-                    return PhaseLength;
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    return TNAMDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>(ex, null);
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    this.SunTexture = ex;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    this.SunGlareTexture = ex;
-                    break;
-                case Climate_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    this.SunriseBegin = ex;
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    this.SunriseEnd = ex;
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    this.SunsetBegin = ex;
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    this.SunsetEnd = ex;
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    this.Volatility = ex;
-                    break;
-                case Climate_FieldIndex.Phase:
-                    this.Phase = ex;
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    this.PhaseLength = ex;
-                    break;
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    this.TNAMDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Climate_FieldIndex enu = (Climate_FieldIndex)index;
-            switch (enu)
-            {
-                case Climate_FieldIndex.Weathers:
-                    this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>)obj;
-                    break;
-                case Climate_FieldIndex.SunTexture:
-                    this.SunTexture = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.SunGlareTexture:
-                    this.SunGlareTexture = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Climate_FieldIndex.SunriseBegin:
-                    this.SunriseBegin = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.SunriseEnd:
-                    this.SunriseEnd = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.SunsetBegin:
-                    this.SunsetBegin = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.SunsetEnd:
-                    this.SunsetEnd = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.Volatility:
-                    this.Volatility = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.Phase:
-                    this.Phase = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.PhaseLength:
-                    this.PhaseLength = (Exception)obj;
-                    break;
-                case Climate_FieldIndex.TNAMDataTypeState:
-                    this.TNAMDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Weathers != null) return true;
-            if (SunTexture != null) return true;
-            if (SunGlareTexture != null) return true;
-            if (Model != null) return true;
-            if (SunriseBegin != null) return true;
-            if (SunriseEnd != null) return true;
-            if (SunsetBegin != null) return true;
-            if (SunsetEnd != null) return true;
-            if (Volatility != null) return true;
-            if (Phase != null) return true;
-            if (PhaseLength != null) return true;
-            if (TNAMDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Climate_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine("Weathers =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Weathers != null)
-                {
-                    if (Weathers.Overall != null)
-                    {
-                        fg.AppendLine(Weathers.Overall.ToString());
-                    }
-                    if (Weathers.Specific != null)
-                    {
-                        foreach (var subItem in Weathers.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"SunTexture => {SunTexture}");
-            fg.AppendLine($"SunGlareTexture => {SunGlareTexture}");
-            Model?.ToString(fg);
-            fg.AppendLine($"SunriseBegin => {SunriseBegin}");
-            fg.AppendLine($"SunriseEnd => {SunriseEnd}");
-            fg.AppendLine($"SunsetBegin => {SunsetBegin}");
-            fg.AppendLine($"SunsetEnd => {SunsetEnd}");
-            fg.AppendLine($"Volatility => {Volatility}");
-            fg.AppendLine($"Phase => {Phase}");
-            fg.AppendLine($"PhaseLength => {PhaseLength}");
-            fg.AppendLine($"TNAMDataTypeState => {TNAMDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Climate_ErrorMask Combine(Climate_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Climate_ErrorMask();
-            ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
-            ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
-            ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
-            ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
-            ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
-            ret.SunsetEnd = this.SunsetEnd.Combine(rhs.SunsetEnd);
-            ret.Volatility = this.Volatility.Combine(rhs.Volatility);
-            ret.Phase = this.Phase.Combine(rhs.Phase);
-            ret.PhaseLength = this.PhaseLength.Combine(rhs.PhaseLength);
-            ret.TNAMDataTypeState = this.TNAMDataTypeState.Combine(rhs.TNAMDataTypeState);
-            return ret;
-        }
-        public static Climate_ErrorMask? Combine(Climate_ErrorMask? lhs, Climate_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Climate_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Climate_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Climate_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, WeatherChance_TranslationMask?> Weathers;
-        public bool SunTexture;
-        public bool SunGlareTexture;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool SunriseBegin;
-        public bool SunriseEnd;
-        public bool SunsetBegin;
-        public bool SunsetEnd;
-        public bool Volatility;
-        public bool Phase;
-        public bool PhaseLength;
-        public bool TNAMDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Climate_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Weathers = new MaskItem<bool, WeatherChance_TranslationMask?>(defaultOn, null);
-            this.SunTexture = defaultOn;
-            this.SunGlareTexture = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.SunriseBegin = defaultOn;
-            this.SunriseEnd = defaultOn;
-            this.SunsetBegin = defaultOn;
-            this.SunsetEnd = defaultOn;
-            this.Volatility = defaultOn;
-            this.Phase = defaultOn;
-            this.PhaseLength = defaultOn;
-            this.TNAMDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
-            ret.Add((SunTexture, null));
-            ret.Add((SunGlareTexture, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((SunriseBegin, null));
-            ret.Add((SunriseEnd, null));
-            ret.Add((SunsetBegin, null));
-            ret.Add((SunsetEnd, null));
-            ret.Add((Volatility, null));
-            ret.Add((Phase, null));
-            ret.Add((PhaseLength, null));
-            ret.Add((TNAMDataTypeState, null));
-        }
-    }
 }
 #endregion
 

@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionData CreateFromXml(
             XElement node,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -158,15 +158,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionData CreateFromXml(
             XElement node,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionData CreateFromXml(
             string path,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionData CreateFromXml(
             string path,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionData CreateFromXml(
             Stream stream,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -233,8 +233,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionData CreateFromXml(
             Stream stream,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -257,6 +257,347 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.DataType = initialValue;
+                this.Flags = initialValue;
+                this.Priority = initialValue;
+                this.RDATDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T DataType,
+                T Flags,
+                T Priority,
+                T RDATDataTypeState)
+            {
+                this.DataType = DataType;
+                this.Flags = Flags;
+                this.Priority = Priority;
+                this.RDATDataTypeState = RDATDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T DataType;
+            public T Flags;
+            public T Priority;
+            public T RDATDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.DataType, rhs.DataType)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.RDATDataTypeState, rhs.RDATDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.DataType?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Priority?.GetHashCode());
+                ret = ret.CombineHashCode(this.RDATDataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public virtual bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.DataType)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Priority)) return false;
+                if (!eval(this.RDATDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RegionData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.DataType = eval(this.DataType);
+                obj.Flags = eval(this.Flags);
+                obj.Priority = eval(this.Priority);
+                obj.RDATDataTypeState = eval(this.RDATDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RegionData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RegionData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RegionData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.DataType ?? true)
+                    {
+                        fg.AppendLine($"DataType => {DataType}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        fg.AppendLine($"Priority => {Priority}");
+                    }
+                    if (printMask?.RDATDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"RDATDataTypeState => {RDATDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? DataType;
+            public Exception? Flags;
+            public Exception? Priority;
+            public Exception? RDATDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public virtual object? GetNthMask(int index)
+            {
+                RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionData_FieldIndex.DataType:
+                        return DataType;
+                    case RegionData_FieldIndex.Flags:
+                        return Flags;
+                    case RegionData_FieldIndex.Priority:
+                        return Priority;
+                    case RegionData_FieldIndex.RDATDataTypeState:
+                        return RDATDataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthException(int index, Exception ex)
+            {
+                RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionData_FieldIndex.DataType:
+                        this.DataType = ex;
+                        break;
+                    case RegionData_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case RegionData_FieldIndex.Priority:
+                        this.Priority = ex;
+                        break;
+                    case RegionData_FieldIndex.RDATDataTypeState:
+                        this.RDATDataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthMask(int index, object obj)
+            {
+                RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionData_FieldIndex.DataType:
+                        this.DataType = (Exception)obj;
+                        break;
+                    case RegionData_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case RegionData_FieldIndex.Priority:
+                        this.Priority = (Exception)obj;
+                        break;
+                    case RegionData_FieldIndex.RDATDataTypeState:
+                        this.RDATDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (DataType != null) return true;
+                if (Flags != null) return true;
+                if (Priority != null) return true;
+                if (RDATDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public virtual void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected virtual void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"DataType => {DataType}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Priority => {Priority}");
+                fg.AppendLine($"RDATDataTypeState => {RDATDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.DataType = this.DataType.Combine(rhs.DataType);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
+                ret.RDATDataTypeState = this.RDATDataTypeState.Combine(rhs.RDATDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool DataType;
+            public bool Flags;
+            public bool Priority;
+            public bool RDATDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.DataType = defaultOn;
+                this.Flags = defaultOn;
+                this.Priority = defaultOn;
+                this.RDATDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((DataType, null));
+                ret.Add((Flags, null));
+                ret.Add((Priority, null));
+                ret.Add((RDATDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -352,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionData_Mask<bool> GetEqualsMask(
+        public static RegionData.Mask<bool> GetEqualsMask(
             this IRegionDataGetter item,
             IRegionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -366,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionDataGetter item,
             string? name = null,
-            RegionData_Mask<bool>? printMask = null)
+            RegionData.Mask<bool>? printMask = null)
         {
             return ((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -378,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionData_Mask<bool>? printMask = null)
+            RegionData.Mask<bool>? printMask = null)
         {
             ((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -389,16 +730,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionDataGetter item,
-            RegionData_Mask<bool?> checkMask)
+            RegionData.Mask<bool?> checkMask)
         {
             return ((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionData_Mask<bool> GetHasBeenSetMask(this IRegionDataGetter item)
+        public static RegionData.Mask<bool> GetHasBeenSetMask(this IRegionDataGetter item)
         {
-            var ret = new RegionData_Mask<bool>(false);
+            var ret = new RegionData.Mask<bool>(false);
             ((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -417,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs,
-            RegionData_TranslationMask? copyMask = null)
+            RegionData.TranslationMask? copyMask = null)
         {
             ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -429,8 +770,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? copyMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -438,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -456,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionData DeepCopy(
             this IRegionDataGetter item,
-            RegionData_TranslationMask? copyMask = null)
+            RegionData.TranslationMask? copyMask = null)
         {
             return ((RegionDataSetterTranslationCommon)((IRegionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -465,8 +806,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionData DeepCopy(
             this IRegionDataGetter item,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? copyMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? copyMask = null)
         {
             return ((RegionDataSetterTranslationCommon)((IRegionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -490,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataInternal item,
             XElement node,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -503,8 +844,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataInternal item,
             XElement node,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -512,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -531,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataInternal item,
             string path,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -543,8 +884,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataInternal item,
             string path,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -558,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -571,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataInternal item,
             Stream stream,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -583,8 +924,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataInternal item,
             Stream stream,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -598,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -674,9 +1015,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(RegionData_Mask<>);
+        public static readonly Type MaskType = typeof(RegionData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionData.ErrorMask);
 
         public static readonly Type ClassType = typeof(RegionData);
 
@@ -1002,12 +1343,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RegionDataCommon Instance = new RegionDataCommon();
 
-        public RegionData_Mask<bool> GetEqualsMask(
+        public RegionData.Mask<bool> GetEqualsMask(
             IRegionDataGetter item,
             IRegionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionData_Mask<bool>(false);
+            var ret = new RegionData.Mask<bool>(false);
             ((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1019,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionDataGetter item,
             IRegionDataGetter rhs,
-            RegionData_Mask<bool> ret,
+            RegionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1032,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionDataGetter item,
             string? name = null,
-            RegionData_Mask<bool>? printMask = null)
+            RegionData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1047,7 +1388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionData_Mask<bool>? printMask = null)
+            RegionData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1071,7 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionDataGetter item,
             FileGeneration fg,
-            RegionData_Mask<bool>? printMask = null)
+            RegionData.Mask<bool>? printMask = null)
         {
             if (printMask?.DataType ?? true)
             {
@@ -1093,14 +1434,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionDataGetter item,
-            RegionData_Mask<bool?> checkMask)
+            RegionData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRegionDataGetter item,
-            RegionData_Mask<bool> mask)
+            RegionData.Mask<bool> mask)
         {
             mask.DataType = true;
             mask.Flags = true;
@@ -1195,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionData DeepCopy(
             IRegionDataGetter item,
-            RegionData_TranslationMask? copyMask = null)
+            RegionData.TranslationMask? copyMask = null)
         {
             RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1206,8 +1547,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionData DeepCopy(
             IRegionDataGetter item,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? copyMask = null)
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? copyMask = null)
         {
             RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1493,8 +1834,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataGetter item,
             XElement node,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null,
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1504,14 +1845,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionDataGetter item,
             string path,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null,
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1544,8 +1885,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataGetter item,
             Stream stream,
-            out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask? translationMask = null,
+            out RegionData.ErrorMask errorMask,
+            RegionData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1594,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGetter item,
             XElement node,
             string? name = null,
-            RegionData_TranslationMask? translationMask = null)
+            RegionData.TranslationMask? translationMask = null)
         {
             ((RegionDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1638,348 +1979,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RegionData_Mask<T> :
-        IMask<T>,
-        IEquatable<RegionData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RegionData_Mask(T initialValue)
-        {
-            this.DataType = initialValue;
-            this.Flags = initialValue;
-            this.Priority = initialValue;
-            this.RDATDataTypeState = initialValue;
-        }
-
-        public RegionData_Mask(
-            T DataType,
-            T Flags,
-            T Priority,
-            T RDATDataTypeState)
-        {
-            this.DataType = DataType;
-            this.Flags = Flags;
-            this.Priority = Priority;
-            this.RDATDataTypeState = RDATDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected RegionData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T DataType;
-        public T Flags;
-        public T Priority;
-        public T RDATDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RegionData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RegionData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.DataType, rhs.DataType)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Priority, rhs.Priority)) return false;
-            if (!object.Equals(this.RDATDataTypeState, rhs.RDATDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.DataType?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Priority?.GetHashCode());
-            ret = ret.CombineHashCode(this.RDATDataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public virtual bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.DataType)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Priority)) return false;
-            if (!eval(this.RDATDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RegionData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RegionData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RegionData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.DataType = eval(this.DataType);
-            obj.Flags = eval(this.Flags);
-            obj.Priority = eval(this.Priority);
-            obj.RDATDataTypeState = eval(this.RDATDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RegionData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RegionData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RegionData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.DataType ?? true)
-                {
-                    fg.AppendLine($"DataType => {DataType}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Priority ?? true)
-                {
-                    fg.AppendLine($"Priority => {Priority}");
-                }
-                if (printMask?.RDATDataTypeState ?? true)
-                {
-                    fg.AppendLine($"RDATDataTypeState => {RDATDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RegionData_ErrorMask : IErrorMask, IErrorMask<RegionData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? DataType;
-        public Exception? Flags;
-        public Exception? Priority;
-        public Exception? RDATDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public virtual object? GetNthMask(int index)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                    return DataType;
-                case RegionData_FieldIndex.Flags:
-                    return Flags;
-                case RegionData_FieldIndex.Priority:
-                    return Priority;
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    return RDATDataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthException(int index, Exception ex)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                    this.DataType = ex;
-                    break;
-                case RegionData_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case RegionData_FieldIndex.Priority:
-                    this.Priority = ex;
-                    break;
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    this.RDATDataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthMask(int index, object obj)
-        {
-            RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionData_FieldIndex.DataType:
-                    this.DataType = (Exception)obj;
-                    break;
-                case RegionData_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case RegionData_FieldIndex.Priority:
-                    this.Priority = (Exception)obj;
-                    break;
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    this.RDATDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (DataType != null) return true;
-            if (Flags != null) return true;
-            if (Priority != null) return true;
-            if (RDATDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public virtual void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RegionData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected virtual void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"DataType => {DataType}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Priority => {Priority}");
-            fg.AppendLine($"RDATDataTypeState => {RDATDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public RegionData_ErrorMask Combine(RegionData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RegionData_ErrorMask();
-            ret.DataType = this.DataType.Combine(rhs.DataType);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Priority = this.Priority.Combine(rhs.Priority);
-            ret.RDATDataTypeState = this.RDATDataTypeState.Combine(rhs.RDATDataTypeState);
-            return ret;
-        }
-        public static RegionData_ErrorMask? Combine(RegionData_ErrorMask? lhs, RegionData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RegionData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RegionData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RegionData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool DataType;
-        public bool Flags;
-        public bool Priority;
-        public bool RDATDataTypeState;
-        #endregion
-
-        #region Ctors
-        public RegionData_TranslationMask(bool defaultOn)
-        {
-            this.DataType = defaultOn;
-            this.Flags = defaultOn;
-            this.Priority = defaultOn;
-            this.RDATDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((DataType, null));
-            ret.Add((Flags, null));
-            ret.Add((Priority, null));
-            ret.Add((RDATDataTypeState, null));
-        }
-    }
 }
 #endregion
 

@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static QuestStage CreateFromXml(
             XElement node,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -126,15 +126,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static QuestStage CreateFromXml(
             XElement node,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage CreateFromXml(
             string path,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage CreateFromXml(
             string path,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static QuestStage CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage CreateFromXml(
             Stream stream,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -198,8 +198,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage CreateFromXml(
             Stream stream,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static QuestStage CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -222,6 +222,366 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Stage = initialValue;
+                this.LogEntries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, LogEntry.Mask<T>?>>());
+            }
+
+            public Mask(
+                T Stage,
+                T LogEntries)
+            {
+                this.Stage = Stage;
+                this.LogEntries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry.Mask<T>?>>>(LogEntries, Enumerable.Empty<MaskItemIndexed<T, LogEntry.Mask<T>?>>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Stage;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry.Mask<T>?>>>? LogEntries;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Stage, rhs.Stage)) return false;
+                if (!object.Equals(this.LogEntries, rhs.LogEntries)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Stage?.GetHashCode());
+                ret = ret.CombineHashCode(this.LogEntries?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Stage)) return false;
+                if (this.LogEntries != null)
+                {
+                    if (!eval(this.LogEntries.Overall)) return false;
+                    if (this.LogEntries.Specific != null)
+                    {
+                        foreach (var item in this.LogEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new QuestStage.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Stage = eval(this.Stage);
+                if (LogEntries != null)
+                {
+                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry.Mask<R>?>>>(eval(this.LogEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, LogEntry.Mask<R>?>>());
+                    if (LogEntries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LogEntry.Mask<R>?>>();
+                        obj.LogEntries.Specific = l;
+                        foreach (var item in LogEntries.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LogEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LogEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(QuestStage.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, QuestStage.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(QuestStage.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Stage ?? true)
+                    {
+                        fg.AppendLine($"Stage => {Stage}");
+                    }
+                    if (printMask?.LogEntries?.Overall ?? true)
+                    {
+                        fg.AppendLine("LogEntries =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (LogEntries != null)
+                            {
+                                if (LogEntries.Overall != null)
+                                {
+                                    fg.AppendLine(LogEntries.Overall.ToString());
+                                }
+                                if (LogEntries.Specific != null)
+                                {
+                                    foreach (var subItem in LogEntries.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Stage;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>? LogEntries;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
+                switch (enu)
+                {
+                    case QuestStage_FieldIndex.Stage:
+                        return Stage;
+                    case QuestStage_FieldIndex.LogEntries:
+                        return LogEntries;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
+                switch (enu)
+                {
+                    case QuestStage_FieldIndex.Stage:
+                        this.Stage = ex;
+                        break;
+                    case QuestStage_FieldIndex.LogEntries:
+                        this.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
+                switch (enu)
+                {
+                    case QuestStage_FieldIndex.Stage:
+                        this.Stage = (Exception)obj;
+                        break;
+                    case QuestStage_FieldIndex.LogEntries:
+                        this.LogEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Stage != null) return true;
+                if (LogEntries != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Stage => {Stage}");
+                fg.AppendLine("LogEntries =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (LogEntries != null)
+                    {
+                        if (LogEntries.Overall != null)
+                        {
+                            fg.AppendLine(LogEntries.Overall.ToString());
+                        }
+                        if (LogEntries.Specific != null)
+                        {
+                            foreach (var subItem in LogEntries.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Stage = this.Stage.Combine(rhs.Stage);
+                ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Stage;
+            public MaskItem<bool, LogEntry.TranslationMask?> LogEntries;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Stage = defaultOn;
+                this.LogEntries = new MaskItem<bool, LogEntry.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Stage, null));
+                ret.Add((LogEntries?.Overall ?? true, LogEntries?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -330,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static QuestStage_Mask<bool> GetEqualsMask(
+        public static QuestStage.Mask<bool> GetEqualsMask(
             this IQuestStageGetter item,
             IQuestStageGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -344,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IQuestStageGetter item,
             string? name = null,
-            QuestStage_Mask<bool>? printMask = null)
+            QuestStage.Mask<bool>? printMask = null)
         {
             return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -356,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestStageGetter item,
             FileGeneration fg,
             string? name = null,
-            QuestStage_Mask<bool>? printMask = null)
+            QuestStage.Mask<bool>? printMask = null)
         {
             ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -367,16 +727,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IQuestStageGetter item,
-            QuestStage_Mask<bool?> checkMask)
+            QuestStage.Mask<bool?> checkMask)
         {
             return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static QuestStage_Mask<bool> GetHasBeenSetMask(this IQuestStageGetter item)
+        public static QuestStage.Mask<bool> GetHasBeenSetMask(this IQuestStageGetter item)
         {
-            var ret = new QuestStage_Mask<bool>(false);
+            var ret = new QuestStage.Mask<bool>(false);
             ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -395,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IQuestStage lhs,
             IQuestStageGetter rhs,
-            QuestStage_TranslationMask? copyMask = null)
+            QuestStage.TranslationMask? copyMask = null)
         {
             ((QuestStageSetterTranslationCommon)((IQuestStageGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -407,8 +767,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IQuestStage lhs,
             IQuestStageGetter rhs,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? copyMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((QuestStageSetterTranslationCommon)((IQuestStageGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -416,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -434,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage DeepCopy(
             this IQuestStageGetter item,
-            QuestStage_TranslationMask? copyMask = null)
+            QuestStage.TranslationMask? copyMask = null)
         {
             return ((QuestStageSetterTranslationCommon)((IQuestStageGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -443,8 +803,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static QuestStage DeepCopy(
             this IQuestStageGetter item,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? copyMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? copyMask = null)
         {
             return ((QuestStageSetterTranslationCommon)((IQuestStageGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -468,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestStage item,
             XElement node,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -481,8 +841,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestStage item,
             XElement node,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -490,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -509,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestStage item,
             string path,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -521,8 +881,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestStage item,
             string path,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -536,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestStage item,
             string path,
             ErrorMaskBuilder? errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -549,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestStage item,
             Stream stream,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -561,8 +921,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IQuestStage item,
             Stream stream,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -576,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestStage item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +1010,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(QuestStage_Mask<>);
+        public static readonly Type MaskType = typeof(QuestStage.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(QuestStage_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(QuestStage.ErrorMask);
 
         public static readonly Type ClassType = typeof(QuestStage);
 
@@ -943,12 +1303,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly QuestStageCommon Instance = new QuestStageCommon();
 
-        public QuestStage_Mask<bool> GetEqualsMask(
+        public QuestStage.Mask<bool> GetEqualsMask(
             IQuestStageGetter item,
             IQuestStageGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new QuestStage_Mask<bool>(false);
+            var ret = new QuestStage.Mask<bool>(false);
             ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -960,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IQuestStageGetter item,
             IQuestStageGetter rhs,
-            QuestStage_Mask<bool> ret,
+            QuestStage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -974,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IQuestStageGetter item,
             string? name = null,
-            QuestStage_Mask<bool>? printMask = null)
+            QuestStage.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -989,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestStageGetter item,
             FileGeneration fg,
             string? name = null,
-            QuestStage_Mask<bool>? printMask = null)
+            QuestStage.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1013,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IQuestStageGetter item,
             FileGeneration fg,
-            QuestStage_Mask<bool>? printMask = null)
+            QuestStage.Mask<bool>? printMask = null)
         {
             if (printMask?.Stage ?? true)
             {
@@ -1041,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IQuestStageGetter item,
-            QuestStage_Mask<bool?> checkMask)
+            QuestStage.Mask<bool?> checkMask)
         {
             if (checkMask.LogEntries?.Overall.HasValue ?? false && checkMask.LogEntries!.Overall.Value != item.LogEntries.HasBeenSet) return false;
             return true;
@@ -1049,10 +1409,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IQuestStageGetter item,
-            QuestStage_Mask<bool> mask)
+            QuestStage.Mask<bool> mask)
         {
             mask.Stage = true;
-            mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry_Mask<bool>?>>>(item.LogEntries.HasBeenSet, item.LogEntries.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.LogEntries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LogEntry.Mask<bool>?>>>(item.LogEntries.HasBeenSet, item.LogEntries.WithIndex().Select((i) => new MaskItemIndexed<bool, LogEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1149,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public QuestStage DeepCopy(
             IQuestStageGetter item,
-            QuestStage_TranslationMask? copyMask = null)
+            QuestStage.TranslationMask? copyMask = null)
         {
             QuestStage ret = (QuestStage)((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1160,8 +1520,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public QuestStage DeepCopy(
             IQuestStageGetter item,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? copyMask = null)
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? copyMask = null)
         {
             QuestStage ret = (QuestStage)((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1430,8 +1790,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IQuestStageGetter item,
             XElement node,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null,
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1441,14 +1801,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = QuestStage_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IQuestStageGetter item,
             string path,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null,
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1481,8 +1841,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IQuestStageGetter item,
             Stream stream,
-            out QuestStage_ErrorMask errorMask,
-            QuestStage_TranslationMask? translationMask = null,
+            out QuestStage.ErrorMask errorMask,
+            QuestStage.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1531,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestStageGetter item,
             XElement node,
             string? name = null,
-            QuestStage_TranslationMask? translationMask = null)
+            QuestStage.TranslationMask? translationMask = null)
         {
             ((QuestStageXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1575,367 +1935,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class QuestStage_Mask<T> :
-        IMask<T>,
-        IEquatable<QuestStage_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public QuestStage_Mask(T initialValue)
-        {
-            this.Stage = initialValue;
-            this.LogEntries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, LogEntry_Mask<T>?>>());
-        }
-
-        public QuestStage_Mask(
-            T Stage,
-            T LogEntries)
-        {
-            this.Stage = Stage;
-            this.LogEntries = new MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry_Mask<T>?>>>(LogEntries, Enumerable.Empty<MaskItemIndexed<T, LogEntry_Mask<T>?>>());
-        }
-
-        #pragma warning disable CS8618
-        protected QuestStage_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Stage;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, LogEntry_Mask<T>?>>>? LogEntries;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is QuestStage_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(QuestStage_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Stage, rhs.Stage)) return false;
-            if (!object.Equals(this.LogEntries, rhs.LogEntries)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Stage?.GetHashCode());
-            ret = ret.CombineHashCode(this.LogEntries?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Stage)) return false;
-            if (this.LogEntries != null)
-            {
-                if (!eval(this.LogEntries.Overall)) return false;
-                if (this.LogEntries.Specific != null)
-                {
-                    foreach (var item in this.LogEntries.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public QuestStage_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new QuestStage_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(QuestStage_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Stage = eval(this.Stage);
-            if (LogEntries != null)
-            {
-                obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry_Mask<R>?>>>(eval(this.LogEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, LogEntry_Mask<R>?>>());
-                if (LogEntries.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, LogEntry_Mask<R>?>>();
-                    obj.LogEntries.Specific = l;
-                    foreach (var item in LogEntries.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, LogEntry_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LogEntry_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(QuestStage_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, QuestStage_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(QuestStage_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Stage ?? true)
-                {
-                    fg.AppendLine($"Stage => {Stage}");
-                }
-                if (printMask?.LogEntries?.Overall ?? true)
-                {
-                    fg.AppendLine("LogEntries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (LogEntries != null)
-                        {
-                            if (LogEntries.Overall != null)
-                            {
-                                fg.AppendLine(LogEntries.Overall.ToString());
-                            }
-                            if (LogEntries.Specific != null)
-                            {
-                                foreach (var subItem in LogEntries.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class QuestStage_ErrorMask : IErrorMask, IErrorMask<QuestStage_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Stage;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry_ErrorMask?>>?>? LogEntries;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    return Stage;
-                case QuestStage_FieldIndex.LogEntries:
-                    return LogEntries;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    this.Stage = ex;
-                    break;
-                case QuestStage_FieldIndex.LogEntries:
-                    this.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry_ErrorMask?>>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            QuestStage_FieldIndex enu = (QuestStage_FieldIndex)index;
-            switch (enu)
-            {
-                case QuestStage_FieldIndex.Stage:
-                    this.Stage = (Exception)obj;
-                    break;
-                case QuestStage_FieldIndex.LogEntries:
-                    this.LogEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry_ErrorMask?>>?>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Stage != null) return true;
-            if (LogEntries != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("QuestStage_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Stage => {Stage}");
-            fg.AppendLine("LogEntries =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (LogEntries != null)
-                {
-                    if (LogEntries.Overall != null)
-                    {
-                        fg.AppendLine(LogEntries.Overall.ToString());
-                    }
-                    if (LogEntries.Specific != null)
-                    {
-                        foreach (var subItem in LogEntries.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public QuestStage_ErrorMask Combine(QuestStage_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new QuestStage_ErrorMask();
-            ret.Stage = this.Stage.Combine(rhs.Stage);
-            ret.LogEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LogEntry_ErrorMask?>>?>(ExceptionExt.Combine(this.LogEntries?.Overall, rhs.LogEntries?.Overall), ExceptionExt.Combine(this.LogEntries?.Specific, rhs.LogEntries?.Specific));
-            return ret;
-        }
-        public static QuestStage_ErrorMask? Combine(QuestStage_ErrorMask? lhs, QuestStage_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static QuestStage_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new QuestStage_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class QuestStage_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Stage;
-        public MaskItem<bool, LogEntry_TranslationMask?> LogEntries;
-        #endregion
-
-        #region Ctors
-        public QuestStage_TranslationMask(bool defaultOn)
-        {
-            this.Stage = defaultOn;
-            this.LogEntries = new MaskItem<bool, LogEntry_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Stage, null));
-            ret.Add((LogEntries?.Overall ?? true, LogEntries?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

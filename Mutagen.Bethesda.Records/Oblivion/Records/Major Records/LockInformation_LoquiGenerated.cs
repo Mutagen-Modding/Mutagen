@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LockInformation CreateFromXml(
             XElement node,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -134,15 +134,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LockInformation CreateFromXml(
             XElement node,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LockInformation.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LockInformation CreateFromXml(
             string path,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -172,8 +172,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LockInformation CreateFromXml(
             string path,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LockInformation CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LockInformation CreateFromXml(
             Stream stream,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -206,8 +206,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LockInformation CreateFromXml(
             Stream stream,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LockInformation CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -230,6 +230,347 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.LockLevel = initialValue;
+                this.Fluff = initialValue;
+                this.Key = initialValue;
+                this.Flags = initialValue;
+            }
+
+            public Mask(
+                T LockLevel,
+                T Fluff,
+                T Key,
+                T Flags)
+            {
+                this.LockLevel = LockLevel;
+                this.Fluff = Fluff;
+                this.Key = Key;
+                this.Flags = Flags;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T LockLevel;
+            public T Fluff;
+            public T Key;
+            public T Flags;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.LockLevel, rhs.LockLevel)) return false;
+                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Key, rhs.Key)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.LockLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.Key?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.LockLevel)) return false;
+                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Key)) return false;
+                if (!eval(this.Flags)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new LockInformation.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.LockLevel = eval(this.LockLevel);
+                obj.Fluff = eval(this.Fluff);
+                obj.Key = eval(this.Key);
+                obj.Flags = eval(this.Flags);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(LockInformation.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, LockInformation.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(LockInformation.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.LockLevel ?? true)
+                    {
+                        fg.AppendLine($"LockLevel => {LockLevel}");
+                    }
+                    if (printMask?.Fluff ?? true)
+                    {
+                        fg.AppendLine($"Fluff => {Fluff}");
+                    }
+                    if (printMask?.Key ?? true)
+                    {
+                        fg.AppendLine($"Key => {Key}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? LockLevel;
+            public Exception? Fluff;
+            public Exception? Key;
+            public Exception? Flags;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
+                switch (enu)
+                {
+                    case LockInformation_FieldIndex.LockLevel:
+                        return LockLevel;
+                    case LockInformation_FieldIndex.Fluff:
+                        return Fluff;
+                    case LockInformation_FieldIndex.Key:
+                        return Key;
+                    case LockInformation_FieldIndex.Flags:
+                        return Flags;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
+                switch (enu)
+                {
+                    case LockInformation_FieldIndex.LockLevel:
+                        this.LockLevel = ex;
+                        break;
+                    case LockInformation_FieldIndex.Fluff:
+                        this.Fluff = ex;
+                        break;
+                    case LockInformation_FieldIndex.Key:
+                        this.Key = ex;
+                        break;
+                    case LockInformation_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
+                switch (enu)
+                {
+                    case LockInformation_FieldIndex.LockLevel:
+                        this.LockLevel = (Exception)obj;
+                        break;
+                    case LockInformation_FieldIndex.Fluff:
+                        this.Fluff = (Exception)obj;
+                        break;
+                    case LockInformation_FieldIndex.Key:
+                        this.Key = (Exception)obj;
+                        break;
+                    case LockInformation_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (LockLevel != null) return true;
+                if (Fluff != null) return true;
+                if (Key != null) return true;
+                if (Flags != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"LockLevel => {LockLevel}");
+                fg.AppendLine($"Fluff => {Fluff}");
+                fg.AppendLine($"Key => {Key}");
+                fg.AppendLine($"Flags => {Flags}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.LockLevel = this.LockLevel.Combine(rhs.LockLevel);
+                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Key = this.Key.Combine(rhs.Key);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool LockLevel;
+            public bool Fluff;
+            public bool Key;
+            public bool Flags;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.LockLevel = defaultOn;
+                this.Fluff = defaultOn;
+                this.Key = defaultOn;
+                this.Flags = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((LockLevel, null));
+                ret.Add((Fluff, null));
+                ret.Add((Key, null));
+                ret.Add((Flags, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -342,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LockInformation_Mask<bool> GetEqualsMask(
+        public static LockInformation.Mask<bool> GetEqualsMask(
             this ILockInformationGetter item,
             ILockInformationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -356,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILockInformationGetter item,
             string? name = null,
-            LockInformation_Mask<bool>? printMask = null)
+            LockInformation.Mask<bool>? printMask = null)
         {
             return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -368,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformationGetter item,
             FileGeneration fg,
             string? name = null,
-            LockInformation_Mask<bool>? printMask = null)
+            LockInformation.Mask<bool>? printMask = null)
         {
             ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -379,16 +720,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILockInformationGetter item,
-            LockInformation_Mask<bool?> checkMask)
+            LockInformation.Mask<bool?> checkMask)
         {
             return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LockInformation_Mask<bool> GetHasBeenSetMask(this ILockInformationGetter item)
+        public static LockInformation.Mask<bool> GetHasBeenSetMask(this ILockInformationGetter item)
         {
-            var ret = new LockInformation_Mask<bool>(false);
+            var ret = new LockInformation.Mask<bool>(false);
             ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -407,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILockInformation lhs,
             ILockInformationGetter rhs,
-            LockInformation_TranslationMask? copyMask = null)
+            LockInformation.TranslationMask? copyMask = null)
         {
             ((LockInformationSetterTranslationCommon)((ILockInformationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -419,8 +760,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILockInformation lhs,
             ILockInformationGetter rhs,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? copyMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LockInformationSetterTranslationCommon)((ILockInformationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -428,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LockInformation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -446,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LockInformation DeepCopy(
             this ILockInformationGetter item,
-            LockInformation_TranslationMask? copyMask = null)
+            LockInformation.TranslationMask? copyMask = null)
         {
             return ((LockInformationSetterTranslationCommon)((ILockInformationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -455,8 +796,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LockInformation DeepCopy(
             this ILockInformationGetter item,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? copyMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? copyMask = null)
         {
             return ((LockInformationSetterTranslationCommon)((ILockInformationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -480,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILockInformation item,
             XElement node,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -493,8 +834,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILockInformation item,
             XElement node,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -502,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LockInformation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -521,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILockInformation item,
             string path,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -533,8 +874,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILockInformation item,
             string path,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -548,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformation item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -561,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILockInformation item,
             Stream stream,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -573,8 +914,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILockInformation item,
             Stream stream,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -588,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformation item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -664,9 +1005,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(LockInformation_Mask<>);
+        public static readonly Type MaskType = typeof(LockInformation.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LockInformation_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LockInformation.ErrorMask);
 
         public static readonly Type ClassType = typeof(LockInformation);
 
@@ -937,12 +1278,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly LockInformationCommon Instance = new LockInformationCommon();
 
-        public LockInformation_Mask<bool> GetEqualsMask(
+        public LockInformation.Mask<bool> GetEqualsMask(
             ILockInformationGetter item,
             ILockInformationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LockInformation_Mask<bool>(false);
+            var ret = new LockInformation.Mask<bool>(false);
             ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -954,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILockInformationGetter item,
             ILockInformationGetter rhs,
-            LockInformation_Mask<bool> ret,
+            LockInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -967,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILockInformationGetter item,
             string? name = null,
-            LockInformation_Mask<bool>? printMask = null)
+            LockInformation.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -982,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILockInformationGetter item,
             FileGeneration fg,
             string? name = null,
-            LockInformation_Mask<bool>? printMask = null)
+            LockInformation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1006,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILockInformationGetter item,
             FileGeneration fg,
-            LockInformation_Mask<bool>? printMask = null)
+            LockInformation.Mask<bool>? printMask = null)
         {
             if (printMask?.LockLevel ?? true)
             {
@@ -1028,14 +1369,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILockInformationGetter item,
-            LockInformation_Mask<bool?> checkMask)
+            LockInformation.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ILockInformationGetter item,
-            LockInformation_Mask<bool> mask)
+            LockInformation.Mask<bool> mask)
         {
             mask.LockLevel = true;
             mask.Fluff = true;
@@ -1118,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LockInformation DeepCopy(
             ILockInformationGetter item,
-            LockInformation_TranslationMask? copyMask = null)
+            LockInformation.TranslationMask? copyMask = null)
         {
             LockInformation ret = (LockInformation)((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1129,8 +1470,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LockInformation DeepCopy(
             ILockInformationGetter item,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? copyMask = null)
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? copyMask = null)
         {
             LockInformation ret = (LockInformation)((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1433,8 +1774,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILockInformationGetter item,
             XElement node,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null,
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1444,14 +1785,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LockInformation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILockInformationGetter item,
             string path,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null,
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1484,8 +1825,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILockInformationGetter item,
             Stream stream,
-            out LockInformation_ErrorMask errorMask,
-            LockInformation_TranslationMask? translationMask = null,
+            out LockInformation.ErrorMask errorMask,
+            LockInformation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1534,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformationGetter item,
             XElement node,
             string? name = null,
-            LockInformation_TranslationMask? translationMask = null)
+            LockInformation.TranslationMask? translationMask = null)
         {
             ((LockInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1578,348 +1919,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class LockInformation_Mask<T> :
-        IMask<T>,
-        IEquatable<LockInformation_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public LockInformation_Mask(T initialValue)
-        {
-            this.LockLevel = initialValue;
-            this.Fluff = initialValue;
-            this.Key = initialValue;
-            this.Flags = initialValue;
-        }
-
-        public LockInformation_Mask(
-            T LockLevel,
-            T Fluff,
-            T Key,
-            T Flags)
-        {
-            this.LockLevel = LockLevel;
-            this.Fluff = Fluff;
-            this.Key = Key;
-            this.Flags = Flags;
-        }
-
-        #pragma warning disable CS8618
-        protected LockInformation_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T LockLevel;
-        public T Fluff;
-        public T Key;
-        public T Flags;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LockInformation_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(LockInformation_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.LockLevel, rhs.LockLevel)) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.Key, rhs.Key)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.LockLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.Key?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.LockLevel)) return false;
-            if (!eval(this.Fluff)) return false;
-            if (!eval(this.Key)) return false;
-            if (!eval(this.Flags)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public LockInformation_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new LockInformation_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(LockInformation_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.LockLevel = eval(this.LockLevel);
-            obj.Fluff = eval(this.Fluff);
-            obj.Key = eval(this.Key);
-            obj.Flags = eval(this.Flags);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(LockInformation_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, LockInformation_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(LockInformation_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.LockLevel ?? true)
-                {
-                    fg.AppendLine($"LockLevel => {LockLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff}");
-                }
-                if (printMask?.Key ?? true)
-                {
-                    fg.AppendLine($"Key => {Key}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class LockInformation_ErrorMask : IErrorMask, IErrorMask<LockInformation_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? LockLevel;
-        public Exception? Fluff;
-        public Exception? Key;
-        public Exception? Flags;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                    return LockLevel;
-                case LockInformation_FieldIndex.Fluff:
-                    return Fluff;
-                case LockInformation_FieldIndex.Key:
-                    return Key;
-                case LockInformation_FieldIndex.Flags:
-                    return Flags;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                    this.LockLevel = ex;
-                    break;
-                case LockInformation_FieldIndex.Fluff:
-                    this.Fluff = ex;
-                    break;
-                case LockInformation_FieldIndex.Key:
-                    this.Key = ex;
-                    break;
-                case LockInformation_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            LockInformation_FieldIndex enu = (LockInformation_FieldIndex)index;
-            switch (enu)
-            {
-                case LockInformation_FieldIndex.LockLevel:
-                    this.LockLevel = (Exception)obj;
-                    break;
-                case LockInformation_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
-                    break;
-                case LockInformation_FieldIndex.Key:
-                    this.Key = (Exception)obj;
-                    break;
-                case LockInformation_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (LockLevel != null) return true;
-            if (Fluff != null) return true;
-            if (Key != null) return true;
-            if (Flags != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("LockInformation_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"LockLevel => {LockLevel}");
-            fg.AppendLine($"Fluff => {Fluff}");
-            fg.AppendLine($"Key => {Key}");
-            fg.AppendLine($"Flags => {Flags}");
-        }
-        #endregion
-
-        #region Combine
-        public LockInformation_ErrorMask Combine(LockInformation_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new LockInformation_ErrorMask();
-            ret.LockLevel = this.LockLevel.Combine(rhs.LockLevel);
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.Key = this.Key.Combine(rhs.Key);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            return ret;
-        }
-        public static LockInformation_ErrorMask? Combine(LockInformation_ErrorMask? lhs, LockInformation_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static LockInformation_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new LockInformation_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class LockInformation_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool LockLevel;
-        public bool Fluff;
-        public bool Key;
-        public bool Flags;
-        #endregion
-
-        #region Ctors
-        public LockInformation_TranslationMask(bool defaultOn)
-        {
-            this.LockLevel = defaultOn;
-            this.Fluff = defaultOn;
-            this.Key = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((LockLevel, null));
-            ret.Add((Fluff, null));
-            ret.Add((Key, null));
-            ret.Add((Flags, null));
-        }
-    }
 }
 #endregion
 

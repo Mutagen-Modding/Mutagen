@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new MagicEffect CreateFromXml(
             XElement node,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -285,15 +285,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static MagicEffect CreateFromXml(
             XElement node,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffect CreateFromXml(
             string path,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffect CreateFromXml(
             string path,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffect CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffect CreateFromXml(
             Stream stream,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -357,8 +357,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffect CreateFromXml(
             Stream stream,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffect CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -381,6 +381,751 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Icon = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Flags = initialValue;
+                this.BaseCost = initialValue;
+                this.Unused = initialValue;
+                this.MagicSchool = initialValue;
+                this.Resistance = initialValue;
+                this.CounterEffectCount = initialValue;
+                this.Light = initialValue;
+                this.ProjectileSpeed = initialValue;
+                this.EffectShader = initialValue;
+                this.SubData = new MaskItem<T, MagicEffectSubData.Mask<T>?>(initialValue, new MagicEffectSubData.Mask<T>(initialValue));
+                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Description,
+                T Icon,
+                T Model,
+                T Flags,
+                T BaseCost,
+                T Unused,
+                T MagicSchool,
+                T Resistance,
+                T CounterEffectCount,
+                T Light,
+                T ProjectileSpeed,
+                T EffectShader,
+                T SubData,
+                T CounterEffects,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Description = Description;
+                this.Icon = Icon;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Flags = Flags;
+                this.BaseCost = BaseCost;
+                this.Unused = Unused;
+                this.MagicSchool = MagicSchool;
+                this.Resistance = Resistance;
+                this.CounterEffectCount = CounterEffectCount;
+                this.Light = Light;
+                this.ProjectileSpeed = ProjectileSpeed;
+                this.EffectShader = EffectShader;
+                this.SubData = new MaskItem<T, MagicEffectSubData.Mask<T>?>(SubData, new MagicEffectSubData.Mask<T>(SubData));
+                this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(CounterEffects, Enumerable.Empty<(int Index, T Value)>());
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public T Description;
+            public T Icon;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Flags;
+            public T BaseCost;
+            public T Unused;
+            public T MagicSchool;
+            public T Resistance;
+            public T CounterEffectCount;
+            public T Light;
+            public T ProjectileSpeed;
+            public T EffectShader;
+            public MaskItem<T, MagicEffectSubData.Mask<T>?>? SubData { get; set; }
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? CounterEffects;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.MagicSchool, rhs.MagicSchool)) return false;
+                if (!object.Equals(this.Resistance, rhs.Resistance)) return false;
+                if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.ProjectileSpeed, rhs.ProjectileSpeed)) return false;
+                if (!object.Equals(this.EffectShader, rhs.EffectShader)) return false;
+                if (!object.Equals(this.SubData, rhs.SubData)) return false;
+                if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Description?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.BaseCost?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unused?.GetHashCode());
+                ret = ret.CombineHashCode(this.MagicSchool?.GetHashCode());
+                ret = ret.CombineHashCode(this.Resistance?.GetHashCode());
+                ret = ret.CombineHashCode(this.CounterEffectCount?.GetHashCode());
+                ret = ret.CombineHashCode(this.Light?.GetHashCode());
+                ret = ret.CombineHashCode(this.ProjectileSpeed?.GetHashCode());
+                ret = ret.CombineHashCode(this.EffectShader?.GetHashCode());
+                ret = ret.CombineHashCode(this.SubData?.GetHashCode());
+                ret = ret.CombineHashCode(this.CounterEffects?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Icon)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.BaseCost)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.MagicSchool)) return false;
+                if (!eval(this.Resistance)) return false;
+                if (!eval(this.CounterEffectCount)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.ProjectileSpeed)) return false;
+                if (!eval(this.EffectShader)) return false;
+                if (SubData != null)
+                {
+                    if (!eval(this.SubData.Overall)) return false;
+                    if (this.SubData.Specific != null && !this.SubData.Specific.AllEqual(eval)) return false;
+                }
+                if (this.CounterEffects != null)
+                {
+                    if (!eval(this.CounterEffects.Overall)) return false;
+                    if (this.CounterEffects.Specific != null)
+                    {
+                        foreach (var item in this.CounterEffects.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new MagicEffect.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Icon = eval(this.Icon);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.BaseCost = eval(this.BaseCost);
+                obj.Unused = eval(this.Unused);
+                obj.MagicSchool = eval(this.MagicSchool);
+                obj.Resistance = eval(this.Resistance);
+                obj.CounterEffectCount = eval(this.CounterEffectCount);
+                obj.Light = eval(this.Light);
+                obj.ProjectileSpeed = eval(this.ProjectileSpeed);
+                obj.EffectShader = eval(this.EffectShader);
+                obj.SubData = this.SubData == null ? null : new MaskItem<R, MagicEffectSubData.Mask<R>?>(eval(this.SubData.Overall), this.SubData.Specific?.Translate(eval));
+                if (CounterEffects != null)
+                {
+                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (CounterEffects.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CounterEffects.Specific = l;
+                        foreach (var item in CounterEffects.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(MagicEffect.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, MagicEffect.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(MagicEffect.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendLine($"Description => {Description}");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.BaseCost ?? true)
+                    {
+                        fg.AppendLine($"BaseCost => {BaseCost}");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        fg.AppendLine($"Unused => {Unused}");
+                    }
+                    if (printMask?.MagicSchool ?? true)
+                    {
+                        fg.AppendLine($"MagicSchool => {MagicSchool}");
+                    }
+                    if (printMask?.Resistance ?? true)
+                    {
+                        fg.AppendLine($"Resistance => {Resistance}");
+                    }
+                    if (printMask?.CounterEffectCount ?? true)
+                    {
+                        fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        fg.AppendLine($"Light => {Light}");
+                    }
+                    if (printMask?.ProjectileSpeed ?? true)
+                    {
+                        fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
+                    }
+                    if (printMask?.EffectShader ?? true)
+                    {
+                        fg.AppendLine($"EffectShader => {EffectShader}");
+                    }
+                    if (printMask?.SubData?.Overall ?? true)
+                    {
+                        SubData?.ToString(fg);
+                    }
+                    if (printMask?.CounterEffects?.Overall ?? true)
+                    {
+                        fg.AppendLine("CounterEffects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (CounterEffects != null)
+                            {
+                                if (CounterEffects.Overall != null)
+                                {
+                                    fg.AppendLine(CounterEffects.Overall.ToString());
+                                }
+                                if (CounterEffects.Specific != null)
+                                {
+                                    foreach (var subItem in CounterEffects.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public Exception? Description;
+            public Exception? Icon;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Flags;
+            public Exception? BaseCost;
+            public Exception? Unused;
+            public Exception? MagicSchool;
+            public Exception? Resistance;
+            public Exception? CounterEffectCount;
+            public Exception? Light;
+            public Exception? ProjectileSpeed;
+            public Exception? EffectShader;
+            public MaskItem<Exception?, MagicEffectSubData.ErrorMask?>? SubData;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
+                switch (enu)
+                {
+                    case MagicEffect_FieldIndex.Name:
+                        return Name;
+                    case MagicEffect_FieldIndex.Description:
+                        return Description;
+                    case MagicEffect_FieldIndex.Icon:
+                        return Icon;
+                    case MagicEffect_FieldIndex.Model:
+                        return Model;
+                    case MagicEffect_FieldIndex.Flags:
+                        return Flags;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        return BaseCost;
+                    case MagicEffect_FieldIndex.Unused:
+                        return Unused;
+                    case MagicEffect_FieldIndex.MagicSchool:
+                        return MagicSchool;
+                    case MagicEffect_FieldIndex.Resistance:
+                        return Resistance;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        return CounterEffectCount;
+                    case MagicEffect_FieldIndex.Light:
+                        return Light;
+                    case MagicEffect_FieldIndex.ProjectileSpeed:
+                        return ProjectileSpeed;
+                    case MagicEffect_FieldIndex.EffectShader:
+                        return EffectShader;
+                    case MagicEffect_FieldIndex.SubData:
+                        return SubData;
+                    case MagicEffect_FieldIndex.CounterEffects:
+                        return CounterEffects;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
+                switch (enu)
+                {
+                    case MagicEffect_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case MagicEffect_FieldIndex.MagicSchool:
+                        this.MagicSchool = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Resistance:
+                        this.Resistance = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        this.CounterEffectCount = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ProjectileSpeed:
+                        this.ProjectileSpeed = ex;
+                        break;
+                    case MagicEffect_FieldIndex.EffectShader:
+                        this.EffectShader = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SubData:
+                        this.SubData = new MaskItem<Exception?, MagicEffectSubData.ErrorMask?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffects:
+                        this.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
+                switch (enu)
+                {
+                    case MagicEffect_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Description:
+                        this.Description = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Unused:
+                        this.Unused = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.MagicSchool:
+                        this.MagicSchool = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Resistance:
+                        this.Resistance = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        this.CounterEffectCount = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Light:
+                        this.Light = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ProjectileSpeed:
+                        this.ProjectileSpeed = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.EffectShader:
+                        this.EffectShader = (Exception)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SubData:
+                        this.SubData = (MaskItem<Exception?, MagicEffectSubData.ErrorMask?>?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffects:
+                        this.CounterEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Icon != null) return true;
+                if (Model != null) return true;
+                if (Flags != null) return true;
+                if (BaseCost != null) return true;
+                if (Unused != null) return true;
+                if (MagicSchool != null) return true;
+                if (Resistance != null) return true;
+                if (CounterEffectCount != null) return true;
+                if (Light != null) return true;
+                if (ProjectileSpeed != null) return true;
+                if (EffectShader != null) return true;
+                if (SubData != null) return true;
+                if (CounterEffects != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Description => {Description}");
+                fg.AppendLine($"Icon => {Icon}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"BaseCost => {BaseCost}");
+                fg.AppendLine($"Unused => {Unused}");
+                fg.AppendLine($"MagicSchool => {MagicSchool}");
+                fg.AppendLine($"Resistance => {Resistance}");
+                fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
+                fg.AppendLine($"Light => {Light}");
+                fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
+                fg.AppendLine($"EffectShader => {EffectShader}");
+                SubData?.ToString(fg);
+                fg.AppendLine("CounterEffects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (CounterEffects != null)
+                    {
+                        if (CounterEffects.Overall != null)
+                        {
+                            fg.AppendLine(CounterEffects.Overall.ToString());
+                        }
+                        if (CounterEffects.Specific != null)
+                        {
+                            foreach (var subItem in CounterEffects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.MagicSchool = this.MagicSchool.Combine(rhs.MagicSchool);
+                ret.Resistance = this.Resistance.Combine(rhs.Resistance);
+                ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.ProjectileSpeed = this.ProjectileSpeed.Combine(rhs.ProjectileSpeed);
+                ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
+                ret.SubData = new MaskItem<Exception?, MagicEffectSubData.ErrorMask?>(ExceptionExt.Combine(this.SubData?.Overall, rhs.SubData?.Overall), (this.SubData?.Specific as IErrorMask<MagicEffectSubData.ErrorMask>)?.Combine(rhs.SubData?.Specific));
+                ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public bool Description;
+            public bool Icon;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Flags;
+            public bool BaseCost;
+            public bool Unused;
+            public bool MagicSchool;
+            public bool Resistance;
+            public bool CounterEffectCount;
+            public bool Light;
+            public bool ProjectileSpeed;
+            public bool EffectShader;
+            public MaskItem<bool, MagicEffectSubData.TranslationMask?> SubData;
+            public bool CounterEffects;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Icon = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.BaseCost = defaultOn;
+                this.Unused = defaultOn;
+                this.MagicSchool = defaultOn;
+                this.Resistance = defaultOn;
+                this.CounterEffectCount = defaultOn;
+                this.Light = defaultOn;
+                this.ProjectileSpeed = defaultOn;
+                this.EffectShader = defaultOn;
+                this.SubData = new MaskItem<bool, MagicEffectSubData.TranslationMask?>(defaultOn, null);
+                this.CounterEffects = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Icon, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((BaseCost, null));
+                ret.Add((Unused, null));
+                ret.Add((MagicSchool, null));
+                ret.Add((Resistance, null));
+                ret.Add((CounterEffectCount, null));
+                ret.Add((Light, null));
+                ret.Add((ProjectileSpeed, null));
+                ret.Add((EffectShader, null));
+                ret.Add((SubData?.Overall ?? true, SubData?.Specific?.GetCrystal()));
+                ret.Add((CounterEffects, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -534,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MagicEffectSetterCommon)((IMagicEffectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MagicEffect_Mask<bool> GetEqualsMask(
+        public static MagicEffect.Mask<bool> GetEqualsMask(
             this IMagicEffectGetter item,
             IMagicEffectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -548,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IMagicEffectGetter item,
             string? name = null,
-            MagicEffect_Mask<bool>? printMask = null)
+            MagicEffect.Mask<bool>? printMask = null)
         {
             return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -560,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffect_Mask<bool>? printMask = null)
+            MagicEffect.Mask<bool>? printMask = null)
         {
             ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -571,16 +1316,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IMagicEffectGetter item,
-            MagicEffect_Mask<bool?> checkMask)
+            MagicEffect.Mask<bool?> checkMask)
         {
             return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MagicEffect_Mask<bool> GetHasBeenSetMask(this IMagicEffectGetter item)
+        public static MagicEffect.Mask<bool> GetHasBeenSetMask(this IMagicEffectGetter item)
         {
-            var ret = new MagicEffect_Mask<bool>(false);
+            var ret = new MagicEffect.Mask<bool>(false);
             ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -599,8 +1344,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IMagicEffectInternal lhs,
             IMagicEffectGetter rhs,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? copyMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -608,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -626,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffect DeepCopy(
             this IMagicEffectGetter item,
-            MagicEffect_TranslationMask? copyMask = null)
+            MagicEffect.TranslationMask? copyMask = null)
         {
             return ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -635,8 +1380,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static MagicEffect DeepCopy(
             this IMagicEffectGetter item,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? copyMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? copyMask = null)
         {
             return ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -660,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectInternal item,
             XElement node,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -673,8 +1418,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectInternal item,
             XElement node,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -682,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -701,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectInternal item,
             string path,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -713,8 +1458,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectInternal item,
             string path,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -728,7 +1473,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -741,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectInternal item,
             Stream stream,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -753,8 +1498,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IMagicEffectInternal item,
             Stream stream,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -768,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MagicEffect_TranslationMask? translationMask = null)
+            MagicEffect.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -861,9 +1606,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 21;
 
-        public static readonly Type MaskType = typeof(MagicEffect_Mask<>);
+        public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MagicEffect_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MagicEffect.ErrorMask);
 
         public static readonly Type ClassType = typeof(MagicEffect);
 
@@ -1421,12 +2166,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly MagicEffectCommon Instance = new MagicEffectCommon();
 
-        public MagicEffect_Mask<bool> GetEqualsMask(
+        public MagicEffect.Mask<bool> GetEqualsMask(
             IMagicEffectGetter item,
             IMagicEffectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffect_Mask<bool>(false);
+            var ret = new MagicEffect.Mask<bool>(false);
             ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1438,7 +2183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IMagicEffectGetter item,
             IMagicEffectGetter rhs,
-            MagicEffect_Mask<bool> ret,
+            MagicEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1471,7 +2216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IMagicEffectGetter item,
             string? name = null,
-            MagicEffect_Mask<bool>? printMask = null)
+            MagicEffect.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1486,7 +2231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffect_Mask<bool>? printMask = null)
+            MagicEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1510,7 +2255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IMagicEffectGetter item,
             FileGeneration fg,
-            MagicEffect_Mask<bool>? printMask = null)
+            MagicEffect.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1598,7 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IMagicEffectGetter item,
-            MagicEffect_Mask<bool?> checkMask)
+            MagicEffect.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
@@ -1613,13 +2358,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IMagicEffectGetter item,
-            MagicEffect_Mask<bool> mask)
+            MagicEffect.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Description = (item.Description != null);
             mask.Icon = (item.Icon != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Flags = true;
             mask.BaseCost = true;
             mask.Unused = true;
@@ -1629,7 +2374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Light = true;
             mask.ProjectileSpeed = true;
             mask.EffectShader = true;
-            mask.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>?>(true, item.SubData?.GetHasBeenSetMask());
+            mask.SubData = new MaskItem<bool, MagicEffectSubData.Mask<bool>?>(true, item.SubData?.GetHasBeenSetMask());
             mask.CounterEffects = new MaskItem<bool, IEnumerable<(int, bool)>>(item.CounterEffects.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
@@ -2018,7 +2763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MagicEffect DeepCopy(
             IMagicEffectGetter item,
-            MagicEffect_TranslationMask? copyMask = null)
+            MagicEffect.TranslationMask? copyMask = null)
         {
             MagicEffect ret = (MagicEffect)((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2029,8 +2774,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MagicEffect DeepCopy(
             IMagicEffectGetter item,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? copyMask = null)
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? copyMask = null)
         {
             MagicEffect ret = (MagicEffect)((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2708,8 +3453,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMagicEffectGetter item,
             XElement node,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null,
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2719,14 +3464,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IMagicEffectGetter item,
             string path,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null,
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2742,8 +3487,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IMagicEffectGetter item,
             Stream stream,
-            out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask? translationMask = null,
+            out MagicEffect.ErrorMask errorMask,
+            MagicEffect.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2760,750 +3505,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class MagicEffect_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<MagicEffect_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public MagicEffect_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Description = initialValue;
-            this.Icon = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Flags = initialValue;
-            this.BaseCost = initialValue;
-            this.Unused = initialValue;
-            this.MagicSchool = initialValue;
-            this.Resistance = initialValue;
-            this.CounterEffectCount = initialValue;
-            this.Light = initialValue;
-            this.ProjectileSpeed = initialValue;
-            this.EffectShader = initialValue;
-            this.SubData = new MaskItem<T, MagicEffectSubData_Mask<T>?>(initialValue, new MagicEffectSubData_Mask<T>(initialValue));
-            this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.DATADataTypeState = initialValue;
-        }
-
-        public MagicEffect_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Description,
-            T Icon,
-            T Model,
-            T Flags,
-            T BaseCost,
-            T Unused,
-            T MagicSchool,
-            T Resistance,
-            T CounterEffectCount,
-            T Light,
-            T ProjectileSpeed,
-            T EffectShader,
-            T SubData,
-            T CounterEffects,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Icon = Icon;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Flags = Flags;
-            this.BaseCost = BaseCost;
-            this.Unused = Unused;
-            this.MagicSchool = MagicSchool;
-            this.Resistance = Resistance;
-            this.CounterEffectCount = CounterEffectCount;
-            this.Light = Light;
-            this.ProjectileSpeed = ProjectileSpeed;
-            this.EffectShader = EffectShader;
-            this.SubData = new MaskItem<T, MagicEffectSubData_Mask<T>?>(SubData, new MagicEffectSubData_Mask<T>(SubData));
-            this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(CounterEffects, Enumerable.Empty<(int Index, T Value)>());
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected MagicEffect_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Description;
-        public T Icon;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Flags;
-        public T BaseCost;
-        public T Unused;
-        public T MagicSchool;
-        public T Resistance;
-        public T CounterEffectCount;
-        public T Light;
-        public T ProjectileSpeed;
-        public T EffectShader;
-        public MaskItem<T, MagicEffectSubData_Mask<T>?>? SubData { get; set; }
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? CounterEffects;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is MagicEffect_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(MagicEffect_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Description, rhs.Description)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
-            if (!object.Equals(this.Unused, rhs.Unused)) return false;
-            if (!object.Equals(this.MagicSchool, rhs.MagicSchool)) return false;
-            if (!object.Equals(this.Resistance, rhs.Resistance)) return false;
-            if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
-            if (!object.Equals(this.Light, rhs.Light)) return false;
-            if (!object.Equals(this.ProjectileSpeed, rhs.ProjectileSpeed)) return false;
-            if (!object.Equals(this.EffectShader, rhs.EffectShader)) return false;
-            if (!object.Equals(this.SubData, rhs.SubData)) return false;
-            if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Description?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.BaseCost?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unused?.GetHashCode());
-            ret = ret.CombineHashCode(this.MagicSchool?.GetHashCode());
-            ret = ret.CombineHashCode(this.Resistance?.GetHashCode());
-            ret = ret.CombineHashCode(this.CounterEffectCount?.GetHashCode());
-            ret = ret.CombineHashCode(this.Light?.GetHashCode());
-            ret = ret.CombineHashCode(this.ProjectileSpeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.EffectShader?.GetHashCode());
-            ret = ret.CombineHashCode(this.SubData?.GetHashCode());
-            ret = ret.CombineHashCode(this.CounterEffects?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Description)) return false;
-            if (!eval(this.Icon)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.BaseCost)) return false;
-            if (!eval(this.Unused)) return false;
-            if (!eval(this.MagicSchool)) return false;
-            if (!eval(this.Resistance)) return false;
-            if (!eval(this.CounterEffectCount)) return false;
-            if (!eval(this.Light)) return false;
-            if (!eval(this.ProjectileSpeed)) return false;
-            if (!eval(this.EffectShader)) return false;
-            if (SubData != null)
-            {
-                if (!eval(this.SubData.Overall)) return false;
-                if (this.SubData.Specific != null && !this.SubData.Specific.AllEqual(eval)) return false;
-            }
-            if (this.CounterEffects != null)
-            {
-                if (!eval(this.CounterEffects.Overall)) return false;
-                if (this.CounterEffects.Specific != null)
-                {
-                    foreach (var item in this.CounterEffects.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new MagicEffect_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new MagicEffect_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(MagicEffect_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Description = eval(this.Description);
-            obj.Icon = eval(this.Icon);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Flags = eval(this.Flags);
-            obj.BaseCost = eval(this.BaseCost);
-            obj.Unused = eval(this.Unused);
-            obj.MagicSchool = eval(this.MagicSchool);
-            obj.Resistance = eval(this.Resistance);
-            obj.CounterEffectCount = eval(this.CounterEffectCount);
-            obj.Light = eval(this.Light);
-            obj.ProjectileSpeed = eval(this.ProjectileSpeed);
-            obj.EffectShader = eval(this.EffectShader);
-            obj.SubData = this.SubData == null ? null : new MaskItem<R, MagicEffectSubData_Mask<R>?>(eval(this.SubData.Overall), this.SubData.Specific?.Translate(eval));
-            if (CounterEffects != null)
-            {
-                obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (CounterEffects.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.CounterEffects.Specific = l;
-                    foreach (var item in CounterEffects.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(MagicEffect_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, MagicEffect_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(MagicEffect_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {Description}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.BaseCost ?? true)
-                {
-                    fg.AppendLine($"BaseCost => {BaseCost}");
-                }
-                if (printMask?.Unused ?? true)
-                {
-                    fg.AppendLine($"Unused => {Unused}");
-                }
-                if (printMask?.MagicSchool ?? true)
-                {
-                    fg.AppendLine($"MagicSchool => {MagicSchool}");
-                }
-                if (printMask?.Resistance ?? true)
-                {
-                    fg.AppendLine($"Resistance => {Resistance}");
-                }
-                if (printMask?.CounterEffectCount ?? true)
-                {
-                    fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
-                }
-                if (printMask?.Light ?? true)
-                {
-                    fg.AppendLine($"Light => {Light}");
-                }
-                if (printMask?.ProjectileSpeed ?? true)
-                {
-                    fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
-                }
-                if (printMask?.EffectShader ?? true)
-                {
-                    fg.AppendLine($"EffectShader => {EffectShader}");
-                }
-                if (printMask?.SubData?.Overall ?? true)
-                {
-                    SubData?.ToString(fg);
-                }
-                if (printMask?.CounterEffects?.Overall ?? true)
-                {
-                    fg.AppendLine("CounterEffects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (CounterEffects != null)
-                        {
-                            if (CounterEffects.Overall != null)
-                            {
-                                fg.AppendLine(CounterEffects.Overall.ToString());
-                            }
-                            if (CounterEffects.Specific != null)
-                            {
-                                foreach (var subItem in CounterEffects.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class MagicEffect_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<MagicEffect_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public Exception? Description;
-        public Exception? Icon;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Flags;
-        public Exception? BaseCost;
-        public Exception? Unused;
-        public Exception? MagicSchool;
-        public Exception? Resistance;
-        public Exception? CounterEffectCount;
-        public Exception? Light;
-        public Exception? ProjectileSpeed;
-        public Exception? EffectShader;
-        public MaskItem<Exception?, MagicEffectSubData_ErrorMask?>? SubData;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    return Name;
-                case MagicEffect_FieldIndex.Description:
-                    return Description;
-                case MagicEffect_FieldIndex.Icon:
-                    return Icon;
-                case MagicEffect_FieldIndex.Model:
-                    return Model;
-                case MagicEffect_FieldIndex.Flags:
-                    return Flags;
-                case MagicEffect_FieldIndex.BaseCost:
-                    return BaseCost;
-                case MagicEffect_FieldIndex.Unused:
-                    return Unused;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    return MagicSchool;
-                case MagicEffect_FieldIndex.Resistance:
-                    return Resistance;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return CounterEffectCount;
-                case MagicEffect_FieldIndex.Light:
-                    return Light;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    return ProjectileSpeed;
-                case MagicEffect_FieldIndex.EffectShader:
-                    return EffectShader;
-                case MagicEffect_FieldIndex.SubData:
-                    return SubData;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    return CounterEffects;
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case MagicEffect_FieldIndex.Description:
-                    this.Description = ex;
-                    break;
-                case MagicEffect_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case MagicEffect_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case MagicEffect_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case MagicEffect_FieldIndex.BaseCost:
-                    this.BaseCost = ex;
-                    break;
-                case MagicEffect_FieldIndex.Unused:
-                    this.Unused = ex;
-                    break;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    this.MagicSchool = ex;
-                    break;
-                case MagicEffect_FieldIndex.Resistance:
-                    this.Resistance = ex;
-                    break;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    this.CounterEffectCount = ex;
-                    break;
-                case MagicEffect_FieldIndex.Light:
-                    this.Light = ex;
-                    break;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    this.ProjectileSpeed = ex;
-                    break;
-                case MagicEffect_FieldIndex.EffectShader:
-                    this.EffectShader = ex;
-                    break;
-                case MagicEffect_FieldIndex.SubData:
-                    this.SubData = new MaskItem<Exception?, MagicEffectSubData_ErrorMask?>(ex, null);
-                    break;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    this.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
-            switch (enu)
-            {
-                case MagicEffect_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.Description:
-                    this.Description = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case MagicEffect_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.BaseCost:
-                    this.BaseCost = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.Unused:
-                    this.Unused = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    this.MagicSchool = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.Resistance:
-                    this.Resistance = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    this.CounterEffectCount = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.Light:
-                    this.Light = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    this.ProjectileSpeed = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.EffectShader:
-                    this.EffectShader = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.SubData:
-                    this.SubData = (MaskItem<Exception?, MagicEffectSubData_ErrorMask?>?)obj;
-                    break;
-                case MagicEffect_FieldIndex.CounterEffects:
-                    this.CounterEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case MagicEffect_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Description != null) return true;
-            if (Icon != null) return true;
-            if (Model != null) return true;
-            if (Flags != null) return true;
-            if (BaseCost != null) return true;
-            if (Unused != null) return true;
-            if (MagicSchool != null) return true;
-            if (Resistance != null) return true;
-            if (CounterEffectCount != null) return true;
-            if (Light != null) return true;
-            if (ProjectileSpeed != null) return true;
-            if (EffectShader != null) return true;
-            if (SubData != null) return true;
-            if (CounterEffects != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("MagicEffect_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Description => {Description}");
-            fg.AppendLine($"Icon => {Icon}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"BaseCost => {BaseCost}");
-            fg.AppendLine($"Unused => {Unused}");
-            fg.AppendLine($"MagicSchool => {MagicSchool}");
-            fg.AppendLine($"Resistance => {Resistance}");
-            fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
-            fg.AppendLine($"Light => {Light}");
-            fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
-            fg.AppendLine($"EffectShader => {EffectShader}");
-            SubData?.ToString(fg);
-            fg.AppendLine("CounterEffects =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (CounterEffects != null)
-                {
-                    if (CounterEffects.Overall != null)
-                    {
-                        fg.AppendLine(CounterEffects.Overall.ToString());
-                    }
-                    if (CounterEffects.Specific != null)
-                    {
-                        foreach (var subItem in CounterEffects.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public MagicEffect_ErrorMask Combine(MagicEffect_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new MagicEffect_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Description = this.Description.Combine(rhs.Description);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
-            ret.Unused = this.Unused.Combine(rhs.Unused);
-            ret.MagicSchool = this.MagicSchool.Combine(rhs.MagicSchool);
-            ret.Resistance = this.Resistance.Combine(rhs.Resistance);
-            ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
-            ret.Light = this.Light.Combine(rhs.Light);
-            ret.ProjectileSpeed = this.ProjectileSpeed.Combine(rhs.ProjectileSpeed);
-            ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
-            ret.SubData = new MaskItem<Exception?, MagicEffectSubData_ErrorMask?>(ExceptionExt.Combine(this.SubData?.Overall, rhs.SubData?.Overall), (this.SubData?.Specific as IErrorMask<MagicEffectSubData_ErrorMask>)?.Combine(rhs.SubData?.Specific));
-            ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static MagicEffect_ErrorMask? Combine(MagicEffect_ErrorMask? lhs, MagicEffect_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new MagicEffect_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new MagicEffect_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class MagicEffect_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Description;
-        public bool Icon;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Flags;
-        public bool BaseCost;
-        public bool Unused;
-        public bool MagicSchool;
-        public bool Resistance;
-        public bool CounterEffectCount;
-        public bool Light;
-        public bool ProjectileSpeed;
-        public bool EffectShader;
-        public MaskItem<bool, MagicEffectSubData_TranslationMask?> SubData;
-        public bool CounterEffects;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public MagicEffect_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Flags = defaultOn;
-            this.BaseCost = defaultOn;
-            this.Unused = defaultOn;
-            this.MagicSchool = defaultOn;
-            this.Resistance = defaultOn;
-            this.CounterEffectCount = defaultOn;
-            this.Light = defaultOn;
-            this.ProjectileSpeed = defaultOn;
-            this.EffectShader = defaultOn;
-            this.SubData = new MaskItem<bool, MagicEffectSubData_TranslationMask?>(defaultOn, null);
-            this.CounterEffects = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Description, null));
-            ret.Add((Icon, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Flags, null));
-            ret.Add((BaseCost, null));
-            ret.Add((Unused, null));
-            ret.Add((MagicSchool, null));
-            ret.Add((Resistance, null));
-            ret.Add((CounterEffectCount, null));
-            ret.Add((Light, null));
-            ret.Add((ProjectileSpeed, null));
-            ret.Add((EffectShader, null));
-            ret.Add((SubData?.Overall ?? true, SubData?.Specific?.GetCrystal()));
-            ret.Add((CounterEffects, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

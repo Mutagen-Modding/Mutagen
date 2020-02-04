@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Rank CreateFromXml(
             XElement node,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -154,15 +154,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Rank CreateFromXml(
             XElement node,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Rank.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Rank CreateFromXml(
             string path,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Rank CreateFromXml(
             string path,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Rank CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Rank CreateFromXml(
             Stream stream,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -226,8 +226,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Rank CreateFromXml(
             Stream stream,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Rank CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -250,6 +250,347 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.RankNumber = initialValue;
+                this.MaleName = initialValue;
+                this.FemaleName = initialValue;
+                this.Insignia = initialValue;
+            }
+
+            public Mask(
+                T RankNumber,
+                T MaleName,
+                T FemaleName,
+                T Insignia)
+            {
+                this.RankNumber = RankNumber;
+                this.MaleName = MaleName;
+                this.FemaleName = FemaleName;
+                this.Insignia = Insignia;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T RankNumber;
+            public T MaleName;
+            public T FemaleName;
+            public T Insignia;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.RankNumber, rhs.RankNumber)) return false;
+                if (!object.Equals(this.MaleName, rhs.MaleName)) return false;
+                if (!object.Equals(this.FemaleName, rhs.FemaleName)) return false;
+                if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.RankNumber?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaleName?.GetHashCode());
+                ret = ret.CombineHashCode(this.FemaleName?.GetHashCode());
+                ret = ret.CombineHashCode(this.Insignia?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.RankNumber)) return false;
+                if (!eval(this.MaleName)) return false;
+                if (!eval(this.FemaleName)) return false;
+                if (!eval(this.Insignia)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Rank.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.RankNumber = eval(this.RankNumber);
+                obj.MaleName = eval(this.MaleName);
+                obj.FemaleName = eval(this.FemaleName);
+                obj.Insignia = eval(this.Insignia);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Rank.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Rank.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Rank.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.RankNumber ?? true)
+                    {
+                        fg.AppendLine($"RankNumber => {RankNumber}");
+                    }
+                    if (printMask?.MaleName ?? true)
+                    {
+                        fg.AppendLine($"MaleName => {MaleName}");
+                    }
+                    if (printMask?.FemaleName ?? true)
+                    {
+                        fg.AppendLine($"FemaleName => {FemaleName}");
+                    }
+                    if (printMask?.Insignia ?? true)
+                    {
+                        fg.AppendLine($"Insignia => {Insignia}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? RankNumber;
+            public Exception? MaleName;
+            public Exception? FemaleName;
+            public Exception? Insignia;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Rank_FieldIndex enu = (Rank_FieldIndex)index;
+                switch (enu)
+                {
+                    case Rank_FieldIndex.RankNumber:
+                        return RankNumber;
+                    case Rank_FieldIndex.MaleName:
+                        return MaleName;
+                    case Rank_FieldIndex.FemaleName:
+                        return FemaleName;
+                    case Rank_FieldIndex.Insignia:
+                        return Insignia;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Rank_FieldIndex enu = (Rank_FieldIndex)index;
+                switch (enu)
+                {
+                    case Rank_FieldIndex.RankNumber:
+                        this.RankNumber = ex;
+                        break;
+                    case Rank_FieldIndex.MaleName:
+                        this.MaleName = ex;
+                        break;
+                    case Rank_FieldIndex.FemaleName:
+                        this.FemaleName = ex;
+                        break;
+                    case Rank_FieldIndex.Insignia:
+                        this.Insignia = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Rank_FieldIndex enu = (Rank_FieldIndex)index;
+                switch (enu)
+                {
+                    case Rank_FieldIndex.RankNumber:
+                        this.RankNumber = (Exception)obj;
+                        break;
+                    case Rank_FieldIndex.MaleName:
+                        this.MaleName = (Exception)obj;
+                        break;
+                    case Rank_FieldIndex.FemaleName:
+                        this.FemaleName = (Exception)obj;
+                        break;
+                    case Rank_FieldIndex.Insignia:
+                        this.Insignia = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (RankNumber != null) return true;
+                if (MaleName != null) return true;
+                if (FemaleName != null) return true;
+                if (Insignia != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"RankNumber => {RankNumber}");
+                fg.AppendLine($"MaleName => {MaleName}");
+                fg.AppendLine($"FemaleName => {FemaleName}");
+                fg.AppendLine($"Insignia => {Insignia}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
+                ret.MaleName = this.MaleName.Combine(rhs.MaleName);
+                ret.FemaleName = this.FemaleName.Combine(rhs.FemaleName);
+                ret.Insignia = this.Insignia.Combine(rhs.Insignia);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool RankNumber;
+            public bool MaleName;
+            public bool FemaleName;
+            public bool Insignia;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.RankNumber = defaultOn;
+                this.MaleName = defaultOn;
+                this.FemaleName = defaultOn;
+                this.Insignia = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((RankNumber, null));
+                ret.Add((MaleName, null));
+                ret.Add((FemaleName, null));
+                ret.Add((Insignia, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -355,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Rank_Mask<bool> GetEqualsMask(
+        public static Rank.Mask<bool> GetEqualsMask(
             this IRankGetter item,
             IRankGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -369,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRankGetter item,
             string? name = null,
-            Rank_Mask<bool>? printMask = null)
+            Rank.Mask<bool>? printMask = null)
         {
             return ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -381,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankGetter item,
             FileGeneration fg,
             string? name = null,
-            Rank_Mask<bool>? printMask = null)
+            Rank.Mask<bool>? printMask = null)
         {
             ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -392,16 +733,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRankGetter item,
-            Rank_Mask<bool?> checkMask)
+            Rank.Mask<bool?> checkMask)
         {
             return ((RankCommon)((IRankGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Rank_Mask<bool> GetHasBeenSetMask(this IRankGetter item)
+        public static Rank.Mask<bool> GetHasBeenSetMask(this IRankGetter item)
         {
-            var ret = new Rank_Mask<bool>(false);
+            var ret = new Rank.Mask<bool>(false);
             ((RankCommon)((IRankGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -420,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRank lhs,
             IRankGetter rhs,
-            Rank_TranslationMask? copyMask = null)
+            Rank.TranslationMask? copyMask = null)
         {
             ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -432,8 +773,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRank lhs,
             IRankGetter rhs,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? copyMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -441,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Rank.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -459,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Rank DeepCopy(
             this IRankGetter item,
-            Rank_TranslationMask? copyMask = null)
+            Rank.TranslationMask? copyMask = null)
         {
             return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -468,8 +809,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Rank DeepCopy(
             this IRankGetter item,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? copyMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? copyMask = null)
         {
             return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -493,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRank item,
             XElement node,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -506,8 +847,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRank item,
             XElement node,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -515,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Rank.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -534,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRank item,
             string path,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -546,8 +887,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRank item,
             string path,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -561,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRank item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -574,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRank item,
             Stream stream,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -586,8 +927,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRank item,
             Stream stream,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -601,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRank item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -677,9 +1018,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(Rank_Mask<>);
+        public static readonly Type MaskType = typeof(Rank.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Rank_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Rank.ErrorMask);
 
         public static readonly Type ClassType = typeof(Rank);
 
@@ -1008,12 +1349,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RankCommon Instance = new RankCommon();
 
-        public Rank_Mask<bool> GetEqualsMask(
+        public Rank.Mask<bool> GetEqualsMask(
             IRankGetter item,
             IRankGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Rank_Mask<bool>(false);
+            var ret = new Rank.Mask<bool>(false);
             ((RankCommon)((IRankGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1025,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRankGetter item,
             IRankGetter rhs,
-            Rank_Mask<bool> ret,
+            Rank.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1038,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRankGetter item,
             string? name = null,
-            Rank_Mask<bool>? printMask = null)
+            Rank.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1053,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankGetter item,
             FileGeneration fg,
             string? name = null,
-            Rank_Mask<bool>? printMask = null)
+            Rank.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1077,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRankGetter item,
             FileGeneration fg,
-            Rank_Mask<bool>? printMask = null)
+            Rank.Mask<bool>? printMask = null)
         {
             if (printMask?.RankNumber ?? true)
             {
@@ -1099,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRankGetter item,
-            Rank_Mask<bool?> checkMask)
+            Rank.Mask<bool?> checkMask)
         {
             if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != (item.RankNumber != null)) return false;
             if (checkMask.MaleName.HasValue && checkMask.MaleName.Value != (item.MaleName != null)) return false;
@@ -1110,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IRankGetter item,
-            Rank_Mask<bool> mask)
+            Rank.Mask<bool> mask)
         {
             mask.RankNumber = (item.RankNumber != null);
             mask.MaleName = (item.MaleName != null);
@@ -1204,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Rank DeepCopy(
             IRankGetter item,
-            Rank_TranslationMask? copyMask = null)
+            Rank.TranslationMask? copyMask = null)
         {
             Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1215,8 +1556,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Rank DeepCopy(
             IRankGetter item,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? copyMask = null)
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? copyMask = null)
         {
             Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1521,8 +1862,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRankGetter item,
             XElement node,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null,
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1532,14 +1873,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Rank.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRankGetter item,
             string path,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null,
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1572,8 +1913,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRankGetter item,
             Stream stream,
-            out Rank_ErrorMask errorMask,
-            Rank_TranslationMask? translationMask = null,
+            out Rank.ErrorMask errorMask,
+            Rank.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1622,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankGetter item,
             XElement node,
             string? name = null,
-            Rank_TranslationMask? translationMask = null)
+            Rank.TranslationMask? translationMask = null)
         {
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1666,348 +2007,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Rank_Mask<T> :
-        IMask<T>,
-        IEquatable<Rank_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Rank_Mask(T initialValue)
-        {
-            this.RankNumber = initialValue;
-            this.MaleName = initialValue;
-            this.FemaleName = initialValue;
-            this.Insignia = initialValue;
-        }
-
-        public Rank_Mask(
-            T RankNumber,
-            T MaleName,
-            T FemaleName,
-            T Insignia)
-        {
-            this.RankNumber = RankNumber;
-            this.MaleName = MaleName;
-            this.FemaleName = FemaleName;
-            this.Insignia = Insignia;
-        }
-
-        #pragma warning disable CS8618
-        protected Rank_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T RankNumber;
-        public T MaleName;
-        public T FemaleName;
-        public T Insignia;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Rank_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Rank_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.RankNumber, rhs.RankNumber)) return false;
-            if (!object.Equals(this.MaleName, rhs.MaleName)) return false;
-            if (!object.Equals(this.FemaleName, rhs.FemaleName)) return false;
-            if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.RankNumber?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaleName?.GetHashCode());
-            ret = ret.CombineHashCode(this.FemaleName?.GetHashCode());
-            ret = ret.CombineHashCode(this.Insignia?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.RankNumber)) return false;
-            if (!eval(this.MaleName)) return false;
-            if (!eval(this.FemaleName)) return false;
-            if (!eval(this.Insignia)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Rank_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Rank_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Rank_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.RankNumber = eval(this.RankNumber);
-            obj.MaleName = eval(this.MaleName);
-            obj.FemaleName = eval(this.FemaleName);
-            obj.Insignia = eval(this.Insignia);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Rank_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Rank_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Rank_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.RankNumber ?? true)
-                {
-                    fg.AppendLine($"RankNumber => {RankNumber}");
-                }
-                if (printMask?.MaleName ?? true)
-                {
-                    fg.AppendLine($"MaleName => {MaleName}");
-                }
-                if (printMask?.FemaleName ?? true)
-                {
-                    fg.AppendLine($"FemaleName => {FemaleName}");
-                }
-                if (printMask?.Insignia ?? true)
-                {
-                    fg.AppendLine($"Insignia => {Insignia}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Rank_ErrorMask : IErrorMask, IErrorMask<Rank_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? RankNumber;
-        public Exception? MaleName;
-        public Exception? FemaleName;
-        public Exception? Insignia;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Rank_FieldIndex enu = (Rank_FieldIndex)index;
-            switch (enu)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    return RankNumber;
-                case Rank_FieldIndex.MaleName:
-                    return MaleName;
-                case Rank_FieldIndex.FemaleName:
-                    return FemaleName;
-                case Rank_FieldIndex.Insignia:
-                    return Insignia;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Rank_FieldIndex enu = (Rank_FieldIndex)index;
-            switch (enu)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    this.RankNumber = ex;
-                    break;
-                case Rank_FieldIndex.MaleName:
-                    this.MaleName = ex;
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    this.FemaleName = ex;
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    this.Insignia = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Rank_FieldIndex enu = (Rank_FieldIndex)index;
-            switch (enu)
-            {
-                case Rank_FieldIndex.RankNumber:
-                    this.RankNumber = (Exception)obj;
-                    break;
-                case Rank_FieldIndex.MaleName:
-                    this.MaleName = (Exception)obj;
-                    break;
-                case Rank_FieldIndex.FemaleName:
-                    this.FemaleName = (Exception)obj;
-                    break;
-                case Rank_FieldIndex.Insignia:
-                    this.Insignia = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (RankNumber != null) return true;
-            if (MaleName != null) return true;
-            if (FemaleName != null) return true;
-            if (Insignia != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Rank_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"RankNumber => {RankNumber}");
-            fg.AppendLine($"MaleName => {MaleName}");
-            fg.AppendLine($"FemaleName => {FemaleName}");
-            fg.AppendLine($"Insignia => {Insignia}");
-        }
-        #endregion
-
-        #region Combine
-        public Rank_ErrorMask Combine(Rank_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Rank_ErrorMask();
-            ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
-            ret.MaleName = this.MaleName.Combine(rhs.MaleName);
-            ret.FemaleName = this.FemaleName.Combine(rhs.FemaleName);
-            ret.Insignia = this.Insignia.Combine(rhs.Insignia);
-            return ret;
-        }
-        public static Rank_ErrorMask? Combine(Rank_ErrorMask? lhs, Rank_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Rank_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Rank_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Rank_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool RankNumber;
-        public bool MaleName;
-        public bool FemaleName;
-        public bool Insignia;
-        #endregion
-
-        #region Ctors
-        public Rank_TranslationMask(bool defaultOn)
-        {
-            this.RankNumber = defaultOn;
-            this.MaleName = defaultOn;
-            this.FemaleName = defaultOn;
-            this.Insignia = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((RankNumber, null));
-            ret.Add((MaleName, null));
-            ret.Add((FemaleName, null));
-            ret.Add((Insignia, null));
-        }
-    }
 }
 #endregion
 

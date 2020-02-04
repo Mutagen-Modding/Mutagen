@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>44de5e1d151e4551ad3e07fed11129451b7f31b5</Sha>
+         <Sha>e9e9dd8aea37d070dea9074a642adfd657f52052</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-03-2020 23:23:47</CommitDate>
-         <Description>CopyFieldsFrom -&gt; CopyIn</Description>
+         <CommitDate>02-03-2020 23:28:17</CommitDate>
+         <Description>Object_Mask -&gt; Object.Mask</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

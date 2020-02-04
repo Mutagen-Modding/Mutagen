@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Worldspace CreateFromXml(
             XElement node,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -271,15 +271,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Worldspace CreateFromXml(
             XElement node,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Worldspace.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Worldspace CreateFromXml(
             string path,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -309,8 +309,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Worldspace CreateFromXml(
             string path,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Worldspace CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Worldspace CreateFromXml(
             Stream stream,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -343,8 +343,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Worldspace CreateFromXml(
             Stream stream,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Worldspace CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -367,6 +367,757 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            Place.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Parent = initialValue;
+                this.Climate = initialValue;
+                this.Water = initialValue;
+                this.Icon = initialValue;
+                this.MapData = new MaskItem<T, MapData.Mask<T>?>(initialValue, new MapData.Mask<T>(initialValue));
+                this.Flags = initialValue;
+                this.ObjectBoundsMin = initialValue;
+                this.ObjectBoundsMax = initialValue;
+                this.Music = initialValue;
+                this.OffsetData = initialValue;
+                this.Road = new MaskItem<T, Road.Mask<T>?>(initialValue, new Road.Mask<T>(initialValue));
+                this.TopCell = new MaskItem<T, Cell.Mask<T>?>(initialValue, new Cell.Mask<T>(initialValue));
+                this.SubCellsTimestamp = initialValue;
+                this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>());
+                this.UsingOffsetLength = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Parent,
+                T Climate,
+                T Water,
+                T Icon,
+                T MapData,
+                T Flags,
+                T ObjectBoundsMin,
+                T ObjectBoundsMax,
+                T Music,
+                T OffsetData,
+                T Road,
+                T TopCell,
+                T SubCellsTimestamp,
+                T SubCells,
+                T UsingOffsetLength)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Parent = Parent;
+                this.Climate = Climate;
+                this.Water = Water;
+                this.Icon = Icon;
+                this.MapData = new MaskItem<T, MapData.Mask<T>?>(MapData, new MapData.Mask<T>(MapData));
+                this.Flags = Flags;
+                this.ObjectBoundsMin = ObjectBoundsMin;
+                this.ObjectBoundsMax = ObjectBoundsMax;
+                this.Music = Music;
+                this.OffsetData = OffsetData;
+                this.Road = new MaskItem<T, Road.Mask<T>?>(Road, new Road.Mask<T>(Road));
+                this.TopCell = new MaskItem<T, Cell.Mask<T>?>(TopCell, new Cell.Mask<T>(TopCell));
+                this.SubCellsTimestamp = SubCellsTimestamp;
+                this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>>(SubCells, Enumerable.Empty<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>());
+                this.UsingOffsetLength = UsingOffsetLength;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public T Parent;
+            public T Climate;
+            public T Water;
+            public T Icon;
+            public MaskItem<T, MapData.Mask<T>?>? MapData { get; set; }
+            public T Flags;
+            public T ObjectBoundsMin;
+            public T ObjectBoundsMax;
+            public T Music;
+            public T OffsetData;
+            public MaskItem<T, Road.Mask<T>?>? Road { get; set; }
+            public MaskItem<T, Cell.Mask<T>?>? TopCell { get; set; }
+            public T SubCellsTimestamp;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock.Mask<T>?>>>? SubCells;
+            public T UsingOffsetLength;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Climate, rhs.Climate)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.MapData, rhs.MapData)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ObjectBoundsMin, rhs.ObjectBoundsMin)) return false;
+                if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
+                if (!object.Equals(this.Music, rhs.Music)) return false;
+                if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
+                if (!object.Equals(this.Road, rhs.Road)) return false;
+                if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
+                if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
+                if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
+                if (!object.Equals(this.UsingOffsetLength, rhs.UsingOffsetLength)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Parent?.GetHashCode());
+                ret = ret.CombineHashCode(this.Climate?.GetHashCode());
+                ret = ret.CombineHashCode(this.Water?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.MapData?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.ObjectBoundsMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.ObjectBoundsMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.Music?.GetHashCode());
+                ret = ret.CombineHashCode(this.OffsetData?.GetHashCode());
+                ret = ret.CombineHashCode(this.Road?.GetHashCode());
+                ret = ret.CombineHashCode(this.TopCell?.GetHashCode());
+                ret = ret.CombineHashCode(this.SubCellsTimestamp?.GetHashCode());
+                ret = ret.CombineHashCode(this.SubCells?.GetHashCode());
+                ret = ret.CombineHashCode(this.UsingOffsetLength?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.Climate)) return false;
+                if (!eval(this.Water)) return false;
+                if (!eval(this.Icon)) return false;
+                if (MapData != null)
+                {
+                    if (!eval(this.MapData.Overall)) return false;
+                    if (this.MapData.Specific != null && !this.MapData.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.ObjectBoundsMin)) return false;
+                if (!eval(this.ObjectBoundsMax)) return false;
+                if (!eval(this.Music)) return false;
+                if (!eval(this.OffsetData)) return false;
+                if (Road != null)
+                {
+                    if (!eval(this.Road.Overall)) return false;
+                    if (this.Road.Specific != null && !this.Road.Specific.AllEqual(eval)) return false;
+                }
+                if (TopCell != null)
+                {
+                    if (!eval(this.TopCell.Overall)) return false;
+                    if (this.TopCell.Specific != null && !this.TopCell.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.SubCellsTimestamp)) return false;
+                if (this.SubCells != null)
+                {
+                    if (!eval(this.SubCells.Overall)) return false;
+                    if (this.SubCells.Specific != null)
+                    {
+                        foreach (var item in this.SubCells.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.UsingOffsetLength)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Worldspace.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Parent = eval(this.Parent);
+                obj.Climate = eval(this.Climate);
+                obj.Water = eval(this.Water);
+                obj.Icon = eval(this.Icon);
+                obj.MapData = this.MapData == null ? null : new MaskItem<R, MapData.Mask<R>?>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
+                obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
+                obj.Music = eval(this.Music);
+                obj.OffsetData = eval(this.OffsetData);
+                obj.Road = this.Road == null ? null : new MaskItem<R, Road.Mask<R>?>(eval(this.Road.Overall), this.Road.Specific?.Translate(eval));
+                obj.TopCell = this.TopCell == null ? null : new MaskItem<R, Cell.Mask<R>?>(eval(this.TopCell.Overall), this.TopCell.Specific?.Translate(eval));
+                obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
+                if (SubCells != null)
+                {
+                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
+                    if (SubCells.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();
+                        obj.SubCells.Specific = l;
+                        foreach (var item in SubCells.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.UsingOffsetLength = eval(this.UsingOffsetLength);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Worldspace.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Worldspace.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Worldspace.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Parent ?? true)
+                    {
+                        fg.AppendLine($"Parent => {Parent}");
+                    }
+                    if (printMask?.Climate ?? true)
+                    {
+                        fg.AppendLine($"Climate => {Climate}");
+                    }
+                    if (printMask?.Water ?? true)
+                    {
+                        fg.AppendLine($"Water => {Water}");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.MapData?.Overall ?? true)
+                    {
+                        MapData?.ToString(fg);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.ObjectBoundsMin ?? true)
+                    {
+                        fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
+                    }
+                    if (printMask?.ObjectBoundsMax ?? true)
+                    {
+                        fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
+                    }
+                    if (printMask?.Music ?? true)
+                    {
+                        fg.AppendLine($"Music => {Music}");
+                    }
+                    if (printMask?.OffsetData ?? true)
+                    {
+                        fg.AppendLine($"OffsetData => {OffsetData}");
+                    }
+                    if (printMask?.Road?.Overall ?? true)
+                    {
+                        Road?.ToString(fg);
+                    }
+                    if (printMask?.TopCell?.Overall ?? true)
+                    {
+                        TopCell?.ToString(fg);
+                    }
+                    if (printMask?.SubCellsTimestamp ?? true)
+                    {
+                        fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
+                    }
+                    if (printMask?.SubCells?.Overall ?? true)
+                    {
+                        fg.AppendLine("SubCells =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (SubCells != null)
+                            {
+                                if (SubCells.Overall != null)
+                                {
+                                    fg.AppendLine(SubCells.Overall.ToString());
+                                }
+                                if (SubCells.Specific != null)
+                                {
+                                    foreach (var subItem in SubCells.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.UsingOffsetLength ?? true)
+                    {
+                        fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            Place.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public Exception? Parent;
+            public Exception? Climate;
+            public Exception? Water;
+            public Exception? Icon;
+            public MaskItem<Exception?, MapData.ErrorMask?>? MapData;
+            public Exception? Flags;
+            public Exception? ObjectBoundsMin;
+            public Exception? ObjectBoundsMax;
+            public Exception? Music;
+            public Exception? OffsetData;
+            public MaskItem<Exception?, Road.ErrorMask?>? Road;
+            public MaskItem<Exception?, Cell.ErrorMask?>? TopCell;
+            public Exception? SubCellsTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>? SubCells;
+            public Exception? UsingOffsetLength;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
+                switch (enu)
+                {
+                    case Worldspace_FieldIndex.Name:
+                        return Name;
+                    case Worldspace_FieldIndex.Parent:
+                        return Parent;
+                    case Worldspace_FieldIndex.Climate:
+                        return Climate;
+                    case Worldspace_FieldIndex.Water:
+                        return Water;
+                    case Worldspace_FieldIndex.Icon:
+                        return Icon;
+                    case Worldspace_FieldIndex.MapData:
+                        return MapData;
+                    case Worldspace_FieldIndex.Flags:
+                        return Flags;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        return ObjectBoundsMin;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        return ObjectBoundsMax;
+                    case Worldspace_FieldIndex.Music:
+                        return Music;
+                    case Worldspace_FieldIndex.OffsetData:
+                        return OffsetData;
+                    case Worldspace_FieldIndex.Road:
+                        return Road;
+                    case Worldspace_FieldIndex.TopCell:
+                        return TopCell;
+                    case Worldspace_FieldIndex.SubCellsTimestamp:
+                        return SubCellsTimestamp;
+                    case Worldspace_FieldIndex.SubCells:
+                        return SubCells;
+                    case Worldspace_FieldIndex.UsingOffsetLength:
+                        return UsingOffsetLength;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
+                switch (enu)
+                {
+                    case Worldspace_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Worldspace_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
+                    case Worldspace_FieldIndex.Climate:
+                        this.Climate = ex;
+                        break;
+                    case Worldspace_FieldIndex.Water:
+                        this.Water = ex;
+                        break;
+                    case Worldspace_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Worldspace_FieldIndex.MapData:
+                        this.MapData = new MaskItem<Exception?, MapData.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        this.ObjectBoundsMin = ex;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        this.ObjectBoundsMax = ex;
+                        break;
+                    case Worldspace_FieldIndex.Music:
+                        this.Music = ex;
+                        break;
+                    case Worldspace_FieldIndex.OffsetData:
+                        this.OffsetData = ex;
+                        break;
+                    case Worldspace_FieldIndex.Road:
+                        this.Road = new MaskItem<Exception?, Road.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.TopCell:
+                        this.TopCell = new MaskItem<Exception?, Cell.ErrorMask?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.SubCellsTimestamp:
+                        this.SubCellsTimestamp = ex;
+                        break;
+                    case Worldspace_FieldIndex.SubCells:
+                        this.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.UsingOffsetLength:
+                        this.UsingOffsetLength = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
+                switch (enu)
+                {
+                    case Worldspace_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.Parent:
+                        this.Parent = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.Climate:
+                        this.Climate = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.Water:
+                        this.Water = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.MapData:
+                        this.MapData = (MaskItem<Exception?, MapData.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMin:
+                        this.ObjectBoundsMin = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.ObjectBoundsMax:
+                        this.ObjectBoundsMax = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.Music:
+                        this.Music = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.OffsetData:
+                        this.OffsetData = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.Road:
+                        this.Road = (MaskItem<Exception?, Road.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.TopCell:
+                        this.TopCell = (MaskItem<Exception?, Cell.ErrorMask?>?)obj;
+                        break;
+                    case Worldspace_FieldIndex.SubCellsTimestamp:
+                        this.SubCellsTimestamp = (Exception)obj;
+                        break;
+                    case Worldspace_FieldIndex.SubCells:
+                        this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>)obj;
+                        break;
+                    case Worldspace_FieldIndex.UsingOffsetLength:
+                        this.UsingOffsetLength = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Parent != null) return true;
+                if (Climate != null) return true;
+                if (Water != null) return true;
+                if (Icon != null) return true;
+                if (MapData != null) return true;
+                if (Flags != null) return true;
+                if (ObjectBoundsMin != null) return true;
+                if (ObjectBoundsMax != null) return true;
+                if (Music != null) return true;
+                if (OffsetData != null) return true;
+                if (Road != null) return true;
+                if (TopCell != null) return true;
+                if (SubCellsTimestamp != null) return true;
+                if (SubCells != null) return true;
+                if (UsingOffsetLength != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Parent => {Parent}");
+                fg.AppendLine($"Climate => {Climate}");
+                fg.AppendLine($"Water => {Water}");
+                fg.AppendLine($"Icon => {Icon}");
+                MapData?.ToString(fg);
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
+                fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
+                fg.AppendLine($"Music => {Music}");
+                fg.AppendLine($"OffsetData => {OffsetData}");
+                Road?.ToString(fg);
+                TopCell?.ToString(fg);
+                fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
+                fg.AppendLine("SubCells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (SubCells != null)
+                    {
+                        if (SubCells.Overall != null)
+                        {
+                            fg.AppendLine(SubCells.Overall.ToString());
+                        }
+                        if (SubCells.Specific != null)
+                        {
+                            foreach (var subItem in SubCells.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.Climate = this.Climate.Combine(rhs.Climate);
+                ret.Water = this.Water.Combine(rhs.Water);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.MapData = new MaskItem<Exception?, MapData.ErrorMask?>(ExceptionExt.Combine(this.MapData?.Overall, rhs.MapData?.Overall), (this.MapData?.Specific as IErrorMask<MapData.ErrorMask>)?.Combine(rhs.MapData?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
+                ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
+                ret.Music = this.Music.Combine(rhs.Music);
+                ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
+                ret.Road = new MaskItem<Exception?, Road.ErrorMask?>(ExceptionExt.Combine(this.Road?.Overall, rhs.Road?.Overall), (this.Road?.Specific as IErrorMask<Road.ErrorMask>)?.Combine(rhs.Road?.Specific));
+                ret.TopCell = new MaskItem<Exception?, Cell.ErrorMask?>(ExceptionExt.Combine(this.TopCell?.Overall, rhs.TopCell?.Overall), (this.TopCell?.Specific as IErrorMask<Cell.ErrorMask>)?.Combine(rhs.TopCell?.Specific));
+                ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
+                ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock.ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
+                ret.UsingOffsetLength = this.UsingOffsetLength.Combine(rhs.UsingOffsetLength);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            Place.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public bool Parent;
+            public bool Climate;
+            public bool Water;
+            public bool Icon;
+            public MaskItem<bool, MapData.TranslationMask?> MapData;
+            public bool Flags;
+            public bool ObjectBoundsMin;
+            public bool ObjectBoundsMax;
+            public bool Music;
+            public bool OffsetData;
+            public MaskItem<bool, Road.TranslationMask?> Road;
+            public MaskItem<bool, Cell.TranslationMask?> TopCell;
+            public bool SubCellsTimestamp;
+            public MaskItem<bool, WorldspaceBlock.TranslationMask?> SubCells;
+            public bool UsingOffsetLength;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Parent = defaultOn;
+                this.Climate = defaultOn;
+                this.Water = defaultOn;
+                this.Icon = defaultOn;
+                this.MapData = new MaskItem<bool, MapData.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.ObjectBoundsMin = defaultOn;
+                this.ObjectBoundsMax = defaultOn;
+                this.Music = defaultOn;
+                this.OffsetData = defaultOn;
+                this.Road = new MaskItem<bool, Road.TranslationMask?>(defaultOn, null);
+                this.TopCell = new MaskItem<bool, Cell.TranslationMask?>(defaultOn, null);
+                this.SubCellsTimestamp = defaultOn;
+                this.SubCells = new MaskItem<bool, WorldspaceBlock.TranslationMask?>(defaultOn, null);
+                this.UsingOffsetLength = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Parent, null));
+                ret.Add((Climate, null));
+                ret.Add((Water, null));
+                ret.Add((Icon, null));
+                ret.Add((MapData?.Overall ?? true, MapData?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((ObjectBoundsMin, null));
+                ret.Add((ObjectBoundsMax, null));
+                ret.Add((Music, null));
+                ret.Add((OffsetData, null));
+                ret.Add((Road?.Overall ?? true, Road?.Specific?.GetCrystal()));
+                ret.Add((TopCell?.Overall ?? true, TopCell?.Specific?.GetCrystal()));
+                ret.Add((SubCellsTimestamp, null));
+                ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
+                ret.Add((UsingOffsetLength, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -527,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Worldspace_Mask<bool> GetEqualsMask(
+        public static Worldspace.Mask<bool> GetEqualsMask(
             this IWorldspaceGetter item,
             IWorldspaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -541,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IWorldspaceGetter item,
             string? name = null,
-            Worldspace_Mask<bool>? printMask = null)
+            Worldspace.Mask<bool>? printMask = null)
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -553,7 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceGetter item,
             FileGeneration fg,
             string? name = null,
-            Worldspace_Mask<bool>? printMask = null)
+            Worldspace.Mask<bool>? printMask = null)
         {
             ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -564,16 +1315,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IWorldspaceGetter item,
-            Worldspace_Mask<bool?> checkMask)
+            Worldspace.Mask<bool?> checkMask)
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Worldspace_Mask<bool> GetHasBeenSetMask(this IWorldspaceGetter item)
+        public static Worldspace.Mask<bool> GetHasBeenSetMask(this IWorldspaceGetter item)
         {
-            var ret = new Worldspace_Mask<bool>(false);
+            var ret = new Worldspace.Mask<bool>(false);
             ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -592,8 +1343,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWorldspaceInternal lhs,
             IWorldspaceGetter rhs,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? copyMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -601,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Worldspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -619,7 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Worldspace DeepCopy(
             this IWorldspaceGetter item,
-            Worldspace_TranslationMask? copyMask = null)
+            Worldspace.TranslationMask? copyMask = null)
         {
             return ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -628,8 +1379,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Worldspace DeepCopy(
             this IWorldspaceGetter item,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? copyMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? copyMask = null)
         {
             return ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -653,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             XElement node,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -666,8 +1417,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             XElement node,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -675,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Worldspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -694,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             string path,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -706,8 +1457,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             string path,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -721,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -734,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             Stream stream,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -746,8 +1497,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             Stream stream,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -761,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Worldspace_TranslationMask? translationMask = null)
+            Worldspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -883,9 +1634,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 21;
 
-        public static readonly Type MaskType = typeof(Worldspace_Mask<>);
+        public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Worldspace_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Worldspace.ErrorMask);
 
         public static readonly Type ClassType = typeof(Worldspace);
 
@@ -1492,12 +2243,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly WorldspaceCommon Instance = new WorldspaceCommon();
 
-        public Worldspace_Mask<bool> GetEqualsMask(
+        public Worldspace.Mask<bool> GetEqualsMask(
             IWorldspaceGetter item,
             IWorldspaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Worldspace_Mask<bool>(false);
+            var ret = new Worldspace.Mask<bool>(false);
             ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1509,7 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IWorldspaceGetter item,
             IWorldspaceGetter rhs,
-            Worldspace_Mask<bool> ret,
+            Worldspace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1550,7 +2301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IWorldspaceGetter item,
             string? name = null,
-            Worldspace_Mask<bool>? printMask = null)
+            Worldspace.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1565,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter item,
             FileGeneration fg,
             string? name = null,
-            Worldspace_Mask<bool>? printMask = null)
+            Worldspace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1589,7 +2340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWorldspaceGetter item,
             FileGeneration fg,
-            Worldspace_Mask<bool>? printMask = null)
+            Worldspace.Mask<bool>? printMask = null)
         {
             PlaceCommon.ToStringFields(
                 item: item,
@@ -1677,7 +2428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IWorldspaceGetter item,
-            Worldspace_Mask<bool?> checkMask)
+            Worldspace.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent.HasBeenSet) return false;
@@ -1703,7 +2454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IWorldspaceGetter item,
-            Worldspace_Mask<bool> mask)
+            Worldspace.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Parent = item.Parent.HasBeenSet;
@@ -1711,18 +2462,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Water = item.Water.HasBeenSet;
             mask.Icon = (item.Icon != null);
             var itemMapData = item.MapData;
-            mask.MapData = new MaskItem<bool, MapData_Mask<bool>?>(itemMapData != null, itemMapData?.GetHasBeenSetMask());
+            mask.MapData = new MaskItem<bool, MapData.Mask<bool>?>(itemMapData != null, itemMapData?.GetHasBeenSetMask());
             mask.Flags = (item.Flags != null);
             mask.ObjectBoundsMin = (item.ObjectBoundsMin != null);
             mask.ObjectBoundsMax = (item.ObjectBoundsMax != null);
             mask.Music = (item.Music != null);
             mask.OffsetData = item.OffsetData_IsSet;
             var itemRoad = item.Road;
-            mask.Road = new MaskItem<bool, Road_Mask<bool>?>(itemRoad != null, itemRoad?.GetHasBeenSetMask());
+            mask.Road = new MaskItem<bool, Road.Mask<bool>?>(itemRoad != null, itemRoad?.GetHasBeenSetMask());
             var itemTopCell = item.TopCell;
-            mask.TopCell = new MaskItem<bool, Cell_Mask<bool>?>(itemTopCell != null, itemTopCell?.GetHasBeenSetMask());
+            mask.TopCell = new MaskItem<bool, Cell.Mask<bool>?>(itemTopCell != null, itemTopCell?.GetHasBeenSetMask());
             mask.SubCellsTimestamp = true;
-            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>?>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>>(item.SubCells.HasBeenSet, item.SubCells.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.UsingOffsetLength = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2329,7 +3080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Worldspace DeepCopy(
             IWorldspaceGetter item,
-            Worldspace_TranslationMask? copyMask = null)
+            Worldspace.TranslationMask? copyMask = null)
         {
             Worldspace ret = (Worldspace)((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2340,8 +3091,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Worldspace DeepCopy(
             IWorldspaceGetter item,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? copyMask = null)
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? copyMask = null)
         {
             Worldspace ret = (Worldspace)((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -3037,8 +3788,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWorldspaceGetter item,
             XElement node,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null,
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -3048,14 +3799,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Worldspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IWorldspaceGetter item,
             string path,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null,
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3071,8 +3822,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWorldspaceGetter item,
             Stream stream,
-            out Worldspace_ErrorMask errorMask,
-            Worldspace_TranslationMask? translationMask = null,
+            out Worldspace.ErrorMask errorMask,
+            Worldspace.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3089,756 +3840,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Worldspace_Mask<T> :
-        Place_Mask<T>,
-        IMask<T>,
-        IEquatable<Worldspace_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Worldspace_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Parent = initialValue;
-            this.Climate = initialValue;
-            this.Water = initialValue;
-            this.Icon = initialValue;
-            this.MapData = new MaskItem<T, MapData_Mask<T>?>(initialValue, new MapData_Mask<T>(initialValue));
-            this.Flags = initialValue;
-            this.ObjectBoundsMin = initialValue;
-            this.ObjectBoundsMax = initialValue;
-            this.Music = initialValue;
-            this.OffsetData = initialValue;
-            this.Road = new MaskItem<T, Road_Mask<T>?>(initialValue, new Road_Mask<T>(initialValue));
-            this.TopCell = new MaskItem<T, Cell_Mask<T>?>(initialValue, new Cell_Mask<T>(initialValue));
-            this.SubCellsTimestamp = initialValue;
-            this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WorldspaceBlock_Mask<T>?>>());
-            this.UsingOffsetLength = initialValue;
-        }
-
-        public Worldspace_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Parent,
-            T Climate,
-            T Water,
-            T Icon,
-            T MapData,
-            T Flags,
-            T ObjectBoundsMin,
-            T ObjectBoundsMax,
-            T Music,
-            T OffsetData,
-            T Road,
-            T TopCell,
-            T SubCellsTimestamp,
-            T SubCells,
-            T UsingOffsetLength)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Parent = Parent;
-            this.Climate = Climate;
-            this.Water = Water;
-            this.Icon = Icon;
-            this.MapData = new MaskItem<T, MapData_Mask<T>?>(MapData, new MapData_Mask<T>(MapData));
-            this.Flags = Flags;
-            this.ObjectBoundsMin = ObjectBoundsMin;
-            this.ObjectBoundsMax = ObjectBoundsMax;
-            this.Music = Music;
-            this.OffsetData = OffsetData;
-            this.Road = new MaskItem<T, Road_Mask<T>?>(Road, new Road_Mask<T>(Road));
-            this.TopCell = new MaskItem<T, Cell_Mask<T>?>(TopCell, new Cell_Mask<T>(TopCell));
-            this.SubCellsTimestamp = SubCellsTimestamp;
-            this.SubCells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>?>>>(SubCells, Enumerable.Empty<MaskItemIndexed<T, WorldspaceBlock_Mask<T>?>>());
-            this.UsingOffsetLength = UsingOffsetLength;
-        }
-
-        #pragma warning disable CS8618
-        protected Worldspace_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Parent;
-        public T Climate;
-        public T Water;
-        public T Icon;
-        public MaskItem<T, MapData_Mask<T>?>? MapData { get; set; }
-        public T Flags;
-        public T ObjectBoundsMin;
-        public T ObjectBoundsMax;
-        public T Music;
-        public T OffsetData;
-        public MaskItem<T, Road_Mask<T>?>? Road { get; set; }
-        public MaskItem<T, Cell_Mask<T>?>? TopCell { get; set; }
-        public T SubCellsTimestamp;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WorldspaceBlock_Mask<T>?>>>? SubCells;
-        public T UsingOffsetLength;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Worldspace_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Worldspace_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Parent, rhs.Parent)) return false;
-            if (!object.Equals(this.Climate, rhs.Climate)) return false;
-            if (!object.Equals(this.Water, rhs.Water)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.MapData, rhs.MapData)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.ObjectBoundsMin, rhs.ObjectBoundsMin)) return false;
-            if (!object.Equals(this.ObjectBoundsMax, rhs.ObjectBoundsMax)) return false;
-            if (!object.Equals(this.Music, rhs.Music)) return false;
-            if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
-            if (!object.Equals(this.Road, rhs.Road)) return false;
-            if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
-            if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
-            if (!object.Equals(this.SubCells, rhs.SubCells)) return false;
-            if (!object.Equals(this.UsingOffsetLength, rhs.UsingOffsetLength)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Parent?.GetHashCode());
-            ret = ret.CombineHashCode(this.Climate?.GetHashCode());
-            ret = ret.CombineHashCode(this.Water?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.MapData?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.ObjectBoundsMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.ObjectBoundsMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.Music?.GetHashCode());
-            ret = ret.CombineHashCode(this.OffsetData?.GetHashCode());
-            ret = ret.CombineHashCode(this.Road?.GetHashCode());
-            ret = ret.CombineHashCode(this.TopCell?.GetHashCode());
-            ret = ret.CombineHashCode(this.SubCellsTimestamp?.GetHashCode());
-            ret = ret.CombineHashCode(this.SubCells?.GetHashCode());
-            ret = ret.CombineHashCode(this.UsingOffsetLength?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Parent)) return false;
-            if (!eval(this.Climate)) return false;
-            if (!eval(this.Water)) return false;
-            if (!eval(this.Icon)) return false;
-            if (MapData != null)
-            {
-                if (!eval(this.MapData.Overall)) return false;
-                if (this.MapData.Specific != null && !this.MapData.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.ObjectBoundsMin)) return false;
-            if (!eval(this.ObjectBoundsMax)) return false;
-            if (!eval(this.Music)) return false;
-            if (!eval(this.OffsetData)) return false;
-            if (Road != null)
-            {
-                if (!eval(this.Road.Overall)) return false;
-                if (this.Road.Specific != null && !this.Road.Specific.AllEqual(eval)) return false;
-            }
-            if (TopCell != null)
-            {
-                if (!eval(this.TopCell.Overall)) return false;
-                if (this.TopCell.Specific != null && !this.TopCell.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.SubCellsTimestamp)) return false;
-            if (this.SubCells != null)
-            {
-                if (!eval(this.SubCells.Overall)) return false;
-                if (this.SubCells.Specific != null)
-                {
-                    foreach (var item in this.SubCells.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.UsingOffsetLength)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Worldspace_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Worldspace_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Worldspace_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Parent = eval(this.Parent);
-            obj.Climate = eval(this.Climate);
-            obj.Water = eval(this.Water);
-            obj.Icon = eval(this.Icon);
-            obj.MapData = this.MapData == null ? null : new MaskItem<R, MapData_Mask<R>?>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
-            obj.Flags = eval(this.Flags);
-            obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
-            obj.ObjectBoundsMax = eval(this.ObjectBoundsMax);
-            obj.Music = eval(this.Music);
-            obj.OffsetData = eval(this.OffsetData);
-            obj.Road = this.Road == null ? null : new MaskItem<R, Road_Mask<R>?>(eval(this.Road.Overall), this.Road.Specific?.Translate(eval));
-            obj.TopCell = this.TopCell == null ? null : new MaskItem<R, Cell_Mask<R>?>(eval(this.TopCell.Overall), this.TopCell.Specific?.Translate(eval));
-            obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
-            if (SubCells != null)
-            {
-                obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock_Mask<R>?>>>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock_Mask<R>?>>());
-                if (SubCells.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, WorldspaceBlock_Mask<R>?>>();
-                    obj.SubCells.Specific = l;
-                    foreach (var item in SubCells.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, WorldspaceBlock_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceBlock_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.UsingOffsetLength = eval(this.UsingOffsetLength);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Worldspace_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Worldspace_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Worldspace_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Parent ?? true)
-                {
-                    fg.AppendLine($"Parent => {Parent}");
-                }
-                if (printMask?.Climate ?? true)
-                {
-                    fg.AppendLine($"Climate => {Climate}");
-                }
-                if (printMask?.Water ?? true)
-                {
-                    fg.AppendLine($"Water => {Water}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.MapData?.Overall ?? true)
-                {
-                    MapData?.ToString(fg);
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.ObjectBoundsMin ?? true)
-                {
-                    fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
-                }
-                if (printMask?.ObjectBoundsMax ?? true)
-                {
-                    fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
-                }
-                if (printMask?.Music ?? true)
-                {
-                    fg.AppendLine($"Music => {Music}");
-                }
-                if (printMask?.OffsetData ?? true)
-                {
-                    fg.AppendLine($"OffsetData => {OffsetData}");
-                }
-                if (printMask?.Road?.Overall ?? true)
-                {
-                    Road?.ToString(fg);
-                }
-                if (printMask?.TopCell?.Overall ?? true)
-                {
-                    TopCell?.ToString(fg);
-                }
-                if (printMask?.SubCellsTimestamp ?? true)
-                {
-                    fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
-                }
-                if (printMask?.SubCells?.Overall ?? true)
-                {
-                    fg.AppendLine("SubCells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (SubCells != null)
-                        {
-                            if (SubCells.Overall != null)
-                            {
-                                fg.AppendLine(SubCells.Overall.ToString());
-                            }
-                            if (SubCells.Specific != null)
-                            {
-                                foreach (var subItem in SubCells.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.UsingOffsetLength ?? true)
-                {
-                    fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Worldspace_ErrorMask : Place_ErrorMask, IErrorMask<Worldspace_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public Exception? Parent;
-        public Exception? Climate;
-        public Exception? Water;
-        public Exception? Icon;
-        public MaskItem<Exception?, MapData_ErrorMask?>? MapData;
-        public Exception? Flags;
-        public Exception? ObjectBoundsMin;
-        public Exception? ObjectBoundsMax;
-        public Exception? Music;
-        public Exception? OffsetData;
-        public MaskItem<Exception?, Road_ErrorMask?>? Road;
-        public MaskItem<Exception?, Cell_ErrorMask?>? TopCell;
-        public Exception? SubCellsTimestamp;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock_ErrorMask?>>?>? SubCells;
-        public Exception? UsingOffsetLength;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    return Name;
-                case Worldspace_FieldIndex.Parent:
-                    return Parent;
-                case Worldspace_FieldIndex.Climate:
-                    return Climate;
-                case Worldspace_FieldIndex.Water:
-                    return Water;
-                case Worldspace_FieldIndex.Icon:
-                    return Icon;
-                case Worldspace_FieldIndex.MapData:
-                    return MapData;
-                case Worldspace_FieldIndex.Flags:
-                    return Flags;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    return ObjectBoundsMin;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    return ObjectBoundsMax;
-                case Worldspace_FieldIndex.Music:
-                    return Music;
-                case Worldspace_FieldIndex.OffsetData:
-                    return OffsetData;
-                case Worldspace_FieldIndex.Road:
-                    return Road;
-                case Worldspace_FieldIndex.TopCell:
-                    return TopCell;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return SubCellsTimestamp;
-                case Worldspace_FieldIndex.SubCells:
-                    return SubCells;
-                case Worldspace_FieldIndex.UsingOffsetLength:
-                    return UsingOffsetLength;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Worldspace_FieldIndex.Parent:
-                    this.Parent = ex;
-                    break;
-                case Worldspace_FieldIndex.Climate:
-                    this.Climate = ex;
-                    break;
-                case Worldspace_FieldIndex.Water:
-                    this.Water = ex;
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Worldspace_FieldIndex.MapData:
-                    this.MapData = new MaskItem<Exception?, MapData_ErrorMask?>(ex, null);
-                    break;
-                case Worldspace_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    this.ObjectBoundsMin = ex;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    this.ObjectBoundsMax = ex;
-                    break;
-                case Worldspace_FieldIndex.Music:
-                    this.Music = ex;
-                    break;
-                case Worldspace_FieldIndex.OffsetData:
-                    this.OffsetData = ex;
-                    break;
-                case Worldspace_FieldIndex.Road:
-                    this.Road = new MaskItem<Exception?, Road_ErrorMask?>(ex, null);
-                    break;
-                case Worldspace_FieldIndex.TopCell:
-                    this.TopCell = new MaskItem<Exception?, Cell_ErrorMask?>(ex, null);
-                    break;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    this.SubCellsTimestamp = ex;
-                    break;
-                case Worldspace_FieldIndex.SubCells:
-                    this.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock_ErrorMask?>>?>(ex, null);
-                    break;
-                case Worldspace_FieldIndex.UsingOffsetLength:
-                    this.UsingOffsetLength = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Worldspace_FieldIndex enu = (Worldspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Worldspace_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.Parent:
-                    this.Parent = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.Climate:
-                    this.Climate = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.Water:
-                    this.Water = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.MapData:
-                    this.MapData = (MaskItem<Exception?, MapData_ErrorMask?>?)obj;
-                    break;
-                case Worldspace_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMin:
-                    this.ObjectBoundsMin = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.ObjectBoundsMax:
-                    this.ObjectBoundsMax = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.Music:
-                    this.Music = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.OffsetData:
-                    this.OffsetData = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.Road:
-                    this.Road = (MaskItem<Exception?, Road_ErrorMask?>?)obj;
-                    break;
-                case Worldspace_FieldIndex.TopCell:
-                    this.TopCell = (MaskItem<Exception?, Cell_ErrorMask?>?)obj;
-                    break;
-                case Worldspace_FieldIndex.SubCellsTimestamp:
-                    this.SubCellsTimestamp = (Exception)obj;
-                    break;
-                case Worldspace_FieldIndex.SubCells:
-                    this.SubCells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock_ErrorMask?>>?>)obj;
-                    break;
-                case Worldspace_FieldIndex.UsingOffsetLength:
-                    this.UsingOffsetLength = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Parent != null) return true;
-            if (Climate != null) return true;
-            if (Water != null) return true;
-            if (Icon != null) return true;
-            if (MapData != null) return true;
-            if (Flags != null) return true;
-            if (ObjectBoundsMin != null) return true;
-            if (ObjectBoundsMax != null) return true;
-            if (Music != null) return true;
-            if (OffsetData != null) return true;
-            if (Road != null) return true;
-            if (TopCell != null) return true;
-            if (SubCellsTimestamp != null) return true;
-            if (SubCells != null) return true;
-            if (UsingOffsetLength != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Worldspace_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Parent => {Parent}");
-            fg.AppendLine($"Climate => {Climate}");
-            fg.AppendLine($"Water => {Water}");
-            fg.AppendLine($"Icon => {Icon}");
-            MapData?.ToString(fg);
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"ObjectBoundsMin => {ObjectBoundsMin}");
-            fg.AppendLine($"ObjectBoundsMax => {ObjectBoundsMax}");
-            fg.AppendLine($"Music => {Music}");
-            fg.AppendLine($"OffsetData => {OffsetData}");
-            Road?.ToString(fg);
-            TopCell?.ToString(fg);
-            fg.AppendLine($"SubCellsTimestamp => {SubCellsTimestamp}");
-            fg.AppendLine("SubCells =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (SubCells != null)
-                {
-                    if (SubCells.Overall != null)
-                    {
-                        fg.AppendLine(SubCells.Overall.ToString());
-                    }
-                    if (SubCells.Specific != null)
-                    {
-                        foreach (var subItem in SubCells.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"UsingOffsetLength => {UsingOffsetLength}");
-        }
-        #endregion
-
-        #region Combine
-        public Worldspace_ErrorMask Combine(Worldspace_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Worldspace_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Parent = this.Parent.Combine(rhs.Parent);
-            ret.Climate = this.Climate.Combine(rhs.Climate);
-            ret.Water = this.Water.Combine(rhs.Water);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.MapData = new MaskItem<Exception?, MapData_ErrorMask?>(ExceptionExt.Combine(this.MapData?.Overall, rhs.MapData?.Overall), (this.MapData?.Specific as IErrorMask<MapData_ErrorMask>)?.Combine(rhs.MapData?.Specific));
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.ObjectBoundsMin = this.ObjectBoundsMin.Combine(rhs.ObjectBoundsMin);
-            ret.ObjectBoundsMax = this.ObjectBoundsMax.Combine(rhs.ObjectBoundsMax);
-            ret.Music = this.Music.Combine(rhs.Music);
-            ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
-            ret.Road = new MaskItem<Exception?, Road_ErrorMask?>(ExceptionExt.Combine(this.Road?.Overall, rhs.Road?.Overall), (this.Road?.Specific as IErrorMask<Road_ErrorMask>)?.Combine(rhs.Road?.Specific));
-            ret.TopCell = new MaskItem<Exception?, Cell_ErrorMask?>(ExceptionExt.Combine(this.TopCell?.Overall, rhs.TopCell?.Overall), (this.TopCell?.Specific as IErrorMask<Cell_ErrorMask>)?.Combine(rhs.TopCell?.Specific));
-            ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
-            ret.SubCells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceBlock_ErrorMask?>>?>(ExceptionExt.Combine(this.SubCells?.Overall, rhs.SubCells?.Overall), ExceptionExt.Combine(this.SubCells?.Specific, rhs.SubCells?.Specific));
-            ret.UsingOffsetLength = this.UsingOffsetLength.Combine(rhs.UsingOffsetLength);
-            return ret;
-        }
-        public static Worldspace_ErrorMask? Combine(Worldspace_ErrorMask? lhs, Worldspace_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Worldspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Worldspace_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Worldspace_TranslationMask : Place_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Parent;
-        public bool Climate;
-        public bool Water;
-        public bool Icon;
-        public MaskItem<bool, MapData_TranslationMask?> MapData;
-        public bool Flags;
-        public bool ObjectBoundsMin;
-        public bool ObjectBoundsMax;
-        public bool Music;
-        public bool OffsetData;
-        public MaskItem<bool, Road_TranslationMask?> Road;
-        public MaskItem<bool, Cell_TranslationMask?> TopCell;
-        public bool SubCellsTimestamp;
-        public MaskItem<bool, WorldspaceBlock_TranslationMask?> SubCells;
-        public bool UsingOffsetLength;
-        #endregion
-
-        #region Ctors
-        public Worldspace_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Parent = defaultOn;
-            this.Climate = defaultOn;
-            this.Water = defaultOn;
-            this.Icon = defaultOn;
-            this.MapData = new MaskItem<bool, MapData_TranslationMask?>(defaultOn, null);
-            this.Flags = defaultOn;
-            this.ObjectBoundsMin = defaultOn;
-            this.ObjectBoundsMax = defaultOn;
-            this.Music = defaultOn;
-            this.OffsetData = defaultOn;
-            this.Road = new MaskItem<bool, Road_TranslationMask?>(defaultOn, null);
-            this.TopCell = new MaskItem<bool, Cell_TranslationMask?>(defaultOn, null);
-            this.SubCellsTimestamp = defaultOn;
-            this.SubCells = new MaskItem<bool, WorldspaceBlock_TranslationMask?>(defaultOn, null);
-            this.UsingOffsetLength = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Parent, null));
-            ret.Add((Climate, null));
-            ret.Add((Water, null));
-            ret.Add((Icon, null));
-            ret.Add((MapData?.Overall ?? true, MapData?.Specific?.GetCrystal()));
-            ret.Add((Flags, null));
-            ret.Add((ObjectBoundsMin, null));
-            ret.Add((ObjectBoundsMax, null));
-            ret.Add((Music, null));
-            ret.Add((OffsetData, null));
-            ret.Add((Road?.Overall ?? true, Road?.Specific?.GetCrystal()));
-            ret.Add((TopCell?.Overall ?? true, TopCell?.Specific?.GetCrystal()));
-            ret.Add((SubCellsTimestamp, null));
-            ret.Add((SubCells?.Overall ?? true, SubCells?.Specific?.GetCrystal()));
-            ret.Add((UsingOffsetLength, null));
-        }
-    }
 }
 #endregion
 

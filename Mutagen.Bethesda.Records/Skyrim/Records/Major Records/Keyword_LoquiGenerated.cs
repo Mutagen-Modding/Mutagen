@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new Keyword CreateFromXml(
             XElement node,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -124,15 +124,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Keyword CreateFromXml(
             XElement node,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Keyword.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Keyword CreateFromXml(
             string path,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Keyword CreateFromXml(
             string path,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Keyword CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Keyword CreateFromXml(
             Stream stream,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,8 +196,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Keyword CreateFromXml(
             Stream stream,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Keyword CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -220,6 +220,271 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            SkyrimMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Color = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T SkyrimMajorRecordFlags,
+                T FormVersion,
+                T Version2,
+                T Color)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+                FormVersion: FormVersion,
+                Version2: Version2)
+            {
+                this.Color = Color;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Color;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Color?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Color)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Keyword.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Color = eval(this.Color);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Keyword.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Keyword.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Keyword.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendLine($"Color => {Color}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            SkyrimMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Color;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
+                switch (enu)
+                {
+                    case Keyword_FieldIndex.Color:
+                        return Color;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
+                switch (enu)
+                {
+                    case Keyword_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
+                switch (enu)
+                {
+                    case Keyword_FieldIndex.Color:
+                        this.Color = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Color != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Color => {Color}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Color = this.Color.Combine(rhs.Color);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            SkyrimMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Color;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Color = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Color, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -334,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Keyword_Mask<bool> GetEqualsMask(
+        public static Keyword.Mask<bool> GetEqualsMask(
             this IKeywordGetter item,
             IKeywordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -348,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IKeywordGetter item,
             string? name = null,
-            Keyword_Mask<bool>? printMask = null)
+            Keyword.Mask<bool>? printMask = null)
         {
             return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -360,7 +625,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordGetter item,
             FileGeneration fg,
             string? name = null,
-            Keyword_Mask<bool>? printMask = null)
+            Keyword.Mask<bool>? printMask = null)
         {
             ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -371,16 +636,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IKeywordGetter item,
-            Keyword_Mask<bool?> checkMask)
+            Keyword.Mask<bool?> checkMask)
         {
             return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Keyword_Mask<bool> GetHasBeenSetMask(this IKeywordGetter item)
+        public static Keyword.Mask<bool> GetHasBeenSetMask(this IKeywordGetter item)
         {
-            var ret = new Keyword_Mask<bool>(false);
+            var ret = new Keyword.Mask<bool>(false);
             ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -399,8 +664,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IKeywordInternal lhs,
             IKeywordGetter rhs,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? copyMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -408,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Keyword.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -426,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Keyword DeepCopy(
             this IKeywordGetter item,
-            Keyword_TranslationMask? copyMask = null)
+            Keyword.TranslationMask? copyMask = null)
         {
             return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -435,8 +700,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Keyword DeepCopy(
             this IKeywordGetter item,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? copyMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? copyMask = null)
         {
             return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -460,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IKeywordInternal item,
             XElement node,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -473,8 +738,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IKeywordInternal item,
             XElement node,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -482,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Keyword.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -501,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IKeywordInternal item,
             string path,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -513,8 +778,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IKeywordInternal item,
             string path,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -528,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -541,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IKeywordInternal item,
             Stream stream,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -553,8 +818,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IKeywordInternal item,
             Stream stream,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -568,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Keyword_TranslationMask? translationMask = null)
+            Keyword.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -648,9 +913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Keyword_Mask<>);
+        public static readonly Type MaskType = typeof(Keyword.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Keyword_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Keyword.ErrorMask);
 
         public static readonly Type ClassType = typeof(Keyword);
 
@@ -949,12 +1214,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly KeywordCommon Instance = new KeywordCommon();
 
-        public Keyword_Mask<bool> GetEqualsMask(
+        public Keyword.Mask<bool> GetEqualsMask(
             IKeywordGetter item,
             IKeywordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Keyword_Mask<bool>(false);
+            var ret = new Keyword.Mask<bool>(false);
             ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -966,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IKeywordGetter item,
             IKeywordGetter rhs,
-            Keyword_Mask<bool> ret,
+            Keyword.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -977,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IKeywordGetter item,
             string? name = null,
-            Keyword_Mask<bool>? printMask = null)
+            Keyword.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -992,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IKeywordGetter item,
             FileGeneration fg,
             string? name = null,
-            Keyword_Mask<bool>? printMask = null)
+            Keyword.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1016,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IKeywordGetter item,
             FileGeneration fg,
-            Keyword_Mask<bool>? printMask = null)
+            Keyword.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1030,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IKeywordGetter item,
-            Keyword_Mask<bool?> checkMask)
+            Keyword.Mask<bool?> checkMask)
         {
             if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color != null)) return false;
             return base.HasBeenSet(
@@ -1040,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IKeywordGetter item,
-            Keyword_Mask<bool> mask)
+            Keyword.Mask<bool> mask)
         {
             mask.Color = (item.Color != null);
             base.FillHasBeenSetMask(
@@ -1262,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Keyword DeepCopy(
             IKeywordGetter item,
-            Keyword_TranslationMask? copyMask = null)
+            Keyword.TranslationMask? copyMask = null)
         {
             Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1273,8 +1538,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Keyword DeepCopy(
             IKeywordGetter item,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? copyMask = null)
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? copyMask = null)
         {
             Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1503,8 +1768,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IKeywordGetter item,
             XElement node,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null,
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1514,14 +1779,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Keyword.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IKeywordGetter item,
             string path,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null,
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1537,8 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IKeywordGetter item,
             Stream stream,
-            out Keyword_ErrorMask errorMask,
-            Keyword_TranslationMask? translationMask = null,
+            out Keyword.ErrorMask errorMask,
+            Keyword.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1555,270 +1820,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class Keyword_Mask<T> :
-        SkyrimMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Keyword_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Keyword_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Color = initialValue;
-        }
-
-        public Keyword_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T SkyrimMajorRecordFlags,
-            T FormVersion,
-            T Version2,
-            T Color)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
-            FormVersion: FormVersion,
-            Version2: Version2)
-        {
-            this.Color = Color;
-        }
-
-        #pragma warning disable CS8618
-        protected Keyword_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Color;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Keyword_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Keyword_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Color, rhs.Color)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Color?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Color)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Keyword_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Keyword_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Keyword_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Color = eval(this.Color);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Keyword_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Keyword_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Keyword_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Color ?? true)
-                {
-                    fg.AppendLine($"Color => {Color}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Keyword_ErrorMask : SkyrimMajorRecord_ErrorMask, IErrorMask<Keyword_ErrorMask>
-    {
-        #region Members
-        public Exception? Color;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
-            switch (enu)
-            {
-                case Keyword_FieldIndex.Color:
-                    return Color;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
-            switch (enu)
-            {
-                case Keyword_FieldIndex.Color:
-                    this.Color = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
-            switch (enu)
-            {
-                case Keyword_FieldIndex.Color:
-                    this.Color = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Color != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Keyword_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Color => {Color}");
-        }
-        #endregion
-
-        #region Combine
-        public Keyword_ErrorMask Combine(Keyword_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Keyword_ErrorMask();
-            ret.Color = this.Color.Combine(rhs.Color);
-            return ret;
-        }
-        public static Keyword_ErrorMask? Combine(Keyword_ErrorMask? lhs, Keyword_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Keyword_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Keyword_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Keyword_TranslationMask : SkyrimMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Color;
-        #endregion
-
-        #region Ctors
-        public Keyword_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Color = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Color, null));
-        }
-    }
 }
 #endregion
 

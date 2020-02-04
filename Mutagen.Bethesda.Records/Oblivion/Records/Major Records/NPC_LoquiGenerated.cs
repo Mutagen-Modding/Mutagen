@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new NPC CreateFromXml(
             XElement node,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -913,15 +913,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static NPC CreateFromXml(
             XElement node,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPC CreateFromXml(
             string path,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -951,8 +951,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPC CreateFromXml(
             string path,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPC CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPC CreateFromXml(
             Stream stream,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -985,8 +985,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPC CreateFromXml(
             Stream stream,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPC CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -1009,6 +1009,2510 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            NPCAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Flags = initialValue;
+                this.BaseSpellPoints = initialValue;
+                this.Fatigue = initialValue;
+                this.BarterGold = initialValue;
+                this.LevelOffset = initialValue;
+                this.CalcMin = initialValue;
+                this.CalcMax = initialValue;
+                this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RankPlacement.Mask<T>?>>());
+                this.DeathItem = initialValue;
+                this.Race = initialValue;
+                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Script = initialValue;
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ItemEntry.Mask<T>?>>());
+                this.Aggression = initialValue;
+                this.Confidence = initialValue;
+                this.EnergyLevel = initialValue;
+                this.Responsibility = initialValue;
+                this.BuySellServices = initialValue;
+                this.Teaches = initialValue;
+                this.MaximumTrainingLevel = initialValue;
+                this.Fluff = initialValue;
+                this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.Class = initialValue;
+                this.Armorer = initialValue;
+                this.Athletics = initialValue;
+                this.Blade = initialValue;
+                this.Block = initialValue;
+                this.Blunt = initialValue;
+                this.HandToHand = initialValue;
+                this.HeavyArmor = initialValue;
+                this.Alchemy = initialValue;
+                this.Alteration = initialValue;
+                this.Conjuration = initialValue;
+                this.Destruction = initialValue;
+                this.Illusion = initialValue;
+                this.Mysticism = initialValue;
+                this.Restoration = initialValue;
+                this.Acrobatics = initialValue;
+                this.LightArmor = initialValue;
+                this.Marksman = initialValue;
+                this.Mercantile = initialValue;
+                this.Security = initialValue;
+                this.Sneak = initialValue;
+                this.Speechcraft = initialValue;
+                this.Health = initialValue;
+                this.Strength = initialValue;
+                this.Intelligence = initialValue;
+                this.Willpower = initialValue;
+                this.Agility = initialValue;
+                this.Speed = initialValue;
+                this.Endurance = initialValue;
+                this.Personality = initialValue;
+                this.Luck = initialValue;
+                this.Hair = initialValue;
+                this.HairLength = initialValue;
+                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.HairColor = initialValue;
+                this.CombatStyle = initialValue;
+                this.FaceGenGeometrySymmetric = initialValue;
+                this.FaceGenGeometryAsymmetric = initialValue;
+                this.FaceGenTextureSymmetric = initialValue;
+                this.Unknown = initialValue;
+                this.ACBSDataTypeState = initialValue;
+                this.AIDTDataTypeState = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Flags,
+                T BaseSpellPoints,
+                T Fatigue,
+                T BarterGold,
+                T LevelOffset,
+                T CalcMin,
+                T CalcMax,
+                T Factions,
+                T DeathItem,
+                T Race,
+                T Spells,
+                T Script,
+                T Items,
+                T Aggression,
+                T Confidence,
+                T EnergyLevel,
+                T Responsibility,
+                T BuySellServices,
+                T Teaches,
+                T MaximumTrainingLevel,
+                T Fluff,
+                T AIPackages,
+                T Animations,
+                T Class,
+                T Armorer,
+                T Athletics,
+                T Blade,
+                T Block,
+                T Blunt,
+                T HandToHand,
+                T HeavyArmor,
+                T Alchemy,
+                T Alteration,
+                T Conjuration,
+                T Destruction,
+                T Illusion,
+                T Mysticism,
+                T Restoration,
+                T Acrobatics,
+                T LightArmor,
+                T Marksman,
+                T Mercantile,
+                T Security,
+                T Sneak,
+                T Speechcraft,
+                T Health,
+                T Strength,
+                T Intelligence,
+                T Willpower,
+                T Agility,
+                T Speed,
+                T Endurance,
+                T Personality,
+                T Luck,
+                T Hair,
+                T HairLength,
+                T Eyes,
+                T HairColor,
+                T CombatStyle,
+                T FaceGenGeometrySymmetric,
+                T FaceGenGeometryAsymmetric,
+                T FaceGenTextureSymmetric,
+                T Unknown,
+                T ACBSDataTypeState,
+                T AIDTDataTypeState,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Flags = Flags;
+                this.BaseSpellPoints = BaseSpellPoints;
+                this.Fatigue = Fatigue;
+                this.BarterGold = BarterGold;
+                this.LevelOffset = LevelOffset;
+                this.CalcMin = CalcMin;
+                this.CalcMax = CalcMax;
+                this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>(Factions, Enumerable.Empty<MaskItemIndexed<T, RankPlacement.Mask<T>?>>());
+                this.DeathItem = DeathItem;
+                this.Race = Race;
+                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
+                this.Script = Script;
+                this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ItemEntry.Mask<T>?>>());
+                this.Aggression = Aggression;
+                this.Confidence = Confidence;
+                this.EnergyLevel = EnergyLevel;
+                this.Responsibility = Responsibility;
+                this.BuySellServices = BuySellServices;
+                this.Teaches = Teaches;
+                this.MaximumTrainingLevel = MaximumTrainingLevel;
+                this.Fluff = Fluff;
+                this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(AIPackages, Enumerable.Empty<(int Index, T Value)>());
+                this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Animations, Enumerable.Empty<(int Index, T Value)>());
+                this.Class = Class;
+                this.Armorer = Armorer;
+                this.Athletics = Athletics;
+                this.Blade = Blade;
+                this.Block = Block;
+                this.Blunt = Blunt;
+                this.HandToHand = HandToHand;
+                this.HeavyArmor = HeavyArmor;
+                this.Alchemy = Alchemy;
+                this.Alteration = Alteration;
+                this.Conjuration = Conjuration;
+                this.Destruction = Destruction;
+                this.Illusion = Illusion;
+                this.Mysticism = Mysticism;
+                this.Restoration = Restoration;
+                this.Acrobatics = Acrobatics;
+                this.LightArmor = LightArmor;
+                this.Marksman = Marksman;
+                this.Mercantile = Mercantile;
+                this.Security = Security;
+                this.Sneak = Sneak;
+                this.Speechcraft = Speechcraft;
+                this.Health = Health;
+                this.Strength = Strength;
+                this.Intelligence = Intelligence;
+                this.Willpower = Willpower;
+                this.Agility = Agility;
+                this.Speed = Speed;
+                this.Endurance = Endurance;
+                this.Personality = Personality;
+                this.Luck = Luck;
+                this.Hair = Hair;
+                this.HairLength = HairLength;
+                this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, Enumerable.Empty<(int Index, T Value)>());
+                this.HairColor = HairColor;
+                this.CombatStyle = CombatStyle;
+                this.FaceGenGeometrySymmetric = FaceGenGeometrySymmetric;
+                this.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetric;
+                this.FaceGenTextureSymmetric = FaceGenTextureSymmetric;
+                this.Unknown = Unknown;
+                this.ACBSDataTypeState = ACBSDataTypeState;
+                this.AIDTDataTypeState = AIDTDataTypeState;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Flags;
+            public T BaseSpellPoints;
+            public T Fatigue;
+            public T BarterGold;
+            public T LevelOffset;
+            public T CalcMin;
+            public T CalcMax;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement.Mask<T>?>>>? Factions;
+            public T DeathItem;
+            public T Race;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
+            public T Script;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry.Mask<T>?>>>? Items;
+            public T Aggression;
+            public T Confidence;
+            public T EnergyLevel;
+            public T Responsibility;
+            public T BuySellServices;
+            public T Teaches;
+            public T MaximumTrainingLevel;
+            public T Fluff;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? AIPackages;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Animations;
+            public T Class;
+            public T Armorer;
+            public T Athletics;
+            public T Blade;
+            public T Block;
+            public T Blunt;
+            public T HandToHand;
+            public T HeavyArmor;
+            public T Alchemy;
+            public T Alteration;
+            public T Conjuration;
+            public T Destruction;
+            public T Illusion;
+            public T Mysticism;
+            public T Restoration;
+            public T Acrobatics;
+            public T LightArmor;
+            public T Marksman;
+            public T Mercantile;
+            public T Security;
+            public T Sneak;
+            public T Speechcraft;
+            public T Health;
+            public T Strength;
+            public T Intelligence;
+            public T Willpower;
+            public T Agility;
+            public T Speed;
+            public T Endurance;
+            public T Personality;
+            public T Luck;
+            public T Hair;
+            public T HairLength;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Eyes;
+            public T HairColor;
+            public T CombatStyle;
+            public T FaceGenGeometrySymmetric;
+            public T FaceGenGeometryAsymmetric;
+            public T FaceGenTextureSymmetric;
+            public T Unknown;
+            public T ACBSDataTypeState;
+            public T AIDTDataTypeState;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
+                if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
+                if (!object.Equals(this.BarterGold, rhs.BarterGold)) return false;
+                if (!object.Equals(this.LevelOffset, rhs.LevelOffset)) return false;
+                if (!object.Equals(this.CalcMin, rhs.CalcMin)) return false;
+                if (!object.Equals(this.CalcMax, rhs.CalcMax)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
+                if (!object.Equals(this.DeathItem, rhs.DeathItem)) return false;
+                if (!object.Equals(this.Race, rhs.Race)) return false;
+                if (!object.Equals(this.Spells, rhs.Spells)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
+                if (!object.Equals(this.Aggression, rhs.Aggression)) return false;
+                if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
+                if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
+                if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
+                if (!object.Equals(this.BuySellServices, rhs.BuySellServices)) return false;
+                if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
+                if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
+                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
+                if (!object.Equals(this.Animations, rhs.Animations)) return false;
+                if (!object.Equals(this.Class, rhs.Class)) return false;
+                if (!object.Equals(this.Armorer, rhs.Armorer)) return false;
+                if (!object.Equals(this.Athletics, rhs.Athletics)) return false;
+                if (!object.Equals(this.Blade, rhs.Blade)) return false;
+                if (!object.Equals(this.Block, rhs.Block)) return false;
+                if (!object.Equals(this.Blunt, rhs.Blunt)) return false;
+                if (!object.Equals(this.HandToHand, rhs.HandToHand)) return false;
+                if (!object.Equals(this.HeavyArmor, rhs.HeavyArmor)) return false;
+                if (!object.Equals(this.Alchemy, rhs.Alchemy)) return false;
+                if (!object.Equals(this.Alteration, rhs.Alteration)) return false;
+                if (!object.Equals(this.Conjuration, rhs.Conjuration)) return false;
+                if (!object.Equals(this.Destruction, rhs.Destruction)) return false;
+                if (!object.Equals(this.Illusion, rhs.Illusion)) return false;
+                if (!object.Equals(this.Mysticism, rhs.Mysticism)) return false;
+                if (!object.Equals(this.Restoration, rhs.Restoration)) return false;
+                if (!object.Equals(this.Acrobatics, rhs.Acrobatics)) return false;
+                if (!object.Equals(this.LightArmor, rhs.LightArmor)) return false;
+                if (!object.Equals(this.Marksman, rhs.Marksman)) return false;
+                if (!object.Equals(this.Mercantile, rhs.Mercantile)) return false;
+                if (!object.Equals(this.Security, rhs.Security)) return false;
+                if (!object.Equals(this.Sneak, rhs.Sneak)) return false;
+                if (!object.Equals(this.Speechcraft, rhs.Speechcraft)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.Strength, rhs.Strength)) return false;
+                if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
+                if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
+                if (!object.Equals(this.Agility, rhs.Agility)) return false;
+                if (!object.Equals(this.Speed, rhs.Speed)) return false;
+                if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
+                if (!object.Equals(this.Personality, rhs.Personality)) return false;
+                if (!object.Equals(this.Luck, rhs.Luck)) return false;
+                if (!object.Equals(this.Hair, rhs.Hair)) return false;
+                if (!object.Equals(this.HairLength, rhs.HairLength)) return false;
+                if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+                if (!object.Equals(this.HairColor, rhs.HairColor)) return false;
+                if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
+                if (!object.Equals(this.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
+                if (!object.Equals(this.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
+                if (!object.Equals(this.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
+                if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
+                ret = ret.CombineHashCode(this.BarterGold?.GetHashCode());
+                ret = ret.CombineHashCode(this.LevelOffset?.GetHashCode());
+                ret = ret.CombineHashCode(this.CalcMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.CalcMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.Factions?.GetHashCode());
+                ret = ret.CombineHashCode(this.DeathItem?.GetHashCode());
+                ret = ret.CombineHashCode(this.Race?.GetHashCode());
+                ret = ret.CombineHashCode(this.Spells?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Items?.GetHashCode());
+                ret = ret.CombineHashCode(this.Aggression?.GetHashCode());
+                ret = ret.CombineHashCode(this.Confidence?.GetHashCode());
+                ret = ret.CombineHashCode(this.EnergyLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.Responsibility?.GetHashCode());
+                ret = ret.CombineHashCode(this.BuySellServices?.GetHashCode());
+                ret = ret.CombineHashCode(this.Teaches?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
+                ret = ret.CombineHashCode(this.Animations?.GetHashCode());
+                ret = ret.CombineHashCode(this.Class?.GetHashCode());
+                ret = ret.CombineHashCode(this.Armorer?.GetHashCode());
+                ret = ret.CombineHashCode(this.Athletics?.GetHashCode());
+                ret = ret.CombineHashCode(this.Blade?.GetHashCode());
+                ret = ret.CombineHashCode(this.Block?.GetHashCode());
+                ret = ret.CombineHashCode(this.Blunt?.GetHashCode());
+                ret = ret.CombineHashCode(this.HandToHand?.GetHashCode());
+                ret = ret.CombineHashCode(this.HeavyArmor?.GetHashCode());
+                ret = ret.CombineHashCode(this.Alchemy?.GetHashCode());
+                ret = ret.CombineHashCode(this.Alteration?.GetHashCode());
+                ret = ret.CombineHashCode(this.Conjuration?.GetHashCode());
+                ret = ret.CombineHashCode(this.Destruction?.GetHashCode());
+                ret = ret.CombineHashCode(this.Illusion?.GetHashCode());
+                ret = ret.CombineHashCode(this.Mysticism?.GetHashCode());
+                ret = ret.CombineHashCode(this.Restoration?.GetHashCode());
+                ret = ret.CombineHashCode(this.Acrobatics?.GetHashCode());
+                ret = ret.CombineHashCode(this.LightArmor?.GetHashCode());
+                ret = ret.CombineHashCode(this.Marksman?.GetHashCode());
+                ret = ret.CombineHashCode(this.Mercantile?.GetHashCode());
+                ret = ret.CombineHashCode(this.Security?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sneak?.GetHashCode());
+                ret = ret.CombineHashCode(this.Speechcraft?.GetHashCode());
+                ret = ret.CombineHashCode(this.Health?.GetHashCode());
+                ret = ret.CombineHashCode(this.Strength?.GetHashCode());
+                ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
+                ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
+                ret = ret.CombineHashCode(this.Agility?.GetHashCode());
+                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
+                ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
+                ret = ret.CombineHashCode(this.Personality?.GetHashCode());
+                ret = ret.CombineHashCode(this.Luck?.GetHashCode());
+                ret = ret.CombineHashCode(this.Hair?.GetHashCode());
+                ret = ret.CombineHashCode(this.HairLength?.GetHashCode());
+                ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
+                ret = ret.CombineHashCode(this.HairColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.CombatStyle?.GetHashCode());
+                ret = ret.CombineHashCode(this.FaceGenGeometrySymmetric?.GetHashCode());
+                ret = ret.CombineHashCode(this.FaceGenGeometryAsymmetric?.GetHashCode());
+                ret = ret.CombineHashCode(this.FaceGenTextureSymmetric?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
+                ret = ret.CombineHashCode(this.ACBSDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(this.AIDTDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.BaseSpellPoints)) return false;
+                if (!eval(this.Fatigue)) return false;
+                if (!eval(this.BarterGold)) return false;
+                if (!eval(this.LevelOffset)) return false;
+                if (!eval(this.CalcMin)) return false;
+                if (!eval(this.CalcMax)) return false;
+                if (this.Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null)
+                    {
+                        foreach (var item in this.Factions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DeathItem)) return false;
+                if (!eval(this.Race)) return false;
+                if (this.Spells != null)
+                {
+                    if (!eval(this.Spells.Overall)) return false;
+                    if (this.Spells.Specific != null)
+                    {
+                        foreach (var item in this.Spells.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Script)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Aggression)) return false;
+                if (!eval(this.Confidence)) return false;
+                if (!eval(this.EnergyLevel)) return false;
+                if (!eval(this.Responsibility)) return false;
+                if (!eval(this.BuySellServices)) return false;
+                if (!eval(this.Teaches)) return false;
+                if (!eval(this.MaximumTrainingLevel)) return false;
+                if (!eval(this.Fluff)) return false;
+                if (this.AIPackages != null)
+                {
+                    if (!eval(this.AIPackages.Overall)) return false;
+                    if (this.AIPackages.Specific != null)
+                    {
+                        foreach (var item in this.AIPackages.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Animations != null)
+                {
+                    if (!eval(this.Animations.Overall)) return false;
+                    if (this.Animations.Specific != null)
+                    {
+                        foreach (var item in this.Animations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Class)) return false;
+                if (!eval(this.Armorer)) return false;
+                if (!eval(this.Athletics)) return false;
+                if (!eval(this.Blade)) return false;
+                if (!eval(this.Block)) return false;
+                if (!eval(this.Blunt)) return false;
+                if (!eval(this.HandToHand)) return false;
+                if (!eval(this.HeavyArmor)) return false;
+                if (!eval(this.Alchemy)) return false;
+                if (!eval(this.Alteration)) return false;
+                if (!eval(this.Conjuration)) return false;
+                if (!eval(this.Destruction)) return false;
+                if (!eval(this.Illusion)) return false;
+                if (!eval(this.Mysticism)) return false;
+                if (!eval(this.Restoration)) return false;
+                if (!eval(this.Acrobatics)) return false;
+                if (!eval(this.LightArmor)) return false;
+                if (!eval(this.Marksman)) return false;
+                if (!eval(this.Mercantile)) return false;
+                if (!eval(this.Security)) return false;
+                if (!eval(this.Sneak)) return false;
+                if (!eval(this.Speechcraft)) return false;
+                if (!eval(this.Health)) return false;
+                if (!eval(this.Strength)) return false;
+                if (!eval(this.Intelligence)) return false;
+                if (!eval(this.Willpower)) return false;
+                if (!eval(this.Agility)) return false;
+                if (!eval(this.Speed)) return false;
+                if (!eval(this.Endurance)) return false;
+                if (!eval(this.Personality)) return false;
+                if (!eval(this.Luck)) return false;
+                if (!eval(this.Hair)) return false;
+                if (!eval(this.HairLength)) return false;
+                if (this.Eyes != null)
+                {
+                    if (!eval(this.Eyes.Overall)) return false;
+                    if (this.Eyes.Specific != null)
+                    {
+                        foreach (var item in this.Eyes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.HairColor)) return false;
+                if (!eval(this.CombatStyle)) return false;
+                if (!eval(this.FaceGenGeometrySymmetric)) return false;
+                if (!eval(this.FaceGenGeometryAsymmetric)) return false;
+                if (!eval(this.FaceGenTextureSymmetric)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.ACBSDataTypeState)) return false;
+                if (!eval(this.AIDTDataTypeState)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new NPC.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.BaseSpellPoints = eval(this.BaseSpellPoints);
+                obj.Fatigue = eval(this.Fatigue);
+                obj.BarterGold = eval(this.BarterGold);
+                obj.LevelOffset = eval(this.LevelOffset);
+                obj.CalcMin = eval(this.CalcMin);
+                obj.CalcMax = eval(this.CalcMax);
+                if (Factions != null)
+                {
+                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement.Mask<R>?>>());
+                    if (Factions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
+                        obj.Factions.Specific = l;
+                        foreach (var item in Factions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DeathItem = eval(this.DeathItem);
+                obj.Race = eval(this.Race);
+                if (Spells != null)
+                {
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Spells.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Spells.Specific = l;
+                        foreach (var item in Spells.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Script = eval(this.Script);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry.Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemEntry.Mask<R>?>>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ItemEntry.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ItemEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ItemEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Aggression = eval(this.Aggression);
+                obj.Confidence = eval(this.Confidence);
+                obj.EnergyLevel = eval(this.EnergyLevel);
+                obj.Responsibility = eval(this.Responsibility);
+                obj.BuySellServices = eval(this.BuySellServices);
+                obj.Teaches = eval(this.Teaches);
+                obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
+                obj.Fluff = eval(this.Fluff);
+                if (AIPackages != null)
+                {
+                    obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.AIPackages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AIPackages.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AIPackages.Specific = l;
+                        foreach (var item in AIPackages.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Animations != null)
+                {
+                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Animations.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Animations.Specific = l;
+                        foreach (var item in Animations.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Class = eval(this.Class);
+                obj.Armorer = eval(this.Armorer);
+                obj.Athletics = eval(this.Athletics);
+                obj.Blade = eval(this.Blade);
+                obj.Block = eval(this.Block);
+                obj.Blunt = eval(this.Blunt);
+                obj.HandToHand = eval(this.HandToHand);
+                obj.HeavyArmor = eval(this.HeavyArmor);
+                obj.Alchemy = eval(this.Alchemy);
+                obj.Alteration = eval(this.Alteration);
+                obj.Conjuration = eval(this.Conjuration);
+                obj.Destruction = eval(this.Destruction);
+                obj.Illusion = eval(this.Illusion);
+                obj.Mysticism = eval(this.Mysticism);
+                obj.Restoration = eval(this.Restoration);
+                obj.Acrobatics = eval(this.Acrobatics);
+                obj.LightArmor = eval(this.LightArmor);
+                obj.Marksman = eval(this.Marksman);
+                obj.Mercantile = eval(this.Mercantile);
+                obj.Security = eval(this.Security);
+                obj.Sneak = eval(this.Sneak);
+                obj.Speechcraft = eval(this.Speechcraft);
+                obj.Health = eval(this.Health);
+                obj.Strength = eval(this.Strength);
+                obj.Intelligence = eval(this.Intelligence);
+                obj.Willpower = eval(this.Willpower);
+                obj.Agility = eval(this.Agility);
+                obj.Speed = eval(this.Speed);
+                obj.Endurance = eval(this.Endurance);
+                obj.Personality = eval(this.Personality);
+                obj.Luck = eval(this.Luck);
+                obj.Hair = eval(this.Hair);
+                obj.HairLength = eval(this.HairLength);
+                if (Eyes != null)
+                {
+                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Eyes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Eyes.Specific = l;
+                        foreach (var item in Eyes.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.HairColor = eval(this.HairColor);
+                obj.CombatStyle = eval(this.CombatStyle);
+                obj.FaceGenGeometrySymmetric = eval(this.FaceGenGeometrySymmetric);
+                obj.FaceGenGeometryAsymmetric = eval(this.FaceGenGeometryAsymmetric);
+                obj.FaceGenTextureSymmetric = eval(this.FaceGenTextureSymmetric);
+                obj.Unknown = eval(this.Unknown);
+                obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
+                obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(NPC.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, NPC.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(NPC.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.BaseSpellPoints ?? true)
+                    {
+                        fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
+                    }
+                    if (printMask?.Fatigue ?? true)
+                    {
+                        fg.AppendLine($"Fatigue => {Fatigue}");
+                    }
+                    if (printMask?.BarterGold ?? true)
+                    {
+                        fg.AppendLine($"BarterGold => {BarterGold}");
+                    }
+                    if (printMask?.LevelOffset ?? true)
+                    {
+                        fg.AppendLine($"LevelOffset => {LevelOffset}");
+                    }
+                    if (printMask?.CalcMin ?? true)
+                    {
+                        fg.AppendLine($"CalcMin => {CalcMin}");
+                    }
+                    if (printMask?.CalcMax ?? true)
+                    {
+                        fg.AppendLine($"CalcMax => {CalcMax}");
+                    }
+                    if (printMask?.Factions?.Overall ?? true)
+                    {
+                        fg.AppendLine("Factions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Factions != null)
+                            {
+                                if (Factions.Overall != null)
+                                {
+                                    fg.AppendLine(Factions.Overall.ToString());
+                                }
+                                if (Factions.Specific != null)
+                                {
+                                    foreach (var subItem in Factions.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DeathItem ?? true)
+                    {
+                        fg.AppendLine($"DeathItem => {DeathItem}");
+                    }
+                    if (printMask?.Race ?? true)
+                    {
+                        fg.AppendLine($"Race => {Race}");
+                    }
+                    if (printMask?.Spells?.Overall ?? true)
+                    {
+                        fg.AppendLine("Spells =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Spells != null)
+                            {
+                                if (Spells.Overall != null)
+                                {
+                                    fg.AppendLine(Spells.Overall.ToString());
+                                }
+                                if (Spells.Specific != null)
+                                {
+                                    foreach (var subItem in Spells.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Items?.Overall ?? true)
+                    {
+                        fg.AppendLine("Items =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Items != null)
+                            {
+                                if (Items.Overall != null)
+                                {
+                                    fg.AppendLine(Items.Overall.ToString());
+                                }
+                                if (Items.Specific != null)
+                                {
+                                    foreach (var subItem in Items.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Aggression ?? true)
+                    {
+                        fg.AppendLine($"Aggression => {Aggression}");
+                    }
+                    if (printMask?.Confidence ?? true)
+                    {
+                        fg.AppendLine($"Confidence => {Confidence}");
+                    }
+                    if (printMask?.EnergyLevel ?? true)
+                    {
+                        fg.AppendLine($"EnergyLevel => {EnergyLevel}");
+                    }
+                    if (printMask?.Responsibility ?? true)
+                    {
+                        fg.AppendLine($"Responsibility => {Responsibility}");
+                    }
+                    if (printMask?.BuySellServices ?? true)
+                    {
+                        fg.AppendLine($"BuySellServices => {BuySellServices}");
+                    }
+                    if (printMask?.Teaches ?? true)
+                    {
+                        fg.AppendLine($"Teaches => {Teaches}");
+                    }
+                    if (printMask?.MaximumTrainingLevel ?? true)
+                    {
+                        fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+                    }
+                    if (printMask?.Fluff ?? true)
+                    {
+                        fg.AppendLine($"Fluff => {Fluff}");
+                    }
+                    if (printMask?.AIPackages?.Overall ?? true)
+                    {
+                        fg.AppendLine("AIPackages =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (AIPackages != null)
+                            {
+                                if (AIPackages.Overall != null)
+                                {
+                                    fg.AppendLine(AIPackages.Overall.ToString());
+                                }
+                                if (AIPackages.Specific != null)
+                                {
+                                    foreach (var subItem in AIPackages.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Animations?.Overall ?? true)
+                    {
+                        fg.AppendLine("Animations =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Animations != null)
+                            {
+                                if (Animations.Overall != null)
+                                {
+                                    fg.AppendLine(Animations.Overall.ToString());
+                                }
+                                if (Animations.Specific != null)
+                                {
+                                    foreach (var subItem in Animations.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Class ?? true)
+                    {
+                        fg.AppendLine($"Class => {Class}");
+                    }
+                    if (printMask?.Armorer ?? true)
+                    {
+                        fg.AppendLine($"Armorer => {Armorer}");
+                    }
+                    if (printMask?.Athletics ?? true)
+                    {
+                        fg.AppendLine($"Athletics => {Athletics}");
+                    }
+                    if (printMask?.Blade ?? true)
+                    {
+                        fg.AppendLine($"Blade => {Blade}");
+                    }
+                    if (printMask?.Block ?? true)
+                    {
+                        fg.AppendLine($"Block => {Block}");
+                    }
+                    if (printMask?.Blunt ?? true)
+                    {
+                        fg.AppendLine($"Blunt => {Blunt}");
+                    }
+                    if (printMask?.HandToHand ?? true)
+                    {
+                        fg.AppendLine($"HandToHand => {HandToHand}");
+                    }
+                    if (printMask?.HeavyArmor ?? true)
+                    {
+                        fg.AppendLine($"HeavyArmor => {HeavyArmor}");
+                    }
+                    if (printMask?.Alchemy ?? true)
+                    {
+                        fg.AppendLine($"Alchemy => {Alchemy}");
+                    }
+                    if (printMask?.Alteration ?? true)
+                    {
+                        fg.AppendLine($"Alteration => {Alteration}");
+                    }
+                    if (printMask?.Conjuration ?? true)
+                    {
+                        fg.AppendLine($"Conjuration => {Conjuration}");
+                    }
+                    if (printMask?.Destruction ?? true)
+                    {
+                        fg.AppendLine($"Destruction => {Destruction}");
+                    }
+                    if (printMask?.Illusion ?? true)
+                    {
+                        fg.AppendLine($"Illusion => {Illusion}");
+                    }
+                    if (printMask?.Mysticism ?? true)
+                    {
+                        fg.AppendLine($"Mysticism => {Mysticism}");
+                    }
+                    if (printMask?.Restoration ?? true)
+                    {
+                        fg.AppendLine($"Restoration => {Restoration}");
+                    }
+                    if (printMask?.Acrobatics ?? true)
+                    {
+                        fg.AppendLine($"Acrobatics => {Acrobatics}");
+                    }
+                    if (printMask?.LightArmor ?? true)
+                    {
+                        fg.AppendLine($"LightArmor => {LightArmor}");
+                    }
+                    if (printMask?.Marksman ?? true)
+                    {
+                        fg.AppendLine($"Marksman => {Marksman}");
+                    }
+                    if (printMask?.Mercantile ?? true)
+                    {
+                        fg.AppendLine($"Mercantile => {Mercantile}");
+                    }
+                    if (printMask?.Security ?? true)
+                    {
+                        fg.AppendLine($"Security => {Security}");
+                    }
+                    if (printMask?.Sneak ?? true)
+                    {
+                        fg.AppendLine($"Sneak => {Sneak}");
+                    }
+                    if (printMask?.Speechcraft ?? true)
+                    {
+                        fg.AppendLine($"Speechcraft => {Speechcraft}");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        fg.AppendLine($"Health => {Health}");
+                    }
+                    if (printMask?.Strength ?? true)
+                    {
+                        fg.AppendLine($"Strength => {Strength}");
+                    }
+                    if (printMask?.Intelligence ?? true)
+                    {
+                        fg.AppendLine($"Intelligence => {Intelligence}");
+                    }
+                    if (printMask?.Willpower ?? true)
+                    {
+                        fg.AppendLine($"Willpower => {Willpower}");
+                    }
+                    if (printMask?.Agility ?? true)
+                    {
+                        fg.AppendLine($"Agility => {Agility}");
+                    }
+                    if (printMask?.Speed ?? true)
+                    {
+                        fg.AppendLine($"Speed => {Speed}");
+                    }
+                    if (printMask?.Endurance ?? true)
+                    {
+                        fg.AppendLine($"Endurance => {Endurance}");
+                    }
+                    if (printMask?.Personality ?? true)
+                    {
+                        fg.AppendLine($"Personality => {Personality}");
+                    }
+                    if (printMask?.Luck ?? true)
+                    {
+                        fg.AppendLine($"Luck => {Luck}");
+                    }
+                    if (printMask?.Hair ?? true)
+                    {
+                        fg.AppendLine($"Hair => {Hair}");
+                    }
+                    if (printMask?.HairLength ?? true)
+                    {
+                        fg.AppendLine($"HairLength => {HairLength}");
+                    }
+                    if (printMask?.Eyes?.Overall ?? true)
+                    {
+                        fg.AppendLine("Eyes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Eyes != null)
+                            {
+                                if (Eyes.Overall != null)
+                                {
+                                    fg.AppendLine(Eyes.Overall.ToString());
+                                }
+                                if (Eyes.Specific != null)
+                                {
+                                    foreach (var subItem in Eyes.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.HairColor ?? true)
+                    {
+                        fg.AppendLine($"HairColor => {HairColor}");
+                    }
+                    if (printMask?.CombatStyle ?? true)
+                    {
+                        fg.AppendLine($"CombatStyle => {CombatStyle}");
+                    }
+                    if (printMask?.FaceGenGeometrySymmetric ?? true)
+                    {
+                        fg.AppendLine($"FaceGenGeometrySymmetric => {FaceGenGeometrySymmetric}");
+                    }
+                    if (printMask?.FaceGenGeometryAsymmetric ?? true)
+                    {
+                        fg.AppendLine($"FaceGenGeometryAsymmetric => {FaceGenGeometryAsymmetric}");
+                    }
+                    if (printMask?.FaceGenTextureSymmetric ?? true)
+                    {
+                        fg.AppendLine($"FaceGenTextureSymmetric => {FaceGenTextureSymmetric}");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendLine($"Unknown => {Unknown}");
+                    }
+                    if (printMask?.ACBSDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
+                    }
+                    if (printMask?.AIDTDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            NPCAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Flags;
+            public Exception? BaseSpellPoints;
+            public Exception? Fatigue;
+            public Exception? BarterGold;
+            public Exception? LevelOffset;
+            public Exception? CalcMin;
+            public Exception? CalcMax;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>? Factions;
+            public Exception? DeathItem;
+            public Exception? Race;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
+            public Exception? Script;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>? Items;
+            public Exception? Aggression;
+            public Exception? Confidence;
+            public Exception? EnergyLevel;
+            public Exception? Responsibility;
+            public Exception? BuySellServices;
+            public Exception? Teaches;
+            public Exception? MaximumTrainingLevel;
+            public Exception? Fluff;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AIPackages;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
+            public Exception? Class;
+            public Exception? Armorer;
+            public Exception? Athletics;
+            public Exception? Blade;
+            public Exception? Block;
+            public Exception? Blunt;
+            public Exception? HandToHand;
+            public Exception? HeavyArmor;
+            public Exception? Alchemy;
+            public Exception? Alteration;
+            public Exception? Conjuration;
+            public Exception? Destruction;
+            public Exception? Illusion;
+            public Exception? Mysticism;
+            public Exception? Restoration;
+            public Exception? Acrobatics;
+            public Exception? LightArmor;
+            public Exception? Marksman;
+            public Exception? Mercantile;
+            public Exception? Security;
+            public Exception? Sneak;
+            public Exception? Speechcraft;
+            public Exception? Health;
+            public Exception? Strength;
+            public Exception? Intelligence;
+            public Exception? Willpower;
+            public Exception? Agility;
+            public Exception? Speed;
+            public Exception? Endurance;
+            public Exception? Personality;
+            public Exception? Luck;
+            public Exception? Hair;
+            public Exception? HairLength;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Eyes;
+            public Exception? HairColor;
+            public Exception? CombatStyle;
+            public Exception? FaceGenGeometrySymmetric;
+            public Exception? FaceGenGeometryAsymmetric;
+            public Exception? FaceGenTextureSymmetric;
+            public Exception? Unknown;
+            public Exception? ACBSDataTypeState;
+            public Exception? AIDTDataTypeState;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                NPC_FieldIndex enu = (NPC_FieldIndex)index;
+                switch (enu)
+                {
+                    case NPC_FieldIndex.Name:
+                        return Name;
+                    case NPC_FieldIndex.Model:
+                        return Model;
+                    case NPC_FieldIndex.Flags:
+                        return Flags;
+                    case NPC_FieldIndex.BaseSpellPoints:
+                        return BaseSpellPoints;
+                    case NPC_FieldIndex.Fatigue:
+                        return Fatigue;
+                    case NPC_FieldIndex.BarterGold:
+                        return BarterGold;
+                    case NPC_FieldIndex.LevelOffset:
+                        return LevelOffset;
+                    case NPC_FieldIndex.CalcMin:
+                        return CalcMin;
+                    case NPC_FieldIndex.CalcMax:
+                        return CalcMax;
+                    case NPC_FieldIndex.Factions:
+                        return Factions;
+                    case NPC_FieldIndex.DeathItem:
+                        return DeathItem;
+                    case NPC_FieldIndex.Race:
+                        return Race;
+                    case NPC_FieldIndex.Spells:
+                        return Spells;
+                    case NPC_FieldIndex.Script:
+                        return Script;
+                    case NPC_FieldIndex.Items:
+                        return Items;
+                    case NPC_FieldIndex.Aggression:
+                        return Aggression;
+                    case NPC_FieldIndex.Confidence:
+                        return Confidence;
+                    case NPC_FieldIndex.EnergyLevel:
+                        return EnergyLevel;
+                    case NPC_FieldIndex.Responsibility:
+                        return Responsibility;
+                    case NPC_FieldIndex.BuySellServices:
+                        return BuySellServices;
+                    case NPC_FieldIndex.Teaches:
+                        return Teaches;
+                    case NPC_FieldIndex.MaximumTrainingLevel:
+                        return MaximumTrainingLevel;
+                    case NPC_FieldIndex.Fluff:
+                        return Fluff;
+                    case NPC_FieldIndex.AIPackages:
+                        return AIPackages;
+                    case NPC_FieldIndex.Animations:
+                        return Animations;
+                    case NPC_FieldIndex.Class:
+                        return Class;
+                    case NPC_FieldIndex.Armorer:
+                        return Armorer;
+                    case NPC_FieldIndex.Athletics:
+                        return Athletics;
+                    case NPC_FieldIndex.Blade:
+                        return Blade;
+                    case NPC_FieldIndex.Block:
+                        return Block;
+                    case NPC_FieldIndex.Blunt:
+                        return Blunt;
+                    case NPC_FieldIndex.HandToHand:
+                        return HandToHand;
+                    case NPC_FieldIndex.HeavyArmor:
+                        return HeavyArmor;
+                    case NPC_FieldIndex.Alchemy:
+                        return Alchemy;
+                    case NPC_FieldIndex.Alteration:
+                        return Alteration;
+                    case NPC_FieldIndex.Conjuration:
+                        return Conjuration;
+                    case NPC_FieldIndex.Destruction:
+                        return Destruction;
+                    case NPC_FieldIndex.Illusion:
+                        return Illusion;
+                    case NPC_FieldIndex.Mysticism:
+                        return Mysticism;
+                    case NPC_FieldIndex.Restoration:
+                        return Restoration;
+                    case NPC_FieldIndex.Acrobatics:
+                        return Acrobatics;
+                    case NPC_FieldIndex.LightArmor:
+                        return LightArmor;
+                    case NPC_FieldIndex.Marksman:
+                        return Marksman;
+                    case NPC_FieldIndex.Mercantile:
+                        return Mercantile;
+                    case NPC_FieldIndex.Security:
+                        return Security;
+                    case NPC_FieldIndex.Sneak:
+                        return Sneak;
+                    case NPC_FieldIndex.Speechcraft:
+                        return Speechcraft;
+                    case NPC_FieldIndex.Health:
+                        return Health;
+                    case NPC_FieldIndex.Strength:
+                        return Strength;
+                    case NPC_FieldIndex.Intelligence:
+                        return Intelligence;
+                    case NPC_FieldIndex.Willpower:
+                        return Willpower;
+                    case NPC_FieldIndex.Agility:
+                        return Agility;
+                    case NPC_FieldIndex.Speed:
+                        return Speed;
+                    case NPC_FieldIndex.Endurance:
+                        return Endurance;
+                    case NPC_FieldIndex.Personality:
+                        return Personality;
+                    case NPC_FieldIndex.Luck:
+                        return Luck;
+                    case NPC_FieldIndex.Hair:
+                        return Hair;
+                    case NPC_FieldIndex.HairLength:
+                        return HairLength;
+                    case NPC_FieldIndex.Eyes:
+                        return Eyes;
+                    case NPC_FieldIndex.HairColor:
+                        return HairColor;
+                    case NPC_FieldIndex.CombatStyle:
+                        return CombatStyle;
+                    case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                        return FaceGenGeometrySymmetric;
+                    case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                        return FaceGenGeometryAsymmetric;
+                    case NPC_FieldIndex.FaceGenTextureSymmetric:
+                        return FaceGenTextureSymmetric;
+                    case NPC_FieldIndex.Unknown:
+                        return Unknown;
+                    case NPC_FieldIndex.ACBSDataTypeState:
+                        return ACBSDataTypeState;
+                    case NPC_FieldIndex.AIDTDataTypeState:
+                        return AIDTDataTypeState;
+                    case NPC_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                NPC_FieldIndex enu = (NPC_FieldIndex)index;
+                switch (enu)
+                {
+                    case NPC_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case NPC_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case NPC_FieldIndex.BaseSpellPoints:
+                        this.BaseSpellPoints = ex;
+                        break;
+                    case NPC_FieldIndex.Fatigue:
+                        this.Fatigue = ex;
+                        break;
+                    case NPC_FieldIndex.BarterGold:
+                        this.BarterGold = ex;
+                        break;
+                    case NPC_FieldIndex.LevelOffset:
+                        this.LevelOffset = ex;
+                        break;
+                    case NPC_FieldIndex.CalcMin:
+                        this.CalcMin = ex;
+                        break;
+                    case NPC_FieldIndex.CalcMax:
+                        this.CalcMax = ex;
+                        break;
+                    case NPC_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.DeathItem:
+                        this.DeathItem = ex;
+                        break;
+                    case NPC_FieldIndex.Race:
+                        this.Race = ex;
+                        break;
+                    case NPC_FieldIndex.Spells:
+                        this.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case NPC_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.Aggression:
+                        this.Aggression = ex;
+                        break;
+                    case NPC_FieldIndex.Confidence:
+                        this.Confidence = ex;
+                        break;
+                    case NPC_FieldIndex.EnergyLevel:
+                        this.EnergyLevel = ex;
+                        break;
+                    case NPC_FieldIndex.Responsibility:
+                        this.Responsibility = ex;
+                        break;
+                    case NPC_FieldIndex.BuySellServices:
+                        this.BuySellServices = ex;
+                        break;
+                    case NPC_FieldIndex.Teaches:
+                        this.Teaches = ex;
+                        break;
+                    case NPC_FieldIndex.MaximumTrainingLevel:
+                        this.MaximumTrainingLevel = ex;
+                        break;
+                    case NPC_FieldIndex.Fluff:
+                        this.Fluff = ex;
+                        break;
+                    case NPC_FieldIndex.AIPackages:
+                        this.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.Animations:
+                        this.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.Class:
+                        this.Class = ex;
+                        break;
+                    case NPC_FieldIndex.Armorer:
+                        this.Armorer = ex;
+                        break;
+                    case NPC_FieldIndex.Athletics:
+                        this.Athletics = ex;
+                        break;
+                    case NPC_FieldIndex.Blade:
+                        this.Blade = ex;
+                        break;
+                    case NPC_FieldIndex.Block:
+                        this.Block = ex;
+                        break;
+                    case NPC_FieldIndex.Blunt:
+                        this.Blunt = ex;
+                        break;
+                    case NPC_FieldIndex.HandToHand:
+                        this.HandToHand = ex;
+                        break;
+                    case NPC_FieldIndex.HeavyArmor:
+                        this.HeavyArmor = ex;
+                        break;
+                    case NPC_FieldIndex.Alchemy:
+                        this.Alchemy = ex;
+                        break;
+                    case NPC_FieldIndex.Alteration:
+                        this.Alteration = ex;
+                        break;
+                    case NPC_FieldIndex.Conjuration:
+                        this.Conjuration = ex;
+                        break;
+                    case NPC_FieldIndex.Destruction:
+                        this.Destruction = ex;
+                        break;
+                    case NPC_FieldIndex.Illusion:
+                        this.Illusion = ex;
+                        break;
+                    case NPC_FieldIndex.Mysticism:
+                        this.Mysticism = ex;
+                        break;
+                    case NPC_FieldIndex.Restoration:
+                        this.Restoration = ex;
+                        break;
+                    case NPC_FieldIndex.Acrobatics:
+                        this.Acrobatics = ex;
+                        break;
+                    case NPC_FieldIndex.LightArmor:
+                        this.LightArmor = ex;
+                        break;
+                    case NPC_FieldIndex.Marksman:
+                        this.Marksman = ex;
+                        break;
+                    case NPC_FieldIndex.Mercantile:
+                        this.Mercantile = ex;
+                        break;
+                    case NPC_FieldIndex.Security:
+                        this.Security = ex;
+                        break;
+                    case NPC_FieldIndex.Sneak:
+                        this.Sneak = ex;
+                        break;
+                    case NPC_FieldIndex.Speechcraft:
+                        this.Speechcraft = ex;
+                        break;
+                    case NPC_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case NPC_FieldIndex.Strength:
+                        this.Strength = ex;
+                        break;
+                    case NPC_FieldIndex.Intelligence:
+                        this.Intelligence = ex;
+                        break;
+                    case NPC_FieldIndex.Willpower:
+                        this.Willpower = ex;
+                        break;
+                    case NPC_FieldIndex.Agility:
+                        this.Agility = ex;
+                        break;
+                    case NPC_FieldIndex.Speed:
+                        this.Speed = ex;
+                        break;
+                    case NPC_FieldIndex.Endurance:
+                        this.Endurance = ex;
+                        break;
+                    case NPC_FieldIndex.Personality:
+                        this.Personality = ex;
+                        break;
+                    case NPC_FieldIndex.Luck:
+                        this.Luck = ex;
+                        break;
+                    case NPC_FieldIndex.Hair:
+                        this.Hair = ex;
+                        break;
+                    case NPC_FieldIndex.HairLength:
+                        this.HairLength = ex;
+                        break;
+                    case NPC_FieldIndex.Eyes:
+                        this.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case NPC_FieldIndex.HairColor:
+                        this.HairColor = ex;
+                        break;
+                    case NPC_FieldIndex.CombatStyle:
+                        this.CombatStyle = ex;
+                        break;
+                    case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                        this.FaceGenGeometrySymmetric = ex;
+                        break;
+                    case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                        this.FaceGenGeometryAsymmetric = ex;
+                        break;
+                    case NPC_FieldIndex.FaceGenTextureSymmetric:
+                        this.FaceGenTextureSymmetric = ex;
+                        break;
+                    case NPC_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case NPC_FieldIndex.ACBSDataTypeState:
+                        this.ACBSDataTypeState = ex;
+                        break;
+                    case NPC_FieldIndex.AIDTDataTypeState:
+                        this.AIDTDataTypeState = ex;
+                        break;
+                    case NPC_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                NPC_FieldIndex enu = (NPC_FieldIndex)index;
+                switch (enu)
+                {
+                    case NPC_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case NPC_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.BaseSpellPoints:
+                        this.BaseSpellPoints = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Fatigue:
+                        this.Fatigue = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.BarterGold:
+                        this.BarterGold = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.LevelOffset:
+                        this.LevelOffset = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.CalcMin:
+                        this.CalcMin = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.CalcMax:
+                        this.CalcMax = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>)obj;
+                        break;
+                    case NPC_FieldIndex.DeathItem:
+                        this.DeathItem = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Race:
+                        this.Race = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Spells:
+                        this.Spells = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case NPC_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>)obj;
+                        break;
+                    case NPC_FieldIndex.Aggression:
+                        this.Aggression = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Confidence:
+                        this.Confidence = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.EnergyLevel:
+                        this.EnergyLevel = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Responsibility:
+                        this.Responsibility = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.BuySellServices:
+                        this.BuySellServices = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Teaches:
+                        this.Teaches = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.MaximumTrainingLevel:
+                        this.MaximumTrainingLevel = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Fluff:
+                        this.Fluff = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.AIPackages:
+                        this.AIPackages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case NPC_FieldIndex.Animations:
+                        this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case NPC_FieldIndex.Class:
+                        this.Class = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Armorer:
+                        this.Armorer = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Athletics:
+                        this.Athletics = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Blade:
+                        this.Blade = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Block:
+                        this.Block = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Blunt:
+                        this.Blunt = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.HandToHand:
+                        this.HandToHand = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.HeavyArmor:
+                        this.HeavyArmor = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Alchemy:
+                        this.Alchemy = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Alteration:
+                        this.Alteration = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Conjuration:
+                        this.Conjuration = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Destruction:
+                        this.Destruction = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Illusion:
+                        this.Illusion = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Mysticism:
+                        this.Mysticism = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Restoration:
+                        this.Restoration = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Acrobatics:
+                        this.Acrobatics = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.LightArmor:
+                        this.LightArmor = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Marksman:
+                        this.Marksman = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Mercantile:
+                        this.Mercantile = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Security:
+                        this.Security = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Sneak:
+                        this.Sneak = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Speechcraft:
+                        this.Speechcraft = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Health:
+                        this.Health = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Strength:
+                        this.Strength = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Intelligence:
+                        this.Intelligence = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Willpower:
+                        this.Willpower = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Agility:
+                        this.Agility = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Speed:
+                        this.Speed = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Endurance:
+                        this.Endurance = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Personality:
+                        this.Personality = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Luck:
+                        this.Luck = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Hair:
+                        this.Hair = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.HairLength:
+                        this.HairLength = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Eyes:
+                        this.Eyes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case NPC_FieldIndex.HairColor:
+                        this.HairColor = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.CombatStyle:
+                        this.CombatStyle = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.FaceGenGeometrySymmetric:
+                        this.FaceGenGeometrySymmetric = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.FaceGenGeometryAsymmetric:
+                        this.FaceGenGeometryAsymmetric = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.FaceGenTextureSymmetric:
+                        this.FaceGenTextureSymmetric = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.Unknown:
+                        this.Unknown = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.ACBSDataTypeState:
+                        this.ACBSDataTypeState = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.AIDTDataTypeState:
+                        this.AIDTDataTypeState = (Exception)obj;
+                        break;
+                    case NPC_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Flags != null) return true;
+                if (BaseSpellPoints != null) return true;
+                if (Fatigue != null) return true;
+                if (BarterGold != null) return true;
+                if (LevelOffset != null) return true;
+                if (CalcMin != null) return true;
+                if (CalcMax != null) return true;
+                if (Factions != null) return true;
+                if (DeathItem != null) return true;
+                if (Race != null) return true;
+                if (Spells != null) return true;
+                if (Script != null) return true;
+                if (Items != null) return true;
+                if (Aggression != null) return true;
+                if (Confidence != null) return true;
+                if (EnergyLevel != null) return true;
+                if (Responsibility != null) return true;
+                if (BuySellServices != null) return true;
+                if (Teaches != null) return true;
+                if (MaximumTrainingLevel != null) return true;
+                if (Fluff != null) return true;
+                if (AIPackages != null) return true;
+                if (Animations != null) return true;
+                if (Class != null) return true;
+                if (Armorer != null) return true;
+                if (Athletics != null) return true;
+                if (Blade != null) return true;
+                if (Block != null) return true;
+                if (Blunt != null) return true;
+                if (HandToHand != null) return true;
+                if (HeavyArmor != null) return true;
+                if (Alchemy != null) return true;
+                if (Alteration != null) return true;
+                if (Conjuration != null) return true;
+                if (Destruction != null) return true;
+                if (Illusion != null) return true;
+                if (Mysticism != null) return true;
+                if (Restoration != null) return true;
+                if (Acrobatics != null) return true;
+                if (LightArmor != null) return true;
+                if (Marksman != null) return true;
+                if (Mercantile != null) return true;
+                if (Security != null) return true;
+                if (Sneak != null) return true;
+                if (Speechcraft != null) return true;
+                if (Health != null) return true;
+                if (Strength != null) return true;
+                if (Intelligence != null) return true;
+                if (Willpower != null) return true;
+                if (Agility != null) return true;
+                if (Speed != null) return true;
+                if (Endurance != null) return true;
+                if (Personality != null) return true;
+                if (Luck != null) return true;
+                if (Hair != null) return true;
+                if (HairLength != null) return true;
+                if (Eyes != null) return true;
+                if (HairColor != null) return true;
+                if (CombatStyle != null) return true;
+                if (FaceGenGeometrySymmetric != null) return true;
+                if (FaceGenGeometryAsymmetric != null) return true;
+                if (FaceGenTextureSymmetric != null) return true;
+                if (Unknown != null) return true;
+                if (ACBSDataTypeState != null) return true;
+                if (AIDTDataTypeState != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
+                fg.AppendLine($"Fatigue => {Fatigue}");
+                fg.AppendLine($"BarterGold => {BarterGold}");
+                fg.AppendLine($"LevelOffset => {LevelOffset}");
+                fg.AppendLine($"CalcMin => {CalcMin}");
+                fg.AppendLine($"CalcMax => {CalcMax}");
+                fg.AppendLine("Factions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Factions != null)
+                    {
+                        if (Factions.Overall != null)
+                        {
+                            fg.AppendLine(Factions.Overall.ToString());
+                        }
+                        if (Factions.Specific != null)
+                        {
+                            foreach (var subItem in Factions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"DeathItem => {DeathItem}");
+                fg.AppendLine($"Race => {Race}");
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Spells != null)
+                    {
+                        if (Spells.Overall != null)
+                        {
+                            fg.AppendLine(Spells.Overall.ToString());
+                        }
+                        if (Spells.Specific != null)
+                        {
+                            foreach (var subItem in Spells.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Items != null)
+                    {
+                        if (Items.Overall != null)
+                        {
+                            fg.AppendLine(Items.Overall.ToString());
+                        }
+                        if (Items.Specific != null)
+                        {
+                            foreach (var subItem in Items.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Aggression => {Aggression}");
+                fg.AppendLine($"Confidence => {Confidence}");
+                fg.AppendLine($"EnergyLevel => {EnergyLevel}");
+                fg.AppendLine($"Responsibility => {Responsibility}");
+                fg.AppendLine($"BuySellServices => {BuySellServices}");
+                fg.AppendLine($"Teaches => {Teaches}");
+                fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+                fg.AppendLine($"Fluff => {Fluff}");
+                fg.AppendLine("AIPackages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (AIPackages != null)
+                    {
+                        if (AIPackages.Overall != null)
+                        {
+                            fg.AppendLine(AIPackages.Overall.ToString());
+                        }
+                        if (AIPackages.Specific != null)
+                        {
+                            foreach (var subItem in AIPackages.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("Animations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Animations != null)
+                    {
+                        if (Animations.Overall != null)
+                        {
+                            fg.AppendLine(Animations.Overall.ToString());
+                        }
+                        if (Animations.Specific != null)
+                        {
+                            foreach (var subItem in Animations.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Class => {Class}");
+                fg.AppendLine($"Armorer => {Armorer}");
+                fg.AppendLine($"Athletics => {Athletics}");
+                fg.AppendLine($"Blade => {Blade}");
+                fg.AppendLine($"Block => {Block}");
+                fg.AppendLine($"Blunt => {Blunt}");
+                fg.AppendLine($"HandToHand => {HandToHand}");
+                fg.AppendLine($"HeavyArmor => {HeavyArmor}");
+                fg.AppendLine($"Alchemy => {Alchemy}");
+                fg.AppendLine($"Alteration => {Alteration}");
+                fg.AppendLine($"Conjuration => {Conjuration}");
+                fg.AppendLine($"Destruction => {Destruction}");
+                fg.AppendLine($"Illusion => {Illusion}");
+                fg.AppendLine($"Mysticism => {Mysticism}");
+                fg.AppendLine($"Restoration => {Restoration}");
+                fg.AppendLine($"Acrobatics => {Acrobatics}");
+                fg.AppendLine($"LightArmor => {LightArmor}");
+                fg.AppendLine($"Marksman => {Marksman}");
+                fg.AppendLine($"Mercantile => {Mercantile}");
+                fg.AppendLine($"Security => {Security}");
+                fg.AppendLine($"Sneak => {Sneak}");
+                fg.AppendLine($"Speechcraft => {Speechcraft}");
+                fg.AppendLine($"Health => {Health}");
+                fg.AppendLine($"Strength => {Strength}");
+                fg.AppendLine($"Intelligence => {Intelligence}");
+                fg.AppendLine($"Willpower => {Willpower}");
+                fg.AppendLine($"Agility => {Agility}");
+                fg.AppendLine($"Speed => {Speed}");
+                fg.AppendLine($"Endurance => {Endurance}");
+                fg.AppendLine($"Personality => {Personality}");
+                fg.AppendLine($"Luck => {Luck}");
+                fg.AppendLine($"Hair => {Hair}");
+                fg.AppendLine($"HairLength => {HairLength}");
+                fg.AppendLine("Eyes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Eyes != null)
+                    {
+                        if (Eyes.Overall != null)
+                        {
+                            fg.AppendLine(Eyes.Overall.ToString());
+                        }
+                        if (Eyes.Specific != null)
+                        {
+                            foreach (var subItem in Eyes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"HairColor => {HairColor}");
+                fg.AppendLine($"CombatStyle => {CombatStyle}");
+                fg.AppendLine($"FaceGenGeometrySymmetric => {FaceGenGeometrySymmetric}");
+                fg.AppendLine($"FaceGenGeometryAsymmetric => {FaceGenGeometryAsymmetric}");
+                fg.AppendLine($"FaceGenTextureSymmetric => {FaceGenTextureSymmetric}");
+                fg.AppendLine($"Unknown => {Unknown}");
+                fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
+                fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
+                ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
+                ret.BarterGold = this.BarterGold.Combine(rhs.BarterGold);
+                ret.LevelOffset = this.LevelOffset.Combine(rhs.LevelOffset);
+                ret.CalcMin = this.CalcMin.Combine(rhs.CalcMin);
+                ret.CalcMax = this.CalcMax.Combine(rhs.CalcMax);
+                ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
+                ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
+                ret.Race = this.Race.Combine(rhs.Race);
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Aggression = this.Aggression.Combine(rhs.Aggression);
+                ret.Confidence = this.Confidence.Combine(rhs.Confidence);
+                ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
+                ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
+                ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
+                ret.Teaches = this.Teaches.Combine(rhs.Teaches);
+                ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
+                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Class = this.Class.Combine(rhs.Class);
+                ret.Armorer = this.Armorer.Combine(rhs.Armorer);
+                ret.Athletics = this.Athletics.Combine(rhs.Athletics);
+                ret.Blade = this.Blade.Combine(rhs.Blade);
+                ret.Block = this.Block.Combine(rhs.Block);
+                ret.Blunt = this.Blunt.Combine(rhs.Blunt);
+                ret.HandToHand = this.HandToHand.Combine(rhs.HandToHand);
+                ret.HeavyArmor = this.HeavyArmor.Combine(rhs.HeavyArmor);
+                ret.Alchemy = this.Alchemy.Combine(rhs.Alchemy);
+                ret.Alteration = this.Alteration.Combine(rhs.Alteration);
+                ret.Conjuration = this.Conjuration.Combine(rhs.Conjuration);
+                ret.Destruction = this.Destruction.Combine(rhs.Destruction);
+                ret.Illusion = this.Illusion.Combine(rhs.Illusion);
+                ret.Mysticism = this.Mysticism.Combine(rhs.Mysticism);
+                ret.Restoration = this.Restoration.Combine(rhs.Restoration);
+                ret.Acrobatics = this.Acrobatics.Combine(rhs.Acrobatics);
+                ret.LightArmor = this.LightArmor.Combine(rhs.LightArmor);
+                ret.Marksman = this.Marksman.Combine(rhs.Marksman);
+                ret.Mercantile = this.Mercantile.Combine(rhs.Mercantile);
+                ret.Security = this.Security.Combine(rhs.Security);
+                ret.Sneak = this.Sneak.Combine(rhs.Sneak);
+                ret.Speechcraft = this.Speechcraft.Combine(rhs.Speechcraft);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.Strength = this.Strength.Combine(rhs.Strength);
+                ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
+                ret.Willpower = this.Willpower.Combine(rhs.Willpower);
+                ret.Agility = this.Agility.Combine(rhs.Agility);
+                ret.Speed = this.Speed.Combine(rhs.Speed);
+                ret.Endurance = this.Endurance.Combine(rhs.Endurance);
+                ret.Personality = this.Personality.Combine(rhs.Personality);
+                ret.Luck = this.Luck.Combine(rhs.Luck);
+                ret.Hair = this.Hair.Combine(rhs.Hair);
+                ret.HairLength = this.HairLength.Combine(rhs.HairLength);
+                ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
+                ret.HairColor = this.HairColor.Combine(rhs.HairColor);
+                ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
+                ret.FaceGenGeometrySymmetric = this.FaceGenGeometrySymmetric.Combine(rhs.FaceGenGeometrySymmetric);
+                ret.FaceGenGeometryAsymmetric = this.FaceGenGeometryAsymmetric.Combine(rhs.FaceGenGeometryAsymmetric);
+                ret.FaceGenTextureSymmetric = this.FaceGenTextureSymmetric.Combine(rhs.FaceGenTextureSymmetric);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
+                ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            NPCAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Flags;
+            public bool BaseSpellPoints;
+            public bool Fatigue;
+            public bool BarterGold;
+            public bool LevelOffset;
+            public bool CalcMin;
+            public bool CalcMax;
+            public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
+            public bool DeathItem;
+            public bool Race;
+            public bool Spells;
+            public bool Script;
+            public MaskItem<bool, ItemEntry.TranslationMask?> Items;
+            public bool Aggression;
+            public bool Confidence;
+            public bool EnergyLevel;
+            public bool Responsibility;
+            public bool BuySellServices;
+            public bool Teaches;
+            public bool MaximumTrainingLevel;
+            public bool Fluff;
+            public bool AIPackages;
+            public bool Animations;
+            public bool Class;
+            public bool Armorer;
+            public bool Athletics;
+            public bool Blade;
+            public bool Block;
+            public bool Blunt;
+            public bool HandToHand;
+            public bool HeavyArmor;
+            public bool Alchemy;
+            public bool Alteration;
+            public bool Conjuration;
+            public bool Destruction;
+            public bool Illusion;
+            public bool Mysticism;
+            public bool Restoration;
+            public bool Acrobatics;
+            public bool LightArmor;
+            public bool Marksman;
+            public bool Mercantile;
+            public bool Security;
+            public bool Sneak;
+            public bool Speechcraft;
+            public bool Health;
+            public bool Strength;
+            public bool Intelligence;
+            public bool Willpower;
+            public bool Agility;
+            public bool Speed;
+            public bool Endurance;
+            public bool Personality;
+            public bool Luck;
+            public bool Hair;
+            public bool HairLength;
+            public bool Eyes;
+            public bool HairColor;
+            public bool CombatStyle;
+            public bool FaceGenGeometrySymmetric;
+            public bool FaceGenGeometryAsymmetric;
+            public bool FaceGenTextureSymmetric;
+            public bool Unknown;
+            public bool ACBSDataTypeState;
+            public bool AIDTDataTypeState;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.BaseSpellPoints = defaultOn;
+                this.Fatigue = defaultOn;
+                this.BarterGold = defaultOn;
+                this.LevelOffset = defaultOn;
+                this.CalcMin = defaultOn;
+                this.CalcMax = defaultOn;
+                this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
+                this.DeathItem = defaultOn;
+                this.Race = defaultOn;
+                this.Spells = defaultOn;
+                this.Script = defaultOn;
+                this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
+                this.Aggression = defaultOn;
+                this.Confidence = defaultOn;
+                this.EnergyLevel = defaultOn;
+                this.Responsibility = defaultOn;
+                this.BuySellServices = defaultOn;
+                this.Teaches = defaultOn;
+                this.MaximumTrainingLevel = defaultOn;
+                this.Fluff = defaultOn;
+                this.AIPackages = defaultOn;
+                this.Animations = defaultOn;
+                this.Class = defaultOn;
+                this.Armorer = defaultOn;
+                this.Athletics = defaultOn;
+                this.Blade = defaultOn;
+                this.Block = defaultOn;
+                this.Blunt = defaultOn;
+                this.HandToHand = defaultOn;
+                this.HeavyArmor = defaultOn;
+                this.Alchemy = defaultOn;
+                this.Alteration = defaultOn;
+                this.Conjuration = defaultOn;
+                this.Destruction = defaultOn;
+                this.Illusion = defaultOn;
+                this.Mysticism = defaultOn;
+                this.Restoration = defaultOn;
+                this.Acrobatics = defaultOn;
+                this.LightArmor = defaultOn;
+                this.Marksman = defaultOn;
+                this.Mercantile = defaultOn;
+                this.Security = defaultOn;
+                this.Sneak = defaultOn;
+                this.Speechcraft = defaultOn;
+                this.Health = defaultOn;
+                this.Strength = defaultOn;
+                this.Intelligence = defaultOn;
+                this.Willpower = defaultOn;
+                this.Agility = defaultOn;
+                this.Speed = defaultOn;
+                this.Endurance = defaultOn;
+                this.Personality = defaultOn;
+                this.Luck = defaultOn;
+                this.Hair = defaultOn;
+                this.HairLength = defaultOn;
+                this.Eyes = defaultOn;
+                this.HairColor = defaultOn;
+                this.CombatStyle = defaultOn;
+                this.FaceGenGeometrySymmetric = defaultOn;
+                this.FaceGenGeometryAsymmetric = defaultOn;
+                this.FaceGenTextureSymmetric = defaultOn;
+                this.Unknown = defaultOn;
+                this.ACBSDataTypeState = defaultOn;
+                this.AIDTDataTypeState = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((BaseSpellPoints, null));
+                ret.Add((Fatigue, null));
+                ret.Add((BarterGold, null));
+                ret.Add((LevelOffset, null));
+                ret.Add((CalcMin, null));
+                ret.Add((CalcMax, null));
+                ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+                ret.Add((DeathItem, null));
+                ret.Add((Race, null));
+                ret.Add((Spells, null));
+                ret.Add((Script, null));
+                ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+                ret.Add((Aggression, null));
+                ret.Add((Confidence, null));
+                ret.Add((EnergyLevel, null));
+                ret.Add((Responsibility, null));
+                ret.Add((BuySellServices, null));
+                ret.Add((Teaches, null));
+                ret.Add((MaximumTrainingLevel, null));
+                ret.Add((Fluff, null));
+                ret.Add((AIPackages, null));
+                ret.Add((Animations, null));
+                ret.Add((Class, null));
+                ret.Add((Armorer, null));
+                ret.Add((Athletics, null));
+                ret.Add((Blade, null));
+                ret.Add((Block, null));
+                ret.Add((Blunt, null));
+                ret.Add((HandToHand, null));
+                ret.Add((HeavyArmor, null));
+                ret.Add((Alchemy, null));
+                ret.Add((Alteration, null));
+                ret.Add((Conjuration, null));
+                ret.Add((Destruction, null));
+                ret.Add((Illusion, null));
+                ret.Add((Mysticism, null));
+                ret.Add((Restoration, null));
+                ret.Add((Acrobatics, null));
+                ret.Add((LightArmor, null));
+                ret.Add((Marksman, null));
+                ret.Add((Mercantile, null));
+                ret.Add((Security, null));
+                ret.Add((Sneak, null));
+                ret.Add((Speechcraft, null));
+                ret.Add((Health, null));
+                ret.Add((Strength, null));
+                ret.Add((Intelligence, null));
+                ret.Add((Willpower, null));
+                ret.Add((Agility, null));
+                ret.Add((Speed, null));
+                ret.Add((Endurance, null));
+                ret.Add((Personality, null));
+                ret.Add((Luck, null));
+                ret.Add((Hair, null));
+                ret.Add((HairLength, null));
+                ret.Add((Eyes, null));
+                ret.Add((HairColor, null));
+                ret.Add((CombatStyle, null));
+                ret.Add((FaceGenGeometrySymmetric, null));
+                ret.Add((FaceGenGeometryAsymmetric, null));
+                ret.Add((FaceGenTextureSymmetric, null));
+                ret.Add((Unknown, null));
+                ret.Add((ACBSDataTypeState, null));
+                ret.Add((AIDTDataTypeState, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -1287,7 +3791,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static NPC_Mask<bool> GetEqualsMask(
+        public static NPC.Mask<bool> GetEqualsMask(
             this INPCGetter item,
             INPCGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -1301,7 +3805,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this INPCGetter item,
             string? name = null,
-            NPC_Mask<bool>? printMask = null)
+            NPC.Mask<bool>? printMask = null)
         {
             return ((NPCCommon)((INPCGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -1313,7 +3817,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCGetter item,
             FileGeneration fg,
             string? name = null,
-            NPC_Mask<bool>? printMask = null)
+            NPC.Mask<bool>? printMask = null)
         {
             ((NPCCommon)((INPCGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -1324,16 +3828,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this INPCGetter item,
-            NPC_Mask<bool?> checkMask)
+            NPC.Mask<bool?> checkMask)
         {
             return ((NPCCommon)((INPCGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static NPC_Mask<bool> GetHasBeenSetMask(this INPCGetter item)
+        public static NPC.Mask<bool> GetHasBeenSetMask(this INPCGetter item)
         {
-            var ret = new NPC_Mask<bool>(false);
+            var ret = new NPC.Mask<bool>(false);
             ((NPCCommon)((INPCGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -1352,8 +3856,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this INPCInternal lhs,
             INPCGetter rhs,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? copyMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -1361,7 +3865,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -1379,7 +3883,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPC DeepCopy(
             this INPCGetter item,
-            NPC_TranslationMask? copyMask = null)
+            NPC.TranslationMask? copyMask = null)
         {
             return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1388,8 +3892,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static NPC DeepCopy(
             this INPCGetter item,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? copyMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? copyMask = null)
         {
             return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1413,7 +3917,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCInternal item,
             XElement node,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -1426,8 +3930,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCInternal item,
             XElement node,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1435,7 +3939,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -1454,7 +3958,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCInternal item,
             string path,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1466,8 +3970,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCInternal item,
             string path,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1481,7 +3985,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1494,7 +3998,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCInternal item,
             Stream stream,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1506,8 +4010,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this INPCInternal item,
             Stream stream,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1521,7 +4025,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            NPC_TranslationMask? translationMask = null)
+            NPC.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1666,9 +4170,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 73;
 
-        public static readonly Type MaskType = typeof(NPC_Mask<>);
+        public static readonly Type MaskType = typeof(NPC.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NPC_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NPC.ErrorMask);
 
         public static readonly Type ClassType = typeof(NPC);
 
@@ -3068,12 +5572,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly NPCCommon Instance = new NPCCommon();
 
-        public NPC_Mask<bool> GetEqualsMask(
+        public NPC.Mask<bool> GetEqualsMask(
             INPCGetter item,
             INPCGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new NPC_Mask<bool>(false);
+            var ret = new NPC.Mask<bool>(false);
             ((NPCCommon)((INPCGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -3085,7 +5589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             INPCGetter item,
             INPCGetter rhs,
-            NPC_Mask<bool> ret,
+            NPC.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -3185,7 +5689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             INPCGetter item,
             string? name = null,
-            NPC_Mask<bool>? printMask = null)
+            NPC.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -3200,7 +5704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPCGetter item,
             FileGeneration fg,
             string? name = null,
-            NPC_Mask<bool>? printMask = null)
+            NPC.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -3224,7 +5728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             INPCGetter item,
             FileGeneration fg,
-            NPC_Mask<bool>? printMask = null)
+            NPC.Mask<bool>? printMask = null)
         {
             NPCAbstractCommon.ToStringFields(
                 item: item,
@@ -3590,7 +6094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             INPCGetter item,
-            NPC_Mask<bool?> checkMask)
+            NPC.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -3620,11 +6124,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             INPCGetter item,
-            NPC_Mask<bool> mask)
+            NPC.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Flags = true;
             mask.BaseSpellPoints = true;
             mask.Fatigue = true;
@@ -3632,12 +6136,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.LevelOffset = true;
             mask.CalcMin = true;
             mask.CalcMax = true;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>?>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DeathItem = item.DeathItem.HasBeenSet;
             mask.Race = item.Race.HasBeenSet;
             mask.Spells = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Spells.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.Script = item.Script.HasBeenSet;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry_Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>>(item.Items.HasBeenSet, item.Items.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Aggression = true;
             mask.Confidence = true;
             mask.EnergyLevel = true;
@@ -4681,7 +7185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public NPC DeepCopy(
             INPCGetter item,
-            NPC_TranslationMask? copyMask = null)
+            NPC.TranslationMask? copyMask = null)
         {
             NPC ret = (NPC)((NPCCommon)((INPCGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -4692,8 +7196,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public NPC DeepCopy(
             INPCGetter item,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? copyMask = null)
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? copyMask = null)
         {
             NPC ret = (NPC)((NPCCommon)((INPCGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -6920,8 +9424,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this INPCGetter item,
             XElement node,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null,
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -6931,14 +9435,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NPC.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this INPCGetter item,
             string path,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null,
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -6954,8 +9458,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this INPCGetter item,
             Stream stream,
-            out NPC_ErrorMask errorMask,
-            NPC_TranslationMask? translationMask = null,
+            out NPC.ErrorMask errorMask,
+            NPC.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -6972,2509 +9476,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class NPC_Mask<T> :
-        NPCAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<NPC_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public NPC_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Flags = initialValue;
-            this.BaseSpellPoints = initialValue;
-            this.Fatigue = initialValue;
-            this.BarterGold = initialValue;
-            this.LevelOffset = initialValue;
-            this.CalcMin = initialValue;
-            this.CalcMax = initialValue;
-            this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, RankPlacement_Mask<T>?>>());
-            this.DeathItem = initialValue;
-            this.Race = initialValue;
-            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Script = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, ItemEntry_Mask<T>?>>());
-            this.Aggression = initialValue;
-            this.Confidence = initialValue;
-            this.EnergyLevel = initialValue;
-            this.Responsibility = initialValue;
-            this.BuySellServices = initialValue;
-            this.Teaches = initialValue;
-            this.MaximumTrainingLevel = initialValue;
-            this.Fluff = initialValue;
-            this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.Class = initialValue;
-            this.Armorer = initialValue;
-            this.Athletics = initialValue;
-            this.Blade = initialValue;
-            this.Block = initialValue;
-            this.Blunt = initialValue;
-            this.HandToHand = initialValue;
-            this.HeavyArmor = initialValue;
-            this.Alchemy = initialValue;
-            this.Alteration = initialValue;
-            this.Conjuration = initialValue;
-            this.Destruction = initialValue;
-            this.Illusion = initialValue;
-            this.Mysticism = initialValue;
-            this.Restoration = initialValue;
-            this.Acrobatics = initialValue;
-            this.LightArmor = initialValue;
-            this.Marksman = initialValue;
-            this.Mercantile = initialValue;
-            this.Security = initialValue;
-            this.Sneak = initialValue;
-            this.Speechcraft = initialValue;
-            this.Health = initialValue;
-            this.Strength = initialValue;
-            this.Intelligence = initialValue;
-            this.Willpower = initialValue;
-            this.Agility = initialValue;
-            this.Speed = initialValue;
-            this.Endurance = initialValue;
-            this.Personality = initialValue;
-            this.Luck = initialValue;
-            this.Hair = initialValue;
-            this.HairLength = initialValue;
-            this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.HairColor = initialValue;
-            this.CombatStyle = initialValue;
-            this.FaceGenGeometrySymmetric = initialValue;
-            this.FaceGenGeometryAsymmetric = initialValue;
-            this.FaceGenTextureSymmetric = initialValue;
-            this.Unknown = initialValue;
-            this.ACBSDataTypeState = initialValue;
-            this.AIDTDataTypeState = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public NPC_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Flags,
-            T BaseSpellPoints,
-            T Fatigue,
-            T BarterGold,
-            T LevelOffset,
-            T CalcMin,
-            T CalcMax,
-            T Factions,
-            T DeathItem,
-            T Race,
-            T Spells,
-            T Script,
-            T Items,
-            T Aggression,
-            T Confidence,
-            T EnergyLevel,
-            T Responsibility,
-            T BuySellServices,
-            T Teaches,
-            T MaximumTrainingLevel,
-            T Fluff,
-            T AIPackages,
-            T Animations,
-            T Class,
-            T Armorer,
-            T Athletics,
-            T Blade,
-            T Block,
-            T Blunt,
-            T HandToHand,
-            T HeavyArmor,
-            T Alchemy,
-            T Alteration,
-            T Conjuration,
-            T Destruction,
-            T Illusion,
-            T Mysticism,
-            T Restoration,
-            T Acrobatics,
-            T LightArmor,
-            T Marksman,
-            T Mercantile,
-            T Security,
-            T Sneak,
-            T Speechcraft,
-            T Health,
-            T Strength,
-            T Intelligence,
-            T Willpower,
-            T Agility,
-            T Speed,
-            T Endurance,
-            T Personality,
-            T Luck,
-            T Hair,
-            T HairLength,
-            T Eyes,
-            T HairColor,
-            T CombatStyle,
-            T FaceGenGeometrySymmetric,
-            T FaceGenGeometryAsymmetric,
-            T FaceGenTextureSymmetric,
-            T Unknown,
-            T ACBSDataTypeState,
-            T AIDTDataTypeState,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Flags = Flags;
-            this.BaseSpellPoints = BaseSpellPoints;
-            this.Fatigue = Fatigue;
-            this.BarterGold = BarterGold;
-            this.LevelOffset = LevelOffset;
-            this.CalcMin = CalcMin;
-            this.CalcMax = CalcMax;
-            this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>?>>>(Factions, Enumerable.Empty<MaskItemIndexed<T, RankPlacement_Mask<T>?>>());
-            this.DeathItem = DeathItem;
-            this.Race = Race;
-            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
-            this.Script = Script;
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>?>>>(Items, Enumerable.Empty<MaskItemIndexed<T, ItemEntry_Mask<T>?>>());
-            this.Aggression = Aggression;
-            this.Confidence = Confidence;
-            this.EnergyLevel = EnergyLevel;
-            this.Responsibility = Responsibility;
-            this.BuySellServices = BuySellServices;
-            this.Teaches = Teaches;
-            this.MaximumTrainingLevel = MaximumTrainingLevel;
-            this.Fluff = Fluff;
-            this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(AIPackages, Enumerable.Empty<(int Index, T Value)>());
-            this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Animations, Enumerable.Empty<(int Index, T Value)>());
-            this.Class = Class;
-            this.Armorer = Armorer;
-            this.Athletics = Athletics;
-            this.Blade = Blade;
-            this.Block = Block;
-            this.Blunt = Blunt;
-            this.HandToHand = HandToHand;
-            this.HeavyArmor = HeavyArmor;
-            this.Alchemy = Alchemy;
-            this.Alteration = Alteration;
-            this.Conjuration = Conjuration;
-            this.Destruction = Destruction;
-            this.Illusion = Illusion;
-            this.Mysticism = Mysticism;
-            this.Restoration = Restoration;
-            this.Acrobatics = Acrobatics;
-            this.LightArmor = LightArmor;
-            this.Marksman = Marksman;
-            this.Mercantile = Mercantile;
-            this.Security = Security;
-            this.Sneak = Sneak;
-            this.Speechcraft = Speechcraft;
-            this.Health = Health;
-            this.Strength = Strength;
-            this.Intelligence = Intelligence;
-            this.Willpower = Willpower;
-            this.Agility = Agility;
-            this.Speed = Speed;
-            this.Endurance = Endurance;
-            this.Personality = Personality;
-            this.Luck = Luck;
-            this.Hair = Hair;
-            this.HairLength = HairLength;
-            this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, Enumerable.Empty<(int Index, T Value)>());
-            this.HairColor = HairColor;
-            this.CombatStyle = CombatStyle;
-            this.FaceGenGeometrySymmetric = FaceGenGeometrySymmetric;
-            this.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetric;
-            this.FaceGenTextureSymmetric = FaceGenTextureSymmetric;
-            this.Unknown = Unknown;
-            this.ACBSDataTypeState = ACBSDataTypeState;
-            this.AIDTDataTypeState = AIDTDataTypeState;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected NPC_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Flags;
-        public T BaseSpellPoints;
-        public T Fatigue;
-        public T BarterGold;
-        public T LevelOffset;
-        public T CalcMin;
-        public T CalcMax;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>?>>>? Factions;
-        public T DeathItem;
-        public T Race;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
-        public T Script;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>?>>>? Items;
-        public T Aggression;
-        public T Confidence;
-        public T EnergyLevel;
-        public T Responsibility;
-        public T BuySellServices;
-        public T Teaches;
-        public T MaximumTrainingLevel;
-        public T Fluff;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? AIPackages;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Animations;
-        public T Class;
-        public T Armorer;
-        public T Athletics;
-        public T Blade;
-        public T Block;
-        public T Blunt;
-        public T HandToHand;
-        public T HeavyArmor;
-        public T Alchemy;
-        public T Alteration;
-        public T Conjuration;
-        public T Destruction;
-        public T Illusion;
-        public T Mysticism;
-        public T Restoration;
-        public T Acrobatics;
-        public T LightArmor;
-        public T Marksman;
-        public T Mercantile;
-        public T Security;
-        public T Sneak;
-        public T Speechcraft;
-        public T Health;
-        public T Strength;
-        public T Intelligence;
-        public T Willpower;
-        public T Agility;
-        public T Speed;
-        public T Endurance;
-        public T Personality;
-        public T Luck;
-        public T Hair;
-        public T HairLength;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Eyes;
-        public T HairColor;
-        public T CombatStyle;
-        public T FaceGenGeometrySymmetric;
-        public T FaceGenGeometryAsymmetric;
-        public T FaceGenTextureSymmetric;
-        public T Unknown;
-        public T ACBSDataTypeState;
-        public T AIDTDataTypeState;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is NPC_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(NPC_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
-            if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
-            if (!object.Equals(this.BarterGold, rhs.BarterGold)) return false;
-            if (!object.Equals(this.LevelOffset, rhs.LevelOffset)) return false;
-            if (!object.Equals(this.CalcMin, rhs.CalcMin)) return false;
-            if (!object.Equals(this.CalcMax, rhs.CalcMax)) return false;
-            if (!object.Equals(this.Factions, rhs.Factions)) return false;
-            if (!object.Equals(this.DeathItem, rhs.DeathItem)) return false;
-            if (!object.Equals(this.Race, rhs.Race)) return false;
-            if (!object.Equals(this.Spells, rhs.Spells)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Items, rhs.Items)) return false;
-            if (!object.Equals(this.Aggression, rhs.Aggression)) return false;
-            if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
-            if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
-            if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
-            if (!object.Equals(this.BuySellServices, rhs.BuySellServices)) return false;
-            if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
-            if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
-            if (!object.Equals(this.Animations, rhs.Animations)) return false;
-            if (!object.Equals(this.Class, rhs.Class)) return false;
-            if (!object.Equals(this.Armorer, rhs.Armorer)) return false;
-            if (!object.Equals(this.Athletics, rhs.Athletics)) return false;
-            if (!object.Equals(this.Blade, rhs.Blade)) return false;
-            if (!object.Equals(this.Block, rhs.Block)) return false;
-            if (!object.Equals(this.Blunt, rhs.Blunt)) return false;
-            if (!object.Equals(this.HandToHand, rhs.HandToHand)) return false;
-            if (!object.Equals(this.HeavyArmor, rhs.HeavyArmor)) return false;
-            if (!object.Equals(this.Alchemy, rhs.Alchemy)) return false;
-            if (!object.Equals(this.Alteration, rhs.Alteration)) return false;
-            if (!object.Equals(this.Conjuration, rhs.Conjuration)) return false;
-            if (!object.Equals(this.Destruction, rhs.Destruction)) return false;
-            if (!object.Equals(this.Illusion, rhs.Illusion)) return false;
-            if (!object.Equals(this.Mysticism, rhs.Mysticism)) return false;
-            if (!object.Equals(this.Restoration, rhs.Restoration)) return false;
-            if (!object.Equals(this.Acrobatics, rhs.Acrobatics)) return false;
-            if (!object.Equals(this.LightArmor, rhs.LightArmor)) return false;
-            if (!object.Equals(this.Marksman, rhs.Marksman)) return false;
-            if (!object.Equals(this.Mercantile, rhs.Mercantile)) return false;
-            if (!object.Equals(this.Security, rhs.Security)) return false;
-            if (!object.Equals(this.Sneak, rhs.Sneak)) return false;
-            if (!object.Equals(this.Speechcraft, rhs.Speechcraft)) return false;
-            if (!object.Equals(this.Health, rhs.Health)) return false;
-            if (!object.Equals(this.Strength, rhs.Strength)) return false;
-            if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
-            if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
-            if (!object.Equals(this.Agility, rhs.Agility)) return false;
-            if (!object.Equals(this.Speed, rhs.Speed)) return false;
-            if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
-            if (!object.Equals(this.Personality, rhs.Personality)) return false;
-            if (!object.Equals(this.Luck, rhs.Luck)) return false;
-            if (!object.Equals(this.Hair, rhs.Hair)) return false;
-            if (!object.Equals(this.HairLength, rhs.HairLength)) return false;
-            if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(this.HairColor, rhs.HairColor)) return false;
-            if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
-            if (!object.Equals(this.FaceGenGeometrySymmetric, rhs.FaceGenGeometrySymmetric)) return false;
-            if (!object.Equals(this.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
-            if (!object.Equals(this.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
-            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-            if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
-            if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
-            ret = ret.CombineHashCode(this.BarterGold?.GetHashCode());
-            ret = ret.CombineHashCode(this.LevelOffset?.GetHashCode());
-            ret = ret.CombineHashCode(this.CalcMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.CalcMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.Factions?.GetHashCode());
-            ret = ret.CombineHashCode(this.DeathItem?.GetHashCode());
-            ret = ret.CombineHashCode(this.Race?.GetHashCode());
-            ret = ret.CombineHashCode(this.Spells?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Items?.GetHashCode());
-            ret = ret.CombineHashCode(this.Aggression?.GetHashCode());
-            ret = ret.CombineHashCode(this.Confidence?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnergyLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Responsibility?.GetHashCode());
-            ret = ret.CombineHashCode(this.BuySellServices?.GetHashCode());
-            ret = ret.CombineHashCode(this.Teaches?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.AIPackages?.GetHashCode());
-            ret = ret.CombineHashCode(this.Animations?.GetHashCode());
-            ret = ret.CombineHashCode(this.Class?.GetHashCode());
-            ret = ret.CombineHashCode(this.Armorer?.GetHashCode());
-            ret = ret.CombineHashCode(this.Athletics?.GetHashCode());
-            ret = ret.CombineHashCode(this.Blade?.GetHashCode());
-            ret = ret.CombineHashCode(this.Block?.GetHashCode());
-            ret = ret.CombineHashCode(this.Blunt?.GetHashCode());
-            ret = ret.CombineHashCode(this.HandToHand?.GetHashCode());
-            ret = ret.CombineHashCode(this.HeavyArmor?.GetHashCode());
-            ret = ret.CombineHashCode(this.Alchemy?.GetHashCode());
-            ret = ret.CombineHashCode(this.Alteration?.GetHashCode());
-            ret = ret.CombineHashCode(this.Conjuration?.GetHashCode());
-            ret = ret.CombineHashCode(this.Destruction?.GetHashCode());
-            ret = ret.CombineHashCode(this.Illusion?.GetHashCode());
-            ret = ret.CombineHashCode(this.Mysticism?.GetHashCode());
-            ret = ret.CombineHashCode(this.Restoration?.GetHashCode());
-            ret = ret.CombineHashCode(this.Acrobatics?.GetHashCode());
-            ret = ret.CombineHashCode(this.LightArmor?.GetHashCode());
-            ret = ret.CombineHashCode(this.Marksman?.GetHashCode());
-            ret = ret.CombineHashCode(this.Mercantile?.GetHashCode());
-            ret = ret.CombineHashCode(this.Security?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sneak?.GetHashCode());
-            ret = ret.CombineHashCode(this.Speechcraft?.GetHashCode());
-            ret = ret.CombineHashCode(this.Health?.GetHashCode());
-            ret = ret.CombineHashCode(this.Strength?.GetHashCode());
-            ret = ret.CombineHashCode(this.Intelligence?.GetHashCode());
-            ret = ret.CombineHashCode(this.Willpower?.GetHashCode());
-            ret = ret.CombineHashCode(this.Agility?.GetHashCode());
-            ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-            ret = ret.CombineHashCode(this.Endurance?.GetHashCode());
-            ret = ret.CombineHashCode(this.Personality?.GetHashCode());
-            ret = ret.CombineHashCode(this.Luck?.GetHashCode());
-            ret = ret.CombineHashCode(this.Hair?.GetHashCode());
-            ret = ret.CombineHashCode(this.HairLength?.GetHashCode());
-            ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
-            ret = ret.CombineHashCode(this.HairColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.CombatStyle?.GetHashCode());
-            ret = ret.CombineHashCode(this.FaceGenGeometrySymmetric?.GetHashCode());
-            ret = ret.CombineHashCode(this.FaceGenGeometryAsymmetric?.GetHashCode());
-            ret = ret.CombineHashCode(this.FaceGenTextureSymmetric?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-            ret = ret.CombineHashCode(this.ACBSDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(this.AIDTDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.BaseSpellPoints)) return false;
-            if (!eval(this.Fatigue)) return false;
-            if (!eval(this.BarterGold)) return false;
-            if (!eval(this.LevelOffset)) return false;
-            if (!eval(this.CalcMin)) return false;
-            if (!eval(this.CalcMax)) return false;
-            if (this.Factions != null)
-            {
-                if (!eval(this.Factions.Overall)) return false;
-                if (this.Factions.Specific != null)
-                {
-                    foreach (var item in this.Factions.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.DeathItem)) return false;
-            if (!eval(this.Race)) return false;
-            if (this.Spells != null)
-            {
-                if (!eval(this.Spells.Overall)) return false;
-                if (this.Spells.Specific != null)
-                {
-                    foreach (var item in this.Spells.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Script)) return false;
-            if (this.Items != null)
-            {
-                if (!eval(this.Items.Overall)) return false;
-                if (this.Items.Specific != null)
-                {
-                    foreach (var item in this.Items.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Aggression)) return false;
-            if (!eval(this.Confidence)) return false;
-            if (!eval(this.EnergyLevel)) return false;
-            if (!eval(this.Responsibility)) return false;
-            if (!eval(this.BuySellServices)) return false;
-            if (!eval(this.Teaches)) return false;
-            if (!eval(this.MaximumTrainingLevel)) return false;
-            if (!eval(this.Fluff)) return false;
-            if (this.AIPackages != null)
-            {
-                if (!eval(this.AIPackages.Overall)) return false;
-                if (this.AIPackages.Specific != null)
-                {
-                    foreach (var item in this.AIPackages.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (this.Animations != null)
-            {
-                if (!eval(this.Animations.Overall)) return false;
-                if (this.Animations.Specific != null)
-                {
-                    foreach (var item in this.Animations.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Class)) return false;
-            if (!eval(this.Armorer)) return false;
-            if (!eval(this.Athletics)) return false;
-            if (!eval(this.Blade)) return false;
-            if (!eval(this.Block)) return false;
-            if (!eval(this.Blunt)) return false;
-            if (!eval(this.HandToHand)) return false;
-            if (!eval(this.HeavyArmor)) return false;
-            if (!eval(this.Alchemy)) return false;
-            if (!eval(this.Alteration)) return false;
-            if (!eval(this.Conjuration)) return false;
-            if (!eval(this.Destruction)) return false;
-            if (!eval(this.Illusion)) return false;
-            if (!eval(this.Mysticism)) return false;
-            if (!eval(this.Restoration)) return false;
-            if (!eval(this.Acrobatics)) return false;
-            if (!eval(this.LightArmor)) return false;
-            if (!eval(this.Marksman)) return false;
-            if (!eval(this.Mercantile)) return false;
-            if (!eval(this.Security)) return false;
-            if (!eval(this.Sneak)) return false;
-            if (!eval(this.Speechcraft)) return false;
-            if (!eval(this.Health)) return false;
-            if (!eval(this.Strength)) return false;
-            if (!eval(this.Intelligence)) return false;
-            if (!eval(this.Willpower)) return false;
-            if (!eval(this.Agility)) return false;
-            if (!eval(this.Speed)) return false;
-            if (!eval(this.Endurance)) return false;
-            if (!eval(this.Personality)) return false;
-            if (!eval(this.Luck)) return false;
-            if (!eval(this.Hair)) return false;
-            if (!eval(this.HairLength)) return false;
-            if (this.Eyes != null)
-            {
-                if (!eval(this.Eyes.Overall)) return false;
-                if (this.Eyes.Specific != null)
-                {
-                    foreach (var item in this.Eyes.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.HairColor)) return false;
-            if (!eval(this.CombatStyle)) return false;
-            if (!eval(this.FaceGenGeometrySymmetric)) return false;
-            if (!eval(this.FaceGenGeometryAsymmetric)) return false;
-            if (!eval(this.FaceGenTextureSymmetric)) return false;
-            if (!eval(this.Unknown)) return false;
-            if (!eval(this.ACBSDataTypeState)) return false;
-            if (!eval(this.AIDTDataTypeState)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new NPC_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new NPC_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(NPC_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Flags = eval(this.Flags);
-            obj.BaseSpellPoints = eval(this.BaseSpellPoints);
-            obj.Fatigue = eval(this.Fatigue);
-            obj.BarterGold = eval(this.BarterGold);
-            obj.LevelOffset = eval(this.LevelOffset);
-            obj.CalcMin = eval(this.CalcMin);
-            obj.CalcMax = eval(this.CalcMax);
-            if (Factions != null)
-            {
-                obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement_Mask<R>?>>>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement_Mask<R>?>>());
-                if (Factions.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, RankPlacement_Mask<R>?>>();
-                    obj.Factions.Specific = l;
-                    foreach (var item in Factions.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, RankPlacement_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RankPlacement_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.DeathItem = eval(this.DeathItem);
-            obj.Race = eval(this.Race);
-            if (Spells != null)
-            {
-                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Spells.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Spells.Specific = l;
-                    foreach (var item in Spells.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.Script = eval(this.Script);
-            if (Items != null)
-            {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry_Mask<R>?>>>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemEntry_Mask<R>?>>());
-                if (Items.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, ItemEntry_Mask<R>?>>();
-                    obj.Items.Specific = l;
-                    foreach (var item in Items.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, ItemEntry_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ItemEntry_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Aggression = eval(this.Aggression);
-            obj.Confidence = eval(this.Confidence);
-            obj.EnergyLevel = eval(this.EnergyLevel);
-            obj.Responsibility = eval(this.Responsibility);
-            obj.BuySellServices = eval(this.BuySellServices);
-            obj.Teaches = eval(this.Teaches);
-            obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-            obj.Fluff = eval(this.Fluff);
-            if (AIPackages != null)
-            {
-                obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.AIPackages.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (AIPackages.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.AIPackages.Specific = l;
-                    foreach (var item in AIPackages.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            if (Animations != null)
-            {
-                obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Animations.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Animations.Specific = l;
-                    foreach (var item in Animations.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.Class = eval(this.Class);
-            obj.Armorer = eval(this.Armorer);
-            obj.Athletics = eval(this.Athletics);
-            obj.Blade = eval(this.Blade);
-            obj.Block = eval(this.Block);
-            obj.Blunt = eval(this.Blunt);
-            obj.HandToHand = eval(this.HandToHand);
-            obj.HeavyArmor = eval(this.HeavyArmor);
-            obj.Alchemy = eval(this.Alchemy);
-            obj.Alteration = eval(this.Alteration);
-            obj.Conjuration = eval(this.Conjuration);
-            obj.Destruction = eval(this.Destruction);
-            obj.Illusion = eval(this.Illusion);
-            obj.Mysticism = eval(this.Mysticism);
-            obj.Restoration = eval(this.Restoration);
-            obj.Acrobatics = eval(this.Acrobatics);
-            obj.LightArmor = eval(this.LightArmor);
-            obj.Marksman = eval(this.Marksman);
-            obj.Mercantile = eval(this.Mercantile);
-            obj.Security = eval(this.Security);
-            obj.Sneak = eval(this.Sneak);
-            obj.Speechcraft = eval(this.Speechcraft);
-            obj.Health = eval(this.Health);
-            obj.Strength = eval(this.Strength);
-            obj.Intelligence = eval(this.Intelligence);
-            obj.Willpower = eval(this.Willpower);
-            obj.Agility = eval(this.Agility);
-            obj.Speed = eval(this.Speed);
-            obj.Endurance = eval(this.Endurance);
-            obj.Personality = eval(this.Personality);
-            obj.Luck = eval(this.Luck);
-            obj.Hair = eval(this.Hair);
-            obj.HairLength = eval(this.HairLength);
-            if (Eyes != null)
-            {
-                obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Eyes.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Eyes.Specific = l;
-                    foreach (var item in Eyes.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.HairColor = eval(this.HairColor);
-            obj.CombatStyle = eval(this.CombatStyle);
-            obj.FaceGenGeometrySymmetric = eval(this.FaceGenGeometrySymmetric);
-            obj.FaceGenGeometryAsymmetric = eval(this.FaceGenGeometryAsymmetric);
-            obj.FaceGenTextureSymmetric = eval(this.FaceGenTextureSymmetric);
-            obj.Unknown = eval(this.Unknown);
-            obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
-            obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(NPC_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, NPC_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(NPC_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.BaseSpellPoints ?? true)
-                {
-                    fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
-                }
-                if (printMask?.Fatigue ?? true)
-                {
-                    fg.AppendLine($"Fatigue => {Fatigue}");
-                }
-                if (printMask?.BarterGold ?? true)
-                {
-                    fg.AppendLine($"BarterGold => {BarterGold}");
-                }
-                if (printMask?.LevelOffset ?? true)
-                {
-                    fg.AppendLine($"LevelOffset => {LevelOffset}");
-                }
-                if (printMask?.CalcMin ?? true)
-                {
-                    fg.AppendLine($"CalcMin => {CalcMin}");
-                }
-                if (printMask?.CalcMax ?? true)
-                {
-                    fg.AppendLine($"CalcMax => {CalcMax}");
-                }
-                if (printMask?.Factions?.Overall ?? true)
-                {
-                    fg.AppendLine("Factions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Factions != null)
-                        {
-                            if (Factions.Overall != null)
-                            {
-                                fg.AppendLine(Factions.Overall.ToString());
-                            }
-                            if (Factions.Specific != null)
-                            {
-                                foreach (var subItem in Factions.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.DeathItem ?? true)
-                {
-                    fg.AppendLine($"DeathItem => {DeathItem}");
-                }
-                if (printMask?.Race ?? true)
-                {
-                    fg.AppendLine($"Race => {Race}");
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Spells != null)
-                        {
-                            if (Spells.Overall != null)
-                            {
-                                fg.AppendLine(Spells.Overall.ToString());
-                            }
-                            if (Spells.Specific != null)
-                            {
-                                foreach (var subItem in Spells.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Items?.Overall ?? true)
-                {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Items != null)
-                        {
-                            if (Items.Overall != null)
-                            {
-                                fg.AppendLine(Items.Overall.ToString());
-                            }
-                            if (Items.Specific != null)
-                            {
-                                foreach (var subItem in Items.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Aggression ?? true)
-                {
-                    fg.AppendLine($"Aggression => {Aggression}");
-                }
-                if (printMask?.Confidence ?? true)
-                {
-                    fg.AppendLine($"Confidence => {Confidence}");
-                }
-                if (printMask?.EnergyLevel ?? true)
-                {
-                    fg.AppendLine($"EnergyLevel => {EnergyLevel}");
-                }
-                if (printMask?.Responsibility ?? true)
-                {
-                    fg.AppendLine($"Responsibility => {Responsibility}");
-                }
-                if (printMask?.BuySellServices ?? true)
-                {
-                    fg.AppendLine($"BuySellServices => {BuySellServices}");
-                }
-                if (printMask?.Teaches ?? true)
-                {
-                    fg.AppendLine($"Teaches => {Teaches}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff}");
-                }
-                if (printMask?.AIPackages?.Overall ?? true)
-                {
-                    fg.AppendLine("AIPackages =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (AIPackages != null)
-                        {
-                            if (AIPackages.Overall != null)
-                            {
-                                fg.AppendLine(AIPackages.Overall.ToString());
-                            }
-                            if (AIPackages.Specific != null)
-                            {
-                                foreach (var subItem in AIPackages.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Animations?.Overall ?? true)
-                {
-                    fg.AppendLine("Animations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Animations != null)
-                        {
-                            if (Animations.Overall != null)
-                            {
-                                fg.AppendLine(Animations.Overall.ToString());
-                            }
-                            if (Animations.Specific != null)
-                            {
-                                foreach (var subItem in Animations.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Class ?? true)
-                {
-                    fg.AppendLine($"Class => {Class}");
-                }
-                if (printMask?.Armorer ?? true)
-                {
-                    fg.AppendLine($"Armorer => {Armorer}");
-                }
-                if (printMask?.Athletics ?? true)
-                {
-                    fg.AppendLine($"Athletics => {Athletics}");
-                }
-                if (printMask?.Blade ?? true)
-                {
-                    fg.AppendLine($"Blade => {Blade}");
-                }
-                if (printMask?.Block ?? true)
-                {
-                    fg.AppendLine($"Block => {Block}");
-                }
-                if (printMask?.Blunt ?? true)
-                {
-                    fg.AppendLine($"Blunt => {Blunt}");
-                }
-                if (printMask?.HandToHand ?? true)
-                {
-                    fg.AppendLine($"HandToHand => {HandToHand}");
-                }
-                if (printMask?.HeavyArmor ?? true)
-                {
-                    fg.AppendLine($"HeavyArmor => {HeavyArmor}");
-                }
-                if (printMask?.Alchemy ?? true)
-                {
-                    fg.AppendLine($"Alchemy => {Alchemy}");
-                }
-                if (printMask?.Alteration ?? true)
-                {
-                    fg.AppendLine($"Alteration => {Alteration}");
-                }
-                if (printMask?.Conjuration ?? true)
-                {
-                    fg.AppendLine($"Conjuration => {Conjuration}");
-                }
-                if (printMask?.Destruction ?? true)
-                {
-                    fg.AppendLine($"Destruction => {Destruction}");
-                }
-                if (printMask?.Illusion ?? true)
-                {
-                    fg.AppendLine($"Illusion => {Illusion}");
-                }
-                if (printMask?.Mysticism ?? true)
-                {
-                    fg.AppendLine($"Mysticism => {Mysticism}");
-                }
-                if (printMask?.Restoration ?? true)
-                {
-                    fg.AppendLine($"Restoration => {Restoration}");
-                }
-                if (printMask?.Acrobatics ?? true)
-                {
-                    fg.AppendLine($"Acrobatics => {Acrobatics}");
-                }
-                if (printMask?.LightArmor ?? true)
-                {
-                    fg.AppendLine($"LightArmor => {LightArmor}");
-                }
-                if (printMask?.Marksman ?? true)
-                {
-                    fg.AppendLine($"Marksman => {Marksman}");
-                }
-                if (printMask?.Mercantile ?? true)
-                {
-                    fg.AppendLine($"Mercantile => {Mercantile}");
-                }
-                if (printMask?.Security ?? true)
-                {
-                    fg.AppendLine($"Security => {Security}");
-                }
-                if (printMask?.Sneak ?? true)
-                {
-                    fg.AppendLine($"Sneak => {Sneak}");
-                }
-                if (printMask?.Speechcraft ?? true)
-                {
-                    fg.AppendLine($"Speechcraft => {Speechcraft}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {Health}");
-                }
-                if (printMask?.Strength ?? true)
-                {
-                    fg.AppendLine($"Strength => {Strength}");
-                }
-                if (printMask?.Intelligence ?? true)
-                {
-                    fg.AppendLine($"Intelligence => {Intelligence}");
-                }
-                if (printMask?.Willpower ?? true)
-                {
-                    fg.AppendLine($"Willpower => {Willpower}");
-                }
-                if (printMask?.Agility ?? true)
-                {
-                    fg.AppendLine($"Agility => {Agility}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {Speed}");
-                }
-                if (printMask?.Endurance ?? true)
-                {
-                    fg.AppendLine($"Endurance => {Endurance}");
-                }
-                if (printMask?.Personality ?? true)
-                {
-                    fg.AppendLine($"Personality => {Personality}");
-                }
-                if (printMask?.Luck ?? true)
-                {
-                    fg.AppendLine($"Luck => {Luck}");
-                }
-                if (printMask?.Hair ?? true)
-                {
-                    fg.AppendLine($"Hair => {Hair}");
-                }
-                if (printMask?.HairLength ?? true)
-                {
-                    fg.AppendLine($"HairLength => {HairLength}");
-                }
-                if (printMask?.Eyes?.Overall ?? true)
-                {
-                    fg.AppendLine("Eyes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Eyes != null)
-                        {
-                            if (Eyes.Overall != null)
-                            {
-                                fg.AppendLine(Eyes.Overall.ToString());
-                            }
-                            if (Eyes.Specific != null)
-                            {
-                                foreach (var subItem in Eyes.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.HairColor ?? true)
-                {
-                    fg.AppendLine($"HairColor => {HairColor}");
-                }
-                if (printMask?.CombatStyle ?? true)
-                {
-                    fg.AppendLine($"CombatStyle => {CombatStyle}");
-                }
-                if (printMask?.FaceGenGeometrySymmetric ?? true)
-                {
-                    fg.AppendLine($"FaceGenGeometrySymmetric => {FaceGenGeometrySymmetric}");
-                }
-                if (printMask?.FaceGenGeometryAsymmetric ?? true)
-                {
-                    fg.AppendLine($"FaceGenGeometryAsymmetric => {FaceGenGeometryAsymmetric}");
-                }
-                if (printMask?.FaceGenTextureSymmetric ?? true)
-                {
-                    fg.AppendLine($"FaceGenTextureSymmetric => {FaceGenTextureSymmetric}");
-                }
-                if (printMask?.Unknown ?? true)
-                {
-                    fg.AppendLine($"Unknown => {Unknown}");
-                }
-                if (printMask?.ACBSDataTypeState ?? true)
-                {
-                    fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
-                }
-                if (printMask?.AIDTDataTypeState ?? true)
-                {
-                    fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class NPC_ErrorMask : NPCAbstract_ErrorMask, IErrorMask<NPC_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Flags;
-        public Exception? BaseSpellPoints;
-        public Exception? Fatigue;
-        public Exception? BarterGold;
-        public Exception? LevelOffset;
-        public Exception? CalcMin;
-        public Exception? CalcMax;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>? Factions;
-        public Exception? DeathItem;
-        public Exception? Race;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
-        public Exception? Script;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>? Items;
-        public Exception? Aggression;
-        public Exception? Confidence;
-        public Exception? EnergyLevel;
-        public Exception? Responsibility;
-        public Exception? BuySellServices;
-        public Exception? Teaches;
-        public Exception? MaximumTrainingLevel;
-        public Exception? Fluff;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AIPackages;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
-        public Exception? Class;
-        public Exception? Armorer;
-        public Exception? Athletics;
-        public Exception? Blade;
-        public Exception? Block;
-        public Exception? Blunt;
-        public Exception? HandToHand;
-        public Exception? HeavyArmor;
-        public Exception? Alchemy;
-        public Exception? Alteration;
-        public Exception? Conjuration;
-        public Exception? Destruction;
-        public Exception? Illusion;
-        public Exception? Mysticism;
-        public Exception? Restoration;
-        public Exception? Acrobatics;
-        public Exception? LightArmor;
-        public Exception? Marksman;
-        public Exception? Mercantile;
-        public Exception? Security;
-        public Exception? Sneak;
-        public Exception? Speechcraft;
-        public Exception? Health;
-        public Exception? Strength;
-        public Exception? Intelligence;
-        public Exception? Willpower;
-        public Exception? Agility;
-        public Exception? Speed;
-        public Exception? Endurance;
-        public Exception? Personality;
-        public Exception? Luck;
-        public Exception? Hair;
-        public Exception? HairLength;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Eyes;
-        public Exception? HairColor;
-        public Exception? CombatStyle;
-        public Exception? FaceGenGeometrySymmetric;
-        public Exception? FaceGenGeometryAsymmetric;
-        public Exception? FaceGenTextureSymmetric;
-        public Exception? Unknown;
-        public Exception? ACBSDataTypeState;
-        public Exception? AIDTDataTypeState;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    return Name;
-                case NPC_FieldIndex.Model:
-                    return Model;
-                case NPC_FieldIndex.Flags:
-                    return Flags;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    return BaseSpellPoints;
-                case NPC_FieldIndex.Fatigue:
-                    return Fatigue;
-                case NPC_FieldIndex.BarterGold:
-                    return BarterGold;
-                case NPC_FieldIndex.LevelOffset:
-                    return LevelOffset;
-                case NPC_FieldIndex.CalcMin:
-                    return CalcMin;
-                case NPC_FieldIndex.CalcMax:
-                    return CalcMax;
-                case NPC_FieldIndex.Factions:
-                    return Factions;
-                case NPC_FieldIndex.DeathItem:
-                    return DeathItem;
-                case NPC_FieldIndex.Race:
-                    return Race;
-                case NPC_FieldIndex.Spells:
-                    return Spells;
-                case NPC_FieldIndex.Script:
-                    return Script;
-                case NPC_FieldIndex.Items:
-                    return Items;
-                case NPC_FieldIndex.Aggression:
-                    return Aggression;
-                case NPC_FieldIndex.Confidence:
-                    return Confidence;
-                case NPC_FieldIndex.EnergyLevel:
-                    return EnergyLevel;
-                case NPC_FieldIndex.Responsibility:
-                    return Responsibility;
-                case NPC_FieldIndex.BuySellServices:
-                    return BuySellServices;
-                case NPC_FieldIndex.Teaches:
-                    return Teaches;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    return MaximumTrainingLevel;
-                case NPC_FieldIndex.Fluff:
-                    return Fluff;
-                case NPC_FieldIndex.AIPackages:
-                    return AIPackages;
-                case NPC_FieldIndex.Animations:
-                    return Animations;
-                case NPC_FieldIndex.Class:
-                    return Class;
-                case NPC_FieldIndex.Armorer:
-                    return Armorer;
-                case NPC_FieldIndex.Athletics:
-                    return Athletics;
-                case NPC_FieldIndex.Blade:
-                    return Blade;
-                case NPC_FieldIndex.Block:
-                    return Block;
-                case NPC_FieldIndex.Blunt:
-                    return Blunt;
-                case NPC_FieldIndex.HandToHand:
-                    return HandToHand;
-                case NPC_FieldIndex.HeavyArmor:
-                    return HeavyArmor;
-                case NPC_FieldIndex.Alchemy:
-                    return Alchemy;
-                case NPC_FieldIndex.Alteration:
-                    return Alteration;
-                case NPC_FieldIndex.Conjuration:
-                    return Conjuration;
-                case NPC_FieldIndex.Destruction:
-                    return Destruction;
-                case NPC_FieldIndex.Illusion:
-                    return Illusion;
-                case NPC_FieldIndex.Mysticism:
-                    return Mysticism;
-                case NPC_FieldIndex.Restoration:
-                    return Restoration;
-                case NPC_FieldIndex.Acrobatics:
-                    return Acrobatics;
-                case NPC_FieldIndex.LightArmor:
-                    return LightArmor;
-                case NPC_FieldIndex.Marksman:
-                    return Marksman;
-                case NPC_FieldIndex.Mercantile:
-                    return Mercantile;
-                case NPC_FieldIndex.Security:
-                    return Security;
-                case NPC_FieldIndex.Sneak:
-                    return Sneak;
-                case NPC_FieldIndex.Speechcraft:
-                    return Speechcraft;
-                case NPC_FieldIndex.Health:
-                    return Health;
-                case NPC_FieldIndex.Strength:
-                    return Strength;
-                case NPC_FieldIndex.Intelligence:
-                    return Intelligence;
-                case NPC_FieldIndex.Willpower:
-                    return Willpower;
-                case NPC_FieldIndex.Agility:
-                    return Agility;
-                case NPC_FieldIndex.Speed:
-                    return Speed;
-                case NPC_FieldIndex.Endurance:
-                    return Endurance;
-                case NPC_FieldIndex.Personality:
-                    return Personality;
-                case NPC_FieldIndex.Luck:
-                    return Luck;
-                case NPC_FieldIndex.Hair:
-                    return Hair;
-                case NPC_FieldIndex.HairLength:
-                    return HairLength;
-                case NPC_FieldIndex.Eyes:
-                    return Eyes;
-                case NPC_FieldIndex.HairColor:
-                    return HairColor;
-                case NPC_FieldIndex.CombatStyle:
-                    return CombatStyle;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    return FaceGenGeometrySymmetric;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    return FaceGenGeometryAsymmetric;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    return FaceGenTextureSymmetric;
-                case NPC_FieldIndex.Unknown:
-                    return Unknown;
-                case NPC_FieldIndex.ACBSDataTypeState:
-                    return ACBSDataTypeState;
-                case NPC_FieldIndex.AIDTDataTypeState:
-                    return AIDTDataTypeState;
-                case NPC_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case NPC_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case NPC_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    this.BaseSpellPoints = ex;
-                    break;
-                case NPC_FieldIndex.Fatigue:
-                    this.Fatigue = ex;
-                    break;
-                case NPC_FieldIndex.BarterGold:
-                    this.BarterGold = ex;
-                    break;
-                case NPC_FieldIndex.LevelOffset:
-                    this.LevelOffset = ex;
-                    break;
-                case NPC_FieldIndex.CalcMin:
-                    this.CalcMin = ex;
-                    break;
-                case NPC_FieldIndex.CalcMax:
-                    this.CalcMax = ex;
-                    break;
-                case NPC_FieldIndex.Factions:
-                    this.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>(ex, null);
-                    break;
-                case NPC_FieldIndex.DeathItem:
-                    this.DeathItem = ex;
-                    break;
-                case NPC_FieldIndex.Race:
-                    this.Race = ex;
-                    break;
-                case NPC_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case NPC_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case NPC_FieldIndex.Items:
-                    this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>(ex, null);
-                    break;
-                case NPC_FieldIndex.Aggression:
-                    this.Aggression = ex;
-                    break;
-                case NPC_FieldIndex.Confidence:
-                    this.Confidence = ex;
-                    break;
-                case NPC_FieldIndex.EnergyLevel:
-                    this.EnergyLevel = ex;
-                    break;
-                case NPC_FieldIndex.Responsibility:
-                    this.Responsibility = ex;
-                    break;
-                case NPC_FieldIndex.BuySellServices:
-                    this.BuySellServices = ex;
-                    break;
-                case NPC_FieldIndex.Teaches:
-                    this.Teaches = ex;
-                    break;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = ex;
-                    break;
-                case NPC_FieldIndex.Fluff:
-                    this.Fluff = ex;
-                    break;
-                case NPC_FieldIndex.AIPackages:
-                    this.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case NPC_FieldIndex.Animations:
-                    this.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case NPC_FieldIndex.Class:
-                    this.Class = ex;
-                    break;
-                case NPC_FieldIndex.Armorer:
-                    this.Armorer = ex;
-                    break;
-                case NPC_FieldIndex.Athletics:
-                    this.Athletics = ex;
-                    break;
-                case NPC_FieldIndex.Blade:
-                    this.Blade = ex;
-                    break;
-                case NPC_FieldIndex.Block:
-                    this.Block = ex;
-                    break;
-                case NPC_FieldIndex.Blunt:
-                    this.Blunt = ex;
-                    break;
-                case NPC_FieldIndex.HandToHand:
-                    this.HandToHand = ex;
-                    break;
-                case NPC_FieldIndex.HeavyArmor:
-                    this.HeavyArmor = ex;
-                    break;
-                case NPC_FieldIndex.Alchemy:
-                    this.Alchemy = ex;
-                    break;
-                case NPC_FieldIndex.Alteration:
-                    this.Alteration = ex;
-                    break;
-                case NPC_FieldIndex.Conjuration:
-                    this.Conjuration = ex;
-                    break;
-                case NPC_FieldIndex.Destruction:
-                    this.Destruction = ex;
-                    break;
-                case NPC_FieldIndex.Illusion:
-                    this.Illusion = ex;
-                    break;
-                case NPC_FieldIndex.Mysticism:
-                    this.Mysticism = ex;
-                    break;
-                case NPC_FieldIndex.Restoration:
-                    this.Restoration = ex;
-                    break;
-                case NPC_FieldIndex.Acrobatics:
-                    this.Acrobatics = ex;
-                    break;
-                case NPC_FieldIndex.LightArmor:
-                    this.LightArmor = ex;
-                    break;
-                case NPC_FieldIndex.Marksman:
-                    this.Marksman = ex;
-                    break;
-                case NPC_FieldIndex.Mercantile:
-                    this.Mercantile = ex;
-                    break;
-                case NPC_FieldIndex.Security:
-                    this.Security = ex;
-                    break;
-                case NPC_FieldIndex.Sneak:
-                    this.Sneak = ex;
-                    break;
-                case NPC_FieldIndex.Speechcraft:
-                    this.Speechcraft = ex;
-                    break;
-                case NPC_FieldIndex.Health:
-                    this.Health = ex;
-                    break;
-                case NPC_FieldIndex.Strength:
-                    this.Strength = ex;
-                    break;
-                case NPC_FieldIndex.Intelligence:
-                    this.Intelligence = ex;
-                    break;
-                case NPC_FieldIndex.Willpower:
-                    this.Willpower = ex;
-                    break;
-                case NPC_FieldIndex.Agility:
-                    this.Agility = ex;
-                    break;
-                case NPC_FieldIndex.Speed:
-                    this.Speed = ex;
-                    break;
-                case NPC_FieldIndex.Endurance:
-                    this.Endurance = ex;
-                    break;
-                case NPC_FieldIndex.Personality:
-                    this.Personality = ex;
-                    break;
-                case NPC_FieldIndex.Luck:
-                    this.Luck = ex;
-                    break;
-                case NPC_FieldIndex.Hair:
-                    this.Hair = ex;
-                    break;
-                case NPC_FieldIndex.HairLength:
-                    this.HairLength = ex;
-                    break;
-                case NPC_FieldIndex.Eyes:
-                    this.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case NPC_FieldIndex.HairColor:
-                    this.HairColor = ex;
-                    break;
-                case NPC_FieldIndex.CombatStyle:
-                    this.CombatStyle = ex;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    this.FaceGenGeometrySymmetric = ex;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    this.FaceGenGeometryAsymmetric = ex;
-                    break;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    this.FaceGenTextureSymmetric = ex;
-                    break;
-                case NPC_FieldIndex.Unknown:
-                    this.Unknown = ex;
-                    break;
-                case NPC_FieldIndex.ACBSDataTypeState:
-                    this.ACBSDataTypeState = ex;
-                    break;
-                case NPC_FieldIndex.AIDTDataTypeState:
-                    this.AIDTDataTypeState = ex;
-                    break;
-                case NPC_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            NPC_FieldIndex enu = (NPC_FieldIndex)index;
-            switch (enu)
-            {
-                case NPC_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case NPC_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.BaseSpellPoints:
-                    this.BaseSpellPoints = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Fatigue:
-                    this.Fatigue = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.BarterGold:
-                    this.BarterGold = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.LevelOffset:
-                    this.LevelOffset = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.CalcMin:
-                    this.CalcMin = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.CalcMax:
-                    this.CalcMax = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Factions:
-                    this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>)obj;
-                    break;
-                case NPC_FieldIndex.DeathItem:
-                    this.DeathItem = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Race:
-                    this.Race = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case NPC_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Items:
-                    this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>)obj;
-                    break;
-                case NPC_FieldIndex.Aggression:
-                    this.Aggression = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Confidence:
-                    this.Confidence = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.EnergyLevel:
-                    this.EnergyLevel = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Responsibility:
-                    this.Responsibility = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.BuySellServices:
-                    this.BuySellServices = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Teaches:
-                    this.Teaches = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.AIPackages:
-                    this.AIPackages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case NPC_FieldIndex.Animations:
-                    this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case NPC_FieldIndex.Class:
-                    this.Class = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Armorer:
-                    this.Armorer = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Athletics:
-                    this.Athletics = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Blade:
-                    this.Blade = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Block:
-                    this.Block = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Blunt:
-                    this.Blunt = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.HandToHand:
-                    this.HandToHand = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.HeavyArmor:
-                    this.HeavyArmor = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Alchemy:
-                    this.Alchemy = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Alteration:
-                    this.Alteration = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Conjuration:
-                    this.Conjuration = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Destruction:
-                    this.Destruction = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Illusion:
-                    this.Illusion = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Mysticism:
-                    this.Mysticism = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Restoration:
-                    this.Restoration = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Acrobatics:
-                    this.Acrobatics = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.LightArmor:
-                    this.LightArmor = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Marksman:
-                    this.Marksman = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Mercantile:
-                    this.Mercantile = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Security:
-                    this.Security = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Sneak:
-                    this.Sneak = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Speechcraft:
-                    this.Speechcraft = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Health:
-                    this.Health = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Strength:
-                    this.Strength = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Intelligence:
-                    this.Intelligence = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Willpower:
-                    this.Willpower = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Agility:
-                    this.Agility = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Speed:
-                    this.Speed = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Endurance:
-                    this.Endurance = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Personality:
-                    this.Personality = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Luck:
-                    this.Luck = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Hair:
-                    this.Hair = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.HairLength:
-                    this.HairLength = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Eyes:
-                    this.Eyes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case NPC_FieldIndex.HairColor:
-                    this.HairColor = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.CombatStyle:
-                    this.CombatStyle = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometrySymmetric:
-                    this.FaceGenGeometrySymmetric = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.FaceGenGeometryAsymmetric:
-                    this.FaceGenGeometryAsymmetric = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.FaceGenTextureSymmetric:
-                    this.FaceGenTextureSymmetric = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.Unknown:
-                    this.Unknown = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.ACBSDataTypeState:
-                    this.ACBSDataTypeState = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.AIDTDataTypeState:
-                    this.AIDTDataTypeState = (Exception)obj;
-                    break;
-                case NPC_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Flags != null) return true;
-            if (BaseSpellPoints != null) return true;
-            if (Fatigue != null) return true;
-            if (BarterGold != null) return true;
-            if (LevelOffset != null) return true;
-            if (CalcMin != null) return true;
-            if (CalcMax != null) return true;
-            if (Factions != null) return true;
-            if (DeathItem != null) return true;
-            if (Race != null) return true;
-            if (Spells != null) return true;
-            if (Script != null) return true;
-            if (Items != null) return true;
-            if (Aggression != null) return true;
-            if (Confidence != null) return true;
-            if (EnergyLevel != null) return true;
-            if (Responsibility != null) return true;
-            if (BuySellServices != null) return true;
-            if (Teaches != null) return true;
-            if (MaximumTrainingLevel != null) return true;
-            if (Fluff != null) return true;
-            if (AIPackages != null) return true;
-            if (Animations != null) return true;
-            if (Class != null) return true;
-            if (Armorer != null) return true;
-            if (Athletics != null) return true;
-            if (Blade != null) return true;
-            if (Block != null) return true;
-            if (Blunt != null) return true;
-            if (HandToHand != null) return true;
-            if (HeavyArmor != null) return true;
-            if (Alchemy != null) return true;
-            if (Alteration != null) return true;
-            if (Conjuration != null) return true;
-            if (Destruction != null) return true;
-            if (Illusion != null) return true;
-            if (Mysticism != null) return true;
-            if (Restoration != null) return true;
-            if (Acrobatics != null) return true;
-            if (LightArmor != null) return true;
-            if (Marksman != null) return true;
-            if (Mercantile != null) return true;
-            if (Security != null) return true;
-            if (Sneak != null) return true;
-            if (Speechcraft != null) return true;
-            if (Health != null) return true;
-            if (Strength != null) return true;
-            if (Intelligence != null) return true;
-            if (Willpower != null) return true;
-            if (Agility != null) return true;
-            if (Speed != null) return true;
-            if (Endurance != null) return true;
-            if (Personality != null) return true;
-            if (Luck != null) return true;
-            if (Hair != null) return true;
-            if (HairLength != null) return true;
-            if (Eyes != null) return true;
-            if (HairColor != null) return true;
-            if (CombatStyle != null) return true;
-            if (FaceGenGeometrySymmetric != null) return true;
-            if (FaceGenGeometryAsymmetric != null) return true;
-            if (FaceGenTextureSymmetric != null) return true;
-            if (Unknown != null) return true;
-            if (ACBSDataTypeState != null) return true;
-            if (AIDTDataTypeState != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("NPC_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
-            fg.AppendLine($"Fatigue => {Fatigue}");
-            fg.AppendLine($"BarterGold => {BarterGold}");
-            fg.AppendLine($"LevelOffset => {LevelOffset}");
-            fg.AppendLine($"CalcMin => {CalcMin}");
-            fg.AppendLine($"CalcMax => {CalcMax}");
-            fg.AppendLine("Factions =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Factions != null)
-                {
-                    if (Factions.Overall != null)
-                    {
-                        fg.AppendLine(Factions.Overall.ToString());
-                    }
-                    if (Factions.Specific != null)
-                    {
-                        foreach (var subItem in Factions.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"DeathItem => {DeathItem}");
-            fg.AppendLine($"Race => {Race}");
-            fg.AppendLine("Spells =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Spells != null)
-                {
-                    if (Spells.Overall != null)
-                    {
-                        fg.AppendLine(Spells.Overall.ToString());
-                    }
-                    if (Spells.Specific != null)
-                    {
-                        foreach (var subItem in Spells.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine("Items =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Items != null)
-                {
-                    if (Items.Overall != null)
-                    {
-                        fg.AppendLine(Items.Overall.ToString());
-                    }
-                    if (Items.Specific != null)
-                    {
-                        foreach (var subItem in Items.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Aggression => {Aggression}");
-            fg.AppendLine($"Confidence => {Confidence}");
-            fg.AppendLine($"EnergyLevel => {EnergyLevel}");
-            fg.AppendLine($"Responsibility => {Responsibility}");
-            fg.AppendLine($"BuySellServices => {BuySellServices}");
-            fg.AppendLine($"Teaches => {Teaches}");
-            fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
-            fg.AppendLine($"Fluff => {Fluff}");
-            fg.AppendLine("AIPackages =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (AIPackages != null)
-                {
-                    if (AIPackages.Overall != null)
-                    {
-                        fg.AppendLine(AIPackages.Overall.ToString());
-                    }
-                    if (AIPackages.Specific != null)
-                    {
-                        foreach (var subItem in AIPackages.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("Animations =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Animations != null)
-                {
-                    if (Animations.Overall != null)
-                    {
-                        fg.AppendLine(Animations.Overall.ToString());
-                    }
-                    if (Animations.Specific != null)
-                    {
-                        foreach (var subItem in Animations.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Class => {Class}");
-            fg.AppendLine($"Armorer => {Armorer}");
-            fg.AppendLine($"Athletics => {Athletics}");
-            fg.AppendLine($"Blade => {Blade}");
-            fg.AppendLine($"Block => {Block}");
-            fg.AppendLine($"Blunt => {Blunt}");
-            fg.AppendLine($"HandToHand => {HandToHand}");
-            fg.AppendLine($"HeavyArmor => {HeavyArmor}");
-            fg.AppendLine($"Alchemy => {Alchemy}");
-            fg.AppendLine($"Alteration => {Alteration}");
-            fg.AppendLine($"Conjuration => {Conjuration}");
-            fg.AppendLine($"Destruction => {Destruction}");
-            fg.AppendLine($"Illusion => {Illusion}");
-            fg.AppendLine($"Mysticism => {Mysticism}");
-            fg.AppendLine($"Restoration => {Restoration}");
-            fg.AppendLine($"Acrobatics => {Acrobatics}");
-            fg.AppendLine($"LightArmor => {LightArmor}");
-            fg.AppendLine($"Marksman => {Marksman}");
-            fg.AppendLine($"Mercantile => {Mercantile}");
-            fg.AppendLine($"Security => {Security}");
-            fg.AppendLine($"Sneak => {Sneak}");
-            fg.AppendLine($"Speechcraft => {Speechcraft}");
-            fg.AppendLine($"Health => {Health}");
-            fg.AppendLine($"Strength => {Strength}");
-            fg.AppendLine($"Intelligence => {Intelligence}");
-            fg.AppendLine($"Willpower => {Willpower}");
-            fg.AppendLine($"Agility => {Agility}");
-            fg.AppendLine($"Speed => {Speed}");
-            fg.AppendLine($"Endurance => {Endurance}");
-            fg.AppendLine($"Personality => {Personality}");
-            fg.AppendLine($"Luck => {Luck}");
-            fg.AppendLine($"Hair => {Hair}");
-            fg.AppendLine($"HairLength => {HairLength}");
-            fg.AppendLine("Eyes =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Eyes != null)
-                {
-                    if (Eyes.Overall != null)
-                    {
-                        fg.AppendLine(Eyes.Overall.ToString());
-                    }
-                    if (Eyes.Specific != null)
-                    {
-                        foreach (var subItem in Eyes.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"HairColor => {HairColor}");
-            fg.AppendLine($"CombatStyle => {CombatStyle}");
-            fg.AppendLine($"FaceGenGeometrySymmetric => {FaceGenGeometrySymmetric}");
-            fg.AppendLine($"FaceGenGeometryAsymmetric => {FaceGenGeometryAsymmetric}");
-            fg.AppendLine($"FaceGenTextureSymmetric => {FaceGenTextureSymmetric}");
-            fg.AppendLine($"Unknown => {Unknown}");
-            fg.AppendLine($"ACBSDataTypeState => {ACBSDataTypeState}");
-            fg.AppendLine($"AIDTDataTypeState => {AIDTDataTypeState}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public NPC_ErrorMask Combine(NPC_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new NPC_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
-            ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
-            ret.BarterGold = this.BarterGold.Combine(rhs.BarterGold);
-            ret.LevelOffset = this.LevelOffset.Combine(rhs.LevelOffset);
-            ret.CalcMin = this.CalcMin.Combine(rhs.CalcMin);
-            ret.CalcMax = this.CalcMax.Combine(rhs.CalcMax);
-            ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement_ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
-            ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
-            ret.Race = this.Race.Combine(rhs.Race);
-            ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry_ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-            ret.Aggression = this.Aggression.Combine(rhs.Aggression);
-            ret.Confidence = this.Confidence.Combine(rhs.Confidence);
-            ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
-            ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
-            ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
-            ret.Teaches = this.Teaches.Combine(rhs.Teaches);
-            ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
-            ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
-            ret.Class = this.Class.Combine(rhs.Class);
-            ret.Armorer = this.Armorer.Combine(rhs.Armorer);
-            ret.Athletics = this.Athletics.Combine(rhs.Athletics);
-            ret.Blade = this.Blade.Combine(rhs.Blade);
-            ret.Block = this.Block.Combine(rhs.Block);
-            ret.Blunt = this.Blunt.Combine(rhs.Blunt);
-            ret.HandToHand = this.HandToHand.Combine(rhs.HandToHand);
-            ret.HeavyArmor = this.HeavyArmor.Combine(rhs.HeavyArmor);
-            ret.Alchemy = this.Alchemy.Combine(rhs.Alchemy);
-            ret.Alteration = this.Alteration.Combine(rhs.Alteration);
-            ret.Conjuration = this.Conjuration.Combine(rhs.Conjuration);
-            ret.Destruction = this.Destruction.Combine(rhs.Destruction);
-            ret.Illusion = this.Illusion.Combine(rhs.Illusion);
-            ret.Mysticism = this.Mysticism.Combine(rhs.Mysticism);
-            ret.Restoration = this.Restoration.Combine(rhs.Restoration);
-            ret.Acrobatics = this.Acrobatics.Combine(rhs.Acrobatics);
-            ret.LightArmor = this.LightArmor.Combine(rhs.LightArmor);
-            ret.Marksman = this.Marksman.Combine(rhs.Marksman);
-            ret.Mercantile = this.Mercantile.Combine(rhs.Mercantile);
-            ret.Security = this.Security.Combine(rhs.Security);
-            ret.Sneak = this.Sneak.Combine(rhs.Sneak);
-            ret.Speechcraft = this.Speechcraft.Combine(rhs.Speechcraft);
-            ret.Health = this.Health.Combine(rhs.Health);
-            ret.Strength = this.Strength.Combine(rhs.Strength);
-            ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
-            ret.Willpower = this.Willpower.Combine(rhs.Willpower);
-            ret.Agility = this.Agility.Combine(rhs.Agility);
-            ret.Speed = this.Speed.Combine(rhs.Speed);
-            ret.Endurance = this.Endurance.Combine(rhs.Endurance);
-            ret.Personality = this.Personality.Combine(rhs.Personality);
-            ret.Luck = this.Luck.Combine(rhs.Luck);
-            ret.Hair = this.Hair.Combine(rhs.Hair);
-            ret.HairLength = this.HairLength.Combine(rhs.HairLength);
-            ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
-            ret.HairColor = this.HairColor.Combine(rhs.HairColor);
-            ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
-            ret.FaceGenGeometrySymmetric = this.FaceGenGeometrySymmetric.Combine(rhs.FaceGenGeometrySymmetric);
-            ret.FaceGenGeometryAsymmetric = this.FaceGenGeometryAsymmetric.Combine(rhs.FaceGenGeometryAsymmetric);
-            ret.FaceGenTextureSymmetric = this.FaceGenTextureSymmetric.Combine(rhs.FaceGenTextureSymmetric);
-            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-            ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
-            ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static NPC_ErrorMask? Combine(NPC_ErrorMask? lhs, NPC_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new NPC_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new NPC_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class NPC_TranslationMask : NPCAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Flags;
-        public bool BaseSpellPoints;
-        public bool Fatigue;
-        public bool BarterGold;
-        public bool LevelOffset;
-        public bool CalcMin;
-        public bool CalcMax;
-        public MaskItem<bool, RankPlacement_TranslationMask?> Factions;
-        public bool DeathItem;
-        public bool Race;
-        public bool Spells;
-        public bool Script;
-        public MaskItem<bool, ItemEntry_TranslationMask?> Items;
-        public bool Aggression;
-        public bool Confidence;
-        public bool EnergyLevel;
-        public bool Responsibility;
-        public bool BuySellServices;
-        public bool Teaches;
-        public bool MaximumTrainingLevel;
-        public bool Fluff;
-        public bool AIPackages;
-        public bool Animations;
-        public bool Class;
-        public bool Armorer;
-        public bool Athletics;
-        public bool Blade;
-        public bool Block;
-        public bool Blunt;
-        public bool HandToHand;
-        public bool HeavyArmor;
-        public bool Alchemy;
-        public bool Alteration;
-        public bool Conjuration;
-        public bool Destruction;
-        public bool Illusion;
-        public bool Mysticism;
-        public bool Restoration;
-        public bool Acrobatics;
-        public bool LightArmor;
-        public bool Marksman;
-        public bool Mercantile;
-        public bool Security;
-        public bool Sneak;
-        public bool Speechcraft;
-        public bool Health;
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        public bool Hair;
-        public bool HairLength;
-        public bool Eyes;
-        public bool HairColor;
-        public bool CombatStyle;
-        public bool FaceGenGeometrySymmetric;
-        public bool FaceGenGeometryAsymmetric;
-        public bool FaceGenTextureSymmetric;
-        public bool Unknown;
-        public bool ACBSDataTypeState;
-        public bool AIDTDataTypeState;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public NPC_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Flags = defaultOn;
-            this.BaseSpellPoints = defaultOn;
-            this.Fatigue = defaultOn;
-            this.BarterGold = defaultOn;
-            this.LevelOffset = defaultOn;
-            this.CalcMin = defaultOn;
-            this.CalcMax = defaultOn;
-            this.Factions = new MaskItem<bool, RankPlacement_TranslationMask?>(defaultOn, null);
-            this.DeathItem = defaultOn;
-            this.Race = defaultOn;
-            this.Spells = defaultOn;
-            this.Script = defaultOn;
-            this.Items = new MaskItem<bool, ItemEntry_TranslationMask?>(defaultOn, null);
-            this.Aggression = defaultOn;
-            this.Confidence = defaultOn;
-            this.EnergyLevel = defaultOn;
-            this.Responsibility = defaultOn;
-            this.BuySellServices = defaultOn;
-            this.Teaches = defaultOn;
-            this.MaximumTrainingLevel = defaultOn;
-            this.Fluff = defaultOn;
-            this.AIPackages = defaultOn;
-            this.Animations = defaultOn;
-            this.Class = defaultOn;
-            this.Armorer = defaultOn;
-            this.Athletics = defaultOn;
-            this.Blade = defaultOn;
-            this.Block = defaultOn;
-            this.Blunt = defaultOn;
-            this.HandToHand = defaultOn;
-            this.HeavyArmor = defaultOn;
-            this.Alchemy = defaultOn;
-            this.Alteration = defaultOn;
-            this.Conjuration = defaultOn;
-            this.Destruction = defaultOn;
-            this.Illusion = defaultOn;
-            this.Mysticism = defaultOn;
-            this.Restoration = defaultOn;
-            this.Acrobatics = defaultOn;
-            this.LightArmor = defaultOn;
-            this.Marksman = defaultOn;
-            this.Mercantile = defaultOn;
-            this.Security = defaultOn;
-            this.Sneak = defaultOn;
-            this.Speechcraft = defaultOn;
-            this.Health = defaultOn;
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-            this.Hair = defaultOn;
-            this.HairLength = defaultOn;
-            this.Eyes = defaultOn;
-            this.HairColor = defaultOn;
-            this.CombatStyle = defaultOn;
-            this.FaceGenGeometrySymmetric = defaultOn;
-            this.FaceGenGeometryAsymmetric = defaultOn;
-            this.FaceGenTextureSymmetric = defaultOn;
-            this.Unknown = defaultOn;
-            this.ACBSDataTypeState = defaultOn;
-            this.AIDTDataTypeState = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Flags, null));
-            ret.Add((BaseSpellPoints, null));
-            ret.Add((Fatigue, null));
-            ret.Add((BarterGold, null));
-            ret.Add((LevelOffset, null));
-            ret.Add((CalcMin, null));
-            ret.Add((CalcMax, null));
-            ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
-            ret.Add((DeathItem, null));
-            ret.Add((Race, null));
-            ret.Add((Spells, null));
-            ret.Add((Script, null));
-            ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-            ret.Add((Aggression, null));
-            ret.Add((Confidence, null));
-            ret.Add((EnergyLevel, null));
-            ret.Add((Responsibility, null));
-            ret.Add((BuySellServices, null));
-            ret.Add((Teaches, null));
-            ret.Add((MaximumTrainingLevel, null));
-            ret.Add((Fluff, null));
-            ret.Add((AIPackages, null));
-            ret.Add((Animations, null));
-            ret.Add((Class, null));
-            ret.Add((Armorer, null));
-            ret.Add((Athletics, null));
-            ret.Add((Blade, null));
-            ret.Add((Block, null));
-            ret.Add((Blunt, null));
-            ret.Add((HandToHand, null));
-            ret.Add((HeavyArmor, null));
-            ret.Add((Alchemy, null));
-            ret.Add((Alteration, null));
-            ret.Add((Conjuration, null));
-            ret.Add((Destruction, null));
-            ret.Add((Illusion, null));
-            ret.Add((Mysticism, null));
-            ret.Add((Restoration, null));
-            ret.Add((Acrobatics, null));
-            ret.Add((LightArmor, null));
-            ret.Add((Marksman, null));
-            ret.Add((Mercantile, null));
-            ret.Add((Security, null));
-            ret.Add((Sneak, null));
-            ret.Add((Speechcraft, null));
-            ret.Add((Health, null));
-            ret.Add((Strength, null));
-            ret.Add((Intelligence, null));
-            ret.Add((Willpower, null));
-            ret.Add((Agility, null));
-            ret.Add((Speed, null));
-            ret.Add((Endurance, null));
-            ret.Add((Personality, null));
-            ret.Add((Luck, null));
-            ret.Add((Hair, null));
-            ret.Add((HairLength, null));
-            ret.Add((Eyes, null));
-            ret.Add((HairColor, null));
-            ret.Add((CombatStyle, null));
-            ret.Add((FaceGenGeometrySymmetric, null));
-            ret.Add((FaceGenGeometryAsymmetric, null));
-            ret.Add((FaceGenTextureSymmetric, null));
-            ret.Add((Unknown, null));
-            ret.Add((ACBSDataTypeState, null));
-            ret.Add((AIDTDataTypeState, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

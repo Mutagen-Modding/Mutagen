@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Model CreateFromXml(
             XElement node,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Model CreateFromXml(
             XElement node,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Model CreateFromXml(
             string path,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Model CreateFromXml(
             string path,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Model CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Model CreateFromXml(
             Stream stream,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,8 +200,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Model CreateFromXml(
             Stream stream,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Model CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,6 +224,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.File = initialValue;
+                this.BoundRadius = initialValue;
+                this.Hashes = initialValue;
+            }
+
+            public Mask(
+                T File,
+                T BoundRadius,
+                T Hashes)
+            {
+                this.File = File;
+                this.BoundRadius = BoundRadius;
+                this.Hashes = Hashes;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T File;
+            public T BoundRadius;
+            public T Hashes;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.File, rhs.File)) return false;
+                if (!object.Equals(this.BoundRadius, rhs.BoundRadius)) return false;
+                if (!object.Equals(this.Hashes, rhs.Hashes)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.File?.GetHashCode());
+                ret = ret.CombineHashCode(this.BoundRadius?.GetHashCode());
+                ret = ret.CombineHashCode(this.Hashes?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.File)) return false;
+                if (!eval(this.BoundRadius)) return false;
+                if (!eval(this.Hashes)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Model.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.File = eval(this.File);
+                obj.BoundRadius = eval(this.BoundRadius);
+                obj.Hashes = eval(this.Hashes);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Model.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Model.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Model.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.File ?? true)
+                    {
+                        fg.AppendLine($"File => {File}");
+                    }
+                    if (printMask?.BoundRadius ?? true)
+                    {
+                        fg.AppendLine($"BoundRadius => {BoundRadius}");
+                    }
+                    if (printMask?.Hashes ?? true)
+                    {
+                        fg.AppendLine($"Hashes => {Hashes}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? File;
+            public Exception? BoundRadius;
+            public Exception? Hashes;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                Model_FieldIndex enu = (Model_FieldIndex)index;
+                switch (enu)
+                {
+                    case Model_FieldIndex.File:
+                        return File;
+                    case Model_FieldIndex.BoundRadius:
+                        return BoundRadius;
+                    case Model_FieldIndex.Hashes:
+                        return Hashes;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                Model_FieldIndex enu = (Model_FieldIndex)index;
+                switch (enu)
+                {
+                    case Model_FieldIndex.File:
+                        this.File = ex;
+                        break;
+                    case Model_FieldIndex.BoundRadius:
+                        this.BoundRadius = ex;
+                        break;
+                    case Model_FieldIndex.Hashes:
+                        this.Hashes = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                Model_FieldIndex enu = (Model_FieldIndex)index;
+                switch (enu)
+                {
+                    case Model_FieldIndex.File:
+                        this.File = (Exception)obj;
+                        break;
+                    case Model_FieldIndex.BoundRadius:
+                        this.BoundRadius = (Exception)obj;
+                        break;
+                    case Model_FieldIndex.Hashes:
+                        this.Hashes = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (File != null) return true;
+                if (BoundRadius != null) return true;
+                if (Hashes != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"File => {File}");
+                fg.AppendLine($"BoundRadius => {BoundRadius}");
+                fg.AppendLine($"Hashes => {Hashes}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.File = this.File.Combine(rhs.File);
+                ret.BoundRadius = this.BoundRadius.Combine(rhs.BoundRadius);
+                ret.Hashes = this.Hashes.Combine(rhs.Hashes);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool File;
+            public bool BoundRadius;
+            public bool Hashes;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.File = defaultOn;
+                this.BoundRadius = defaultOn;
+                this.Hashes = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((File, null));
+                ret.Add((BoundRadius, null));
+                ret.Add((Hashes, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -334,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Model_Mask<bool> GetEqualsMask(
+        public static Model.Mask<bool> GetEqualsMask(
             this IModelGetter item,
             IModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -348,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IModelGetter item,
             string? name = null,
-            Model_Mask<bool>? printMask = null)
+            Model.Mask<bool>? printMask = null)
         {
             return ((ModelCommon)((IModelGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -360,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IModelGetter item,
             FileGeneration fg,
             string? name = null,
-            Model_Mask<bool>? printMask = null)
+            Model.Mask<bool>? printMask = null)
         {
             ((ModelCommon)((IModelGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -371,16 +685,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IModelGetter item,
-            Model_Mask<bool?> checkMask)
+            Model.Mask<bool?> checkMask)
         {
             return ((ModelCommon)((IModelGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Model_Mask<bool> GetHasBeenSetMask(this IModelGetter item)
+        public static Model.Mask<bool> GetHasBeenSetMask(this IModelGetter item)
         {
-            var ret = new Model_Mask<bool>(false);
+            var ret = new Model.Mask<bool>(false);
             ((ModelCommon)((IModelGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -399,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IModel lhs,
             IModelGetter rhs,
-            Model_TranslationMask? copyMask = null)
+            Model.TranslationMask? copyMask = null)
         {
             ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -411,8 +725,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IModel lhs,
             IModelGetter rhs,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? copyMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -420,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -438,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Model DeepCopy(
             this IModelGetter item,
-            Model_TranslationMask? copyMask = null)
+            Model.TranslationMask? copyMask = null)
         {
             return ((ModelSetterTranslationCommon)((IModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -447,8 +761,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Model DeepCopy(
             this IModelGetter item,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? copyMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? copyMask = null)
         {
             return ((ModelSetterTranslationCommon)((IModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -472,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IModel item,
             XElement node,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -485,8 +799,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IModel item,
             XElement node,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -494,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -513,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IModel item,
             string path,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -525,8 +839,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IModel item,
             string path,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -540,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IModel item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -553,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IModel item,
             Stream stream,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -565,8 +879,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IModel item,
             Stream stream,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -580,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IModel item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -655,9 +969,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(Model_Mask<>);
+        public static readonly Type MaskType = typeof(Model.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Model_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Model.ErrorMask);
 
         public static readonly Type ClassType = typeof(Model);
 
@@ -947,12 +1261,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ModelCommon Instance = new ModelCommon();
 
-        public Model_Mask<bool> GetEqualsMask(
+        public Model.Mask<bool> GetEqualsMask(
             IModelGetter item,
             IModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Model_Mask<bool>(false);
+            var ret = new Model.Mask<bool>(false);
             ((ModelCommon)((IModelGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -964,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IModelGetter item,
             IModelGetter rhs,
-            Model_Mask<bool> ret,
+            Model.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -976,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IModelGetter item,
             string? name = null,
-            Model_Mask<bool>? printMask = null)
+            Model.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -991,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModelGetter item,
             FileGeneration fg,
             string? name = null,
-            Model_Mask<bool>? printMask = null)
+            Model.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1015,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IModelGetter item,
             FileGeneration fg,
-            Model_Mask<bool>? printMask = null)
+            Model.Mask<bool>? printMask = null)
         {
             if (printMask?.File ?? true)
             {
@@ -1033,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IModelGetter item,
-            Model_Mask<bool?> checkMask)
+            Model.Mask<bool?> checkMask)
         {
             if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != item.Hashes_IsSet) return false;
             return true;
@@ -1041,7 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IModelGetter item,
-            Model_Mask<bool> mask)
+            Model.Mask<bool> mask)
         {
             mask.File = true;
             mask.BoundRadius = true;
@@ -1126,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Model DeepCopy(
             IModelGetter item,
-            Model_TranslationMask? copyMask = null)
+            Model.TranslationMask? copyMask = null)
         {
             Model ret = (Model)((ModelCommon)((IModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1137,8 +1451,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Model DeepCopy(
             IModelGetter item,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? copyMask = null)
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? copyMask = null)
         {
             Model ret = (Model)((ModelCommon)((IModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1413,8 +1727,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IModelGetter item,
             XElement node,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null,
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1424,14 +1738,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IModelGetter item,
             string path,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null,
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1464,8 +1778,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IModelGetter item,
             Stream stream,
-            out Model_ErrorMask errorMask,
-            Model_TranslationMask? translationMask = null,
+            out Model.ErrorMask errorMask,
+            Model.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1514,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IModelGetter item,
             XElement node,
             string? name = null,
-            Model_TranslationMask? translationMask = null)
+            Model.TranslationMask? translationMask = null)
         {
             ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1558,321 +1872,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Model_Mask<T> :
-        IMask<T>,
-        IEquatable<Model_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Model_Mask(T initialValue)
-        {
-            this.File = initialValue;
-            this.BoundRadius = initialValue;
-            this.Hashes = initialValue;
-        }
-
-        public Model_Mask(
-            T File,
-            T BoundRadius,
-            T Hashes)
-        {
-            this.File = File;
-            this.BoundRadius = BoundRadius;
-            this.Hashes = Hashes;
-        }
-
-        #pragma warning disable CS8618
-        protected Model_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T File;
-        public T BoundRadius;
-        public T Hashes;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Model_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Model_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.File, rhs.File)) return false;
-            if (!object.Equals(this.BoundRadius, rhs.BoundRadius)) return false;
-            if (!object.Equals(this.Hashes, rhs.Hashes)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.File?.GetHashCode());
-            ret = ret.CombineHashCode(this.BoundRadius?.GetHashCode());
-            ret = ret.CombineHashCode(this.Hashes?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.File)) return false;
-            if (!eval(this.BoundRadius)) return false;
-            if (!eval(this.Hashes)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Model_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Model_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Model_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.File = eval(this.File);
-            obj.BoundRadius = eval(this.BoundRadius);
-            obj.Hashes = eval(this.Hashes);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Model_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Model_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Model_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.File ?? true)
-                {
-                    fg.AppendLine($"File => {File}");
-                }
-                if (printMask?.BoundRadius ?? true)
-                {
-                    fg.AppendLine($"BoundRadius => {BoundRadius}");
-                }
-                if (printMask?.Hashes ?? true)
-                {
-                    fg.AppendLine($"Hashes => {Hashes}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Model_ErrorMask : IErrorMask, IErrorMask<Model_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? File;
-        public Exception? BoundRadius;
-        public Exception? Hashes;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    return File;
-                case Model_FieldIndex.BoundRadius:
-                    return BoundRadius;
-                case Model_FieldIndex.Hashes:
-                    return Hashes;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    this.File = ex;
-                    break;
-                case Model_FieldIndex.BoundRadius:
-                    this.BoundRadius = ex;
-                    break;
-                case Model_FieldIndex.Hashes:
-                    this.Hashes = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
-            switch (enu)
-            {
-                case Model_FieldIndex.File:
-                    this.File = (Exception)obj;
-                    break;
-                case Model_FieldIndex.BoundRadius:
-                    this.BoundRadius = (Exception)obj;
-                    break;
-                case Model_FieldIndex.Hashes:
-                    this.Hashes = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (File != null) return true;
-            if (BoundRadius != null) return true;
-            if (Hashes != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Model_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"File => {File}");
-            fg.AppendLine($"BoundRadius => {BoundRadius}");
-            fg.AppendLine($"Hashes => {Hashes}");
-        }
-        #endregion
-
-        #region Combine
-        public Model_ErrorMask Combine(Model_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Model_ErrorMask();
-            ret.File = this.File.Combine(rhs.File);
-            ret.BoundRadius = this.BoundRadius.Combine(rhs.BoundRadius);
-            ret.Hashes = this.Hashes.Combine(rhs.Hashes);
-            return ret;
-        }
-        public static Model_ErrorMask? Combine(Model_ErrorMask? lhs, Model_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Model_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Model_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Model_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool File;
-        public bool BoundRadius;
-        public bool Hashes;
-        #endregion
-
-        #region Ctors
-        public Model_TranslationMask(bool defaultOn)
-        {
-            this.File = defaultOn;
-            this.BoundRadius = defaultOn;
-            this.Hashes = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((File, null));
-            ret.Add((BoundRadius, null));
-            ret.Add((Hashes, null));
-        }
-    }
 }
 #endregion
 

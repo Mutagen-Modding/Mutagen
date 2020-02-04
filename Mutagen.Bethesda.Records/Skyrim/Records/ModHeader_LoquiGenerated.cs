@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ModHeader CreateFromXml(
             XElement node,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -230,15 +230,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static ModHeader CreateFromXml(
             XElement node,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModHeader CreateFromXml(
             string path,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModHeader CreateFromXml(
             string path,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModHeader CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModHeader CreateFromXml(
             Stream stream,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -302,8 +302,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModHeader CreateFromXml(
             Stream stream,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static ModHeader CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -326,6 +326,765 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Flags = initialValue;
+                this.FormID = initialValue;
+                this.Version = initialValue;
+                this.FormVersion = initialValue;
+                this.Version2 = initialValue;
+                this.Stats = new MaskItem<T, ModStats.Mask<T>?>(initialValue, new ModStats.Mask<T>(initialValue));
+                this.TypeOffsets = initialValue;
+                this.Deleted = initialValue;
+                this.Author = initialValue;
+                this.Description = initialValue;
+                this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, MasterReference.Mask<T>?>>());
+                this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+                this.INTV = initialValue;
+                this.INCC = initialValue;
+            }
+
+            public Mask(
+                T Flags,
+                T FormID,
+                T Version,
+                T FormVersion,
+                T Version2,
+                T Stats,
+                T TypeOffsets,
+                T Deleted,
+                T Author,
+                T Description,
+                T MasterReferences,
+                T OverriddenForms,
+                T INTV,
+                T INCC)
+            {
+                this.Flags = Flags;
+                this.FormID = FormID;
+                this.Version = Version;
+                this.FormVersion = FormVersion;
+                this.Version2 = Version2;
+                this.Stats = new MaskItem<T, ModStats.Mask<T>?>(Stats, new ModStats.Mask<T>(Stats));
+                this.TypeOffsets = TypeOffsets;
+                this.Deleted = Deleted;
+                this.Author = Author;
+                this.Description = Description;
+                this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>(MasterReferences, Enumerable.Empty<MaskItemIndexed<T, MasterReference.Mask<T>?>>());
+                this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(OverriddenForms, Enumerable.Empty<(int Index, T Value)>());
+                this.INTV = INTV;
+                this.INCC = INCC;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Flags;
+            public T FormID;
+            public T Version;
+            public T FormVersion;
+            public T Version2;
+            public MaskItem<T, ModStats.Mask<T>?>? Stats { get; set; }
+            public T TypeOffsets;
+            public T Deleted;
+            public T Author;
+            public T Description;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference.Mask<T>?>>>? MasterReferences;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? OverriddenForms;
+            public T INTV;
+            public T INCC;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.FormID, rhs.FormID)) return false;
+                if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
+                if (!object.Equals(this.Version2, rhs.Version2)) return false;
+                if (!object.Equals(this.Stats, rhs.Stats)) return false;
+                if (!object.Equals(this.TypeOffsets, rhs.TypeOffsets)) return false;
+                if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
+                if (!object.Equals(this.Author, rhs.Author)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
+                if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
+                if (!object.Equals(this.INTV, rhs.INTV)) return false;
+                if (!object.Equals(this.INCC, rhs.INCC)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.FormID?.GetHashCode());
+                ret = ret.CombineHashCode(this.Version?.GetHashCode());
+                ret = ret.CombineHashCode(this.FormVersion?.GetHashCode());
+                ret = ret.CombineHashCode(this.Version2?.GetHashCode());
+                ret = ret.CombineHashCode(this.Stats?.GetHashCode());
+                ret = ret.CombineHashCode(this.TypeOffsets?.GetHashCode());
+                ret = ret.CombineHashCode(this.Deleted?.GetHashCode());
+                ret = ret.CombineHashCode(this.Author?.GetHashCode());
+                ret = ret.CombineHashCode(this.Description?.GetHashCode());
+                ret = ret.CombineHashCode(this.MasterReferences?.GetHashCode());
+                ret = ret.CombineHashCode(this.OverriddenForms?.GetHashCode());
+                ret = ret.CombineHashCode(this.INTV?.GetHashCode());
+                ret = ret.CombineHashCode(this.INCC?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.FormID)) return false;
+                if (!eval(this.Version)) return false;
+                if (!eval(this.FormVersion)) return false;
+                if (!eval(this.Version2)) return false;
+                if (Stats != null)
+                {
+                    if (!eval(this.Stats.Overall)) return false;
+                    if (this.Stats.Specific != null && !this.Stats.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.TypeOffsets)) return false;
+                if (!eval(this.Deleted)) return false;
+                if (!eval(this.Author)) return false;
+                if (!eval(this.Description)) return false;
+                if (this.MasterReferences != null)
+                {
+                    if (!eval(this.MasterReferences.Overall)) return false;
+                    if (this.MasterReferences.Specific != null)
+                    {
+                        foreach (var item in this.MasterReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (this.OverriddenForms != null)
+                {
+                    if (!eval(this.OverriddenForms.Overall)) return false;
+                    if (this.OverriddenForms.Specific != null)
+                    {
+                        foreach (var item in this.OverriddenForms.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.INTV)) return false;
+                if (!eval(this.INCC)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ModHeader.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Flags = eval(this.Flags);
+                obj.FormID = eval(this.FormID);
+                obj.Version = eval(this.Version);
+                obj.FormVersion = eval(this.FormVersion);
+                obj.Version2 = eval(this.Version2);
+                obj.Stats = this.Stats == null ? null : new MaskItem<R, ModStats.Mask<R>?>(eval(this.Stats.Overall), this.Stats.Specific?.Translate(eval));
+                obj.TypeOffsets = eval(this.TypeOffsets);
+                obj.Deleted = eval(this.Deleted);
+                obj.Author = eval(this.Author);
+                obj.Description = eval(this.Description);
+                if (MasterReferences != null)
+                {
+                    obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference.Mask<R>?>>>(eval(this.MasterReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterReference.Mask<R>?>>());
+                    if (MasterReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, MasterReference.Mask<R>?>>();
+                        obj.MasterReferences.Specific = l;
+                        foreach (var item in MasterReferences.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (OverriddenForms != null)
+                {
+                    obj.OverriddenForms = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.OverriddenForms.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (OverriddenForms.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.OverriddenForms.Specific = l;
+                        foreach (var item in OverriddenForms.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.INTV = eval(this.INTV);
+                obj.INCC = eval(this.INCC);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ModHeader.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ModHeader.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ModHeader.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.FormID ?? true)
+                    {
+                        fg.AppendLine($"FormID => {FormID}");
+                    }
+                    if (printMask?.Version ?? true)
+                    {
+                        fg.AppendLine($"Version => {Version}");
+                    }
+                    if (printMask?.FormVersion ?? true)
+                    {
+                        fg.AppendLine($"FormVersion => {FormVersion}");
+                    }
+                    if (printMask?.Version2 ?? true)
+                    {
+                        fg.AppendLine($"Version2 => {Version2}");
+                    }
+                    if (printMask?.Stats?.Overall ?? true)
+                    {
+                        Stats?.ToString(fg);
+                    }
+                    if (printMask?.TypeOffsets ?? true)
+                    {
+                        fg.AppendLine($"TypeOffsets => {TypeOffsets}");
+                    }
+                    if (printMask?.Deleted ?? true)
+                    {
+                        fg.AppendLine($"Deleted => {Deleted}");
+                    }
+                    if (printMask?.Author ?? true)
+                    {
+                        fg.AppendLine($"Author => {Author}");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendLine($"Description => {Description}");
+                    }
+                    if (printMask?.MasterReferences?.Overall ?? true)
+                    {
+                        fg.AppendLine("MasterReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (MasterReferences != null)
+                            {
+                                if (MasterReferences.Overall != null)
+                                {
+                                    fg.AppendLine(MasterReferences.Overall.ToString());
+                                }
+                                if (MasterReferences.Specific != null)
+                                {
+                                    foreach (var subItem in MasterReferences.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.OverriddenForms?.Overall ?? true)
+                    {
+                        fg.AppendLine("OverriddenForms =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (OverriddenForms != null)
+                            {
+                                if (OverriddenForms.Overall != null)
+                                {
+                                    fg.AppendLine(OverriddenForms.Overall.ToString());
+                                }
+                                if (OverriddenForms.Specific != null)
+                                {
+                                    foreach (var subItem in OverriddenForms.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.INTV ?? true)
+                    {
+                        fg.AppendLine($"INTV => {INTV}");
+                    }
+                    if (printMask?.INCC ?? true)
+                    {
+                        fg.AppendLine($"INCC => {INCC}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Flags;
+            public Exception? FormID;
+            public Exception? Version;
+            public Exception? FormVersion;
+            public Exception? Version2;
+            public MaskItem<Exception?, ModStats.ErrorMask?>? Stats;
+            public Exception? TypeOffsets;
+            public Exception? Deleted;
+            public Exception? Author;
+            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>? MasterReferences;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OverriddenForms;
+            public Exception? INTV;
+            public Exception? INCC;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                switch (enu)
+                {
+                    case ModHeader_FieldIndex.Flags:
+                        return Flags;
+                    case ModHeader_FieldIndex.FormID:
+                        return FormID;
+                    case ModHeader_FieldIndex.Version:
+                        return Version;
+                    case ModHeader_FieldIndex.FormVersion:
+                        return FormVersion;
+                    case ModHeader_FieldIndex.Version2:
+                        return Version2;
+                    case ModHeader_FieldIndex.Stats:
+                        return Stats;
+                    case ModHeader_FieldIndex.TypeOffsets:
+                        return TypeOffsets;
+                    case ModHeader_FieldIndex.Deleted:
+                        return Deleted;
+                    case ModHeader_FieldIndex.Author:
+                        return Author;
+                    case ModHeader_FieldIndex.Description:
+                        return Description;
+                    case ModHeader_FieldIndex.MasterReferences:
+                        return MasterReferences;
+                    case ModHeader_FieldIndex.OverriddenForms:
+                        return OverriddenForms;
+                    case ModHeader_FieldIndex.INTV:
+                        return INTV;
+                    case ModHeader_FieldIndex.INCC:
+                        return INCC;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                switch (enu)
+                {
+                    case ModHeader_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ModHeader_FieldIndex.FormID:
+                        this.FormID = ex;
+                        break;
+                    case ModHeader_FieldIndex.Version:
+                        this.Version = ex;
+                        break;
+                    case ModHeader_FieldIndex.FormVersion:
+                        this.FormVersion = ex;
+                        break;
+                    case ModHeader_FieldIndex.Version2:
+                        this.Version2 = ex;
+                        break;
+                    case ModHeader_FieldIndex.Stats:
+                        this.Stats = new MaskItem<Exception?, ModStats.ErrorMask?>(ex, null);
+                        break;
+                    case ModHeader_FieldIndex.TypeOffsets:
+                        this.TypeOffsets = ex;
+                        break;
+                    case ModHeader_FieldIndex.Deleted:
+                        this.Deleted = ex;
+                        break;
+                    case ModHeader_FieldIndex.Author:
+                        this.Author = ex;
+                        break;
+                    case ModHeader_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case ModHeader_FieldIndex.MasterReferences:
+                        this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ModHeader_FieldIndex.OverriddenForms:
+                        this.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case ModHeader_FieldIndex.INTV:
+                        this.INTV = ex;
+                        break;
+                    case ModHeader_FieldIndex.INCC:
+                        this.INCC = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                switch (enu)
+                {
+                    case ModHeader_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.FormID:
+                        this.FormID = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.Version:
+                        this.Version = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.FormVersion:
+                        this.FormVersion = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.Version2:
+                        this.Version2 = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.Stats:
+                        this.Stats = (MaskItem<Exception?, ModStats.ErrorMask?>?)obj;
+                        break;
+                    case ModHeader_FieldIndex.TypeOffsets:
+                        this.TypeOffsets = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.Deleted:
+                        this.Deleted = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.Author:
+                        this.Author = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.Description:
+                        this.Description = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.MasterReferences:
+                        this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>)obj;
+                        break;
+                    case ModHeader_FieldIndex.OverriddenForms:
+                        this.OverriddenForms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case ModHeader_FieldIndex.INTV:
+                        this.INTV = (Exception)obj;
+                        break;
+                    case ModHeader_FieldIndex.INCC:
+                        this.INCC = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (FormID != null) return true;
+                if (Version != null) return true;
+                if (FormVersion != null) return true;
+                if (Version2 != null) return true;
+                if (Stats != null) return true;
+                if (TypeOffsets != null) return true;
+                if (Deleted != null) return true;
+                if (Author != null) return true;
+                if (Description != null) return true;
+                if (MasterReferences != null) return true;
+                if (OverriddenForms != null) return true;
+                if (INTV != null) return true;
+                if (INCC != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"FormID => {FormID}");
+                fg.AppendLine($"Version => {Version}");
+                fg.AppendLine($"FormVersion => {FormVersion}");
+                fg.AppendLine($"Version2 => {Version2}");
+                Stats?.ToString(fg);
+                fg.AppendLine($"TypeOffsets => {TypeOffsets}");
+                fg.AppendLine($"Deleted => {Deleted}");
+                fg.AppendLine($"Author => {Author}");
+                fg.AppendLine($"Description => {Description}");
+                fg.AppendLine("MasterReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (MasterReferences != null)
+                    {
+                        if (MasterReferences.Overall != null)
+                        {
+                            fg.AppendLine(MasterReferences.Overall.ToString());
+                        }
+                        if (MasterReferences.Specific != null)
+                        {
+                            foreach (var subItem in MasterReferences.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine("OverriddenForms =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (OverriddenForms != null)
+                    {
+                        if (OverriddenForms.Overall != null)
+                        {
+                            fg.AppendLine(OverriddenForms.Overall.ToString());
+                        }
+                        if (OverriddenForms.Specific != null)
+                        {
+                            foreach (var subItem in OverriddenForms.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"INTV => {INTV}");
+                fg.AppendLine($"INCC => {INCC}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.FormID = this.FormID.Combine(rhs.FormID);
+                ret.Version = this.Version.Combine(rhs.Version);
+                ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
+                ret.Version2 = this.Version2.Combine(rhs.Version2);
+                ret.Stats = new MaskItem<Exception?, ModStats.ErrorMask?>(ExceptionExt.Combine(this.Stats?.Overall, rhs.Stats?.Overall), (this.Stats?.Specific as IErrorMask<ModStats.ErrorMask>)?.Combine(rhs.Stats?.Specific));
+                ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
+                ret.Deleted = this.Deleted.Combine(rhs.Deleted);
+                ret.Author = this.Author.Combine(rhs.Author);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
+                ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
+                ret.INTV = this.INTV.Combine(rhs.INTV);
+                ret.INCC = this.INCC.Combine(rhs.INCC);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Flags;
+            public bool FormID;
+            public bool Version;
+            public bool FormVersion;
+            public bool Version2;
+            public MaskItem<bool, ModStats.TranslationMask?> Stats;
+            public bool TypeOffsets;
+            public bool Deleted;
+            public bool Author;
+            public bool Description;
+            public MaskItem<bool, MasterReference.TranslationMask?> MasterReferences;
+            public bool OverriddenForms;
+            public bool INTV;
+            public bool INCC;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Flags = defaultOn;
+                this.FormID = defaultOn;
+                this.Version = defaultOn;
+                this.FormVersion = defaultOn;
+                this.Version2 = defaultOn;
+                this.Stats = new MaskItem<bool, ModStats.TranslationMask?>(defaultOn, null);
+                this.TypeOffsets = defaultOn;
+                this.Deleted = defaultOn;
+                this.Author = defaultOn;
+                this.Description = defaultOn;
+                this.MasterReferences = new MaskItem<bool, MasterReference.TranslationMask?>(defaultOn, null);
+                this.OverriddenForms = defaultOn;
+                this.INTV = defaultOn;
+                this.INCC = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Flags, null));
+                ret.Add((FormID, null));
+                ret.Add((Version, null));
+                ret.Add((FormVersion, null));
+                ret.Add((Version2, null));
+                ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
+                ret.Add((TypeOffsets, null));
+                ret.Add((Deleted, null));
+                ret.Add((Author, null));
+                ret.Add((Description, null));
+                ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
+                ret.Add((OverriddenForms, null));
+                ret.Add((INTV, null));
+                ret.Add((INCC, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -476,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ModHeader_Mask<bool> GetEqualsMask(
+        public static ModHeader.Mask<bool> GetEqualsMask(
             this IModHeaderGetter item,
             IModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -490,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IModHeaderGetter item,
             string? name = null,
-            ModHeader_Mask<bool>? printMask = null)
+            ModHeader.Mask<bool>? printMask = null)
         {
             return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -502,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeaderGetter item,
             FileGeneration fg,
             string? name = null,
-            ModHeader_Mask<bool>? printMask = null)
+            ModHeader.Mask<bool>? printMask = null)
         {
             ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -513,16 +1272,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IModHeaderGetter item,
-            ModHeader_Mask<bool?> checkMask)
+            ModHeader.Mask<bool?> checkMask)
         {
             return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ModHeader_Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
+        public static ModHeader.Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
         {
-            var ret = new ModHeader_Mask<bool>(false);
+            var ret = new ModHeader.Mask<bool>(false);
             ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -541,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IModHeader lhs,
             IModHeaderGetter rhs,
-            ModHeader_TranslationMask? copyMask = null)
+            ModHeader.TranslationMask? copyMask = null)
         {
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -553,8 +1312,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IModHeader lhs,
             IModHeaderGetter rhs,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? copyMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -562,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -580,7 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModHeader DeepCopy(
             this IModHeaderGetter item,
-            ModHeader_TranslationMask? copyMask = null)
+            ModHeader.TranslationMask? copyMask = null)
         {
             return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -589,8 +1348,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ModHeader DeepCopy(
             this IModHeaderGetter item,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? copyMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? copyMask = null)
         {
             return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -614,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModHeader item,
             XElement node,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -627,8 +1386,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModHeader item,
             XElement node,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -636,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -655,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModHeader item,
             string path,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -667,8 +1426,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModHeader item,
             string path,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -682,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeader item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -695,7 +1454,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModHeader item,
             Stream stream,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -707,8 +1466,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IModHeader item,
             Stream stream,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -722,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeader item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -808,9 +1567,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(ModHeader_Mask<>);
+        public static readonly Type MaskType = typeof(ModHeader.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ModHeader_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ModHeader.ErrorMask);
 
         public static readonly Type ClassType = typeof(ModHeader);
 
@@ -1302,12 +2061,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ModHeaderCommon Instance = new ModHeaderCommon();
 
-        public ModHeader_Mask<bool> GetEqualsMask(
+        public ModHeader.Mask<bool> GetEqualsMask(
             IModHeaderGetter item,
             IModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModHeader_Mask<bool>(false);
+            var ret = new ModHeader.Mask<bool>(false);
             ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1319,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IModHeaderGetter item,
             IModHeaderGetter rhs,
-            ModHeader_Mask<bool> ret,
+            ModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1348,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IModHeaderGetter item,
             string? name = null,
-            ModHeader_Mask<bool>? printMask = null)
+            ModHeader.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1363,7 +2122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModHeaderGetter item,
             FileGeneration fg,
             string? name = null,
-            ModHeader_Mask<bool>? printMask = null)
+            ModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1387,7 +2146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IModHeaderGetter item,
             FileGeneration fg,
-            ModHeader_Mask<bool>? printMask = null)
+            ModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
@@ -1477,7 +2236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IModHeaderGetter item,
-            ModHeader_Mask<bool?> checkMask)
+            ModHeader.Mask<bool?> checkMask)
         {
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_IsSet) return false;
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_IsSet) return false;
@@ -1491,19 +2250,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IModHeaderGetter item,
-            ModHeader_Mask<bool> mask)
+            ModHeader.Mask<bool> mask)
         {
             mask.Flags = true;
             mask.FormID = true;
             mask.Version = true;
             mask.FormVersion = true;
             mask.Version2 = true;
-            mask.Stats = new MaskItem<bool, ModStats_Mask<bool>?>(true, item.Stats?.GetHasBeenSetMask());
+            mask.Stats = new MaskItem<bool, ModStats.Mask<bool>?>(true, item.Stats?.GetHasBeenSetMask());
             mask.TypeOffsets = item.TypeOffsets_IsSet;
             mask.Deleted = item.Deleted_IsSet;
             mask.Author = (item.Author != null);
             mask.Description = (item.Description != null);
-            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference_Mask<bool>?>>>(true, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference.Mask<bool>?>>>(true, item.MasterReferences.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.OverriddenForms = new MaskItem<bool, IEnumerable<(int, bool)>>(item.OverriddenForms.HasBeenSet, Enumerable.Empty<(int, bool)>());
             mask.INTV = (item.INTV != null);
             mask.INCC = (item.INCC != null);
@@ -1739,7 +2498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ModHeader DeepCopy(
             IModHeaderGetter item,
-            ModHeader_TranslationMask? copyMask = null)
+            ModHeader.TranslationMask? copyMask = null)
         {
             ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1750,8 +2509,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ModHeader DeepCopy(
             IModHeaderGetter item,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? copyMask = null)
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? copyMask = null)
         {
             ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2372,8 +3131,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IModHeaderGetter item,
             XElement node,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null,
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2383,14 +3142,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IModHeaderGetter item,
             string path,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null,
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2423,8 +3182,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IModHeaderGetter item,
             Stream stream,
-            out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask? translationMask = null,
+            out ModHeader.ErrorMask errorMask,
+            ModHeader.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2473,7 +3232,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeaderGetter item,
             XElement node,
             string? name = null,
-            ModHeader_TranslationMask? translationMask = null)
+            ModHeader.TranslationMask? translationMask = null)
         {
             ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -2517,766 +3276,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class ModHeader_Mask<T> :
-        IMask<T>,
-        IEquatable<ModHeader_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ModHeader_Mask(T initialValue)
-        {
-            this.Flags = initialValue;
-            this.FormID = initialValue;
-            this.Version = initialValue;
-            this.FormVersion = initialValue;
-            this.Version2 = initialValue;
-            this.Stats = new MaskItem<T, ModStats_Mask<T>?>(initialValue, new ModStats_Mask<T>(initialValue));
-            this.TypeOffsets = initialValue;
-            this.Deleted = initialValue;
-            this.Author = initialValue;
-            this.Description = initialValue;
-            this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, MasterReference_Mask<T>?>>());
-            this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-            this.INTV = initialValue;
-            this.INCC = initialValue;
-        }
-
-        public ModHeader_Mask(
-            T Flags,
-            T FormID,
-            T Version,
-            T FormVersion,
-            T Version2,
-            T Stats,
-            T TypeOffsets,
-            T Deleted,
-            T Author,
-            T Description,
-            T MasterReferences,
-            T OverriddenForms,
-            T INTV,
-            T INCC)
-        {
-            this.Flags = Flags;
-            this.FormID = FormID;
-            this.Version = Version;
-            this.FormVersion = FormVersion;
-            this.Version2 = Version2;
-            this.Stats = new MaskItem<T, ModStats_Mask<T>?>(Stats, new ModStats_Mask<T>(Stats));
-            this.TypeOffsets = TypeOffsets;
-            this.Deleted = Deleted;
-            this.Author = Author;
-            this.Description = Description;
-            this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>?>>>(MasterReferences, Enumerable.Empty<MaskItemIndexed<T, MasterReference_Mask<T>?>>());
-            this.OverriddenForms = new MaskItem<T, IEnumerable<(int Index, T Value)>>(OverriddenForms, Enumerable.Empty<(int Index, T Value)>());
-            this.INTV = INTV;
-            this.INCC = INCC;
-        }
-
-        #pragma warning disable CS8618
-        protected ModHeader_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Flags;
-        public T FormID;
-        public T Version;
-        public T FormVersion;
-        public T Version2;
-        public MaskItem<T, ModStats_Mask<T>?>? Stats { get; set; }
-        public T TypeOffsets;
-        public T Deleted;
-        public T Author;
-        public T Description;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>?>>>? MasterReferences;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? OverriddenForms;
-        public T INTV;
-        public T INCC;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ModHeader_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ModHeader_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.FormID, rhs.FormID)) return false;
-            if (!object.Equals(this.Version, rhs.Version)) return false;
-            if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
-            if (!object.Equals(this.Version2, rhs.Version2)) return false;
-            if (!object.Equals(this.Stats, rhs.Stats)) return false;
-            if (!object.Equals(this.TypeOffsets, rhs.TypeOffsets)) return false;
-            if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
-            if (!object.Equals(this.Author, rhs.Author)) return false;
-            if (!object.Equals(this.Description, rhs.Description)) return false;
-            if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
-            if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
-            if (!object.Equals(this.INTV, rhs.INTV)) return false;
-            if (!object.Equals(this.INCC, rhs.INCC)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.FormID?.GetHashCode());
-            ret = ret.CombineHashCode(this.Version?.GetHashCode());
-            ret = ret.CombineHashCode(this.FormVersion?.GetHashCode());
-            ret = ret.CombineHashCode(this.Version2?.GetHashCode());
-            ret = ret.CombineHashCode(this.Stats?.GetHashCode());
-            ret = ret.CombineHashCode(this.TypeOffsets?.GetHashCode());
-            ret = ret.CombineHashCode(this.Deleted?.GetHashCode());
-            ret = ret.CombineHashCode(this.Author?.GetHashCode());
-            ret = ret.CombineHashCode(this.Description?.GetHashCode());
-            ret = ret.CombineHashCode(this.MasterReferences?.GetHashCode());
-            ret = ret.CombineHashCode(this.OverriddenForms?.GetHashCode());
-            ret = ret.CombineHashCode(this.INTV?.GetHashCode());
-            ret = ret.CombineHashCode(this.INCC?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.FormID)) return false;
-            if (!eval(this.Version)) return false;
-            if (!eval(this.FormVersion)) return false;
-            if (!eval(this.Version2)) return false;
-            if (Stats != null)
-            {
-                if (!eval(this.Stats.Overall)) return false;
-                if (this.Stats.Specific != null && !this.Stats.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.TypeOffsets)) return false;
-            if (!eval(this.Deleted)) return false;
-            if (!eval(this.Author)) return false;
-            if (!eval(this.Description)) return false;
-            if (this.MasterReferences != null)
-            {
-                if (!eval(this.MasterReferences.Overall)) return false;
-                if (this.MasterReferences.Specific != null)
-                {
-                    foreach (var item in this.MasterReferences.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (this.OverriddenForms != null)
-            {
-                if (!eval(this.OverriddenForms.Overall)) return false;
-                if (this.OverriddenForms.Specific != null)
-                {
-                    foreach (var item in this.OverriddenForms.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            if (!eval(this.INTV)) return false;
-            if (!eval(this.INCC)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ModHeader_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ModHeader_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ModHeader_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Flags = eval(this.Flags);
-            obj.FormID = eval(this.FormID);
-            obj.Version = eval(this.Version);
-            obj.FormVersion = eval(this.FormVersion);
-            obj.Version2 = eval(this.Version2);
-            obj.Stats = this.Stats == null ? null : new MaskItem<R, ModStats_Mask<R>?>(eval(this.Stats.Overall), this.Stats.Specific?.Translate(eval));
-            obj.TypeOffsets = eval(this.TypeOffsets);
-            obj.Deleted = eval(this.Deleted);
-            obj.Author = eval(this.Author);
-            obj.Description = eval(this.Description);
-            if (MasterReferences != null)
-            {
-                obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference_Mask<R>?>>>(eval(this.MasterReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterReference_Mask<R>?>>());
-                if (MasterReferences.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, MasterReference_Mask<R>?>>();
-                    obj.MasterReferences.Specific = l;
-                    foreach (var item in MasterReferences.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, MasterReference_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MasterReference_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            if (OverriddenForms != null)
-            {
-                obj.OverriddenForms = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.OverriddenForms.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (OverriddenForms.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.OverriddenForms.Specific = l;
-                    foreach (var item in OverriddenForms.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-            obj.INTV = eval(this.INTV);
-            obj.INCC = eval(this.INCC);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ModHeader_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ModHeader_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ModHeader_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.FormID ?? true)
-                {
-                    fg.AppendLine($"FormID => {FormID}");
-                }
-                if (printMask?.Version ?? true)
-                {
-                    fg.AppendLine($"Version => {Version}");
-                }
-                if (printMask?.FormVersion ?? true)
-                {
-                    fg.AppendLine($"FormVersion => {FormVersion}");
-                }
-                if (printMask?.Version2 ?? true)
-                {
-                    fg.AppendLine($"Version2 => {Version2}");
-                }
-                if (printMask?.Stats?.Overall ?? true)
-                {
-                    Stats?.ToString(fg);
-                }
-                if (printMask?.TypeOffsets ?? true)
-                {
-                    fg.AppendLine($"TypeOffsets => {TypeOffsets}");
-                }
-                if (printMask?.Deleted ?? true)
-                {
-                    fg.AppendLine($"Deleted => {Deleted}");
-                }
-                if (printMask?.Author ?? true)
-                {
-                    fg.AppendLine($"Author => {Author}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {Description}");
-                }
-                if (printMask?.MasterReferences?.Overall ?? true)
-                {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (MasterReferences != null)
-                        {
-                            if (MasterReferences.Overall != null)
-                            {
-                                fg.AppendLine(MasterReferences.Overall.ToString());
-                            }
-                            if (MasterReferences.Specific != null)
-                            {
-                                foreach (var subItem in MasterReferences.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.OverriddenForms?.Overall ?? true)
-                {
-                    fg.AppendLine("OverriddenForms =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (OverriddenForms != null)
-                        {
-                            if (OverriddenForms.Overall != null)
-                            {
-                                fg.AppendLine(OverriddenForms.Overall.ToString());
-                            }
-                            if (OverriddenForms.Specific != null)
-                            {
-                                foreach (var subItem in OverriddenForms.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.INTV ?? true)
-                {
-                    fg.AppendLine($"INTV => {INTV}");
-                }
-                if (printMask?.INCC ?? true)
-                {
-                    fg.AppendLine($"INCC => {INCC}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ModHeader_ErrorMask : IErrorMask, IErrorMask<ModHeader_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Flags;
-        public Exception? FormID;
-        public Exception? Version;
-        public Exception? FormVersion;
-        public Exception? Version2;
-        public MaskItem<Exception?, ModStats_ErrorMask?>? Stats;
-        public Exception? TypeOffsets;
-        public Exception? Deleted;
-        public Exception? Author;
-        public Exception? Description;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference_ErrorMask?>>?>? MasterReferences;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OverriddenForms;
-        public Exception? INTV;
-        public Exception? INCC;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case ModHeader_FieldIndex.Flags:
-                    return Flags;
-                case ModHeader_FieldIndex.FormID:
-                    return FormID;
-                case ModHeader_FieldIndex.Version:
-                    return Version;
-                case ModHeader_FieldIndex.FormVersion:
-                    return FormVersion;
-                case ModHeader_FieldIndex.Version2:
-                    return Version2;
-                case ModHeader_FieldIndex.Stats:
-                    return Stats;
-                case ModHeader_FieldIndex.TypeOffsets:
-                    return TypeOffsets;
-                case ModHeader_FieldIndex.Deleted:
-                    return Deleted;
-                case ModHeader_FieldIndex.Author:
-                    return Author;
-                case ModHeader_FieldIndex.Description:
-                    return Description;
-                case ModHeader_FieldIndex.MasterReferences:
-                    return MasterReferences;
-                case ModHeader_FieldIndex.OverriddenForms:
-                    return OverriddenForms;
-                case ModHeader_FieldIndex.INTV:
-                    return INTV;
-                case ModHeader_FieldIndex.INCC:
-                    return INCC;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case ModHeader_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case ModHeader_FieldIndex.FormID:
-                    this.FormID = ex;
-                    break;
-                case ModHeader_FieldIndex.Version:
-                    this.Version = ex;
-                    break;
-                case ModHeader_FieldIndex.FormVersion:
-                    this.FormVersion = ex;
-                    break;
-                case ModHeader_FieldIndex.Version2:
-                    this.Version2 = ex;
-                    break;
-                case ModHeader_FieldIndex.Stats:
-                    this.Stats = new MaskItem<Exception?, ModStats_ErrorMask?>(ex, null);
-                    break;
-                case ModHeader_FieldIndex.TypeOffsets:
-                    this.TypeOffsets = ex;
-                    break;
-                case ModHeader_FieldIndex.Deleted:
-                    this.Deleted = ex;
-                    break;
-                case ModHeader_FieldIndex.Author:
-                    this.Author = ex;
-                    break;
-                case ModHeader_FieldIndex.Description:
-                    this.Description = ex;
-                    break;
-                case ModHeader_FieldIndex.MasterReferences:
-                    this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference_ErrorMask?>>?>(ex, null);
-                    break;
-                case ModHeader_FieldIndex.OverriddenForms:
-                    this.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                case ModHeader_FieldIndex.INTV:
-                    this.INTV = ex;
-                    break;
-                case ModHeader_FieldIndex.INCC:
-                    this.INCC = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
-            switch (enu)
-            {
-                case ModHeader_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.FormID:
-                    this.FormID = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.Version:
-                    this.Version = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.FormVersion:
-                    this.FormVersion = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.Version2:
-                    this.Version2 = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.Stats:
-                    this.Stats = (MaskItem<Exception?, ModStats_ErrorMask?>?)obj;
-                    break;
-                case ModHeader_FieldIndex.TypeOffsets:
-                    this.TypeOffsets = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.Deleted:
-                    this.Deleted = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.Author:
-                    this.Author = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.Description:
-                    this.Description = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.MasterReferences:
-                    this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference_ErrorMask?>>?>)obj;
-                    break;
-                case ModHeader_FieldIndex.OverriddenForms:
-                    this.OverriddenForms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                case ModHeader_FieldIndex.INTV:
-                    this.INTV = (Exception)obj;
-                    break;
-                case ModHeader_FieldIndex.INCC:
-                    this.INCC = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Flags != null) return true;
-            if (FormID != null) return true;
-            if (Version != null) return true;
-            if (FormVersion != null) return true;
-            if (Version2 != null) return true;
-            if (Stats != null) return true;
-            if (TypeOffsets != null) return true;
-            if (Deleted != null) return true;
-            if (Author != null) return true;
-            if (Description != null) return true;
-            if (MasterReferences != null) return true;
-            if (OverriddenForms != null) return true;
-            if (INTV != null) return true;
-            if (INCC != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ModHeader_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"FormID => {FormID}");
-            fg.AppendLine($"Version => {Version}");
-            fg.AppendLine($"FormVersion => {FormVersion}");
-            fg.AppendLine($"Version2 => {Version2}");
-            Stats?.ToString(fg);
-            fg.AppendLine($"TypeOffsets => {TypeOffsets}");
-            fg.AppendLine($"Deleted => {Deleted}");
-            fg.AppendLine($"Author => {Author}");
-            fg.AppendLine($"Description => {Description}");
-            fg.AppendLine("MasterReferences =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (MasterReferences != null)
-                {
-                    if (MasterReferences.Overall != null)
-                    {
-                        fg.AppendLine(MasterReferences.Overall.ToString());
-                    }
-                    if (MasterReferences.Specific != null)
-                    {
-                        foreach (var subItem in MasterReferences.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine("OverriddenForms =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (OverriddenForms != null)
-                {
-                    if (OverriddenForms.Overall != null)
-                    {
-                        fg.AppendLine(OverriddenForms.Overall.ToString());
-                    }
-                    if (OverriddenForms.Specific != null)
-                    {
-                        foreach (var subItem in OverriddenForms.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"INTV => {INTV}");
-            fg.AppendLine($"INCC => {INCC}");
-        }
-        #endregion
-
-        #region Combine
-        public ModHeader_ErrorMask Combine(ModHeader_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ModHeader_ErrorMask();
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.FormID = this.FormID.Combine(rhs.FormID);
-            ret.Version = this.Version.Combine(rhs.Version);
-            ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
-            ret.Version2 = this.Version2.Combine(rhs.Version2);
-            ret.Stats = new MaskItem<Exception?, ModStats_ErrorMask?>(ExceptionExt.Combine(this.Stats?.Overall, rhs.Stats?.Overall), (this.Stats?.Specific as IErrorMask<ModStats_ErrorMask>)?.Combine(rhs.Stats?.Specific));
-            ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
-            ret.Deleted = this.Deleted.Combine(rhs.Deleted);
-            ret.Author = this.Author.Combine(rhs.Author);
-            ret.Description = this.Description.Combine(rhs.Description);
-            ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference_ErrorMask?>>?>(ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
-            ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
-            ret.INTV = this.INTV.Combine(rhs.INTV);
-            ret.INCC = this.INCC.Combine(rhs.INCC);
-            return ret;
-        }
-        public static ModHeader_ErrorMask? Combine(ModHeader_ErrorMask? lhs, ModHeader_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ModHeader_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ModHeader_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ModHeader_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Flags;
-        public bool FormID;
-        public bool Version;
-        public bool FormVersion;
-        public bool Version2;
-        public MaskItem<bool, ModStats_TranslationMask?> Stats;
-        public bool TypeOffsets;
-        public bool Deleted;
-        public bool Author;
-        public bool Description;
-        public MaskItem<bool, MasterReference_TranslationMask?> MasterReferences;
-        public bool OverriddenForms;
-        public bool INTV;
-        public bool INCC;
-        #endregion
-
-        #region Ctors
-        public ModHeader_TranslationMask(bool defaultOn)
-        {
-            this.Flags = defaultOn;
-            this.FormID = defaultOn;
-            this.Version = defaultOn;
-            this.FormVersion = defaultOn;
-            this.Version2 = defaultOn;
-            this.Stats = new MaskItem<bool, ModStats_TranslationMask?>(defaultOn, null);
-            this.TypeOffsets = defaultOn;
-            this.Deleted = defaultOn;
-            this.Author = defaultOn;
-            this.Description = defaultOn;
-            this.MasterReferences = new MaskItem<bool, MasterReference_TranslationMask?>(defaultOn, null);
-            this.OverriddenForms = defaultOn;
-            this.INTV = defaultOn;
-            this.INCC = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Flags, null));
-            ret.Add((FormID, null));
-            ret.Add((Version, null));
-            ret.Add((FormVersion, null));
-            ret.Add((Version2, null));
-            ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
-            ret.Add((TypeOffsets, null));
-            ret.Add((Deleted, null));
-            ret.Add((Author, null));
-            ret.Add((Description, null));
-            ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
-            ret.Add((OverriddenForms, null));
-            ret.Add((INTV, null));
-            ret.Add((INCC, null));
-        }
-    }
 }
 #endregion
 

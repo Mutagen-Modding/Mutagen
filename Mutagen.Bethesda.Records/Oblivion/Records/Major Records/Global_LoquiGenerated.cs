@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Global CreateFromXml(
             XElement node,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -111,15 +111,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Global CreateFromXml(
             XElement node,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromXml(
             string path,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromXml(
             string path,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Global CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromXml(
             Stream stream,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -186,8 +186,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global CreateFromXml(
             Stream stream,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Global CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -210,6 +210,227 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Global.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Global.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Global.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Global.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Global_FieldIndex enu = (Global_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Global_FieldIndex enu = (Global_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Global_FieldIndex enu = (Global_FieldIndex)index;
+                switch (enu)
+                {
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+            }
+
+            #endregion
+
+        }
         #endregion
 
         #region Mutagen
@@ -294,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Global_Mask<bool> GetEqualsMask(
+        public static Global.Mask<bool> GetEqualsMask(
             this IGlobalGetter item,
             IGlobalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -308,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IGlobalGetter item,
             string? name = null,
-            Global_Mask<bool>? printMask = null)
+            Global.Mask<bool>? printMask = null)
         {
             return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -320,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalGetter item,
             FileGeneration fg,
             string? name = null,
-            Global_Mask<bool>? printMask = null)
+            Global.Mask<bool>? printMask = null)
         {
             ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -331,16 +552,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IGlobalGetter item,
-            Global_Mask<bool?> checkMask)
+            Global.Mask<bool?> checkMask)
         {
             return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Global_Mask<bool> GetHasBeenSetMask(this IGlobalGetter item)
+        public static Global.Mask<bool> GetHasBeenSetMask(this IGlobalGetter item)
         {
-            var ret = new Global_Mask<bool>(false);
+            var ret = new Global.Mask<bool>(false);
             ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -359,8 +580,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IGlobalInternal lhs,
             IGlobalGetter rhs,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? copyMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -368,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -386,7 +607,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global DeepCopy(
             this IGlobalGetter item,
-            Global_TranslationMask? copyMask = null)
+            Global.TranslationMask? copyMask = null)
         {
             return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -395,8 +616,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Global DeepCopy(
             this IGlobalGetter item,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? copyMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? copyMask = null)
         {
             return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -420,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGlobalInternal item,
             XElement node,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -433,8 +654,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGlobalInternal item,
             XElement node,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -442,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -461,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGlobalInternal item,
             string path,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -473,8 +694,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGlobalInternal item,
             string path,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -488,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -501,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGlobalInternal item,
             Stream stream,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -513,8 +734,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGlobalInternal item,
             Stream stream,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -528,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Global_TranslationMask? translationMask = null)
+            Global.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -605,9 +826,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(Global_Mask<>);
+        public static readonly Type MaskType = typeof(Global.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Global_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Global.ErrorMask);
 
         public static readonly Type ClassType = typeof(Global);
 
@@ -870,12 +1091,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly GlobalCommon Instance = new GlobalCommon();
 
-        public Global_Mask<bool> GetEqualsMask(
+        public Global.Mask<bool> GetEqualsMask(
             IGlobalGetter item,
             IGlobalGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Global_Mask<bool>(false);
+            var ret = new Global.Mask<bool>(false);
             ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -887,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IGlobalGetter item,
             IGlobalGetter rhs,
-            Global_Mask<bool> ret,
+            Global.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -897,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IGlobalGetter item,
             string? name = null,
-            Global_Mask<bool>? printMask = null)
+            Global.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -912,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalGetter item,
             FileGeneration fg,
             string? name = null,
-            Global_Mask<bool>? printMask = null)
+            Global.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -936,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IGlobalGetter item,
             FileGeneration fg,
-            Global_Mask<bool>? printMask = null)
+            Global.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -946,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IGlobalGetter item,
-            Global_Mask<bool?> checkMask)
+            Global.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -955,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IGlobalGetter item,
-            Global_Mask<bool> mask)
+            Global.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
@@ -1159,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Global DeepCopy(
             IGlobalGetter item,
-            Global_TranslationMask? copyMask = null)
+            Global.TranslationMask? copyMask = null)
         {
             Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1170,8 +1391,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Global DeepCopy(
             IGlobalGetter item,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? copyMask = null)
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? copyMask = null)
         {
             Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1372,8 +1593,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGlobalGetter item,
             XElement node,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null,
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1383,14 +1604,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IGlobalGetter item,
             string path,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null,
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1406,8 +1627,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGlobalGetter item,
             Stream stream,
-            out Global_ErrorMask errorMask,
-            Global_TranslationMask? translationMask = null,
+            out Global.ErrorMask errorMask,
+            Global.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1424,226 +1645,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Global_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Global_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Global_Mask(T initialValue)
-        : base(initialValue)
-        {
-        }
-
-        public Global_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-        }
-
-        #pragma warning disable CS8618
-        protected Global_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Global_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Global_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Global_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Global_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Global_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Global_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Global_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Global_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Global_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Global_ErrorMask>
-    {
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Global_FieldIndex enu = (Global_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Global_FieldIndex enu = (Global_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Global_FieldIndex enu = (Global_FieldIndex)index;
-            switch (enu)
-            {
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Global_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-        }
-        #endregion
-
-        #region Combine
-        public Global_ErrorMask Combine(Global_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Global_ErrorMask();
-            return ret;
-        }
-        public static Global_ErrorMask? Combine(Global_ErrorMask? lhs, Global_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Global_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Global_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Global_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Ctors
-        public Global_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-        }
-
-        #endregion
-
-    }
 }
 #endregion
 

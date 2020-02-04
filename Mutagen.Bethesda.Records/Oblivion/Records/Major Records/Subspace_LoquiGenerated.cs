@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Subspace CreateFromXml(
             XElement node,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -153,15 +153,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Subspace CreateFromXml(
             XElement node,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Subspace.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Subspace CreateFromXml(
             string path,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Subspace CreateFromXml(
             string path,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Subspace CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Subspace CreateFromXml(
             Stream stream,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,8 +225,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Subspace CreateFromXml(
             Stream stream,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Subspace CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -249,6 +249,348 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.X = initialValue;
+                this.Y = initialValue;
+                this.Z = initialValue;
+                this.DNAMDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T X,
+                T Y,
+                T Z,
+                T DNAMDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.X = X;
+                this.Y = Y;
+                this.Z = Z;
+                this.DNAMDataTypeState = DNAMDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T X;
+            public T Y;
+            public T Z;
+            public T DNAMDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.X, rhs.X)) return false;
+                if (!object.Equals(this.Y, rhs.Y)) return false;
+                if (!object.Equals(this.Z, rhs.Z)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.X?.GetHashCode());
+                ret = ret.CombineHashCode(this.Y?.GetHashCode());
+                ret = ret.CombineHashCode(this.Z?.GetHashCode());
+                ret = ret.CombineHashCode(this.DNAMDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.X)) return false;
+                if (!eval(this.Y)) return false;
+                if (!eval(this.Z)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Subspace.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.X = eval(this.X);
+                obj.Y = eval(this.Y);
+                obj.Z = eval(this.Z);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Subspace.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Subspace.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Subspace.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.X ?? true)
+                    {
+                        fg.AppendLine($"X => {X}");
+                    }
+                    if (printMask?.Y ?? true)
+                    {
+                        fg.AppendLine($"Y => {Y}");
+                    }
+                    if (printMask?.Z ?? true)
+                    {
+                        fg.AppendLine($"Z => {Z}");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? X;
+            public Exception? Y;
+            public Exception? Z;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
+                switch (enu)
+                {
+                    case Subspace_FieldIndex.X:
+                        return X;
+                    case Subspace_FieldIndex.Y:
+                        return Y;
+                    case Subspace_FieldIndex.Z:
+                        return Z;
+                    case Subspace_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
+                switch (enu)
+                {
+                    case Subspace_FieldIndex.X:
+                        this.X = ex;
+                        break;
+                    case Subspace_FieldIndex.Y:
+                        this.Y = ex;
+                        break;
+                    case Subspace_FieldIndex.Z:
+                        this.Z = ex;
+                        break;
+                    case Subspace_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
+                switch (enu)
+                {
+                    case Subspace_FieldIndex.X:
+                        this.X = (Exception)obj;
+                        break;
+                    case Subspace_FieldIndex.Y:
+                        this.Y = (Exception)obj;
+                        break;
+                    case Subspace_FieldIndex.Z:
+                        this.Z = (Exception)obj;
+                        break;
+                    case Subspace_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (X != null) return true;
+                if (Y != null) return true;
+                if (Z != null) return true;
+                if (DNAMDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"X => {X}");
+                fg.AppendLine($"Y => {Y}");
+                fg.AppendLine($"Z => {Z}");
+                fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.X = this.X.Combine(rhs.X);
+                ret.Y = this.Y.Combine(rhs.Y);
+                ret.Z = this.Z.Combine(rhs.Z);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool X;
+            public bool Y;
+            public bool Z;
+            public bool DNAMDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.X = defaultOn;
+                this.Y = defaultOn;
+                this.Z = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((X, null));
+                ret.Add((Y, null));
+                ret.Add((Z, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -374,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SubspaceSetterCommon)((ISubspaceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Subspace_Mask<bool> GetEqualsMask(
+        public static Subspace.Mask<bool> GetEqualsMask(
             this ISubspaceGetter item,
             ISubspaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -388,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISubspaceGetter item,
             string? name = null,
-            Subspace_Mask<bool>? printMask = null)
+            Subspace.Mask<bool>? printMask = null)
         {
             return ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -400,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISubspaceGetter item,
             FileGeneration fg,
             string? name = null,
-            Subspace_Mask<bool>? printMask = null)
+            Subspace.Mask<bool>? printMask = null)
         {
             ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -411,16 +753,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISubspaceGetter item,
-            Subspace_Mask<bool?> checkMask)
+            Subspace.Mask<bool?> checkMask)
         {
             return ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Subspace_Mask<bool> GetHasBeenSetMask(this ISubspaceGetter item)
+        public static Subspace.Mask<bool> GetHasBeenSetMask(this ISubspaceGetter item)
         {
-            var ret = new Subspace_Mask<bool>(false);
+            var ret = new Subspace.Mask<bool>(false);
             ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -439,8 +781,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISubspaceInternal lhs,
             ISubspaceGetter rhs,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? copyMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -448,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Subspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -466,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Subspace DeepCopy(
             this ISubspaceGetter item,
-            Subspace_TranslationMask? copyMask = null)
+            Subspace.TranslationMask? copyMask = null)
         {
             return ((SubspaceSetterTranslationCommon)((ISubspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -475,8 +817,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Subspace DeepCopy(
             this ISubspaceGetter item,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? copyMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? copyMask = null)
         {
             return ((SubspaceSetterTranslationCommon)((ISubspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -500,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             XElement node,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -513,8 +855,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             XElement node,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -522,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Subspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -541,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             string path,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -553,8 +895,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             string path,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -568,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISubspaceInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -581,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             Stream stream,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -593,8 +935,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             Stream stream,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -608,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISubspaceInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Subspace_TranslationMask? translationMask = null)
+            Subspace.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -689,9 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(Subspace_Mask<>);
+        public static readonly Type MaskType = typeof(Subspace.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Subspace_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Subspace.ErrorMask);
 
         public static readonly Type ClassType = typeof(Subspace);
 
@@ -1034,12 +1376,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly SubspaceCommon Instance = new SubspaceCommon();
 
-        public Subspace_Mask<bool> GetEqualsMask(
+        public Subspace.Mask<bool> GetEqualsMask(
             ISubspaceGetter item,
             ISubspaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Subspace_Mask<bool>(false);
+            var ret = new Subspace.Mask<bool>(false);
             ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1051,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISubspaceGetter item,
             ISubspaceGetter rhs,
-            Subspace_Mask<bool> ret,
+            Subspace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1065,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISubspaceGetter item,
             string? name = null,
-            Subspace_Mask<bool>? printMask = null)
+            Subspace.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1080,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISubspaceGetter item,
             FileGeneration fg,
             string? name = null,
-            Subspace_Mask<bool>? printMask = null)
+            Subspace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1104,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISubspaceGetter item,
             FileGeneration fg,
-            Subspace_Mask<bool>? printMask = null)
+            Subspace.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1130,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISubspaceGetter item,
-            Subspace_Mask<bool?> checkMask)
+            Subspace.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1139,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ISubspaceGetter item,
-            Subspace_Mask<bool> mask)
+            Subspace.Mask<bool> mask)
         {
             mask.X = true;
             mask.Y = true;
@@ -1375,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Subspace DeepCopy(
             ISubspaceGetter item,
-            Subspace_TranslationMask? copyMask = null)
+            Subspace.TranslationMask? copyMask = null)
         {
             Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1386,8 +1728,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Subspace DeepCopy(
             ISubspaceGetter item,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? copyMask = null)
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? copyMask = null)
         {
             Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1700,8 +2042,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISubspaceGetter item,
             XElement node,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null,
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1711,14 +2053,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Subspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISubspaceGetter item,
             string path,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null,
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1734,8 +2076,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISubspaceGetter item,
             Stream stream,
-            out Subspace_ErrorMask errorMask,
-            Subspace_TranslationMask? translationMask = null,
+            out Subspace.ErrorMask errorMask,
+            Subspace.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1752,347 +2094,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Subspace_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Subspace_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Subspace_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.X = initialValue;
-            this.Y = initialValue;
-            this.Z = initialValue;
-            this.DNAMDataTypeState = initialValue;
-        }
-
-        public Subspace_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T X,
-            T Y,
-            T Z,
-            T DNAMDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.X = X;
-            this.Y = Y;
-            this.Z = Z;
-            this.DNAMDataTypeState = DNAMDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Subspace_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T X;
-        public T Y;
-        public T Z;
-        public T DNAMDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Subspace_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Subspace_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.X, rhs.X)) return false;
-            if (!object.Equals(this.Y, rhs.Y)) return false;
-            if (!object.Equals(this.Z, rhs.Z)) return false;
-            if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.X?.GetHashCode());
-            ret = ret.CombineHashCode(this.Y?.GetHashCode());
-            ret = ret.CombineHashCode(this.Z?.GetHashCode());
-            ret = ret.CombineHashCode(this.DNAMDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.X)) return false;
-            if (!eval(this.Y)) return false;
-            if (!eval(this.Z)) return false;
-            if (!eval(this.DNAMDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Subspace_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Subspace_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Subspace_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.X = eval(this.X);
-            obj.Y = eval(this.Y);
-            obj.Z = eval(this.Z);
-            obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Subspace_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Subspace_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Subspace_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.X ?? true)
-                {
-                    fg.AppendLine($"X => {X}");
-                }
-                if (printMask?.Y ?? true)
-                {
-                    fg.AppendLine($"Y => {Y}");
-                }
-                if (printMask?.Z ?? true)
-                {
-                    fg.AppendLine($"Z => {Z}");
-                }
-                if (printMask?.DNAMDataTypeState ?? true)
-                {
-                    fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Subspace_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Subspace_ErrorMask>
-    {
-        #region Members
-        public Exception? X;
-        public Exception? Y;
-        public Exception? Z;
-        public Exception? DNAMDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    return X;
-                case Subspace_FieldIndex.Y:
-                    return Y;
-                case Subspace_FieldIndex.Z:
-                    return Z;
-                case Subspace_FieldIndex.DNAMDataTypeState:
-                    return DNAMDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    this.X = ex;
-                    break;
-                case Subspace_FieldIndex.Y:
-                    this.Y = ex;
-                    break;
-                case Subspace_FieldIndex.Z:
-                    this.Z = ex;
-                    break;
-                case Subspace_FieldIndex.DNAMDataTypeState:
-                    this.DNAMDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Subspace_FieldIndex enu = (Subspace_FieldIndex)index;
-            switch (enu)
-            {
-                case Subspace_FieldIndex.X:
-                    this.X = (Exception)obj;
-                    break;
-                case Subspace_FieldIndex.Y:
-                    this.Y = (Exception)obj;
-                    break;
-                case Subspace_FieldIndex.Z:
-                    this.Z = (Exception)obj;
-                    break;
-                case Subspace_FieldIndex.DNAMDataTypeState:
-                    this.DNAMDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (X != null) return true;
-            if (Y != null) return true;
-            if (Z != null) return true;
-            if (DNAMDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Subspace_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"X => {X}");
-            fg.AppendLine($"Y => {Y}");
-            fg.AppendLine($"Z => {Z}");
-            fg.AppendLine($"DNAMDataTypeState => {DNAMDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Subspace_ErrorMask Combine(Subspace_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Subspace_ErrorMask();
-            ret.X = this.X.Combine(rhs.X);
-            ret.Y = this.Y.Combine(rhs.Y);
-            ret.Z = this.Z.Combine(rhs.Z);
-            ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
-            return ret;
-        }
-        public static Subspace_ErrorMask? Combine(Subspace_ErrorMask? lhs, Subspace_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Subspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Subspace_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Subspace_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool X;
-        public bool Y;
-        public bool Z;
-        public bool DNAMDataTypeState;
-        #endregion
-
-        #region Ctors
-        public Subspace_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.X = defaultOn;
-            this.Y = defaultOn;
-            this.Z = defaultOn;
-            this.DNAMDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((X, null));
-            ret.Add((Y, null));
-            ret.Add((Z, null));
-            ret.Add((DNAMDataTypeState, null));
-        }
-    }
 }
 #endregion
 

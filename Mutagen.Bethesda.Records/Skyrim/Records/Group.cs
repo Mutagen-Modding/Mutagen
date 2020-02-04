@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             int index)
             where T : SkyrimMajorRecord, ILoquiObject<T>, IFormKey, IBinaryItem
-            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_ErrMask : MajorRecord.ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             throw new NotImplementedException();
         }

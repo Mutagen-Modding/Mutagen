@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Condition CreateFromXml(
             XElement node,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -127,15 +127,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static Condition CreateFromXml(
             XElement node,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             string path,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -168,8 +168,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             Stream stream,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -202,8 +202,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition CreateFromXml(
             Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -226,6 +226,320 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.CompareOperator = initialValue;
+                this.Flags = initialValue;
+                this.Unknown1 = initialValue;
+            }
+
+            public Mask(
+                T CompareOperator,
+                T Flags,
+                T Unknown1)
+            {
+                this.CompareOperator = CompareOperator;
+                this.Flags = Flags;
+                this.Unknown1 = Unknown1;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T CompareOperator;
+            public T Flags;
+            public T Unknown1;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.CompareOperator?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public virtual bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.CompareOperator)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Unknown1)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Condition.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.CompareOperator = eval(this.CompareOperator);
+                obj.Flags = eval(this.Flags);
+                obj.Unknown1 = eval(this.Unknown1);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Condition.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Condition.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Condition.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.CompareOperator ?? true)
+                    {
+                        fg.AppendLine($"CompareOperator => {CompareOperator}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Unknown1 ?? true)
+                    {
+                        fg.AppendLine($"Unknown1 => {Unknown1}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? CompareOperator;
+            public Exception? Flags;
+            public Exception? Unknown1;
+            #endregion
+
+            #region IErrorMask
+            public virtual object? GetNthMask(int index)
+            {
+                Condition_FieldIndex enu = (Condition_FieldIndex)index;
+                switch (enu)
+                {
+                    case Condition_FieldIndex.CompareOperator:
+                        return CompareOperator;
+                    case Condition_FieldIndex.Flags:
+                        return Flags;
+                    case Condition_FieldIndex.Unknown1:
+                        return Unknown1;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthException(int index, Exception ex)
+            {
+                Condition_FieldIndex enu = (Condition_FieldIndex)index;
+                switch (enu)
+                {
+                    case Condition_FieldIndex.CompareOperator:
+                        this.CompareOperator = ex;
+                        break;
+                    case Condition_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Condition_FieldIndex.Unknown1:
+                        this.Unknown1 = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual void SetNthMask(int index, object obj)
+            {
+                Condition_FieldIndex enu = (Condition_FieldIndex)index;
+                switch (enu)
+                {
+                    case Condition_FieldIndex.CompareOperator:
+                        this.CompareOperator = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Condition_FieldIndex.Unknown1:
+                        this.Unknown1 = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public virtual bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (CompareOperator != null) return true;
+                if (Flags != null) return true;
+                if (Unknown1 != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public virtual void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected virtual void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"CompareOperator => {CompareOperator}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Unknown1 => {Unknown1}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool CompareOperator;
+            public bool Flags;
+            public bool Unknown1;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.CompareOperator = defaultOn;
+                this.Flags = defaultOn;
+                this.Unknown1 = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((CompareOperator, null));
+                ret.Add((Flags, null));
+                ret.Add((Unknown1, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -308,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Condition_Mask<bool> GetEqualsMask(
+        public static Condition.Mask<bool> GetEqualsMask(
             this IConditionGetter item,
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -322,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IConditionGetter item,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -334,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             FileGeneration fg,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -345,16 +659,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IConditionGetter item,
-            Condition_Mask<bool?> checkMask)
+            Condition.Mask<bool?> checkMask)
         {
             return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Condition_Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
+        public static Condition.Mask<bool> GetHasBeenSetMask(this IConditionGetter item)
         {
-            var ret = new Condition_Mask<bool>(false);
+            var ret = new Condition.Mask<bool>(false);
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -373,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
-            Condition_TranslationMask? copyMask = null)
+            Condition.TranslationMask? copyMask = null)
         {
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -385,8 +699,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this ICondition lhs,
             IConditionGetter rhs,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? copyMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -394,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -412,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            Condition_TranslationMask? copyMask = null)
+            Condition.TranslationMask? copyMask = null)
         {
             return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -421,8 +735,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? copyMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? copyMask = null)
         {
             return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -446,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             XElement node,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -459,8 +773,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             XElement node,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -468,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -487,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             string path,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -499,8 +813,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -514,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ICondition item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -527,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             Stream stream,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -539,8 +853,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ICondition item,
             Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -554,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ICondition item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -629,9 +943,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(Condition_Mask<>);
+        public static readonly Type MaskType = typeof(Condition.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Condition_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Condition.ErrorMask);
 
         public static readonly Type ClassType = typeof(Condition);
 
@@ -878,12 +1192,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly ConditionCommon Instance = new ConditionCommon();
 
-        public Condition_Mask<bool> GetEqualsMask(
+        public Condition.Mask<bool> GetEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Condition_Mask<bool>(false);
+            var ret = new Condition.Mask<bool>(false);
             ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -895,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IConditionGetter item,
             IConditionGetter rhs,
-            Condition_Mask<bool> ret,
+            Condition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -907,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IConditionGetter item,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -922,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConditionGetter item,
             FileGeneration fg,
             string? name = null,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -946,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IConditionGetter item,
             FileGeneration fg,
-            Condition_Mask<bool>? printMask = null)
+            Condition.Mask<bool>? printMask = null)
         {
             if (printMask?.CompareOperator ?? true)
             {
@@ -964,14 +1278,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IConditionGetter item,
-            Condition_Mask<bool?> checkMask)
+            Condition.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IConditionGetter item,
-            Condition_Mask<bool> mask)
+            Condition.Mask<bool> mask)
         {
             mask.CompareOperator = true;
             mask.Flags = true;
@@ -1046,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            Condition_TranslationMask? copyMask = null)
+            Condition.TranslationMask? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1057,8 +1371,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? copyMask = null)
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? copyMask = null)
         {
             Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1333,8 +1647,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             XElement node,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null,
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1344,14 +1658,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Condition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IConditionGetter item,
             string path,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null,
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1384,8 +1698,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IConditionGetter item,
             Stream stream,
-            out Condition_ErrorMask errorMask,
-            Condition_TranslationMask? translationMask = null,
+            out Condition.ErrorMask errorMask,
+            Condition.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1434,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionGetter item,
             XElement node,
             string? name = null,
-            Condition_TranslationMask? translationMask = null)
+            Condition.TranslationMask? translationMask = null)
         {
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1478,321 +1792,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class Condition_Mask<T> :
-        IMask<T>,
-        IEquatable<Condition_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Condition_Mask(T initialValue)
-        {
-            this.CompareOperator = initialValue;
-            this.Flags = initialValue;
-            this.Unknown1 = initialValue;
-        }
-
-        public Condition_Mask(
-            T CompareOperator,
-            T Flags,
-            T Unknown1)
-        {
-            this.CompareOperator = CompareOperator;
-            this.Flags = Flags;
-            this.Unknown1 = Unknown1;
-        }
-
-        #pragma warning disable CS8618
-        protected Condition_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T CompareOperator;
-        public T Flags;
-        public T Unknown1;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Condition_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Condition_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.CompareOperator?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public virtual bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.CompareOperator)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Unknown1)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public Condition_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Condition_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Condition_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.CompareOperator = eval(this.CompareOperator);
-            obj.Flags = eval(this.Flags);
-            obj.Unknown1 = eval(this.Unknown1);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Condition_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Condition_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Condition_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.CompareOperator ?? true)
-                {
-                    fg.AppendLine($"CompareOperator => {CompareOperator}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Unknown1 ?? true)
-                {
-                    fg.AppendLine($"Unknown1 => {Unknown1}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Condition_ErrorMask : IErrorMask, IErrorMask<Condition_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? CompareOperator;
-        public Exception? Flags;
-        public Exception? Unknown1;
-        #endregion
-
-        #region IErrorMask
-        public virtual object? GetNthMask(int index)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    return CompareOperator;
-                case Condition_FieldIndex.Flags:
-                    return Flags;
-                case Condition_FieldIndex.Unknown1:
-                    return Unknown1;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthException(int index, Exception ex)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    this.CompareOperator = ex;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Condition_FieldIndex.Unknown1:
-                    this.Unknown1 = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual void SetNthMask(int index, object obj)
-        {
-            Condition_FieldIndex enu = (Condition_FieldIndex)index;
-            switch (enu)
-            {
-                case Condition_FieldIndex.CompareOperator:
-                    this.CompareOperator = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Condition_FieldIndex.Unknown1:
-                    this.Unknown1 = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public virtual bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (CompareOperator != null) return true;
-            if (Flags != null) return true;
-            if (Unknown1 != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public virtual void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Condition_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected virtual void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"CompareOperator => {CompareOperator}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Unknown1 => {Unknown1}");
-        }
-        #endregion
-
-        #region Combine
-        public Condition_ErrorMask Combine(Condition_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Condition_ErrorMask();
-            ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-            return ret;
-        }
-        public static Condition_ErrorMask? Combine(Condition_ErrorMask? lhs, Condition_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static Condition_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Condition_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Condition_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool CompareOperator;
-        public bool Flags;
-        public bool Unknown1;
-        #endregion
-
-        #region Ctors
-        public Condition_TranslationMask(bool defaultOn)
-        {
-            this.CompareOperator = defaultOn;
-            this.Flags = defaultOn;
-            this.Unknown1 = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((CompareOperator, null));
-            ret.Add((Flags, null));
-            ret.Add((Unknown1, null));
-        }
-    }
 }
 #endregion
 

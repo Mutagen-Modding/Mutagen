@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new LandTexture CreateFromXml(
             XElement node,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -156,15 +156,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static LandTexture CreateFromXml(
             XElement node,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LandTexture.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             string path,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             string path,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             Stream stream,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -228,8 +228,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture CreateFromXml(
             Stream stream,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static LandTexture CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -252,6 +252,423 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Icon = initialValue;
+                this.Havok = new MaskItem<T, HavokData.Mask<T>?>(initialValue, new HavokData.Mask<T>(initialValue));
+                this.TextureSpecularExponent = initialValue;
+                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Icon,
+                T Havok,
+                T TextureSpecularExponent,
+                T PotentialGrass)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Icon = Icon;
+                this.Havok = new MaskItem<T, HavokData.Mask<T>?>(Havok, new HavokData.Mask<T>(Havok));
+                this.TextureSpecularExponent = TextureSpecularExponent;
+                this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PotentialGrass, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Icon;
+            public MaskItem<T, HavokData.Mask<T>?>? Havok { get; set; }
+            public T TextureSpecularExponent;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? PotentialGrass;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Havok, rhs.Havok)) return false;
+                if (!object.Equals(this.TextureSpecularExponent, rhs.TextureSpecularExponent)) return false;
+                if (!object.Equals(this.PotentialGrass, rhs.PotentialGrass)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Havok?.GetHashCode());
+                ret = ret.CombineHashCode(this.TextureSpecularExponent?.GetHashCode());
+                ret = ret.CombineHashCode(this.PotentialGrass?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Icon)) return false;
+                if (Havok != null)
+                {
+                    if (!eval(this.Havok.Overall)) return false;
+                    if (this.Havok.Specific != null && !this.Havok.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.TextureSpecularExponent)) return false;
+                if (this.PotentialGrass != null)
+                {
+                    if (!eval(this.PotentialGrass.Overall)) return false;
+                    if (this.PotentialGrass.Specific != null)
+                    {
+                        foreach (var item in this.PotentialGrass.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new LandTexture.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Icon = eval(this.Icon);
+                obj.Havok = this.Havok == null ? null : new MaskItem<R, HavokData.Mask<R>?>(eval(this.Havok.Overall), this.Havok.Specific?.Translate(eval));
+                obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
+                if (PotentialGrass != null)
+                {
+                    obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PotentialGrass.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (PotentialGrass.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.PotentialGrass.Specific = l;
+                        foreach (var item in PotentialGrass.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(LandTexture.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, LandTexture.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(LandTexture.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Havok?.Overall ?? true)
+                    {
+                        Havok?.ToString(fg);
+                    }
+                    if (printMask?.TextureSpecularExponent ?? true)
+                    {
+                        fg.AppendLine($"TextureSpecularExponent => {TextureSpecularExponent}");
+                    }
+                    if (printMask?.PotentialGrass?.Overall ?? true)
+                    {
+                        fg.AppendLine("PotentialGrass =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (PotentialGrass != null)
+                            {
+                                if (PotentialGrass.Overall != null)
+                                {
+                                    fg.AppendLine(PotentialGrass.Overall.ToString());
+                                }
+                                if (PotentialGrass.Specific != null)
+                                {
+                                    foreach (var subItem in PotentialGrass.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Icon;
+            public MaskItem<Exception?, HavokData.ErrorMask?>? Havok;
+            public Exception? TextureSpecularExponent;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PotentialGrass;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
+                switch (enu)
+                {
+                    case LandTexture_FieldIndex.Icon:
+                        return Icon;
+                    case LandTexture_FieldIndex.Havok:
+                        return Havok;
+                    case LandTexture_FieldIndex.TextureSpecularExponent:
+                        return TextureSpecularExponent;
+                    case LandTexture_FieldIndex.PotentialGrass:
+                        return PotentialGrass;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
+                switch (enu)
+                {
+                    case LandTexture_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case LandTexture_FieldIndex.Havok:
+                        this.Havok = new MaskItem<Exception?, HavokData.ErrorMask?>(ex, null);
+                        break;
+                    case LandTexture_FieldIndex.TextureSpecularExponent:
+                        this.TextureSpecularExponent = ex;
+                        break;
+                    case LandTexture_FieldIndex.PotentialGrass:
+                        this.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
+                switch (enu)
+                {
+                    case LandTexture_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case LandTexture_FieldIndex.Havok:
+                        this.Havok = (MaskItem<Exception?, HavokData.ErrorMask?>?)obj;
+                        break;
+                    case LandTexture_FieldIndex.TextureSpecularExponent:
+                        this.TextureSpecularExponent = (Exception)obj;
+                        break;
+                    case LandTexture_FieldIndex.PotentialGrass:
+                        this.PotentialGrass = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Icon != null) return true;
+                if (Havok != null) return true;
+                if (TextureSpecularExponent != null) return true;
+                if (PotentialGrass != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                Havok?.ToString(fg);
+                fg.AppendLine($"TextureSpecularExponent => {TextureSpecularExponent}");
+                fg.AppendLine("PotentialGrass =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (PotentialGrass != null)
+                    {
+                        if (PotentialGrass.Overall != null)
+                        {
+                            fg.AppendLine(PotentialGrass.Overall.ToString());
+                        }
+                        if (PotentialGrass.Specific != null)
+                        {
+                            foreach (var subItem in PotentialGrass.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Havok = new MaskItem<Exception?, HavokData.ErrorMask?>(ExceptionExt.Combine(this.Havok?.Overall, rhs.Havok?.Overall), (this.Havok?.Specific as IErrorMask<HavokData.ErrorMask>)?.Combine(rhs.Havok?.Specific));
+                ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
+                ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Icon;
+            public MaskItem<bool, HavokData.TranslationMask?> Havok;
+            public bool TextureSpecularExponent;
+            public bool PotentialGrass;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Icon = defaultOn;
+                this.Havok = new MaskItem<bool, HavokData.TranslationMask?>(defaultOn, null);
+                this.TextureSpecularExponent = defaultOn;
+                this.PotentialGrass = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Icon, null));
+                ret.Add((Havok?.Overall ?? true, Havok?.Specific?.GetCrystal()));
+                ret.Add((TextureSpecularExponent, null));
+                ret.Add((PotentialGrass, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -375,7 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LandTexture_Mask<bool> GetEqualsMask(
+        public static LandTexture.Mask<bool> GetEqualsMask(
             this ILandTextureGetter item,
             ILandTextureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -389,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ILandTextureGetter item,
             string? name = null,
-            LandTexture_Mask<bool>? printMask = null)
+            LandTexture.Mask<bool>? printMask = null)
         {
             return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -401,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureGetter item,
             FileGeneration fg,
             string? name = null,
-            LandTexture_Mask<bool>? printMask = null)
+            LandTexture.Mask<bool>? printMask = null)
         {
             ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -412,16 +829,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ILandTextureGetter item,
-            LandTexture_Mask<bool?> checkMask)
+            LandTexture.Mask<bool?> checkMask)
         {
             return ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LandTexture_Mask<bool> GetHasBeenSetMask(this ILandTextureGetter item)
+        public static LandTexture.Mask<bool> GetHasBeenSetMask(this ILandTextureGetter item)
         {
-            var ret = new LandTexture_Mask<bool>(false);
+            var ret = new LandTexture.Mask<bool>(false);
             ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -440,8 +857,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ILandTextureInternal lhs,
             ILandTextureGetter rhs,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? copyMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -449,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LandTexture.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -467,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture DeepCopy(
             this ILandTextureGetter item,
-            LandTexture_TranslationMask? copyMask = null)
+            LandTexture.TranslationMask? copyMask = null)
         {
             return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -476,8 +893,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static LandTexture DeepCopy(
             this ILandTextureGetter item,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? copyMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? copyMask = null)
         {
             return ((LandTextureSetterTranslationCommon)((ILandTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -501,7 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             XElement node,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -514,8 +931,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             XElement node,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -523,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LandTexture.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -542,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             string path,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -554,8 +971,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             string path,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -569,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -582,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             Stream stream,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -594,8 +1011,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             Stream stream,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -609,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandTextureInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LandTexture_TranslationMask? translationMask = null)
+            LandTexture.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -690,9 +1107,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(LandTexture_Mask<>);
+        public static readonly Type MaskType = typeof(LandTexture.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LandTexture_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LandTexture.ErrorMask);
 
         public static readonly Type ClassType = typeof(LandTexture);
 
@@ -1057,12 +1474,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly LandTextureCommon Instance = new LandTextureCommon();
 
-        public LandTexture_Mask<bool> GetEqualsMask(
+        public LandTexture.Mask<bool> GetEqualsMask(
             ILandTextureGetter item,
             ILandTextureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LandTexture_Mask<bool>(false);
+            var ret = new LandTexture.Mask<bool>(false);
             ((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1074,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ILandTextureGetter item,
             ILandTextureGetter rhs,
-            LandTexture_Mask<bool> ret,
+            LandTexture.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1095,7 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ILandTextureGetter item,
             string? name = null,
-            LandTexture_Mask<bool>? printMask = null)
+            LandTexture.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1110,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter item,
             FileGeneration fg,
             string? name = null,
-            LandTexture_Mask<bool>? printMask = null)
+            LandTexture.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1134,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ILandTextureGetter item,
             FileGeneration fg,
-            LandTexture_Mask<bool>? printMask = null)
+            LandTexture.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1174,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ILandTextureGetter item,
-            LandTexture_Mask<bool?> checkMask)
+            LandTexture.Mask<bool?> checkMask)
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Havok?.Overall.HasValue ?? false && checkMask.Havok.Overall.Value != (item.Havok != null)) return false;
@@ -1188,11 +1605,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ILandTextureGetter item,
-            LandTexture_Mask<bool> mask)
+            LandTexture.Mask<bool> mask)
         {
             mask.Icon = (item.Icon != null);
             var itemHavok = item.Havok;
-            mask.Havok = new MaskItem<bool, HavokData_Mask<bool>?>(itemHavok != null, itemHavok?.GetHasBeenSetMask());
+            mask.Havok = new MaskItem<bool, HavokData.Mask<bool>?>(itemHavok != null, itemHavok?.GetHasBeenSetMask());
             mask.TextureSpecularExponent = (item.TextureSpecularExponent != null);
             mask.PotentialGrass = new MaskItem<bool, IEnumerable<(int, bool)>>(item.PotentialGrass.HasBeenSet, Enumerable.Empty<(int, bool)>());
             base.FillHasBeenSetMask(
@@ -1482,7 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LandTexture DeepCopy(
             ILandTextureGetter item,
-            LandTexture_TranslationMask? copyMask = null)
+            LandTexture.TranslationMask? copyMask = null)
         {
             LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1493,8 +1910,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LandTexture DeepCopy(
             ILandTextureGetter item,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? copyMask = null)
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? copyMask = null)
         {
             LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1829,8 +2246,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILandTextureGetter item,
             XElement node,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null,
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1840,14 +2257,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LandTexture.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ILandTextureGetter item,
             string path,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null,
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1863,8 +2280,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ILandTextureGetter item,
             Stream stream,
-            out LandTexture_ErrorMask errorMask,
-            LandTexture_TranslationMask? translationMask = null,
+            out LandTexture.ErrorMask errorMask,
+            LandTexture.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1881,422 +2298,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class LandTexture_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<LandTexture_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public LandTexture_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Icon = initialValue;
-            this.Havok = new MaskItem<T, HavokData_Mask<T>?>(initialValue, new HavokData_Mask<T>(initialValue));
-            this.TextureSpecularExponent = initialValue;
-            this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public LandTexture_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Icon,
-            T Havok,
-            T TextureSpecularExponent,
-            T PotentialGrass)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Icon = Icon;
-            this.Havok = new MaskItem<T, HavokData_Mask<T>?>(Havok, new HavokData_Mask<T>(Havok));
-            this.TextureSpecularExponent = TextureSpecularExponent;
-            this.PotentialGrass = new MaskItem<T, IEnumerable<(int Index, T Value)>>(PotentialGrass, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected LandTexture_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Icon;
-        public MaskItem<T, HavokData_Mask<T>?>? Havok { get; set; }
-        public T TextureSpecularExponent;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? PotentialGrass;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LandTexture_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(LandTexture_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Havok, rhs.Havok)) return false;
-            if (!object.Equals(this.TextureSpecularExponent, rhs.TextureSpecularExponent)) return false;
-            if (!object.Equals(this.PotentialGrass, rhs.PotentialGrass)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Havok?.GetHashCode());
-            ret = ret.CombineHashCode(this.TextureSpecularExponent?.GetHashCode());
-            ret = ret.CombineHashCode(this.PotentialGrass?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Icon)) return false;
-            if (Havok != null)
-            {
-                if (!eval(this.Havok.Overall)) return false;
-                if (this.Havok.Specific != null && !this.Havok.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.TextureSpecularExponent)) return false;
-            if (this.PotentialGrass != null)
-            {
-                if (!eval(this.PotentialGrass.Overall)) return false;
-                if (this.PotentialGrass.Specific != null)
-                {
-                    foreach (var item in this.PotentialGrass.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new LandTexture_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new LandTexture_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(LandTexture_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Icon = eval(this.Icon);
-            obj.Havok = this.Havok == null ? null : new MaskItem<R, HavokData_Mask<R>?>(eval(this.Havok.Overall), this.Havok.Specific?.Translate(eval));
-            obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
-            if (PotentialGrass != null)
-            {
-                obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PotentialGrass.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (PotentialGrass.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.PotentialGrass.Specific = l;
-                    foreach (var item in PotentialGrass.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(LandTexture_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, LandTexture_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(LandTexture_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Havok?.Overall ?? true)
-                {
-                    Havok?.ToString(fg);
-                }
-                if (printMask?.TextureSpecularExponent ?? true)
-                {
-                    fg.AppendLine($"TextureSpecularExponent => {TextureSpecularExponent}");
-                }
-                if (printMask?.PotentialGrass?.Overall ?? true)
-                {
-                    fg.AppendLine("PotentialGrass =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (PotentialGrass != null)
-                        {
-                            if (PotentialGrass.Overall != null)
-                            {
-                                fg.AppendLine(PotentialGrass.Overall.ToString());
-                            }
-                            if (PotentialGrass.Specific != null)
-                            {
-                                foreach (var subItem in PotentialGrass.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class LandTexture_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<LandTexture_ErrorMask>
-    {
-        #region Members
-        public Exception? Icon;
-        public MaskItem<Exception?, HavokData_ErrorMask?>? Havok;
-        public Exception? TextureSpecularExponent;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PotentialGrass;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    return Icon;
-                case LandTexture_FieldIndex.Havok:
-                    return Havok;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return TextureSpecularExponent;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    return PotentialGrass;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    this.Havok = new MaskItem<Exception?, HavokData_ErrorMask?>(ex, null);
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    this.TextureSpecularExponent = ex;
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    this.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
-            switch (enu)
-            {
-                case LandTexture_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case LandTexture_FieldIndex.Havok:
-                    this.Havok = (MaskItem<Exception?, HavokData_ErrorMask?>?)obj;
-                    break;
-                case LandTexture_FieldIndex.TextureSpecularExponent:
-                    this.TextureSpecularExponent = (Exception)obj;
-                    break;
-                case LandTexture_FieldIndex.PotentialGrass:
-                    this.PotentialGrass = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Icon != null) return true;
-            if (Havok != null) return true;
-            if (TextureSpecularExponent != null) return true;
-            if (PotentialGrass != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("LandTexture_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            Havok?.ToString(fg);
-            fg.AppendLine($"TextureSpecularExponent => {TextureSpecularExponent}");
-            fg.AppendLine("PotentialGrass =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (PotentialGrass != null)
-                {
-                    if (PotentialGrass.Overall != null)
-                    {
-                        fg.AppendLine(PotentialGrass.Overall.ToString());
-                    }
-                    if (PotentialGrass.Specific != null)
-                    {
-                        foreach (var subItem in PotentialGrass.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public LandTexture_ErrorMask Combine(LandTexture_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new LandTexture_ErrorMask();
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Havok = new MaskItem<Exception?, HavokData_ErrorMask?>(ExceptionExt.Combine(this.Havok?.Overall, rhs.Havok?.Overall), (this.Havok?.Specific as IErrorMask<HavokData_ErrorMask>)?.Combine(rhs.Havok?.Specific));
-            ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
-            ret.PotentialGrass = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PotentialGrass?.Overall, rhs.PotentialGrass?.Overall), ExceptionExt.Combine(this.PotentialGrass?.Specific, rhs.PotentialGrass?.Specific));
-            return ret;
-        }
-        public static LandTexture_ErrorMask? Combine(LandTexture_ErrorMask? lhs, LandTexture_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new LandTexture_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new LandTexture_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class LandTexture_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Icon;
-        public MaskItem<bool, HavokData_TranslationMask?> Havok;
-        public bool TextureSpecularExponent;
-        public bool PotentialGrass;
-        #endregion
-
-        #region Ctors
-        public LandTexture_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Icon = defaultOn;
-            this.Havok = new MaskItem<bool, HavokData_TranslationMask?>(defaultOn, null);
-            this.TextureSpecularExponent = defaultOn;
-            this.PotentialGrass = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Icon, null));
-            ret.Add((Havok?.Overall ?? true, Havok?.Specific?.GetCrystal()));
-            ret.Add((TextureSpecularExponent, null));
-            ret.Add((PotentialGrass, null));
-        }
-    }
 }
 #endregion
 

@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new SigilStone CreateFromXml(
             XElement node,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -206,15 +206,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SigilStone CreateFromXml(
             XElement node,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStone.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SigilStone CreateFromXml(
             string path,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SigilStone CreateFromXml(
             string path,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SigilStone CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SigilStone CreateFromXml(
             Stream stream,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -278,8 +278,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SigilStone CreateFromXml(
             Stream stream,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SigilStone CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -302,6 +302,560 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ItemAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+                this.Script = initialValue;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Uses = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Icon,
+                T Script,
+                T Effects,
+                T Uses,
+                T Value,
+                T Weight,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+                this.Script = Script;
+                this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect.Mask<T>?>>());
+                this.Uses = Uses;
+                this.Value = Value;
+                this.Weight = Weight;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            public T Script;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect.Mask<T>?>>>? Effects;
+            public T Uses;
+            public T Value;
+            public T Weight;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.Uses, rhs.Uses)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Effects?.GetHashCode());
+                ret = ret.CombineHashCode(this.Uses?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Script)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Uses)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SigilStone.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+                obj.Script = eval(this.Script);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Effect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Uses = eval(this.Uses);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SigilStone.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SigilStone.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SigilStone.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Effects?.Overall ?? true)
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Effects != null)
+                            {
+                                if (Effects.Overall != null)
+                                {
+                                    fg.AppendLine(Effects.Overall.ToString());
+                                }
+                                if (Effects.Specific != null)
+                                {
+                                    foreach (var subItem in Effects.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Uses ?? true)
+                    {
+                        fg.AppendLine($"Uses => {Uses}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ItemAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            public Exception? Script;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            public Exception? Uses;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
+                switch (enu)
+                {
+                    case SigilStone_FieldIndex.Name:
+                        return Name;
+                    case SigilStone_FieldIndex.Model:
+                        return Model;
+                    case SigilStone_FieldIndex.Icon:
+                        return Icon;
+                    case SigilStone_FieldIndex.Script:
+                        return Script;
+                    case SigilStone_FieldIndex.Effects:
+                        return Effects;
+                    case SigilStone_FieldIndex.Uses:
+                        return Uses;
+                    case SigilStone_FieldIndex.Value:
+                        return Value;
+                    case SigilStone_FieldIndex.Weight:
+                        return Weight;
+                    case SigilStone_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
+                switch (enu)
+                {
+                    case SigilStone_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case SigilStone_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case SigilStone_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case SigilStone_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case SigilStone_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SigilStone_FieldIndex.Uses:
+                        this.Uses = ex;
+                        break;
+                    case SigilStone_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case SigilStone_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case SigilStone_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
+                switch (enu)
+                {
+                    case SigilStone_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case SigilStone_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case SigilStone_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case SigilStone_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case SigilStone_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
+                    case SigilStone_FieldIndex.Uses:
+                        this.Uses = (Exception)obj;
+                        break;
+                    case SigilStone_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case SigilStone_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case SigilStone_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                if (Script != null) return true;
+                if (Effects != null) return true;
+                if (Uses != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Effects != null)
+                    {
+                        if (Effects.Overall != null)
+                        {
+                            fg.AppendLine(Effects.Overall.ToString());
+                        }
+                        if (Effects.Specific != null)
+                        {
+                            foreach (var subItem in Effects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendLine($"Uses => {Uses}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.Uses = this.Uses.Combine(rhs.Uses);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ItemAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            public bool Script;
+            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public bool Uses;
+            public bool Value;
+            public bool Weight;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+                this.Script = defaultOn;
+                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
+                this.Uses = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+                ret.Add((Script, null));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((Uses, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -440,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SigilStone_Mask<bool> GetEqualsMask(
+        public static SigilStone.Mask<bool> GetEqualsMask(
             this ISigilStoneGetter item,
             ISigilStoneGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -454,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISigilStoneGetter item,
             string? name = null,
-            SigilStone_Mask<bool>? printMask = null)
+            SigilStone.Mask<bool>? printMask = null)
         {
             return ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -466,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneGetter item,
             FileGeneration fg,
             string? name = null,
-            SigilStone_Mask<bool>? printMask = null)
+            SigilStone.Mask<bool>? printMask = null)
         {
             ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -477,16 +1031,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISigilStoneGetter item,
-            SigilStone_Mask<bool?> checkMask)
+            SigilStone.Mask<bool?> checkMask)
         {
             return ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SigilStone_Mask<bool> GetHasBeenSetMask(this ISigilStoneGetter item)
+        public static SigilStone.Mask<bool> GetHasBeenSetMask(this ISigilStoneGetter item)
         {
-            var ret = new SigilStone_Mask<bool>(false);
+            var ret = new SigilStone.Mask<bool>(false);
             ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -505,8 +1059,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISigilStoneInternal lhs,
             ISigilStoneGetter rhs,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? copyMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -514,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStone.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -532,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SigilStone DeepCopy(
             this ISigilStoneGetter item,
-            SigilStone_TranslationMask? copyMask = null)
+            SigilStone.TranslationMask? copyMask = null)
         {
             return ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -541,8 +1095,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SigilStone DeepCopy(
             this ISigilStoneGetter item,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? copyMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? copyMask = null)
         {
             return ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -566,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             XElement node,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -579,8 +1133,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             XElement node,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -588,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStone.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -607,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             string path,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -619,8 +1173,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             string path,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -634,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -647,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             Stream stream,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -659,8 +1213,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             Stream stream,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -674,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SigilStone_TranslationMask? translationMask = null)
+            SigilStone.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -760,9 +1314,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(SigilStone_Mask<>);
+        public static readonly Type MaskType = typeof(SigilStone.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SigilStone_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SigilStone.ErrorMask);
 
         public static readonly Type ClassType = typeof(SigilStone);
 
@@ -1226,12 +1780,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly SigilStoneCommon Instance = new SigilStoneCommon();
 
-        public SigilStone_Mask<bool> GetEqualsMask(
+        public SigilStone.Mask<bool> GetEqualsMask(
             ISigilStoneGetter item,
             ISigilStoneGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SigilStone_Mask<bool>(false);
+            var ret = new SigilStone.Mask<bool>(false);
             ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1243,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISigilStoneGetter item,
             ISigilStoneGetter rhs,
-            SigilStone_Mask<bool> ret,
+            SigilStone.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1269,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISigilStoneGetter item,
             string? name = null,
-            SigilStone_Mask<bool>? printMask = null)
+            SigilStone.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1284,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStoneGetter item,
             FileGeneration fg,
             string? name = null,
-            SigilStone_Mask<bool>? printMask = null)
+            SigilStone.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1308,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISigilStoneGetter item,
             FileGeneration fg,
-            SigilStone_Mask<bool>? printMask = null)
+            SigilStone.Mask<bool>? printMask = null)
         {
             ItemAbstractCommon.ToStringFields(
                 item: item,
@@ -1368,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISigilStoneGetter item,
-            SigilStone_Mask<bool?> checkMask)
+            SigilStone.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1383,14 +1937,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ISigilStoneGetter item,
-            SigilStone_Mask<bool> mask)
+            SigilStone.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.Script = item.Script.HasBeenSet;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect_Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>>(item.Effects.HasBeenSet, item.Effects.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Uses = true;
             mask.Value = true;
             mask.Weight = true;
@@ -1780,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SigilStone DeepCopy(
             ISigilStoneGetter item,
-            SigilStone_TranslationMask? copyMask = null)
+            SigilStone.TranslationMask? copyMask = null)
         {
             SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1791,8 +2345,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SigilStone DeepCopy(
             ISigilStoneGetter item,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? copyMask = null)
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? copyMask = null)
         {
             SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2285,8 +2839,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISigilStoneGetter item,
             XElement node,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null,
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2296,14 +2850,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStone.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISigilStoneGetter item,
             string path,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null,
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2319,8 +2873,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISigilStoneGetter item,
             Stream stream,
-            out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask? translationMask = null,
+            out SigilStone.ErrorMask errorMask,
+            SigilStone.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2337,559 +2891,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class SigilStone_Mask<T> :
-        ItemAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<SigilStone_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SigilStone_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Script = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.Uses = initialValue;
-            this.Value = initialValue;
-            this.Weight = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public SigilStone_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Icon,
-            T Script,
-            T Effects,
-            T Uses,
-            T Value,
-            T Weight,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-            this.Script = Script;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>(Effects, Enumerable.Empty<MaskItemIndexed<T, Effect_Mask<T>?>>());
-            this.Uses = Uses;
-            this.Value = Value;
-            this.Weight = Weight;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected SigilStone_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        public T Script;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>?>>>? Effects;
-        public T Uses;
-        public T Value;
-        public T Weight;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SigilStone_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SigilStone_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Effects, rhs.Effects)) return false;
-            if (!object.Equals(this.Uses, rhs.Uses)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Effects?.GetHashCode());
-            ret = ret.CombineHashCode(this.Uses?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Script)) return false;
-            if (this.Effects != null)
-            {
-                if (!eval(this.Effects.Overall)) return false;
-                if (this.Effects.Specific != null)
-                {
-                    foreach (var item in this.Effects.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            if (!eval(this.Uses)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new SigilStone_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SigilStone_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SigilStone_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-            obj.Script = eval(this.Script);
-            if (Effects != null)
-            {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>?>>>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect_Mask<R>?>>());
-                if (Effects.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Effect_Mask<R>?>>();
-                    obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Effect_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-            obj.Uses = eval(this.Uses);
-            obj.Value = eval(this.Value);
-            obj.Weight = eval(this.Weight);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SigilStone_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SigilStone_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SigilStone_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Effects != null)
-                        {
-                            if (Effects.Overall != null)
-                            {
-                                fg.AppendLine(Effects.Overall.ToString());
-                            }
-                            if (Effects.Specific != null)
-                            {
-                                foreach (var subItem in Effects.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                if (printMask?.Uses ?? true)
-                {
-                    fg.AppendLine($"Uses => {Uses}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SigilStone_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<SigilStone_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        public Exception? Script;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>? Effects;
-        public Exception? Uses;
-        public Exception? Value;
-        public Exception? Weight;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    return Name;
-                case SigilStone_FieldIndex.Model:
-                    return Model;
-                case SigilStone_FieldIndex.Icon:
-                    return Icon;
-                case SigilStone_FieldIndex.Script:
-                    return Script;
-                case SigilStone_FieldIndex.Effects:
-                    return Effects;
-                case SigilStone_FieldIndex.Uses:
-                    return Uses;
-                case SigilStone_FieldIndex.Value:
-                    return Value;
-                case SigilStone_FieldIndex.Weight:
-                    return Weight;
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case SigilStone_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case SigilStone_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case SigilStone_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case SigilStone_FieldIndex.Effects:
-                    this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ex, null);
-                    break;
-                case SigilStone_FieldIndex.Uses:
-                    this.Uses = ex;
-                    break;
-                case SigilStone_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case SigilStone_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            SigilStone_FieldIndex enu = (SigilStone_FieldIndex)index;
-            switch (enu)
-            {
-                case SigilStone_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case SigilStone_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case SigilStone_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case SigilStone_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case SigilStone_FieldIndex.Effects:
-                    this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>)obj;
-                    break;
-                case SigilStone_FieldIndex.Uses:
-                    this.Uses = (Exception)obj;
-                    break;
-                case SigilStone_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case SigilStone_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (Script != null) return true;
-            if (Effects != null) return true;
-            if (Uses != null) return true;
-            if (Value != null) return true;
-            if (Weight != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SigilStone_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine("Effects =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Effects != null)
-                {
-                    if (Effects.Overall != null)
-                    {
-                        fg.AppendLine(Effects.Overall.ToString());
-                    }
-                    if (Effects.Specific != null)
-                    {
-                        foreach (var subItem in Effects.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-            fg.AppendLine($"Uses => {Uses}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public SigilStone_ErrorMask Combine(SigilStone_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SigilStone_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect_ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-            ret.Uses = this.Uses.Combine(rhs.Uses);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static SigilStone_ErrorMask? Combine(SigilStone_ErrorMask? lhs, SigilStone_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new SigilStone_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SigilStone_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SigilStone_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        public bool Script;
-        public MaskItem<bool, Effect_TranslationMask?> Effects;
-        public bool Uses;
-        public bool Value;
-        public bool Weight;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public SigilStone_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Effects = new MaskItem<bool, Effect_TranslationMask?>(defaultOn, null);
-            this.Uses = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((Script, null));
-            ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
-            ret.Add((Uses, null));
-            ret.Add((Value, null));
-            ret.Add((Weight, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

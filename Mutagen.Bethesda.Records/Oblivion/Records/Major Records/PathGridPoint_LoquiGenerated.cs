@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PathGridPoint CreateFromXml(
             XElement node,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -139,15 +139,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static PathGridPoint CreateFromXml(
             XElement node,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PathGridPoint.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PathGridPoint CreateFromXml(
             string path,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,8 +177,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PathGridPoint CreateFromXml(
             string path,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGridPoint CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PathGridPoint CreateFromXml(
             Stream stream,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -211,8 +211,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PathGridPoint CreateFromXml(
             Stream stream,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGridPoint CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -235,6 +235,418 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Point = initialValue;
+                this.NumConnections = initialValue;
+                this.FluffBytes = initialValue;
+                this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T Point,
+                T NumConnections,
+                T FluffBytes,
+                T Connections)
+            {
+                this.Point = Point;
+                this.NumConnections = NumConnections;
+                this.FluffBytes = FluffBytes;
+                this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Point;
+            public T NumConnections;
+            public T FluffBytes;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Connections;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Point, rhs.Point)) return false;
+                if (!object.Equals(this.NumConnections, rhs.NumConnections)) return false;
+                if (!object.Equals(this.FluffBytes, rhs.FluffBytes)) return false;
+                if (!object.Equals(this.Connections, rhs.Connections)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Point?.GetHashCode());
+                ret = ret.CombineHashCode(this.NumConnections?.GetHashCode());
+                ret = ret.CombineHashCode(this.FluffBytes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Connections?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Point)) return false;
+                if (!eval(this.NumConnections)) return false;
+                if (!eval(this.FluffBytes)) return false;
+                if (this.Connections != null)
+                {
+                    if (!eval(this.Connections.Overall)) return false;
+                    if (this.Connections.Specific != null)
+                    {
+                        foreach (var item in this.Connections.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new PathGridPoint.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Point = eval(this.Point);
+                obj.NumConnections = eval(this.NumConnections);
+                obj.FluffBytes = eval(this.FluffBytes);
+                if (Connections != null)
+                {
+                    obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Connections.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Connections.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Connections.Specific = l;
+                        foreach (var item in Connections.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(PathGridPoint.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, PathGridPoint.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(PathGridPoint.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Point ?? true)
+                    {
+                        fg.AppendLine($"Point => {Point}");
+                    }
+                    if (printMask?.NumConnections ?? true)
+                    {
+                        fg.AppendLine($"NumConnections => {NumConnections}");
+                    }
+                    if (printMask?.FluffBytes ?? true)
+                    {
+                        fg.AppendLine($"FluffBytes => {FluffBytes}");
+                    }
+                    if (printMask?.Connections?.Overall ?? true)
+                    {
+                        fg.AppendLine("Connections =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Connections != null)
+                            {
+                                if (Connections.Overall != null)
+                                {
+                                    fg.AppendLine(Connections.Overall.ToString());
+                                }
+                                if (Connections.Specific != null)
+                                {
+                                    foreach (var subItem in Connections.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Point;
+            public Exception? NumConnections;
+            public Exception? FluffBytes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Connections;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
+                switch (enu)
+                {
+                    case PathGridPoint_FieldIndex.Point:
+                        return Point;
+                    case PathGridPoint_FieldIndex.NumConnections:
+                        return NumConnections;
+                    case PathGridPoint_FieldIndex.FluffBytes:
+                        return FluffBytes;
+                    case PathGridPoint_FieldIndex.Connections:
+                        return Connections;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
+                switch (enu)
+                {
+                    case PathGridPoint_FieldIndex.Point:
+                        this.Point = ex;
+                        break;
+                    case PathGridPoint_FieldIndex.NumConnections:
+                        this.NumConnections = ex;
+                        break;
+                    case PathGridPoint_FieldIndex.FluffBytes:
+                        this.FluffBytes = ex;
+                        break;
+                    case PathGridPoint_FieldIndex.Connections:
+                        this.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
+                switch (enu)
+                {
+                    case PathGridPoint_FieldIndex.Point:
+                        this.Point = (Exception)obj;
+                        break;
+                    case PathGridPoint_FieldIndex.NumConnections:
+                        this.NumConnections = (Exception)obj;
+                        break;
+                    case PathGridPoint_FieldIndex.FluffBytes:
+                        this.FluffBytes = (Exception)obj;
+                        break;
+                    case PathGridPoint_FieldIndex.Connections:
+                        this.Connections = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Point != null) return true;
+                if (NumConnections != null) return true;
+                if (FluffBytes != null) return true;
+                if (Connections != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Point => {Point}");
+                fg.AppendLine($"NumConnections => {NumConnections}");
+                fg.AppendLine($"FluffBytes => {FluffBytes}");
+                fg.AppendLine("Connections =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Connections != null)
+                    {
+                        if (Connections.Overall != null)
+                        {
+                            fg.AppendLine(Connections.Overall.ToString());
+                        }
+                        if (Connections.Specific != null)
+                        {
+                            foreach (var subItem in Connections.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Point = this.Point.Combine(rhs.Point);
+                ret.NumConnections = this.NumConnections.Combine(rhs.NumConnections);
+                ret.FluffBytes = this.FluffBytes.Combine(rhs.FluffBytes);
+                ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Point;
+            public bool NumConnections;
+            public bool FluffBytes;
+            public bool Connections;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Point = defaultOn;
+                this.NumConnections = defaultOn;
+                this.FluffBytes = defaultOn;
+                this.Connections = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Point, null));
+                ret.Add((NumConnections, null));
+                ret.Add((FluffBytes, null));
+                ret.Add((Connections, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -340,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PathGridPoint_Mask<bool> GetEqualsMask(
+        public static PathGridPoint.Mask<bool> GetEqualsMask(
             this IPathGridPointGetter item,
             IPathGridPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -354,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IPathGridPointGetter item,
             string? name = null,
-            PathGridPoint_Mask<bool>? printMask = null)
+            PathGridPoint.Mask<bool>? printMask = null)
         {
             return ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -366,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPointGetter item,
             FileGeneration fg,
             string? name = null,
-            PathGridPoint_Mask<bool>? printMask = null)
+            PathGridPoint.Mask<bool>? printMask = null)
         {
             ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -377,16 +789,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IPathGridPointGetter item,
-            PathGridPoint_Mask<bool?> checkMask)
+            PathGridPoint.Mask<bool?> checkMask)
         {
             return ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static PathGridPoint_Mask<bool> GetHasBeenSetMask(this IPathGridPointGetter item)
+        public static PathGridPoint.Mask<bool> GetHasBeenSetMask(this IPathGridPointGetter item)
         {
-            var ret = new PathGridPoint_Mask<bool>(false);
+            var ret = new PathGridPoint.Mask<bool>(false);
             ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -405,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IPathGridPoint lhs,
             IPathGridPointGetter rhs,
-            PathGridPoint_TranslationMask? copyMask = null)
+            PathGridPoint.TranslationMask? copyMask = null)
         {
             ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -417,8 +829,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IPathGridPoint lhs,
             IPathGridPointGetter rhs,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? copyMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -426,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PathGridPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -444,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PathGridPoint DeepCopy(
             this IPathGridPointGetter item,
-            PathGridPoint_TranslationMask? copyMask = null)
+            PathGridPoint.TranslationMask? copyMask = null)
         {
             return ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -453,8 +865,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static PathGridPoint DeepCopy(
             this IPathGridPointGetter item,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? copyMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? copyMask = null)
         {
             return ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -478,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPathGridPoint item,
             XElement node,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -491,8 +903,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPathGridPoint item,
             XElement node,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -500,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PathGridPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -519,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPathGridPoint item,
             string path,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -531,8 +943,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPathGridPoint item,
             string path,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -546,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPoint item,
             string path,
             ErrorMaskBuilder? errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -559,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPathGridPoint item,
             Stream stream,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -571,8 +983,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IPathGridPoint item,
             Stream stream,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -586,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPoint item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -662,9 +1074,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(PathGridPoint_Mask<>);
+        public static readonly Type MaskType = typeof(PathGridPoint.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PathGridPoint_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PathGridPoint.ErrorMask);
 
         public static readonly Type ClassType = typeof(PathGridPoint);
 
@@ -927,12 +1339,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly PathGridPointCommon Instance = new PathGridPointCommon();
 
-        public PathGridPoint_Mask<bool> GetEqualsMask(
+        public PathGridPoint.Mask<bool> GetEqualsMask(
             IPathGridPointGetter item,
             IPathGridPointGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PathGridPoint_Mask<bool>(false);
+            var ret = new PathGridPoint.Mask<bool>(false);
             ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -944,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IPathGridPointGetter item,
             IPathGridPointGetter rhs,
-            PathGridPoint_Mask<bool> ret,
+            PathGridPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -960,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IPathGridPointGetter item,
             string? name = null,
-            PathGridPoint_Mask<bool>? printMask = null)
+            PathGridPoint.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -975,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPointGetter item,
             FileGeneration fg,
             string? name = null,
-            PathGridPoint_Mask<bool>? printMask = null)
+            PathGridPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -999,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IPathGridPointGetter item,
             FileGeneration fg,
-            PathGridPoint_Mask<bool>? printMask = null)
+            PathGridPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.Point ?? true)
             {
@@ -1035,14 +1447,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IPathGridPointGetter item,
-            PathGridPoint_Mask<bool?> checkMask)
+            PathGridPoint.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IPathGridPointGetter item,
-            PathGridPoint_Mask<bool> mask)
+            PathGridPoint.Mask<bool> mask)
         {
             mask.Point = true;
             mask.NumConnections = true;
@@ -1137,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public PathGridPoint DeepCopy(
             IPathGridPointGetter item,
-            PathGridPoint_TranslationMask? copyMask = null)
+            PathGridPoint.TranslationMask? copyMask = null)
         {
             PathGridPoint ret = (PathGridPoint)((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1148,8 +1560,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public PathGridPoint DeepCopy(
             IPathGridPointGetter item,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? copyMask = null)
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? copyMask = null)
         {
             PathGridPoint ret = (PathGridPoint)((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1470,8 +1882,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IPathGridPointGetter item,
             XElement node,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null,
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1481,14 +1893,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PathGridPoint.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IPathGridPointGetter item,
             string path,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null,
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1521,8 +1933,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IPathGridPointGetter item,
             Stream stream,
-            out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask? translationMask = null,
+            out PathGridPoint.ErrorMask errorMask,
+            PathGridPoint.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1571,7 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPointGetter item,
             XElement node,
             string? name = null,
-            PathGridPoint_TranslationMask? translationMask = null)
+            PathGridPoint.TranslationMask? translationMask = null)
         {
             ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1615,419 +2027,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class PathGridPoint_Mask<T> :
-        IMask<T>,
-        IEquatable<PathGridPoint_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public PathGridPoint_Mask(T initialValue)
-        {
-            this.Point = initialValue;
-            this.NumConnections = initialValue;
-            this.FluffBytes = initialValue;
-            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public PathGridPoint_Mask(
-            T Point,
-            T NumConnections,
-            T FluffBytes,
-            T Connections)
-        {
-            this.Point = Point;
-            this.NumConnections = NumConnections;
-            this.FluffBytes = FluffBytes;
-            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected PathGridPoint_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Point;
-        public T NumConnections;
-        public T FluffBytes;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Connections;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PathGridPoint_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(PathGridPoint_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Point, rhs.Point)) return false;
-            if (!object.Equals(this.NumConnections, rhs.NumConnections)) return false;
-            if (!object.Equals(this.FluffBytes, rhs.FluffBytes)) return false;
-            if (!object.Equals(this.Connections, rhs.Connections)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Point?.GetHashCode());
-            ret = ret.CombineHashCode(this.NumConnections?.GetHashCode());
-            ret = ret.CombineHashCode(this.FluffBytes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Connections?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Point)) return false;
-            if (!eval(this.NumConnections)) return false;
-            if (!eval(this.FluffBytes)) return false;
-            if (this.Connections != null)
-            {
-                if (!eval(this.Connections.Overall)) return false;
-                if (this.Connections.Specific != null)
-                {
-                    foreach (var item in this.Connections.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public PathGridPoint_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new PathGridPoint_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(PathGridPoint_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Point = eval(this.Point);
-            obj.NumConnections = eval(this.NumConnections);
-            obj.FluffBytes = eval(this.FluffBytes);
-            if (Connections != null)
-            {
-                obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Connections.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Connections.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Connections.Specific = l;
-                    foreach (var item in Connections.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(PathGridPoint_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, PathGridPoint_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(PathGridPoint_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Point ?? true)
-                {
-                    fg.AppendLine($"Point => {Point}");
-                }
-                if (printMask?.NumConnections ?? true)
-                {
-                    fg.AppendLine($"NumConnections => {NumConnections}");
-                }
-                if (printMask?.FluffBytes ?? true)
-                {
-                    fg.AppendLine($"FluffBytes => {FluffBytes}");
-                }
-                if (printMask?.Connections?.Overall ?? true)
-                {
-                    fg.AppendLine("Connections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Connections != null)
-                        {
-                            if (Connections.Overall != null)
-                            {
-                                fg.AppendLine(Connections.Overall.ToString());
-                            }
-                            if (Connections.Specific != null)
-                            {
-                                foreach (var subItem in Connections.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class PathGridPoint_ErrorMask : IErrorMask, IErrorMask<PathGridPoint_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Point;
-        public Exception? NumConnections;
-        public Exception? FluffBytes;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Connections;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    return Point;
-                case PathGridPoint_FieldIndex.NumConnections:
-                    return NumConnections;
-                case PathGridPoint_FieldIndex.FluffBytes:
-                    return FluffBytes;
-                case PathGridPoint_FieldIndex.Connections:
-                    return Connections;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    this.Point = ex;
-                    break;
-                case PathGridPoint_FieldIndex.NumConnections:
-                    this.NumConnections = ex;
-                    break;
-                case PathGridPoint_FieldIndex.FluffBytes:
-                    this.FluffBytes = ex;
-                    break;
-                case PathGridPoint_FieldIndex.Connections:
-                    this.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            PathGridPoint_FieldIndex enu = (PathGridPoint_FieldIndex)index;
-            switch (enu)
-            {
-                case PathGridPoint_FieldIndex.Point:
-                    this.Point = (Exception)obj;
-                    break;
-                case PathGridPoint_FieldIndex.NumConnections:
-                    this.NumConnections = (Exception)obj;
-                    break;
-                case PathGridPoint_FieldIndex.FluffBytes:
-                    this.FluffBytes = (Exception)obj;
-                    break;
-                case PathGridPoint_FieldIndex.Connections:
-                    this.Connections = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Point != null) return true;
-            if (NumConnections != null) return true;
-            if (FluffBytes != null) return true;
-            if (Connections != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("PathGridPoint_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Point => {Point}");
-            fg.AppendLine($"NumConnections => {NumConnections}");
-            fg.AppendLine($"FluffBytes => {FluffBytes}");
-            fg.AppendLine("Connections =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Connections != null)
-                {
-                    if (Connections.Overall != null)
-                    {
-                        fg.AppendLine(Connections.Overall.ToString());
-                    }
-                    if (Connections.Specific != null)
-                    {
-                        foreach (var subItem in Connections.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public PathGridPoint_ErrorMask Combine(PathGridPoint_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new PathGridPoint_ErrorMask();
-            ret.Point = this.Point.Combine(rhs.Point);
-            ret.NumConnections = this.NumConnections.Combine(rhs.NumConnections);
-            ret.FluffBytes = this.FluffBytes.Combine(rhs.FluffBytes);
-            ret.Connections = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
-            return ret;
-        }
-        public static PathGridPoint_ErrorMask? Combine(PathGridPoint_ErrorMask? lhs, PathGridPoint_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static PathGridPoint_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new PathGridPoint_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class PathGridPoint_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Point;
-        public bool NumConnections;
-        public bool FluffBytes;
-        public bool Connections;
-        #endregion
-
-        #region Ctors
-        public PathGridPoint_TranslationMask(bool defaultOn)
-        {
-            this.Point = defaultOn;
-            this.NumConnections = defaultOn;
-            this.FluffBytes = defaultOn;
-            this.Connections = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Point, null));
-            ret.Add((NumConnections, null));
-            ret.Add((FluffBytes, null));
-            ret.Add((Connections, null));
-        }
-    }
 }
 #endregion
 

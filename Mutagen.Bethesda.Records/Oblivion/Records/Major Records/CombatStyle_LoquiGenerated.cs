@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new CombatStyle CreateFromXml(
             XElement node,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -627,15 +627,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CombatStyle CreateFromXml(
             XElement node,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyle CreateFromXml(
             string path,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -665,8 +665,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyle CreateFromXml(
             string path,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyle CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyle CreateFromXml(
             Stream stream,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -699,8 +699,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyle CreateFromXml(
             Stream stream,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyle CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -723,6 +723,1270 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.DodgePercentChance = initialValue;
+                this.LeftRightPercentChance = initialValue;
+                this.DodgeLeftRightTimerMin = initialValue;
+                this.DodgeLeftRightTimerMax = initialValue;
+                this.DodgeForwardTimerMin = initialValue;
+                this.DodgeForwardTimerMax = initialValue;
+                this.DodgeBackTimerMin = initialValue;
+                this.DodgeBackTimerMax = initialValue;
+                this.IdleTimerMin = initialValue;
+                this.IdleTimerMax = initialValue;
+                this.BlockPercentChance = initialValue;
+                this.AttackPercentChance = initialValue;
+                this.RecoilStaggerBonusToAttack = initialValue;
+                this.UnconsciousBonusToAttack = initialValue;
+                this.HandToHandBonusToAttack = initialValue;
+                this.PowerAttackPercentChance = initialValue;
+                this.RecoilStaggerBonusToPowerAttack = initialValue;
+                this.UnconsciousBonusToPowerAttack = initialValue;
+                this.PowerAttackNormal = initialValue;
+                this.PowerAttackForward = initialValue;
+                this.PowerAttackBack = initialValue;
+                this.PowerAttackLeft = initialValue;
+                this.PowerAttackRight = initialValue;
+                this.HoldTimerMin = initialValue;
+                this.HoldTimerMax = initialValue;
+                this.Flags = initialValue;
+                this.AcrobaticDodgePercentChance = initialValue;
+                this.RangeMultOptimal = initialValue;
+                this.RangeMultMax = initialValue;
+                this.SwitchDistanceMelee = initialValue;
+                this.SwitchDistanceRanged = initialValue;
+                this.BuffStandoffDistance = initialValue;
+                this.RangedStandoffDistance = initialValue;
+                this.GroupStandoffDistance = initialValue;
+                this.RushingAttackPercentChance = initialValue;
+                this.RushingAttackDistanceMult = initialValue;
+                this.Advanced = new MaskItem<T, CombatStyleAdvanced.Mask<T>?>(initialValue, new CombatStyleAdvanced.Mask<T>(initialValue));
+                this.CSTDDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T DodgePercentChance,
+                T LeftRightPercentChance,
+                T DodgeLeftRightTimerMin,
+                T DodgeLeftRightTimerMax,
+                T DodgeForwardTimerMin,
+                T DodgeForwardTimerMax,
+                T DodgeBackTimerMin,
+                T DodgeBackTimerMax,
+                T IdleTimerMin,
+                T IdleTimerMax,
+                T BlockPercentChance,
+                T AttackPercentChance,
+                T RecoilStaggerBonusToAttack,
+                T UnconsciousBonusToAttack,
+                T HandToHandBonusToAttack,
+                T PowerAttackPercentChance,
+                T RecoilStaggerBonusToPowerAttack,
+                T UnconsciousBonusToPowerAttack,
+                T PowerAttackNormal,
+                T PowerAttackForward,
+                T PowerAttackBack,
+                T PowerAttackLeft,
+                T PowerAttackRight,
+                T HoldTimerMin,
+                T HoldTimerMax,
+                T Flags,
+                T AcrobaticDodgePercentChance,
+                T RangeMultOptimal,
+                T RangeMultMax,
+                T SwitchDistanceMelee,
+                T SwitchDistanceRanged,
+                T BuffStandoffDistance,
+                T RangedStandoffDistance,
+                T GroupStandoffDistance,
+                T RushingAttackPercentChance,
+                T RushingAttackDistanceMult,
+                T Advanced,
+                T CSTDDataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.DodgePercentChance = DodgePercentChance;
+                this.LeftRightPercentChance = LeftRightPercentChance;
+                this.DodgeLeftRightTimerMin = DodgeLeftRightTimerMin;
+                this.DodgeLeftRightTimerMax = DodgeLeftRightTimerMax;
+                this.DodgeForwardTimerMin = DodgeForwardTimerMin;
+                this.DodgeForwardTimerMax = DodgeForwardTimerMax;
+                this.DodgeBackTimerMin = DodgeBackTimerMin;
+                this.DodgeBackTimerMax = DodgeBackTimerMax;
+                this.IdleTimerMin = IdleTimerMin;
+                this.IdleTimerMax = IdleTimerMax;
+                this.BlockPercentChance = BlockPercentChance;
+                this.AttackPercentChance = AttackPercentChance;
+                this.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttack;
+                this.UnconsciousBonusToAttack = UnconsciousBonusToAttack;
+                this.HandToHandBonusToAttack = HandToHandBonusToAttack;
+                this.PowerAttackPercentChance = PowerAttackPercentChance;
+                this.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttack;
+                this.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttack;
+                this.PowerAttackNormal = PowerAttackNormal;
+                this.PowerAttackForward = PowerAttackForward;
+                this.PowerAttackBack = PowerAttackBack;
+                this.PowerAttackLeft = PowerAttackLeft;
+                this.PowerAttackRight = PowerAttackRight;
+                this.HoldTimerMin = HoldTimerMin;
+                this.HoldTimerMax = HoldTimerMax;
+                this.Flags = Flags;
+                this.AcrobaticDodgePercentChance = AcrobaticDodgePercentChance;
+                this.RangeMultOptimal = RangeMultOptimal;
+                this.RangeMultMax = RangeMultMax;
+                this.SwitchDistanceMelee = SwitchDistanceMelee;
+                this.SwitchDistanceRanged = SwitchDistanceRanged;
+                this.BuffStandoffDistance = BuffStandoffDistance;
+                this.RangedStandoffDistance = RangedStandoffDistance;
+                this.GroupStandoffDistance = GroupStandoffDistance;
+                this.RushingAttackPercentChance = RushingAttackPercentChance;
+                this.RushingAttackDistanceMult = RushingAttackDistanceMult;
+                this.Advanced = new MaskItem<T, CombatStyleAdvanced.Mask<T>?>(Advanced, new CombatStyleAdvanced.Mask<T>(Advanced));
+                this.CSTDDataTypeState = CSTDDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T DodgePercentChance;
+            public T LeftRightPercentChance;
+            public T DodgeLeftRightTimerMin;
+            public T DodgeLeftRightTimerMax;
+            public T DodgeForwardTimerMin;
+            public T DodgeForwardTimerMax;
+            public T DodgeBackTimerMin;
+            public T DodgeBackTimerMax;
+            public T IdleTimerMin;
+            public T IdleTimerMax;
+            public T BlockPercentChance;
+            public T AttackPercentChance;
+            public T RecoilStaggerBonusToAttack;
+            public T UnconsciousBonusToAttack;
+            public T HandToHandBonusToAttack;
+            public T PowerAttackPercentChance;
+            public T RecoilStaggerBonusToPowerAttack;
+            public T UnconsciousBonusToPowerAttack;
+            public T PowerAttackNormal;
+            public T PowerAttackForward;
+            public T PowerAttackBack;
+            public T PowerAttackLeft;
+            public T PowerAttackRight;
+            public T HoldTimerMin;
+            public T HoldTimerMax;
+            public T Flags;
+            public T AcrobaticDodgePercentChance;
+            public T RangeMultOptimal;
+            public T RangeMultMax;
+            public T SwitchDistanceMelee;
+            public T SwitchDistanceRanged;
+            public T BuffStandoffDistance;
+            public T RangedStandoffDistance;
+            public T GroupStandoffDistance;
+            public T RushingAttackPercentChance;
+            public T RushingAttackDistanceMult;
+            public MaskItem<T, CombatStyleAdvanced.Mask<T>?>? Advanced { get; set; }
+            public T CSTDDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.DodgePercentChance, rhs.DodgePercentChance)) return false;
+                if (!object.Equals(this.LeftRightPercentChance, rhs.LeftRightPercentChance)) return false;
+                if (!object.Equals(this.DodgeLeftRightTimerMin, rhs.DodgeLeftRightTimerMin)) return false;
+                if (!object.Equals(this.DodgeLeftRightTimerMax, rhs.DodgeLeftRightTimerMax)) return false;
+                if (!object.Equals(this.DodgeForwardTimerMin, rhs.DodgeForwardTimerMin)) return false;
+                if (!object.Equals(this.DodgeForwardTimerMax, rhs.DodgeForwardTimerMax)) return false;
+                if (!object.Equals(this.DodgeBackTimerMin, rhs.DodgeBackTimerMin)) return false;
+                if (!object.Equals(this.DodgeBackTimerMax, rhs.DodgeBackTimerMax)) return false;
+                if (!object.Equals(this.IdleTimerMin, rhs.IdleTimerMin)) return false;
+                if (!object.Equals(this.IdleTimerMax, rhs.IdleTimerMax)) return false;
+                if (!object.Equals(this.BlockPercentChance, rhs.BlockPercentChance)) return false;
+                if (!object.Equals(this.AttackPercentChance, rhs.AttackPercentChance)) return false;
+                if (!object.Equals(this.RecoilStaggerBonusToAttack, rhs.RecoilStaggerBonusToAttack)) return false;
+                if (!object.Equals(this.UnconsciousBonusToAttack, rhs.UnconsciousBonusToAttack)) return false;
+                if (!object.Equals(this.HandToHandBonusToAttack, rhs.HandToHandBonusToAttack)) return false;
+                if (!object.Equals(this.PowerAttackPercentChance, rhs.PowerAttackPercentChance)) return false;
+                if (!object.Equals(this.RecoilStaggerBonusToPowerAttack, rhs.RecoilStaggerBonusToPowerAttack)) return false;
+                if (!object.Equals(this.UnconsciousBonusToPowerAttack, rhs.UnconsciousBonusToPowerAttack)) return false;
+                if (!object.Equals(this.PowerAttackNormal, rhs.PowerAttackNormal)) return false;
+                if (!object.Equals(this.PowerAttackForward, rhs.PowerAttackForward)) return false;
+                if (!object.Equals(this.PowerAttackBack, rhs.PowerAttackBack)) return false;
+                if (!object.Equals(this.PowerAttackLeft, rhs.PowerAttackLeft)) return false;
+                if (!object.Equals(this.PowerAttackRight, rhs.PowerAttackRight)) return false;
+                if (!object.Equals(this.HoldTimerMin, rhs.HoldTimerMin)) return false;
+                if (!object.Equals(this.HoldTimerMax, rhs.HoldTimerMax)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.AcrobaticDodgePercentChance, rhs.AcrobaticDodgePercentChance)) return false;
+                if (!object.Equals(this.RangeMultOptimal, rhs.RangeMultOptimal)) return false;
+                if (!object.Equals(this.RangeMultMax, rhs.RangeMultMax)) return false;
+                if (!object.Equals(this.SwitchDistanceMelee, rhs.SwitchDistanceMelee)) return false;
+                if (!object.Equals(this.SwitchDistanceRanged, rhs.SwitchDistanceRanged)) return false;
+                if (!object.Equals(this.BuffStandoffDistance, rhs.BuffStandoffDistance)) return false;
+                if (!object.Equals(this.RangedStandoffDistance, rhs.RangedStandoffDistance)) return false;
+                if (!object.Equals(this.GroupStandoffDistance, rhs.GroupStandoffDistance)) return false;
+                if (!object.Equals(this.RushingAttackPercentChance, rhs.RushingAttackPercentChance)) return false;
+                if (!object.Equals(this.RushingAttackDistanceMult, rhs.RushingAttackDistanceMult)) return false;
+                if (!object.Equals(this.Advanced, rhs.Advanced)) return false;
+                if (!object.Equals(this.CSTDDataTypeState, rhs.CSTDDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.DodgePercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.LeftRightPercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeLeftRightTimerMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeLeftRightTimerMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeForwardTimerMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeForwardTimerMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeBackTimerMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.DodgeBackTimerMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.IdleTimerMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.IdleTimerMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.BlockPercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.AttackPercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.RecoilStaggerBonusToAttack?.GetHashCode());
+                ret = ret.CombineHashCode(this.UnconsciousBonusToAttack?.GetHashCode());
+                ret = ret.CombineHashCode(this.HandToHandBonusToAttack?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackPercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.RecoilStaggerBonusToPowerAttack?.GetHashCode());
+                ret = ret.CombineHashCode(this.UnconsciousBonusToPowerAttack?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackNormal?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackForward?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackBack?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackLeft?.GetHashCode());
+                ret = ret.CombineHashCode(this.PowerAttackRight?.GetHashCode());
+                ret = ret.CombineHashCode(this.HoldTimerMin?.GetHashCode());
+                ret = ret.CombineHashCode(this.HoldTimerMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.AcrobaticDodgePercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.RangeMultOptimal?.GetHashCode());
+                ret = ret.CombineHashCode(this.RangeMultMax?.GetHashCode());
+                ret = ret.CombineHashCode(this.SwitchDistanceMelee?.GetHashCode());
+                ret = ret.CombineHashCode(this.SwitchDistanceRanged?.GetHashCode());
+                ret = ret.CombineHashCode(this.BuffStandoffDistance?.GetHashCode());
+                ret = ret.CombineHashCode(this.RangedStandoffDistance?.GetHashCode());
+                ret = ret.CombineHashCode(this.GroupStandoffDistance?.GetHashCode());
+                ret = ret.CombineHashCode(this.RushingAttackPercentChance?.GetHashCode());
+                ret = ret.CombineHashCode(this.RushingAttackDistanceMult?.GetHashCode());
+                ret = ret.CombineHashCode(this.Advanced?.GetHashCode());
+                ret = ret.CombineHashCode(this.CSTDDataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.DodgePercentChance)) return false;
+                if (!eval(this.LeftRightPercentChance)) return false;
+                if (!eval(this.DodgeLeftRightTimerMin)) return false;
+                if (!eval(this.DodgeLeftRightTimerMax)) return false;
+                if (!eval(this.DodgeForwardTimerMin)) return false;
+                if (!eval(this.DodgeForwardTimerMax)) return false;
+                if (!eval(this.DodgeBackTimerMin)) return false;
+                if (!eval(this.DodgeBackTimerMax)) return false;
+                if (!eval(this.IdleTimerMin)) return false;
+                if (!eval(this.IdleTimerMax)) return false;
+                if (!eval(this.BlockPercentChance)) return false;
+                if (!eval(this.AttackPercentChance)) return false;
+                if (!eval(this.RecoilStaggerBonusToAttack)) return false;
+                if (!eval(this.UnconsciousBonusToAttack)) return false;
+                if (!eval(this.HandToHandBonusToAttack)) return false;
+                if (!eval(this.PowerAttackPercentChance)) return false;
+                if (!eval(this.RecoilStaggerBonusToPowerAttack)) return false;
+                if (!eval(this.UnconsciousBonusToPowerAttack)) return false;
+                if (!eval(this.PowerAttackNormal)) return false;
+                if (!eval(this.PowerAttackForward)) return false;
+                if (!eval(this.PowerAttackBack)) return false;
+                if (!eval(this.PowerAttackLeft)) return false;
+                if (!eval(this.PowerAttackRight)) return false;
+                if (!eval(this.HoldTimerMin)) return false;
+                if (!eval(this.HoldTimerMax)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.AcrobaticDodgePercentChance)) return false;
+                if (!eval(this.RangeMultOptimal)) return false;
+                if (!eval(this.RangeMultMax)) return false;
+                if (!eval(this.SwitchDistanceMelee)) return false;
+                if (!eval(this.SwitchDistanceRanged)) return false;
+                if (!eval(this.BuffStandoffDistance)) return false;
+                if (!eval(this.RangedStandoffDistance)) return false;
+                if (!eval(this.GroupStandoffDistance)) return false;
+                if (!eval(this.RushingAttackPercentChance)) return false;
+                if (!eval(this.RushingAttackDistanceMult)) return false;
+                if (Advanced != null)
+                {
+                    if (!eval(this.Advanced.Overall)) return false;
+                    if (this.Advanced.Specific != null && !this.Advanced.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.CSTDDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new CombatStyle.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.DodgePercentChance = eval(this.DodgePercentChance);
+                obj.LeftRightPercentChance = eval(this.LeftRightPercentChance);
+                obj.DodgeLeftRightTimerMin = eval(this.DodgeLeftRightTimerMin);
+                obj.DodgeLeftRightTimerMax = eval(this.DodgeLeftRightTimerMax);
+                obj.DodgeForwardTimerMin = eval(this.DodgeForwardTimerMin);
+                obj.DodgeForwardTimerMax = eval(this.DodgeForwardTimerMax);
+                obj.DodgeBackTimerMin = eval(this.DodgeBackTimerMin);
+                obj.DodgeBackTimerMax = eval(this.DodgeBackTimerMax);
+                obj.IdleTimerMin = eval(this.IdleTimerMin);
+                obj.IdleTimerMax = eval(this.IdleTimerMax);
+                obj.BlockPercentChance = eval(this.BlockPercentChance);
+                obj.AttackPercentChance = eval(this.AttackPercentChance);
+                obj.RecoilStaggerBonusToAttack = eval(this.RecoilStaggerBonusToAttack);
+                obj.UnconsciousBonusToAttack = eval(this.UnconsciousBonusToAttack);
+                obj.HandToHandBonusToAttack = eval(this.HandToHandBonusToAttack);
+                obj.PowerAttackPercentChance = eval(this.PowerAttackPercentChance);
+                obj.RecoilStaggerBonusToPowerAttack = eval(this.RecoilStaggerBonusToPowerAttack);
+                obj.UnconsciousBonusToPowerAttack = eval(this.UnconsciousBonusToPowerAttack);
+                obj.PowerAttackNormal = eval(this.PowerAttackNormal);
+                obj.PowerAttackForward = eval(this.PowerAttackForward);
+                obj.PowerAttackBack = eval(this.PowerAttackBack);
+                obj.PowerAttackLeft = eval(this.PowerAttackLeft);
+                obj.PowerAttackRight = eval(this.PowerAttackRight);
+                obj.HoldTimerMin = eval(this.HoldTimerMin);
+                obj.HoldTimerMax = eval(this.HoldTimerMax);
+                obj.Flags = eval(this.Flags);
+                obj.AcrobaticDodgePercentChance = eval(this.AcrobaticDodgePercentChance);
+                obj.RangeMultOptimal = eval(this.RangeMultOptimal);
+                obj.RangeMultMax = eval(this.RangeMultMax);
+                obj.SwitchDistanceMelee = eval(this.SwitchDistanceMelee);
+                obj.SwitchDistanceRanged = eval(this.SwitchDistanceRanged);
+                obj.BuffStandoffDistance = eval(this.BuffStandoffDistance);
+                obj.RangedStandoffDistance = eval(this.RangedStandoffDistance);
+                obj.GroupStandoffDistance = eval(this.GroupStandoffDistance);
+                obj.RushingAttackPercentChance = eval(this.RushingAttackPercentChance);
+                obj.RushingAttackDistanceMult = eval(this.RushingAttackDistanceMult);
+                obj.Advanced = this.Advanced == null ? null : new MaskItem<R, CombatStyleAdvanced.Mask<R>?>(eval(this.Advanced.Overall), this.Advanced.Specific?.Translate(eval));
+                obj.CSTDDataTypeState = eval(this.CSTDDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(CombatStyle.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, CombatStyle.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(CombatStyle.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.DodgePercentChance ?? true)
+                    {
+                        fg.AppendLine($"DodgePercentChance => {DodgePercentChance}");
+                    }
+                    if (printMask?.LeftRightPercentChance ?? true)
+                    {
+                        fg.AppendLine($"LeftRightPercentChance => {LeftRightPercentChance}");
+                    }
+                    if (printMask?.DodgeLeftRightTimerMin ?? true)
+                    {
+                        fg.AppendLine($"DodgeLeftRightTimerMin => {DodgeLeftRightTimerMin}");
+                    }
+                    if (printMask?.DodgeLeftRightTimerMax ?? true)
+                    {
+                        fg.AppendLine($"DodgeLeftRightTimerMax => {DodgeLeftRightTimerMax}");
+                    }
+                    if (printMask?.DodgeForwardTimerMin ?? true)
+                    {
+                        fg.AppendLine($"DodgeForwardTimerMin => {DodgeForwardTimerMin}");
+                    }
+                    if (printMask?.DodgeForwardTimerMax ?? true)
+                    {
+                        fg.AppendLine($"DodgeForwardTimerMax => {DodgeForwardTimerMax}");
+                    }
+                    if (printMask?.DodgeBackTimerMin ?? true)
+                    {
+                        fg.AppendLine($"DodgeBackTimerMin => {DodgeBackTimerMin}");
+                    }
+                    if (printMask?.DodgeBackTimerMax ?? true)
+                    {
+                        fg.AppendLine($"DodgeBackTimerMax => {DodgeBackTimerMax}");
+                    }
+                    if (printMask?.IdleTimerMin ?? true)
+                    {
+                        fg.AppendLine($"IdleTimerMin => {IdleTimerMin}");
+                    }
+                    if (printMask?.IdleTimerMax ?? true)
+                    {
+                        fg.AppendLine($"IdleTimerMax => {IdleTimerMax}");
+                    }
+                    if (printMask?.BlockPercentChance ?? true)
+                    {
+                        fg.AppendLine($"BlockPercentChance => {BlockPercentChance}");
+                    }
+                    if (printMask?.AttackPercentChance ?? true)
+                    {
+                        fg.AppendLine($"AttackPercentChance => {AttackPercentChance}");
+                    }
+                    if (printMask?.RecoilStaggerBonusToAttack ?? true)
+                    {
+                        fg.AppendLine($"RecoilStaggerBonusToAttack => {RecoilStaggerBonusToAttack}");
+                    }
+                    if (printMask?.UnconsciousBonusToAttack ?? true)
+                    {
+                        fg.AppendLine($"UnconsciousBonusToAttack => {UnconsciousBonusToAttack}");
+                    }
+                    if (printMask?.HandToHandBonusToAttack ?? true)
+                    {
+                        fg.AppendLine($"HandToHandBonusToAttack => {HandToHandBonusToAttack}");
+                    }
+                    if (printMask?.PowerAttackPercentChance ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackPercentChance => {PowerAttackPercentChance}");
+                    }
+                    if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
+                    {
+                        fg.AppendLine($"RecoilStaggerBonusToPowerAttack => {RecoilStaggerBonusToPowerAttack}");
+                    }
+                    if (printMask?.UnconsciousBonusToPowerAttack ?? true)
+                    {
+                        fg.AppendLine($"UnconsciousBonusToPowerAttack => {UnconsciousBonusToPowerAttack}");
+                    }
+                    if (printMask?.PowerAttackNormal ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackNormal => {PowerAttackNormal}");
+                    }
+                    if (printMask?.PowerAttackForward ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackForward => {PowerAttackForward}");
+                    }
+                    if (printMask?.PowerAttackBack ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackBack => {PowerAttackBack}");
+                    }
+                    if (printMask?.PowerAttackLeft ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackLeft => {PowerAttackLeft}");
+                    }
+                    if (printMask?.PowerAttackRight ?? true)
+                    {
+                        fg.AppendLine($"PowerAttackRight => {PowerAttackRight}");
+                    }
+                    if (printMask?.HoldTimerMin ?? true)
+                    {
+                        fg.AppendLine($"HoldTimerMin => {HoldTimerMin}");
+                    }
+                    if (printMask?.HoldTimerMax ?? true)
+                    {
+                        fg.AppendLine($"HoldTimerMax => {HoldTimerMax}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.AcrobaticDodgePercentChance ?? true)
+                    {
+                        fg.AppendLine($"AcrobaticDodgePercentChance => {AcrobaticDodgePercentChance}");
+                    }
+                    if (printMask?.RangeMultOptimal ?? true)
+                    {
+                        fg.AppendLine($"RangeMultOptimal => {RangeMultOptimal}");
+                    }
+                    if (printMask?.RangeMultMax ?? true)
+                    {
+                        fg.AppendLine($"RangeMultMax => {RangeMultMax}");
+                    }
+                    if (printMask?.SwitchDistanceMelee ?? true)
+                    {
+                        fg.AppendLine($"SwitchDistanceMelee => {SwitchDistanceMelee}");
+                    }
+                    if (printMask?.SwitchDistanceRanged ?? true)
+                    {
+                        fg.AppendLine($"SwitchDistanceRanged => {SwitchDistanceRanged}");
+                    }
+                    if (printMask?.BuffStandoffDistance ?? true)
+                    {
+                        fg.AppendLine($"BuffStandoffDistance => {BuffStandoffDistance}");
+                    }
+                    if (printMask?.RangedStandoffDistance ?? true)
+                    {
+                        fg.AppendLine($"RangedStandoffDistance => {RangedStandoffDistance}");
+                    }
+                    if (printMask?.GroupStandoffDistance ?? true)
+                    {
+                        fg.AppendLine($"GroupStandoffDistance => {GroupStandoffDistance}");
+                    }
+                    if (printMask?.RushingAttackPercentChance ?? true)
+                    {
+                        fg.AppendLine($"RushingAttackPercentChance => {RushingAttackPercentChance}");
+                    }
+                    if (printMask?.RushingAttackDistanceMult ?? true)
+                    {
+                        fg.AppendLine($"RushingAttackDistanceMult => {RushingAttackDistanceMult}");
+                    }
+                    if (printMask?.Advanced?.Overall ?? true)
+                    {
+                        Advanced?.ToString(fg);
+                    }
+                    if (printMask?.CSTDDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"CSTDDataTypeState => {CSTDDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? DodgePercentChance;
+            public Exception? LeftRightPercentChance;
+            public Exception? DodgeLeftRightTimerMin;
+            public Exception? DodgeLeftRightTimerMax;
+            public Exception? DodgeForwardTimerMin;
+            public Exception? DodgeForwardTimerMax;
+            public Exception? DodgeBackTimerMin;
+            public Exception? DodgeBackTimerMax;
+            public Exception? IdleTimerMin;
+            public Exception? IdleTimerMax;
+            public Exception? BlockPercentChance;
+            public Exception? AttackPercentChance;
+            public Exception? RecoilStaggerBonusToAttack;
+            public Exception? UnconsciousBonusToAttack;
+            public Exception? HandToHandBonusToAttack;
+            public Exception? PowerAttackPercentChance;
+            public Exception? RecoilStaggerBonusToPowerAttack;
+            public Exception? UnconsciousBonusToPowerAttack;
+            public Exception? PowerAttackNormal;
+            public Exception? PowerAttackForward;
+            public Exception? PowerAttackBack;
+            public Exception? PowerAttackLeft;
+            public Exception? PowerAttackRight;
+            public Exception? HoldTimerMin;
+            public Exception? HoldTimerMax;
+            public Exception? Flags;
+            public Exception? AcrobaticDodgePercentChance;
+            public Exception? RangeMultOptimal;
+            public Exception? RangeMultMax;
+            public Exception? SwitchDistanceMelee;
+            public Exception? SwitchDistanceRanged;
+            public Exception? BuffStandoffDistance;
+            public Exception? RangedStandoffDistance;
+            public Exception? GroupStandoffDistance;
+            public Exception? RushingAttackPercentChance;
+            public Exception? RushingAttackDistanceMult;
+            public MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>? Advanced;
+            public Exception? CSTDDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
+                switch (enu)
+                {
+                    case CombatStyle_FieldIndex.DodgePercentChance:
+                        return DodgePercentChance;
+                    case CombatStyle_FieldIndex.LeftRightPercentChance:
+                        return LeftRightPercentChance;
+                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
+                        return DodgeLeftRightTimerMin;
+                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
+                        return DodgeLeftRightTimerMax;
+                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
+                        return DodgeForwardTimerMin;
+                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
+                        return DodgeForwardTimerMax;
+                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
+                        return DodgeBackTimerMin;
+                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
+                        return DodgeBackTimerMax;
+                    case CombatStyle_FieldIndex.IdleTimerMin:
+                        return IdleTimerMin;
+                    case CombatStyle_FieldIndex.IdleTimerMax:
+                        return IdleTimerMax;
+                    case CombatStyle_FieldIndex.BlockPercentChance:
+                        return BlockPercentChance;
+                    case CombatStyle_FieldIndex.AttackPercentChance:
+                        return AttackPercentChance;
+                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
+                        return RecoilStaggerBonusToAttack;
+                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
+                        return UnconsciousBonusToAttack;
+                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
+                        return HandToHandBonusToAttack;
+                    case CombatStyle_FieldIndex.PowerAttackPercentChance:
+                        return PowerAttackPercentChance;
+                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
+                        return RecoilStaggerBonusToPowerAttack;
+                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
+                        return UnconsciousBonusToPowerAttack;
+                    case CombatStyle_FieldIndex.PowerAttackNormal:
+                        return PowerAttackNormal;
+                    case CombatStyle_FieldIndex.PowerAttackForward:
+                        return PowerAttackForward;
+                    case CombatStyle_FieldIndex.PowerAttackBack:
+                        return PowerAttackBack;
+                    case CombatStyle_FieldIndex.PowerAttackLeft:
+                        return PowerAttackLeft;
+                    case CombatStyle_FieldIndex.PowerAttackRight:
+                        return PowerAttackRight;
+                    case CombatStyle_FieldIndex.HoldTimerMin:
+                        return HoldTimerMin;
+                    case CombatStyle_FieldIndex.HoldTimerMax:
+                        return HoldTimerMax;
+                    case CombatStyle_FieldIndex.Flags:
+                        return Flags;
+                    case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
+                        return AcrobaticDodgePercentChance;
+                    case CombatStyle_FieldIndex.RangeMultOptimal:
+                        return RangeMultOptimal;
+                    case CombatStyle_FieldIndex.RangeMultMax:
+                        return RangeMultMax;
+                    case CombatStyle_FieldIndex.SwitchDistanceMelee:
+                        return SwitchDistanceMelee;
+                    case CombatStyle_FieldIndex.SwitchDistanceRanged:
+                        return SwitchDistanceRanged;
+                    case CombatStyle_FieldIndex.BuffStandoffDistance:
+                        return BuffStandoffDistance;
+                    case CombatStyle_FieldIndex.RangedStandoffDistance:
+                        return RangedStandoffDistance;
+                    case CombatStyle_FieldIndex.GroupStandoffDistance:
+                        return GroupStandoffDistance;
+                    case CombatStyle_FieldIndex.RushingAttackPercentChance:
+                        return RushingAttackPercentChance;
+                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                        return RushingAttackDistanceMult;
+                    case CombatStyle_FieldIndex.Advanced:
+                        return Advanced;
+                    case CombatStyle_FieldIndex.CSTDDataTypeState:
+                        return CSTDDataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
+                switch (enu)
+                {
+                    case CombatStyle_FieldIndex.DodgePercentChance:
+                        this.DodgePercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.LeftRightPercentChance:
+                        this.LeftRightPercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
+                        this.DodgeLeftRightTimerMin = ex;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
+                        this.DodgeLeftRightTimerMax = ex;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
+                        this.DodgeForwardTimerMin = ex;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
+                        this.DodgeForwardTimerMax = ex;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
+                        this.DodgeBackTimerMin = ex;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
+                        this.DodgeBackTimerMax = ex;
+                        break;
+                    case CombatStyle_FieldIndex.IdleTimerMin:
+                        this.IdleTimerMin = ex;
+                        break;
+                    case CombatStyle_FieldIndex.IdleTimerMax:
+                        this.IdleTimerMax = ex;
+                        break;
+                    case CombatStyle_FieldIndex.BlockPercentChance:
+                        this.BlockPercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.AttackPercentChance:
+                        this.AttackPercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
+                        this.RecoilStaggerBonusToAttack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
+                        this.UnconsciousBonusToAttack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
+                        this.HandToHandBonusToAttack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackPercentChance:
+                        this.PowerAttackPercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
+                        this.RecoilStaggerBonusToPowerAttack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
+                        this.UnconsciousBonusToPowerAttack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackNormal:
+                        this.PowerAttackNormal = ex;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackForward:
+                        this.PowerAttackForward = ex;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackBack:
+                        this.PowerAttackBack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackLeft:
+                        this.PowerAttackLeft = ex;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackRight:
+                        this.PowerAttackRight = ex;
+                        break;
+                    case CombatStyle_FieldIndex.HoldTimerMin:
+                        this.HoldTimerMin = ex;
+                        break;
+                    case CombatStyle_FieldIndex.HoldTimerMax:
+                        this.HoldTimerMax = ex;
+                        break;
+                    case CombatStyle_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
+                        this.AcrobaticDodgePercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RangeMultOptimal:
+                        this.RangeMultOptimal = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RangeMultMax:
+                        this.RangeMultMax = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SwitchDistanceMelee:
+                        this.SwitchDistanceMelee = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SwitchDistanceRanged:
+                        this.SwitchDistanceRanged = ex;
+                        break;
+                    case CombatStyle_FieldIndex.BuffStandoffDistance:
+                        this.BuffStandoffDistance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RangedStandoffDistance:
+                        this.RangedStandoffDistance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.GroupStandoffDistance:
+                        this.GroupStandoffDistance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RushingAttackPercentChance:
+                        this.RushingAttackPercentChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                        this.RushingAttackDistanceMult = ex;
+                        break;
+                    case CombatStyle_FieldIndex.Advanced:
+                        this.Advanced = new MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.CSTDDataTypeState:
+                        this.CSTDDataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
+                switch (enu)
+                {
+                    case CombatStyle_FieldIndex.DodgePercentChance:
+                        this.DodgePercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.LeftRightPercentChance:
+                        this.LeftRightPercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
+                        this.DodgeLeftRightTimerMin = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
+                        this.DodgeLeftRightTimerMax = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
+                        this.DodgeForwardTimerMin = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
+                        this.DodgeForwardTimerMax = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
+                        this.DodgeBackTimerMin = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
+                        this.DodgeBackTimerMax = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.IdleTimerMin:
+                        this.IdleTimerMin = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.IdleTimerMax:
+                        this.IdleTimerMax = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.BlockPercentChance:
+                        this.BlockPercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.AttackPercentChance:
+                        this.AttackPercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
+                        this.RecoilStaggerBonusToAttack = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
+                        this.UnconsciousBonusToAttack = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
+                        this.HandToHandBonusToAttack = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackPercentChance:
+                        this.PowerAttackPercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
+                        this.RecoilStaggerBonusToPowerAttack = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
+                        this.UnconsciousBonusToPowerAttack = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackNormal:
+                        this.PowerAttackNormal = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackForward:
+                        this.PowerAttackForward = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackBack:
+                        this.PowerAttackBack = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackLeft:
+                        this.PowerAttackLeft = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.PowerAttackRight:
+                        this.PowerAttackRight = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.HoldTimerMin:
+                        this.HoldTimerMin = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.HoldTimerMax:
+                        this.HoldTimerMax = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
+                        this.AcrobaticDodgePercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RangeMultOptimal:
+                        this.RangeMultOptimal = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RangeMultMax:
+                        this.RangeMultMax = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SwitchDistanceMelee:
+                        this.SwitchDistanceMelee = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SwitchDistanceRanged:
+                        this.SwitchDistanceRanged = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.BuffStandoffDistance:
+                        this.BuffStandoffDistance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RangedStandoffDistance:
+                        this.RangedStandoffDistance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.GroupStandoffDistance:
+                        this.GroupStandoffDistance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RushingAttackPercentChance:
+                        this.RushingAttackPercentChance = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
+                        this.RushingAttackDistanceMult = (Exception)obj;
+                        break;
+                    case CombatStyle_FieldIndex.Advanced:
+                        this.Advanced = (MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.CSTDDataTypeState:
+                        this.CSTDDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (DodgePercentChance != null) return true;
+                if (LeftRightPercentChance != null) return true;
+                if (DodgeLeftRightTimerMin != null) return true;
+                if (DodgeLeftRightTimerMax != null) return true;
+                if (DodgeForwardTimerMin != null) return true;
+                if (DodgeForwardTimerMax != null) return true;
+                if (DodgeBackTimerMin != null) return true;
+                if (DodgeBackTimerMax != null) return true;
+                if (IdleTimerMin != null) return true;
+                if (IdleTimerMax != null) return true;
+                if (BlockPercentChance != null) return true;
+                if (AttackPercentChance != null) return true;
+                if (RecoilStaggerBonusToAttack != null) return true;
+                if (UnconsciousBonusToAttack != null) return true;
+                if (HandToHandBonusToAttack != null) return true;
+                if (PowerAttackPercentChance != null) return true;
+                if (RecoilStaggerBonusToPowerAttack != null) return true;
+                if (UnconsciousBonusToPowerAttack != null) return true;
+                if (PowerAttackNormal != null) return true;
+                if (PowerAttackForward != null) return true;
+                if (PowerAttackBack != null) return true;
+                if (PowerAttackLeft != null) return true;
+                if (PowerAttackRight != null) return true;
+                if (HoldTimerMin != null) return true;
+                if (HoldTimerMax != null) return true;
+                if (Flags != null) return true;
+                if (AcrobaticDodgePercentChance != null) return true;
+                if (RangeMultOptimal != null) return true;
+                if (RangeMultMax != null) return true;
+                if (SwitchDistanceMelee != null) return true;
+                if (SwitchDistanceRanged != null) return true;
+                if (BuffStandoffDistance != null) return true;
+                if (RangedStandoffDistance != null) return true;
+                if (GroupStandoffDistance != null) return true;
+                if (RushingAttackPercentChance != null) return true;
+                if (RushingAttackDistanceMult != null) return true;
+                if (Advanced != null) return true;
+                if (CSTDDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"DodgePercentChance => {DodgePercentChance}");
+                fg.AppendLine($"LeftRightPercentChance => {LeftRightPercentChance}");
+                fg.AppendLine($"DodgeLeftRightTimerMin => {DodgeLeftRightTimerMin}");
+                fg.AppendLine($"DodgeLeftRightTimerMax => {DodgeLeftRightTimerMax}");
+                fg.AppendLine($"DodgeForwardTimerMin => {DodgeForwardTimerMin}");
+                fg.AppendLine($"DodgeForwardTimerMax => {DodgeForwardTimerMax}");
+                fg.AppendLine($"DodgeBackTimerMin => {DodgeBackTimerMin}");
+                fg.AppendLine($"DodgeBackTimerMax => {DodgeBackTimerMax}");
+                fg.AppendLine($"IdleTimerMin => {IdleTimerMin}");
+                fg.AppendLine($"IdleTimerMax => {IdleTimerMax}");
+                fg.AppendLine($"BlockPercentChance => {BlockPercentChance}");
+                fg.AppendLine($"AttackPercentChance => {AttackPercentChance}");
+                fg.AppendLine($"RecoilStaggerBonusToAttack => {RecoilStaggerBonusToAttack}");
+                fg.AppendLine($"UnconsciousBonusToAttack => {UnconsciousBonusToAttack}");
+                fg.AppendLine($"HandToHandBonusToAttack => {HandToHandBonusToAttack}");
+                fg.AppendLine($"PowerAttackPercentChance => {PowerAttackPercentChance}");
+                fg.AppendLine($"RecoilStaggerBonusToPowerAttack => {RecoilStaggerBonusToPowerAttack}");
+                fg.AppendLine($"UnconsciousBonusToPowerAttack => {UnconsciousBonusToPowerAttack}");
+                fg.AppendLine($"PowerAttackNormal => {PowerAttackNormal}");
+                fg.AppendLine($"PowerAttackForward => {PowerAttackForward}");
+                fg.AppendLine($"PowerAttackBack => {PowerAttackBack}");
+                fg.AppendLine($"PowerAttackLeft => {PowerAttackLeft}");
+                fg.AppendLine($"PowerAttackRight => {PowerAttackRight}");
+                fg.AppendLine($"HoldTimerMin => {HoldTimerMin}");
+                fg.AppendLine($"HoldTimerMax => {HoldTimerMax}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"AcrobaticDodgePercentChance => {AcrobaticDodgePercentChance}");
+                fg.AppendLine($"RangeMultOptimal => {RangeMultOptimal}");
+                fg.AppendLine($"RangeMultMax => {RangeMultMax}");
+                fg.AppendLine($"SwitchDistanceMelee => {SwitchDistanceMelee}");
+                fg.AppendLine($"SwitchDistanceRanged => {SwitchDistanceRanged}");
+                fg.AppendLine($"BuffStandoffDistance => {BuffStandoffDistance}");
+                fg.AppendLine($"RangedStandoffDistance => {RangedStandoffDistance}");
+                fg.AppendLine($"GroupStandoffDistance => {GroupStandoffDistance}");
+                fg.AppendLine($"RushingAttackPercentChance => {RushingAttackPercentChance}");
+                fg.AppendLine($"RushingAttackDistanceMult => {RushingAttackDistanceMult}");
+                Advanced?.ToString(fg);
+                fg.AppendLine($"CSTDDataTypeState => {CSTDDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.DodgePercentChance = this.DodgePercentChance.Combine(rhs.DodgePercentChance);
+                ret.LeftRightPercentChance = this.LeftRightPercentChance.Combine(rhs.LeftRightPercentChance);
+                ret.DodgeLeftRightTimerMin = this.DodgeLeftRightTimerMin.Combine(rhs.DodgeLeftRightTimerMin);
+                ret.DodgeLeftRightTimerMax = this.DodgeLeftRightTimerMax.Combine(rhs.DodgeLeftRightTimerMax);
+                ret.DodgeForwardTimerMin = this.DodgeForwardTimerMin.Combine(rhs.DodgeForwardTimerMin);
+                ret.DodgeForwardTimerMax = this.DodgeForwardTimerMax.Combine(rhs.DodgeForwardTimerMax);
+                ret.DodgeBackTimerMin = this.DodgeBackTimerMin.Combine(rhs.DodgeBackTimerMin);
+                ret.DodgeBackTimerMax = this.DodgeBackTimerMax.Combine(rhs.DodgeBackTimerMax);
+                ret.IdleTimerMin = this.IdleTimerMin.Combine(rhs.IdleTimerMin);
+                ret.IdleTimerMax = this.IdleTimerMax.Combine(rhs.IdleTimerMax);
+                ret.BlockPercentChance = this.BlockPercentChance.Combine(rhs.BlockPercentChance);
+                ret.AttackPercentChance = this.AttackPercentChance.Combine(rhs.AttackPercentChance);
+                ret.RecoilStaggerBonusToAttack = this.RecoilStaggerBonusToAttack.Combine(rhs.RecoilStaggerBonusToAttack);
+                ret.UnconsciousBonusToAttack = this.UnconsciousBonusToAttack.Combine(rhs.UnconsciousBonusToAttack);
+                ret.HandToHandBonusToAttack = this.HandToHandBonusToAttack.Combine(rhs.HandToHandBonusToAttack);
+                ret.PowerAttackPercentChance = this.PowerAttackPercentChance.Combine(rhs.PowerAttackPercentChance);
+                ret.RecoilStaggerBonusToPowerAttack = this.RecoilStaggerBonusToPowerAttack.Combine(rhs.RecoilStaggerBonusToPowerAttack);
+                ret.UnconsciousBonusToPowerAttack = this.UnconsciousBonusToPowerAttack.Combine(rhs.UnconsciousBonusToPowerAttack);
+                ret.PowerAttackNormal = this.PowerAttackNormal.Combine(rhs.PowerAttackNormal);
+                ret.PowerAttackForward = this.PowerAttackForward.Combine(rhs.PowerAttackForward);
+                ret.PowerAttackBack = this.PowerAttackBack.Combine(rhs.PowerAttackBack);
+                ret.PowerAttackLeft = this.PowerAttackLeft.Combine(rhs.PowerAttackLeft);
+                ret.PowerAttackRight = this.PowerAttackRight.Combine(rhs.PowerAttackRight);
+                ret.HoldTimerMin = this.HoldTimerMin.Combine(rhs.HoldTimerMin);
+                ret.HoldTimerMax = this.HoldTimerMax.Combine(rhs.HoldTimerMax);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.AcrobaticDodgePercentChance = this.AcrobaticDodgePercentChance.Combine(rhs.AcrobaticDodgePercentChance);
+                ret.RangeMultOptimal = this.RangeMultOptimal.Combine(rhs.RangeMultOptimal);
+                ret.RangeMultMax = this.RangeMultMax.Combine(rhs.RangeMultMax);
+                ret.SwitchDistanceMelee = this.SwitchDistanceMelee.Combine(rhs.SwitchDistanceMelee);
+                ret.SwitchDistanceRanged = this.SwitchDistanceRanged.Combine(rhs.SwitchDistanceRanged);
+                ret.BuffStandoffDistance = this.BuffStandoffDistance.Combine(rhs.BuffStandoffDistance);
+                ret.RangedStandoffDistance = this.RangedStandoffDistance.Combine(rhs.RangedStandoffDistance);
+                ret.GroupStandoffDistance = this.GroupStandoffDistance.Combine(rhs.GroupStandoffDistance);
+                ret.RushingAttackPercentChance = this.RushingAttackPercentChance.Combine(rhs.RushingAttackPercentChance);
+                ret.RushingAttackDistanceMult = this.RushingAttackDistanceMult.Combine(rhs.RushingAttackDistanceMult);
+                ret.Advanced = new MaskItem<Exception?, CombatStyleAdvanced.ErrorMask?>(ExceptionExt.Combine(this.Advanced?.Overall, rhs.Advanced?.Overall), (this.Advanced?.Specific as IErrorMask<CombatStyleAdvanced.ErrorMask>)?.Combine(rhs.Advanced?.Specific));
+                ret.CSTDDataTypeState = this.CSTDDataTypeState.Combine(rhs.CSTDDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool DodgePercentChance;
+            public bool LeftRightPercentChance;
+            public bool DodgeLeftRightTimerMin;
+            public bool DodgeLeftRightTimerMax;
+            public bool DodgeForwardTimerMin;
+            public bool DodgeForwardTimerMax;
+            public bool DodgeBackTimerMin;
+            public bool DodgeBackTimerMax;
+            public bool IdleTimerMin;
+            public bool IdleTimerMax;
+            public bool BlockPercentChance;
+            public bool AttackPercentChance;
+            public bool RecoilStaggerBonusToAttack;
+            public bool UnconsciousBonusToAttack;
+            public bool HandToHandBonusToAttack;
+            public bool PowerAttackPercentChance;
+            public bool RecoilStaggerBonusToPowerAttack;
+            public bool UnconsciousBonusToPowerAttack;
+            public bool PowerAttackNormal;
+            public bool PowerAttackForward;
+            public bool PowerAttackBack;
+            public bool PowerAttackLeft;
+            public bool PowerAttackRight;
+            public bool HoldTimerMin;
+            public bool HoldTimerMax;
+            public bool Flags;
+            public bool AcrobaticDodgePercentChance;
+            public bool RangeMultOptimal;
+            public bool RangeMultMax;
+            public bool SwitchDistanceMelee;
+            public bool SwitchDistanceRanged;
+            public bool BuffStandoffDistance;
+            public bool RangedStandoffDistance;
+            public bool GroupStandoffDistance;
+            public bool RushingAttackPercentChance;
+            public bool RushingAttackDistanceMult;
+            public MaskItem<bool, CombatStyleAdvanced.TranslationMask?> Advanced;
+            public bool CSTDDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.DodgePercentChance = defaultOn;
+                this.LeftRightPercentChance = defaultOn;
+                this.DodgeLeftRightTimerMin = defaultOn;
+                this.DodgeLeftRightTimerMax = defaultOn;
+                this.DodgeForwardTimerMin = defaultOn;
+                this.DodgeForwardTimerMax = defaultOn;
+                this.DodgeBackTimerMin = defaultOn;
+                this.DodgeBackTimerMax = defaultOn;
+                this.IdleTimerMin = defaultOn;
+                this.IdleTimerMax = defaultOn;
+                this.BlockPercentChance = defaultOn;
+                this.AttackPercentChance = defaultOn;
+                this.RecoilStaggerBonusToAttack = defaultOn;
+                this.UnconsciousBonusToAttack = defaultOn;
+                this.HandToHandBonusToAttack = defaultOn;
+                this.PowerAttackPercentChance = defaultOn;
+                this.RecoilStaggerBonusToPowerAttack = defaultOn;
+                this.UnconsciousBonusToPowerAttack = defaultOn;
+                this.PowerAttackNormal = defaultOn;
+                this.PowerAttackForward = defaultOn;
+                this.PowerAttackBack = defaultOn;
+                this.PowerAttackLeft = defaultOn;
+                this.PowerAttackRight = defaultOn;
+                this.HoldTimerMin = defaultOn;
+                this.HoldTimerMax = defaultOn;
+                this.Flags = defaultOn;
+                this.AcrobaticDodgePercentChance = defaultOn;
+                this.RangeMultOptimal = defaultOn;
+                this.RangeMultMax = defaultOn;
+                this.SwitchDistanceMelee = defaultOn;
+                this.SwitchDistanceRanged = defaultOn;
+                this.BuffStandoffDistance = defaultOn;
+                this.RangedStandoffDistance = defaultOn;
+                this.GroupStandoffDistance = defaultOn;
+                this.RushingAttackPercentChance = defaultOn;
+                this.RushingAttackDistanceMult = defaultOn;
+                this.Advanced = new MaskItem<bool, CombatStyleAdvanced.TranslationMask?>(defaultOn, null);
+                this.CSTDDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((DodgePercentChance, null));
+                ret.Add((LeftRightPercentChance, null));
+                ret.Add((DodgeLeftRightTimerMin, null));
+                ret.Add((DodgeLeftRightTimerMax, null));
+                ret.Add((DodgeForwardTimerMin, null));
+                ret.Add((DodgeForwardTimerMax, null));
+                ret.Add((DodgeBackTimerMin, null));
+                ret.Add((DodgeBackTimerMax, null));
+                ret.Add((IdleTimerMin, null));
+                ret.Add((IdleTimerMax, null));
+                ret.Add((BlockPercentChance, null));
+                ret.Add((AttackPercentChance, null));
+                ret.Add((RecoilStaggerBonusToAttack, null));
+                ret.Add((UnconsciousBonusToAttack, null));
+                ret.Add((HandToHandBonusToAttack, null));
+                ret.Add((PowerAttackPercentChance, null));
+                ret.Add((RecoilStaggerBonusToPowerAttack, null));
+                ret.Add((UnconsciousBonusToPowerAttack, null));
+                ret.Add((PowerAttackNormal, null));
+                ret.Add((PowerAttackForward, null));
+                ret.Add((PowerAttackBack, null));
+                ret.Add((PowerAttackLeft, null));
+                ret.Add((PowerAttackRight, null));
+                ret.Add((HoldTimerMin, null));
+                ret.Add((HoldTimerMax, null));
+                ret.Add((Flags, null));
+                ret.Add((AcrobaticDodgePercentChance, null));
+                ret.Add((RangeMultOptimal, null));
+                ret.Add((RangeMultMax, null));
+                ret.Add((SwitchDistanceMelee, null));
+                ret.Add((SwitchDistanceRanged, null));
+                ret.Add((BuffStandoffDistance, null));
+                ret.Add((RangedStandoffDistance, null));
+                ret.Add((GroupStandoffDistance, null));
+                ret.Add((RushingAttackPercentChance, null));
+                ret.Add((RushingAttackDistanceMult, null));
+                ret.Add((Advanced?.Overall ?? true, Advanced?.Specific?.GetCrystal()));
+                ret.Add((CSTDDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -921,7 +2185,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CombatStyle_Mask<bool> GetEqualsMask(
+        public static CombatStyle.Mask<bool> GetEqualsMask(
             this ICombatStyleGetter item,
             ICombatStyleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -935,7 +2199,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ICombatStyleGetter item,
             string? name = null,
-            CombatStyle_Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -947,7 +2211,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleGetter item,
             FileGeneration fg,
             string? name = null,
-            CombatStyle_Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -958,16 +2222,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ICombatStyleGetter item,
-            CombatStyle_Mask<bool?> checkMask)
+            CombatStyle.Mask<bool?> checkMask)
         {
             return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static CombatStyle_Mask<bool> GetHasBeenSetMask(this ICombatStyleGetter item)
+        public static CombatStyle.Mask<bool> GetHasBeenSetMask(this ICombatStyleGetter item)
         {
-            var ret = new CombatStyle_Mask<bool>(false);
+            var ret = new CombatStyle.Mask<bool>(false);
             ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -986,8 +2250,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICombatStyleInternal lhs,
             ICombatStyleGetter rhs,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? copyMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -995,7 +2259,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -1013,7 +2277,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyle DeepCopy(
             this ICombatStyleGetter item,
-            CombatStyle_TranslationMask? copyMask = null)
+            CombatStyle.TranslationMask? copyMask = null)
         {
             return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1022,8 +2286,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CombatStyle DeepCopy(
             this ICombatStyleGetter item,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? copyMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? copyMask = null)
         {
             return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -1047,7 +2311,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             XElement node,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -1060,8 +2324,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             XElement node,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1069,7 +2333,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -1088,7 +2352,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             string path,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1100,8 +2364,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             string path,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1115,7 +2379,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1128,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             Stream stream,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1140,8 +2404,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             Stream stream,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1155,7 +2419,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CombatStyle_TranslationMask? translationMask = null)
+            CombatStyle.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1270,9 +2534,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 43;
 
-        public static readonly Type MaskType = typeof(CombatStyle_Mask<>);
+        public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CombatStyle_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CombatStyle.ErrorMask);
 
         public static readonly Type ClassType = typeof(CombatStyle);
 
@@ -2106,12 +3370,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly CombatStyleCommon Instance = new CombatStyleCommon();
 
-        public CombatStyle_Mask<bool> GetEqualsMask(
+        public CombatStyle.Mask<bool> GetEqualsMask(
             ICombatStyleGetter item,
             ICombatStyleGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CombatStyle_Mask<bool>(false);
+            var ret = new CombatStyle.Mask<bool>(false);
             ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -2123,7 +3387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ICombatStyleGetter item,
             ICombatStyleGetter rhs,
-            CombatStyle_Mask<bool> ret,
+            CombatStyle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -2175,7 +3439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ICombatStyleGetter item,
             string? name = null,
-            CombatStyle_Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2190,7 +3454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter item,
             FileGeneration fg,
             string? name = null,
-            CombatStyle_Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2214,7 +3478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICombatStyleGetter item,
             FileGeneration fg,
-            CombatStyle_Mask<bool>? printMask = null)
+            CombatStyle.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -2376,7 +3640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ICombatStyleGetter item,
-            CombatStyle_Mask<bool?> checkMask)
+            CombatStyle.Mask<bool?> checkMask)
         {
             if (checkMask.Advanced?.Overall.HasValue ?? false && checkMask.Advanced.Overall.Value != (item.Advanced != null)) return false;
             if (checkMask.Advanced?.Specific != null && (item.Advanced == null || !item.Advanced.HasBeenSet(checkMask.Advanced.Specific))) return false;
@@ -2387,7 +3651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ICombatStyleGetter item,
-            CombatStyle_Mask<bool> mask)
+            CombatStyle.Mask<bool> mask)
         {
             mask.DodgePercentChance = true;
             mask.LeftRightPercentChance = true;
@@ -2426,7 +3690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.RushingAttackPercentChance = true;
             mask.RushingAttackDistanceMult = true;
             var itemAdvanced = item.Advanced;
-            mask.Advanced = new MaskItem<bool, CombatStyleAdvanced_Mask<bool>?>(itemAdvanced != null, itemAdvanced?.GetHasBeenSetMask());
+            mask.Advanced = new MaskItem<bool, CombatStyleAdvanced.Mask<bool>?>(itemAdvanced != null, itemAdvanced?.GetHasBeenSetMask());
             mask.CSTDDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2887,7 +4151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyle DeepCopy(
             ICombatStyleGetter item,
-            CombatStyle_TranslationMask? copyMask = null)
+            CombatStyle.TranslationMask? copyMask = null)
         {
             CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2898,8 +4162,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyle DeepCopy(
             ICombatStyleGetter item,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? copyMask = null)
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? copyMask = null)
         {
             CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -4154,8 +5418,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleGetter item,
             XElement node,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null,
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -4165,14 +5429,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ICombatStyleGetter item,
             string path,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null,
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -4188,8 +5452,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICombatStyleGetter item,
             Stream stream,
-            out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask? translationMask = null,
+            out CombatStyle.ErrorMask errorMask,
+            CombatStyle.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -4206,1269 +5470,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class CombatStyle_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<CombatStyle_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public CombatStyle_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.DodgePercentChance = initialValue;
-            this.LeftRightPercentChance = initialValue;
-            this.DodgeLeftRightTimerMin = initialValue;
-            this.DodgeLeftRightTimerMax = initialValue;
-            this.DodgeForwardTimerMin = initialValue;
-            this.DodgeForwardTimerMax = initialValue;
-            this.DodgeBackTimerMin = initialValue;
-            this.DodgeBackTimerMax = initialValue;
-            this.IdleTimerMin = initialValue;
-            this.IdleTimerMax = initialValue;
-            this.BlockPercentChance = initialValue;
-            this.AttackPercentChance = initialValue;
-            this.RecoilStaggerBonusToAttack = initialValue;
-            this.UnconsciousBonusToAttack = initialValue;
-            this.HandToHandBonusToAttack = initialValue;
-            this.PowerAttackPercentChance = initialValue;
-            this.RecoilStaggerBonusToPowerAttack = initialValue;
-            this.UnconsciousBonusToPowerAttack = initialValue;
-            this.PowerAttackNormal = initialValue;
-            this.PowerAttackForward = initialValue;
-            this.PowerAttackBack = initialValue;
-            this.PowerAttackLeft = initialValue;
-            this.PowerAttackRight = initialValue;
-            this.HoldTimerMin = initialValue;
-            this.HoldTimerMax = initialValue;
-            this.Flags = initialValue;
-            this.AcrobaticDodgePercentChance = initialValue;
-            this.RangeMultOptimal = initialValue;
-            this.RangeMultMax = initialValue;
-            this.SwitchDistanceMelee = initialValue;
-            this.SwitchDistanceRanged = initialValue;
-            this.BuffStandoffDistance = initialValue;
-            this.RangedStandoffDistance = initialValue;
-            this.GroupStandoffDistance = initialValue;
-            this.RushingAttackPercentChance = initialValue;
-            this.RushingAttackDistanceMult = initialValue;
-            this.Advanced = new MaskItem<T, CombatStyleAdvanced_Mask<T>?>(initialValue, new CombatStyleAdvanced_Mask<T>(initialValue));
-            this.CSTDDataTypeState = initialValue;
-        }
-
-        public CombatStyle_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T DodgePercentChance,
-            T LeftRightPercentChance,
-            T DodgeLeftRightTimerMin,
-            T DodgeLeftRightTimerMax,
-            T DodgeForwardTimerMin,
-            T DodgeForwardTimerMax,
-            T DodgeBackTimerMin,
-            T DodgeBackTimerMax,
-            T IdleTimerMin,
-            T IdleTimerMax,
-            T BlockPercentChance,
-            T AttackPercentChance,
-            T RecoilStaggerBonusToAttack,
-            T UnconsciousBonusToAttack,
-            T HandToHandBonusToAttack,
-            T PowerAttackPercentChance,
-            T RecoilStaggerBonusToPowerAttack,
-            T UnconsciousBonusToPowerAttack,
-            T PowerAttackNormal,
-            T PowerAttackForward,
-            T PowerAttackBack,
-            T PowerAttackLeft,
-            T PowerAttackRight,
-            T HoldTimerMin,
-            T HoldTimerMax,
-            T Flags,
-            T AcrobaticDodgePercentChance,
-            T RangeMultOptimal,
-            T RangeMultMax,
-            T SwitchDistanceMelee,
-            T SwitchDistanceRanged,
-            T BuffStandoffDistance,
-            T RangedStandoffDistance,
-            T GroupStandoffDistance,
-            T RushingAttackPercentChance,
-            T RushingAttackDistanceMult,
-            T Advanced,
-            T CSTDDataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.DodgePercentChance = DodgePercentChance;
-            this.LeftRightPercentChance = LeftRightPercentChance;
-            this.DodgeLeftRightTimerMin = DodgeLeftRightTimerMin;
-            this.DodgeLeftRightTimerMax = DodgeLeftRightTimerMax;
-            this.DodgeForwardTimerMin = DodgeForwardTimerMin;
-            this.DodgeForwardTimerMax = DodgeForwardTimerMax;
-            this.DodgeBackTimerMin = DodgeBackTimerMin;
-            this.DodgeBackTimerMax = DodgeBackTimerMax;
-            this.IdleTimerMin = IdleTimerMin;
-            this.IdleTimerMax = IdleTimerMax;
-            this.BlockPercentChance = BlockPercentChance;
-            this.AttackPercentChance = AttackPercentChance;
-            this.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttack;
-            this.UnconsciousBonusToAttack = UnconsciousBonusToAttack;
-            this.HandToHandBonusToAttack = HandToHandBonusToAttack;
-            this.PowerAttackPercentChance = PowerAttackPercentChance;
-            this.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttack;
-            this.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttack;
-            this.PowerAttackNormal = PowerAttackNormal;
-            this.PowerAttackForward = PowerAttackForward;
-            this.PowerAttackBack = PowerAttackBack;
-            this.PowerAttackLeft = PowerAttackLeft;
-            this.PowerAttackRight = PowerAttackRight;
-            this.HoldTimerMin = HoldTimerMin;
-            this.HoldTimerMax = HoldTimerMax;
-            this.Flags = Flags;
-            this.AcrobaticDodgePercentChance = AcrobaticDodgePercentChance;
-            this.RangeMultOptimal = RangeMultOptimal;
-            this.RangeMultMax = RangeMultMax;
-            this.SwitchDistanceMelee = SwitchDistanceMelee;
-            this.SwitchDistanceRanged = SwitchDistanceRanged;
-            this.BuffStandoffDistance = BuffStandoffDistance;
-            this.RangedStandoffDistance = RangedStandoffDistance;
-            this.GroupStandoffDistance = GroupStandoffDistance;
-            this.RushingAttackPercentChance = RushingAttackPercentChance;
-            this.RushingAttackDistanceMult = RushingAttackDistanceMult;
-            this.Advanced = new MaskItem<T, CombatStyleAdvanced_Mask<T>?>(Advanced, new CombatStyleAdvanced_Mask<T>(Advanced));
-            this.CSTDDataTypeState = CSTDDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected CombatStyle_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T DodgePercentChance;
-        public T LeftRightPercentChance;
-        public T DodgeLeftRightTimerMin;
-        public T DodgeLeftRightTimerMax;
-        public T DodgeForwardTimerMin;
-        public T DodgeForwardTimerMax;
-        public T DodgeBackTimerMin;
-        public T DodgeBackTimerMax;
-        public T IdleTimerMin;
-        public T IdleTimerMax;
-        public T BlockPercentChance;
-        public T AttackPercentChance;
-        public T RecoilStaggerBonusToAttack;
-        public T UnconsciousBonusToAttack;
-        public T HandToHandBonusToAttack;
-        public T PowerAttackPercentChance;
-        public T RecoilStaggerBonusToPowerAttack;
-        public T UnconsciousBonusToPowerAttack;
-        public T PowerAttackNormal;
-        public T PowerAttackForward;
-        public T PowerAttackBack;
-        public T PowerAttackLeft;
-        public T PowerAttackRight;
-        public T HoldTimerMin;
-        public T HoldTimerMax;
-        public T Flags;
-        public T AcrobaticDodgePercentChance;
-        public T RangeMultOptimal;
-        public T RangeMultMax;
-        public T SwitchDistanceMelee;
-        public T SwitchDistanceRanged;
-        public T BuffStandoffDistance;
-        public T RangedStandoffDistance;
-        public T GroupStandoffDistance;
-        public T RushingAttackPercentChance;
-        public T RushingAttackDistanceMult;
-        public MaskItem<T, CombatStyleAdvanced_Mask<T>?>? Advanced { get; set; }
-        public T CSTDDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is CombatStyle_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(CombatStyle_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.DodgePercentChance, rhs.DodgePercentChance)) return false;
-            if (!object.Equals(this.LeftRightPercentChance, rhs.LeftRightPercentChance)) return false;
-            if (!object.Equals(this.DodgeLeftRightTimerMin, rhs.DodgeLeftRightTimerMin)) return false;
-            if (!object.Equals(this.DodgeLeftRightTimerMax, rhs.DodgeLeftRightTimerMax)) return false;
-            if (!object.Equals(this.DodgeForwardTimerMin, rhs.DodgeForwardTimerMin)) return false;
-            if (!object.Equals(this.DodgeForwardTimerMax, rhs.DodgeForwardTimerMax)) return false;
-            if (!object.Equals(this.DodgeBackTimerMin, rhs.DodgeBackTimerMin)) return false;
-            if (!object.Equals(this.DodgeBackTimerMax, rhs.DodgeBackTimerMax)) return false;
-            if (!object.Equals(this.IdleTimerMin, rhs.IdleTimerMin)) return false;
-            if (!object.Equals(this.IdleTimerMax, rhs.IdleTimerMax)) return false;
-            if (!object.Equals(this.BlockPercentChance, rhs.BlockPercentChance)) return false;
-            if (!object.Equals(this.AttackPercentChance, rhs.AttackPercentChance)) return false;
-            if (!object.Equals(this.RecoilStaggerBonusToAttack, rhs.RecoilStaggerBonusToAttack)) return false;
-            if (!object.Equals(this.UnconsciousBonusToAttack, rhs.UnconsciousBonusToAttack)) return false;
-            if (!object.Equals(this.HandToHandBonusToAttack, rhs.HandToHandBonusToAttack)) return false;
-            if (!object.Equals(this.PowerAttackPercentChance, rhs.PowerAttackPercentChance)) return false;
-            if (!object.Equals(this.RecoilStaggerBonusToPowerAttack, rhs.RecoilStaggerBonusToPowerAttack)) return false;
-            if (!object.Equals(this.UnconsciousBonusToPowerAttack, rhs.UnconsciousBonusToPowerAttack)) return false;
-            if (!object.Equals(this.PowerAttackNormal, rhs.PowerAttackNormal)) return false;
-            if (!object.Equals(this.PowerAttackForward, rhs.PowerAttackForward)) return false;
-            if (!object.Equals(this.PowerAttackBack, rhs.PowerAttackBack)) return false;
-            if (!object.Equals(this.PowerAttackLeft, rhs.PowerAttackLeft)) return false;
-            if (!object.Equals(this.PowerAttackRight, rhs.PowerAttackRight)) return false;
-            if (!object.Equals(this.HoldTimerMin, rhs.HoldTimerMin)) return false;
-            if (!object.Equals(this.HoldTimerMax, rhs.HoldTimerMax)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.AcrobaticDodgePercentChance, rhs.AcrobaticDodgePercentChance)) return false;
-            if (!object.Equals(this.RangeMultOptimal, rhs.RangeMultOptimal)) return false;
-            if (!object.Equals(this.RangeMultMax, rhs.RangeMultMax)) return false;
-            if (!object.Equals(this.SwitchDistanceMelee, rhs.SwitchDistanceMelee)) return false;
-            if (!object.Equals(this.SwitchDistanceRanged, rhs.SwitchDistanceRanged)) return false;
-            if (!object.Equals(this.BuffStandoffDistance, rhs.BuffStandoffDistance)) return false;
-            if (!object.Equals(this.RangedStandoffDistance, rhs.RangedStandoffDistance)) return false;
-            if (!object.Equals(this.GroupStandoffDistance, rhs.GroupStandoffDistance)) return false;
-            if (!object.Equals(this.RushingAttackPercentChance, rhs.RushingAttackPercentChance)) return false;
-            if (!object.Equals(this.RushingAttackDistanceMult, rhs.RushingAttackDistanceMult)) return false;
-            if (!object.Equals(this.Advanced, rhs.Advanced)) return false;
-            if (!object.Equals(this.CSTDDataTypeState, rhs.CSTDDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.DodgePercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeftRightPercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeLeftRightTimerMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeLeftRightTimerMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeForwardTimerMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeForwardTimerMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeBackTimerMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.DodgeBackTimerMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.IdleTimerMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.IdleTimerMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.BlockPercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.AttackPercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.RecoilStaggerBonusToAttack?.GetHashCode());
-            ret = ret.CombineHashCode(this.UnconsciousBonusToAttack?.GetHashCode());
-            ret = ret.CombineHashCode(this.HandToHandBonusToAttack?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackPercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.RecoilStaggerBonusToPowerAttack?.GetHashCode());
-            ret = ret.CombineHashCode(this.UnconsciousBonusToPowerAttack?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackNormal?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackForward?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackBack?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackLeft?.GetHashCode());
-            ret = ret.CombineHashCode(this.PowerAttackRight?.GetHashCode());
-            ret = ret.CombineHashCode(this.HoldTimerMin?.GetHashCode());
-            ret = ret.CombineHashCode(this.HoldTimerMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.AcrobaticDodgePercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.RangeMultOptimal?.GetHashCode());
-            ret = ret.CombineHashCode(this.RangeMultMax?.GetHashCode());
-            ret = ret.CombineHashCode(this.SwitchDistanceMelee?.GetHashCode());
-            ret = ret.CombineHashCode(this.SwitchDistanceRanged?.GetHashCode());
-            ret = ret.CombineHashCode(this.BuffStandoffDistance?.GetHashCode());
-            ret = ret.CombineHashCode(this.RangedStandoffDistance?.GetHashCode());
-            ret = ret.CombineHashCode(this.GroupStandoffDistance?.GetHashCode());
-            ret = ret.CombineHashCode(this.RushingAttackPercentChance?.GetHashCode());
-            ret = ret.CombineHashCode(this.RushingAttackDistanceMult?.GetHashCode());
-            ret = ret.CombineHashCode(this.Advanced?.GetHashCode());
-            ret = ret.CombineHashCode(this.CSTDDataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.DodgePercentChance)) return false;
-            if (!eval(this.LeftRightPercentChance)) return false;
-            if (!eval(this.DodgeLeftRightTimerMin)) return false;
-            if (!eval(this.DodgeLeftRightTimerMax)) return false;
-            if (!eval(this.DodgeForwardTimerMin)) return false;
-            if (!eval(this.DodgeForwardTimerMax)) return false;
-            if (!eval(this.DodgeBackTimerMin)) return false;
-            if (!eval(this.DodgeBackTimerMax)) return false;
-            if (!eval(this.IdleTimerMin)) return false;
-            if (!eval(this.IdleTimerMax)) return false;
-            if (!eval(this.BlockPercentChance)) return false;
-            if (!eval(this.AttackPercentChance)) return false;
-            if (!eval(this.RecoilStaggerBonusToAttack)) return false;
-            if (!eval(this.UnconsciousBonusToAttack)) return false;
-            if (!eval(this.HandToHandBonusToAttack)) return false;
-            if (!eval(this.PowerAttackPercentChance)) return false;
-            if (!eval(this.RecoilStaggerBonusToPowerAttack)) return false;
-            if (!eval(this.UnconsciousBonusToPowerAttack)) return false;
-            if (!eval(this.PowerAttackNormal)) return false;
-            if (!eval(this.PowerAttackForward)) return false;
-            if (!eval(this.PowerAttackBack)) return false;
-            if (!eval(this.PowerAttackLeft)) return false;
-            if (!eval(this.PowerAttackRight)) return false;
-            if (!eval(this.HoldTimerMin)) return false;
-            if (!eval(this.HoldTimerMax)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.AcrobaticDodgePercentChance)) return false;
-            if (!eval(this.RangeMultOptimal)) return false;
-            if (!eval(this.RangeMultMax)) return false;
-            if (!eval(this.SwitchDistanceMelee)) return false;
-            if (!eval(this.SwitchDistanceRanged)) return false;
-            if (!eval(this.BuffStandoffDistance)) return false;
-            if (!eval(this.RangedStandoffDistance)) return false;
-            if (!eval(this.GroupStandoffDistance)) return false;
-            if (!eval(this.RushingAttackPercentChance)) return false;
-            if (!eval(this.RushingAttackDistanceMult)) return false;
-            if (Advanced != null)
-            {
-                if (!eval(this.Advanced.Overall)) return false;
-                if (this.Advanced.Specific != null && !this.Advanced.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.CSTDDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new CombatStyle_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new CombatStyle_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(CombatStyle_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.DodgePercentChance = eval(this.DodgePercentChance);
-            obj.LeftRightPercentChance = eval(this.LeftRightPercentChance);
-            obj.DodgeLeftRightTimerMin = eval(this.DodgeLeftRightTimerMin);
-            obj.DodgeLeftRightTimerMax = eval(this.DodgeLeftRightTimerMax);
-            obj.DodgeForwardTimerMin = eval(this.DodgeForwardTimerMin);
-            obj.DodgeForwardTimerMax = eval(this.DodgeForwardTimerMax);
-            obj.DodgeBackTimerMin = eval(this.DodgeBackTimerMin);
-            obj.DodgeBackTimerMax = eval(this.DodgeBackTimerMax);
-            obj.IdleTimerMin = eval(this.IdleTimerMin);
-            obj.IdleTimerMax = eval(this.IdleTimerMax);
-            obj.BlockPercentChance = eval(this.BlockPercentChance);
-            obj.AttackPercentChance = eval(this.AttackPercentChance);
-            obj.RecoilStaggerBonusToAttack = eval(this.RecoilStaggerBonusToAttack);
-            obj.UnconsciousBonusToAttack = eval(this.UnconsciousBonusToAttack);
-            obj.HandToHandBonusToAttack = eval(this.HandToHandBonusToAttack);
-            obj.PowerAttackPercentChance = eval(this.PowerAttackPercentChance);
-            obj.RecoilStaggerBonusToPowerAttack = eval(this.RecoilStaggerBonusToPowerAttack);
-            obj.UnconsciousBonusToPowerAttack = eval(this.UnconsciousBonusToPowerAttack);
-            obj.PowerAttackNormal = eval(this.PowerAttackNormal);
-            obj.PowerAttackForward = eval(this.PowerAttackForward);
-            obj.PowerAttackBack = eval(this.PowerAttackBack);
-            obj.PowerAttackLeft = eval(this.PowerAttackLeft);
-            obj.PowerAttackRight = eval(this.PowerAttackRight);
-            obj.HoldTimerMin = eval(this.HoldTimerMin);
-            obj.HoldTimerMax = eval(this.HoldTimerMax);
-            obj.Flags = eval(this.Flags);
-            obj.AcrobaticDodgePercentChance = eval(this.AcrobaticDodgePercentChance);
-            obj.RangeMultOptimal = eval(this.RangeMultOptimal);
-            obj.RangeMultMax = eval(this.RangeMultMax);
-            obj.SwitchDistanceMelee = eval(this.SwitchDistanceMelee);
-            obj.SwitchDistanceRanged = eval(this.SwitchDistanceRanged);
-            obj.BuffStandoffDistance = eval(this.BuffStandoffDistance);
-            obj.RangedStandoffDistance = eval(this.RangedStandoffDistance);
-            obj.GroupStandoffDistance = eval(this.GroupStandoffDistance);
-            obj.RushingAttackPercentChance = eval(this.RushingAttackPercentChance);
-            obj.RushingAttackDistanceMult = eval(this.RushingAttackDistanceMult);
-            obj.Advanced = this.Advanced == null ? null : new MaskItem<R, CombatStyleAdvanced_Mask<R>?>(eval(this.Advanced.Overall), this.Advanced.Specific?.Translate(eval));
-            obj.CSTDDataTypeState = eval(this.CSTDDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(CombatStyle_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, CombatStyle_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(CombatStyle_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.DodgePercentChance ?? true)
-                {
-                    fg.AppendLine($"DodgePercentChance => {DodgePercentChance}");
-                }
-                if (printMask?.LeftRightPercentChance ?? true)
-                {
-                    fg.AppendLine($"LeftRightPercentChance => {LeftRightPercentChance}");
-                }
-                if (printMask?.DodgeLeftRightTimerMin ?? true)
-                {
-                    fg.AppendLine($"DodgeLeftRightTimerMin => {DodgeLeftRightTimerMin}");
-                }
-                if (printMask?.DodgeLeftRightTimerMax ?? true)
-                {
-                    fg.AppendLine($"DodgeLeftRightTimerMax => {DodgeLeftRightTimerMax}");
-                }
-                if (printMask?.DodgeForwardTimerMin ?? true)
-                {
-                    fg.AppendLine($"DodgeForwardTimerMin => {DodgeForwardTimerMin}");
-                }
-                if (printMask?.DodgeForwardTimerMax ?? true)
-                {
-                    fg.AppendLine($"DodgeForwardTimerMax => {DodgeForwardTimerMax}");
-                }
-                if (printMask?.DodgeBackTimerMin ?? true)
-                {
-                    fg.AppendLine($"DodgeBackTimerMin => {DodgeBackTimerMin}");
-                }
-                if (printMask?.DodgeBackTimerMax ?? true)
-                {
-                    fg.AppendLine($"DodgeBackTimerMax => {DodgeBackTimerMax}");
-                }
-                if (printMask?.IdleTimerMin ?? true)
-                {
-                    fg.AppendLine($"IdleTimerMin => {IdleTimerMin}");
-                }
-                if (printMask?.IdleTimerMax ?? true)
-                {
-                    fg.AppendLine($"IdleTimerMax => {IdleTimerMax}");
-                }
-                if (printMask?.BlockPercentChance ?? true)
-                {
-                    fg.AppendLine($"BlockPercentChance => {BlockPercentChance}");
-                }
-                if (printMask?.AttackPercentChance ?? true)
-                {
-                    fg.AppendLine($"AttackPercentChance => {AttackPercentChance}");
-                }
-                if (printMask?.RecoilStaggerBonusToAttack ?? true)
-                {
-                    fg.AppendLine($"RecoilStaggerBonusToAttack => {RecoilStaggerBonusToAttack}");
-                }
-                if (printMask?.UnconsciousBonusToAttack ?? true)
-                {
-                    fg.AppendLine($"UnconsciousBonusToAttack => {UnconsciousBonusToAttack}");
-                }
-                if (printMask?.HandToHandBonusToAttack ?? true)
-                {
-                    fg.AppendLine($"HandToHandBonusToAttack => {HandToHandBonusToAttack}");
-                }
-                if (printMask?.PowerAttackPercentChance ?? true)
-                {
-                    fg.AppendLine($"PowerAttackPercentChance => {PowerAttackPercentChance}");
-                }
-                if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
-                {
-                    fg.AppendLine($"RecoilStaggerBonusToPowerAttack => {RecoilStaggerBonusToPowerAttack}");
-                }
-                if (printMask?.UnconsciousBonusToPowerAttack ?? true)
-                {
-                    fg.AppendLine($"UnconsciousBonusToPowerAttack => {UnconsciousBonusToPowerAttack}");
-                }
-                if (printMask?.PowerAttackNormal ?? true)
-                {
-                    fg.AppendLine($"PowerAttackNormal => {PowerAttackNormal}");
-                }
-                if (printMask?.PowerAttackForward ?? true)
-                {
-                    fg.AppendLine($"PowerAttackForward => {PowerAttackForward}");
-                }
-                if (printMask?.PowerAttackBack ?? true)
-                {
-                    fg.AppendLine($"PowerAttackBack => {PowerAttackBack}");
-                }
-                if (printMask?.PowerAttackLeft ?? true)
-                {
-                    fg.AppendLine($"PowerAttackLeft => {PowerAttackLeft}");
-                }
-                if (printMask?.PowerAttackRight ?? true)
-                {
-                    fg.AppendLine($"PowerAttackRight => {PowerAttackRight}");
-                }
-                if (printMask?.HoldTimerMin ?? true)
-                {
-                    fg.AppendLine($"HoldTimerMin => {HoldTimerMin}");
-                }
-                if (printMask?.HoldTimerMax ?? true)
-                {
-                    fg.AppendLine($"HoldTimerMax => {HoldTimerMax}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.AcrobaticDodgePercentChance ?? true)
-                {
-                    fg.AppendLine($"AcrobaticDodgePercentChance => {AcrobaticDodgePercentChance}");
-                }
-                if (printMask?.RangeMultOptimal ?? true)
-                {
-                    fg.AppendLine($"RangeMultOptimal => {RangeMultOptimal}");
-                }
-                if (printMask?.RangeMultMax ?? true)
-                {
-                    fg.AppendLine($"RangeMultMax => {RangeMultMax}");
-                }
-                if (printMask?.SwitchDistanceMelee ?? true)
-                {
-                    fg.AppendLine($"SwitchDistanceMelee => {SwitchDistanceMelee}");
-                }
-                if (printMask?.SwitchDistanceRanged ?? true)
-                {
-                    fg.AppendLine($"SwitchDistanceRanged => {SwitchDistanceRanged}");
-                }
-                if (printMask?.BuffStandoffDistance ?? true)
-                {
-                    fg.AppendLine($"BuffStandoffDistance => {BuffStandoffDistance}");
-                }
-                if (printMask?.RangedStandoffDistance ?? true)
-                {
-                    fg.AppendLine($"RangedStandoffDistance => {RangedStandoffDistance}");
-                }
-                if (printMask?.GroupStandoffDistance ?? true)
-                {
-                    fg.AppendLine($"GroupStandoffDistance => {GroupStandoffDistance}");
-                }
-                if (printMask?.RushingAttackPercentChance ?? true)
-                {
-                    fg.AppendLine($"RushingAttackPercentChance => {RushingAttackPercentChance}");
-                }
-                if (printMask?.RushingAttackDistanceMult ?? true)
-                {
-                    fg.AppendLine($"RushingAttackDistanceMult => {RushingAttackDistanceMult}");
-                }
-                if (printMask?.Advanced?.Overall ?? true)
-                {
-                    Advanced?.ToString(fg);
-                }
-                if (printMask?.CSTDDataTypeState ?? true)
-                {
-                    fg.AppendLine($"CSTDDataTypeState => {CSTDDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class CombatStyle_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<CombatStyle_ErrorMask>
-    {
-        #region Members
-        public Exception? DodgePercentChance;
-        public Exception? LeftRightPercentChance;
-        public Exception? DodgeLeftRightTimerMin;
-        public Exception? DodgeLeftRightTimerMax;
-        public Exception? DodgeForwardTimerMin;
-        public Exception? DodgeForwardTimerMax;
-        public Exception? DodgeBackTimerMin;
-        public Exception? DodgeBackTimerMax;
-        public Exception? IdleTimerMin;
-        public Exception? IdleTimerMax;
-        public Exception? BlockPercentChance;
-        public Exception? AttackPercentChance;
-        public Exception? RecoilStaggerBonusToAttack;
-        public Exception? UnconsciousBonusToAttack;
-        public Exception? HandToHandBonusToAttack;
-        public Exception? PowerAttackPercentChance;
-        public Exception? RecoilStaggerBonusToPowerAttack;
-        public Exception? UnconsciousBonusToPowerAttack;
-        public Exception? PowerAttackNormal;
-        public Exception? PowerAttackForward;
-        public Exception? PowerAttackBack;
-        public Exception? PowerAttackLeft;
-        public Exception? PowerAttackRight;
-        public Exception? HoldTimerMin;
-        public Exception? HoldTimerMax;
-        public Exception? Flags;
-        public Exception? AcrobaticDodgePercentChance;
-        public Exception? RangeMultOptimal;
-        public Exception? RangeMultMax;
-        public Exception? SwitchDistanceMelee;
-        public Exception? SwitchDistanceRanged;
-        public Exception? BuffStandoffDistance;
-        public Exception? RangedStandoffDistance;
-        public Exception? GroupStandoffDistance;
-        public Exception? RushingAttackPercentChance;
-        public Exception? RushingAttackDistanceMult;
-        public MaskItem<Exception?, CombatStyleAdvanced_ErrorMask?>? Advanced;
-        public Exception? CSTDDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    return DodgePercentChance;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    return LeftRightPercentChance;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    return DodgeLeftRightTimerMin;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    return DodgeLeftRightTimerMax;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    return DodgeForwardTimerMin;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    return DodgeForwardTimerMax;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    return DodgeBackTimerMin;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    return DodgeBackTimerMax;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    return IdleTimerMin;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    return IdleTimerMax;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    return BlockPercentChance;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    return AttackPercentChance;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    return RecoilStaggerBonusToAttack;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    return UnconsciousBonusToAttack;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    return HandToHandBonusToAttack;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    return PowerAttackPercentChance;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    return RecoilStaggerBonusToPowerAttack;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    return UnconsciousBonusToPowerAttack;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    return PowerAttackNormal;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    return PowerAttackForward;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    return PowerAttackBack;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    return PowerAttackLeft;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    return PowerAttackRight;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    return HoldTimerMin;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    return HoldTimerMax;
-                case CombatStyle_FieldIndex.Flags:
-                    return Flags;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    return AcrobaticDodgePercentChance;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    return RangeMultOptimal;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    return RangeMultMax;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    return SwitchDistanceMelee;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    return SwitchDistanceRanged;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    return BuffStandoffDistance;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    return RangedStandoffDistance;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    return GroupStandoffDistance;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    return RushingAttackPercentChance;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    return RushingAttackDistanceMult;
-                case CombatStyle_FieldIndex.Advanced:
-                    return Advanced;
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    return CSTDDataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    this.DodgePercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    this.LeftRightPercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    this.DodgeLeftRightTimerMin = ex;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    this.DodgeLeftRightTimerMax = ex;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    this.DodgeForwardTimerMin = ex;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    this.DodgeForwardTimerMax = ex;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    this.DodgeBackTimerMin = ex;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    this.DodgeBackTimerMax = ex;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    this.IdleTimerMin = ex;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    this.IdleTimerMax = ex;
-                    break;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    this.BlockPercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    this.AttackPercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    this.RecoilStaggerBonusToAttack = ex;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    this.UnconsciousBonusToAttack = ex;
-                    break;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    this.HandToHandBonusToAttack = ex;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    this.PowerAttackPercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    this.RecoilStaggerBonusToPowerAttack = ex;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    this.UnconsciousBonusToPowerAttack = ex;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    this.PowerAttackNormal = ex;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    this.PowerAttackForward = ex;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    this.PowerAttackBack = ex;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    this.PowerAttackLeft = ex;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    this.PowerAttackRight = ex;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    this.HoldTimerMin = ex;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    this.HoldTimerMax = ex;
-                    break;
-                case CombatStyle_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    this.AcrobaticDodgePercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    this.RangeMultOptimal = ex;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    this.RangeMultMax = ex;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    this.SwitchDistanceMelee = ex;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    this.SwitchDistanceRanged = ex;
-                    break;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    this.BuffStandoffDistance = ex;
-                    break;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    this.RangedStandoffDistance = ex;
-                    break;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    this.GroupStandoffDistance = ex;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    this.RushingAttackPercentChance = ex;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    this.RushingAttackDistanceMult = ex;
-                    break;
-                case CombatStyle_FieldIndex.Advanced:
-                    this.Advanced = new MaskItem<Exception?, CombatStyleAdvanced_ErrorMask?>(ex, null);
-                    break;
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    this.CSTDDataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
-            switch (enu)
-            {
-                case CombatStyle_FieldIndex.DodgePercentChance:
-                    this.DodgePercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.LeftRightPercentChance:
-                    this.LeftRightPercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMin:
-                    this.DodgeLeftRightTimerMin = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeLeftRightTimerMax:
-                    this.DodgeLeftRightTimerMax = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                    this.DodgeForwardTimerMin = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                    this.DodgeForwardTimerMax = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                    this.DodgeBackTimerMin = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                    this.DodgeBackTimerMax = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMin:
-                    this.IdleTimerMin = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.IdleTimerMax:
-                    this.IdleTimerMax = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.BlockPercentChance:
-                    this.BlockPercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.AttackPercentChance:
-                    this.AttackPercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                    this.RecoilStaggerBonusToAttack = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                    this.UnconsciousBonusToAttack = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                    this.HandToHandBonusToAttack = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackPercentChance:
-                    this.PowerAttackPercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                    this.RecoilStaggerBonusToPowerAttack = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                    this.UnconsciousBonusToPowerAttack = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackNormal:
-                    this.PowerAttackNormal = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackForward:
-                    this.PowerAttackForward = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackBack:
-                    this.PowerAttackBack = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackLeft:
-                    this.PowerAttackLeft = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.PowerAttackRight:
-                    this.PowerAttackRight = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMin:
-                    this.HoldTimerMin = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.HoldTimerMax:
-                    this.HoldTimerMax = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.AcrobaticDodgePercentChance:
-                    this.AcrobaticDodgePercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultOptimal:
-                    this.RangeMultOptimal = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RangeMultMax:
-                    this.RangeMultMax = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceMelee:
-                    this.SwitchDistanceMelee = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.SwitchDistanceRanged:
-                    this.SwitchDistanceRanged = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.BuffStandoffDistance:
-                    this.BuffStandoffDistance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RangedStandoffDistance:
-                    this.RangedStandoffDistance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.GroupStandoffDistance:
-                    this.GroupStandoffDistance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackPercentChance:
-                    this.RushingAttackPercentChance = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                    this.RushingAttackDistanceMult = (Exception)obj;
-                    break;
-                case CombatStyle_FieldIndex.Advanced:
-                    this.Advanced = (MaskItem<Exception?, CombatStyleAdvanced_ErrorMask?>?)obj;
-                    break;
-                case CombatStyle_FieldIndex.CSTDDataTypeState:
-                    this.CSTDDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (DodgePercentChance != null) return true;
-            if (LeftRightPercentChance != null) return true;
-            if (DodgeLeftRightTimerMin != null) return true;
-            if (DodgeLeftRightTimerMax != null) return true;
-            if (DodgeForwardTimerMin != null) return true;
-            if (DodgeForwardTimerMax != null) return true;
-            if (DodgeBackTimerMin != null) return true;
-            if (DodgeBackTimerMax != null) return true;
-            if (IdleTimerMin != null) return true;
-            if (IdleTimerMax != null) return true;
-            if (BlockPercentChance != null) return true;
-            if (AttackPercentChance != null) return true;
-            if (RecoilStaggerBonusToAttack != null) return true;
-            if (UnconsciousBonusToAttack != null) return true;
-            if (HandToHandBonusToAttack != null) return true;
-            if (PowerAttackPercentChance != null) return true;
-            if (RecoilStaggerBonusToPowerAttack != null) return true;
-            if (UnconsciousBonusToPowerAttack != null) return true;
-            if (PowerAttackNormal != null) return true;
-            if (PowerAttackForward != null) return true;
-            if (PowerAttackBack != null) return true;
-            if (PowerAttackLeft != null) return true;
-            if (PowerAttackRight != null) return true;
-            if (HoldTimerMin != null) return true;
-            if (HoldTimerMax != null) return true;
-            if (Flags != null) return true;
-            if (AcrobaticDodgePercentChance != null) return true;
-            if (RangeMultOptimal != null) return true;
-            if (RangeMultMax != null) return true;
-            if (SwitchDistanceMelee != null) return true;
-            if (SwitchDistanceRanged != null) return true;
-            if (BuffStandoffDistance != null) return true;
-            if (RangedStandoffDistance != null) return true;
-            if (GroupStandoffDistance != null) return true;
-            if (RushingAttackPercentChance != null) return true;
-            if (RushingAttackDistanceMult != null) return true;
-            if (Advanced != null) return true;
-            if (CSTDDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("CombatStyle_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"DodgePercentChance => {DodgePercentChance}");
-            fg.AppendLine($"LeftRightPercentChance => {LeftRightPercentChance}");
-            fg.AppendLine($"DodgeLeftRightTimerMin => {DodgeLeftRightTimerMin}");
-            fg.AppendLine($"DodgeLeftRightTimerMax => {DodgeLeftRightTimerMax}");
-            fg.AppendLine($"DodgeForwardTimerMin => {DodgeForwardTimerMin}");
-            fg.AppendLine($"DodgeForwardTimerMax => {DodgeForwardTimerMax}");
-            fg.AppendLine($"DodgeBackTimerMin => {DodgeBackTimerMin}");
-            fg.AppendLine($"DodgeBackTimerMax => {DodgeBackTimerMax}");
-            fg.AppendLine($"IdleTimerMin => {IdleTimerMin}");
-            fg.AppendLine($"IdleTimerMax => {IdleTimerMax}");
-            fg.AppendLine($"BlockPercentChance => {BlockPercentChance}");
-            fg.AppendLine($"AttackPercentChance => {AttackPercentChance}");
-            fg.AppendLine($"RecoilStaggerBonusToAttack => {RecoilStaggerBonusToAttack}");
-            fg.AppendLine($"UnconsciousBonusToAttack => {UnconsciousBonusToAttack}");
-            fg.AppendLine($"HandToHandBonusToAttack => {HandToHandBonusToAttack}");
-            fg.AppendLine($"PowerAttackPercentChance => {PowerAttackPercentChance}");
-            fg.AppendLine($"RecoilStaggerBonusToPowerAttack => {RecoilStaggerBonusToPowerAttack}");
-            fg.AppendLine($"UnconsciousBonusToPowerAttack => {UnconsciousBonusToPowerAttack}");
-            fg.AppendLine($"PowerAttackNormal => {PowerAttackNormal}");
-            fg.AppendLine($"PowerAttackForward => {PowerAttackForward}");
-            fg.AppendLine($"PowerAttackBack => {PowerAttackBack}");
-            fg.AppendLine($"PowerAttackLeft => {PowerAttackLeft}");
-            fg.AppendLine($"PowerAttackRight => {PowerAttackRight}");
-            fg.AppendLine($"HoldTimerMin => {HoldTimerMin}");
-            fg.AppendLine($"HoldTimerMax => {HoldTimerMax}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"AcrobaticDodgePercentChance => {AcrobaticDodgePercentChance}");
-            fg.AppendLine($"RangeMultOptimal => {RangeMultOptimal}");
-            fg.AppendLine($"RangeMultMax => {RangeMultMax}");
-            fg.AppendLine($"SwitchDistanceMelee => {SwitchDistanceMelee}");
-            fg.AppendLine($"SwitchDistanceRanged => {SwitchDistanceRanged}");
-            fg.AppendLine($"BuffStandoffDistance => {BuffStandoffDistance}");
-            fg.AppendLine($"RangedStandoffDistance => {RangedStandoffDistance}");
-            fg.AppendLine($"GroupStandoffDistance => {GroupStandoffDistance}");
-            fg.AppendLine($"RushingAttackPercentChance => {RushingAttackPercentChance}");
-            fg.AppendLine($"RushingAttackDistanceMult => {RushingAttackDistanceMult}");
-            Advanced?.ToString(fg);
-            fg.AppendLine($"CSTDDataTypeState => {CSTDDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public CombatStyle_ErrorMask Combine(CombatStyle_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new CombatStyle_ErrorMask();
-            ret.DodgePercentChance = this.DodgePercentChance.Combine(rhs.DodgePercentChance);
-            ret.LeftRightPercentChance = this.LeftRightPercentChance.Combine(rhs.LeftRightPercentChance);
-            ret.DodgeLeftRightTimerMin = this.DodgeLeftRightTimerMin.Combine(rhs.DodgeLeftRightTimerMin);
-            ret.DodgeLeftRightTimerMax = this.DodgeLeftRightTimerMax.Combine(rhs.DodgeLeftRightTimerMax);
-            ret.DodgeForwardTimerMin = this.DodgeForwardTimerMin.Combine(rhs.DodgeForwardTimerMin);
-            ret.DodgeForwardTimerMax = this.DodgeForwardTimerMax.Combine(rhs.DodgeForwardTimerMax);
-            ret.DodgeBackTimerMin = this.DodgeBackTimerMin.Combine(rhs.DodgeBackTimerMin);
-            ret.DodgeBackTimerMax = this.DodgeBackTimerMax.Combine(rhs.DodgeBackTimerMax);
-            ret.IdleTimerMin = this.IdleTimerMin.Combine(rhs.IdleTimerMin);
-            ret.IdleTimerMax = this.IdleTimerMax.Combine(rhs.IdleTimerMax);
-            ret.BlockPercentChance = this.BlockPercentChance.Combine(rhs.BlockPercentChance);
-            ret.AttackPercentChance = this.AttackPercentChance.Combine(rhs.AttackPercentChance);
-            ret.RecoilStaggerBonusToAttack = this.RecoilStaggerBonusToAttack.Combine(rhs.RecoilStaggerBonusToAttack);
-            ret.UnconsciousBonusToAttack = this.UnconsciousBonusToAttack.Combine(rhs.UnconsciousBonusToAttack);
-            ret.HandToHandBonusToAttack = this.HandToHandBonusToAttack.Combine(rhs.HandToHandBonusToAttack);
-            ret.PowerAttackPercentChance = this.PowerAttackPercentChance.Combine(rhs.PowerAttackPercentChance);
-            ret.RecoilStaggerBonusToPowerAttack = this.RecoilStaggerBonusToPowerAttack.Combine(rhs.RecoilStaggerBonusToPowerAttack);
-            ret.UnconsciousBonusToPowerAttack = this.UnconsciousBonusToPowerAttack.Combine(rhs.UnconsciousBonusToPowerAttack);
-            ret.PowerAttackNormal = this.PowerAttackNormal.Combine(rhs.PowerAttackNormal);
-            ret.PowerAttackForward = this.PowerAttackForward.Combine(rhs.PowerAttackForward);
-            ret.PowerAttackBack = this.PowerAttackBack.Combine(rhs.PowerAttackBack);
-            ret.PowerAttackLeft = this.PowerAttackLeft.Combine(rhs.PowerAttackLeft);
-            ret.PowerAttackRight = this.PowerAttackRight.Combine(rhs.PowerAttackRight);
-            ret.HoldTimerMin = this.HoldTimerMin.Combine(rhs.HoldTimerMin);
-            ret.HoldTimerMax = this.HoldTimerMax.Combine(rhs.HoldTimerMax);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.AcrobaticDodgePercentChance = this.AcrobaticDodgePercentChance.Combine(rhs.AcrobaticDodgePercentChance);
-            ret.RangeMultOptimal = this.RangeMultOptimal.Combine(rhs.RangeMultOptimal);
-            ret.RangeMultMax = this.RangeMultMax.Combine(rhs.RangeMultMax);
-            ret.SwitchDistanceMelee = this.SwitchDistanceMelee.Combine(rhs.SwitchDistanceMelee);
-            ret.SwitchDistanceRanged = this.SwitchDistanceRanged.Combine(rhs.SwitchDistanceRanged);
-            ret.BuffStandoffDistance = this.BuffStandoffDistance.Combine(rhs.BuffStandoffDistance);
-            ret.RangedStandoffDistance = this.RangedStandoffDistance.Combine(rhs.RangedStandoffDistance);
-            ret.GroupStandoffDistance = this.GroupStandoffDistance.Combine(rhs.GroupStandoffDistance);
-            ret.RushingAttackPercentChance = this.RushingAttackPercentChance.Combine(rhs.RushingAttackPercentChance);
-            ret.RushingAttackDistanceMult = this.RushingAttackDistanceMult.Combine(rhs.RushingAttackDistanceMult);
-            ret.Advanced = new MaskItem<Exception?, CombatStyleAdvanced_ErrorMask?>(ExceptionExt.Combine(this.Advanced?.Overall, rhs.Advanced?.Overall), (this.Advanced?.Specific as IErrorMask<CombatStyleAdvanced_ErrorMask>)?.Combine(rhs.Advanced?.Specific));
-            ret.CSTDDataTypeState = this.CSTDDataTypeState.Combine(rhs.CSTDDataTypeState);
-            return ret;
-        }
-        public static CombatStyle_ErrorMask? Combine(CombatStyle_ErrorMask? lhs, CombatStyle_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new CombatStyle_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new CombatStyle_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class CombatStyle_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool DodgePercentChance;
-        public bool LeftRightPercentChance;
-        public bool DodgeLeftRightTimerMin;
-        public bool DodgeLeftRightTimerMax;
-        public bool DodgeForwardTimerMin;
-        public bool DodgeForwardTimerMax;
-        public bool DodgeBackTimerMin;
-        public bool DodgeBackTimerMax;
-        public bool IdleTimerMin;
-        public bool IdleTimerMax;
-        public bool BlockPercentChance;
-        public bool AttackPercentChance;
-        public bool RecoilStaggerBonusToAttack;
-        public bool UnconsciousBonusToAttack;
-        public bool HandToHandBonusToAttack;
-        public bool PowerAttackPercentChance;
-        public bool RecoilStaggerBonusToPowerAttack;
-        public bool UnconsciousBonusToPowerAttack;
-        public bool PowerAttackNormal;
-        public bool PowerAttackForward;
-        public bool PowerAttackBack;
-        public bool PowerAttackLeft;
-        public bool PowerAttackRight;
-        public bool HoldTimerMin;
-        public bool HoldTimerMax;
-        public bool Flags;
-        public bool AcrobaticDodgePercentChance;
-        public bool RangeMultOptimal;
-        public bool RangeMultMax;
-        public bool SwitchDistanceMelee;
-        public bool SwitchDistanceRanged;
-        public bool BuffStandoffDistance;
-        public bool RangedStandoffDistance;
-        public bool GroupStandoffDistance;
-        public bool RushingAttackPercentChance;
-        public bool RushingAttackDistanceMult;
-        public MaskItem<bool, CombatStyleAdvanced_TranslationMask?> Advanced;
-        public bool CSTDDataTypeState;
-        #endregion
-
-        #region Ctors
-        public CombatStyle_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.DodgePercentChance = defaultOn;
-            this.LeftRightPercentChance = defaultOn;
-            this.DodgeLeftRightTimerMin = defaultOn;
-            this.DodgeLeftRightTimerMax = defaultOn;
-            this.DodgeForwardTimerMin = defaultOn;
-            this.DodgeForwardTimerMax = defaultOn;
-            this.DodgeBackTimerMin = defaultOn;
-            this.DodgeBackTimerMax = defaultOn;
-            this.IdleTimerMin = defaultOn;
-            this.IdleTimerMax = defaultOn;
-            this.BlockPercentChance = defaultOn;
-            this.AttackPercentChance = defaultOn;
-            this.RecoilStaggerBonusToAttack = defaultOn;
-            this.UnconsciousBonusToAttack = defaultOn;
-            this.HandToHandBonusToAttack = defaultOn;
-            this.PowerAttackPercentChance = defaultOn;
-            this.RecoilStaggerBonusToPowerAttack = defaultOn;
-            this.UnconsciousBonusToPowerAttack = defaultOn;
-            this.PowerAttackNormal = defaultOn;
-            this.PowerAttackForward = defaultOn;
-            this.PowerAttackBack = defaultOn;
-            this.PowerAttackLeft = defaultOn;
-            this.PowerAttackRight = defaultOn;
-            this.HoldTimerMin = defaultOn;
-            this.HoldTimerMax = defaultOn;
-            this.Flags = defaultOn;
-            this.AcrobaticDodgePercentChance = defaultOn;
-            this.RangeMultOptimal = defaultOn;
-            this.RangeMultMax = defaultOn;
-            this.SwitchDistanceMelee = defaultOn;
-            this.SwitchDistanceRanged = defaultOn;
-            this.BuffStandoffDistance = defaultOn;
-            this.RangedStandoffDistance = defaultOn;
-            this.GroupStandoffDistance = defaultOn;
-            this.RushingAttackPercentChance = defaultOn;
-            this.RushingAttackDistanceMult = defaultOn;
-            this.Advanced = new MaskItem<bool, CombatStyleAdvanced_TranslationMask?>(defaultOn, null);
-            this.CSTDDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((DodgePercentChance, null));
-            ret.Add((LeftRightPercentChance, null));
-            ret.Add((DodgeLeftRightTimerMin, null));
-            ret.Add((DodgeLeftRightTimerMax, null));
-            ret.Add((DodgeForwardTimerMin, null));
-            ret.Add((DodgeForwardTimerMax, null));
-            ret.Add((DodgeBackTimerMin, null));
-            ret.Add((DodgeBackTimerMax, null));
-            ret.Add((IdleTimerMin, null));
-            ret.Add((IdleTimerMax, null));
-            ret.Add((BlockPercentChance, null));
-            ret.Add((AttackPercentChance, null));
-            ret.Add((RecoilStaggerBonusToAttack, null));
-            ret.Add((UnconsciousBonusToAttack, null));
-            ret.Add((HandToHandBonusToAttack, null));
-            ret.Add((PowerAttackPercentChance, null));
-            ret.Add((RecoilStaggerBonusToPowerAttack, null));
-            ret.Add((UnconsciousBonusToPowerAttack, null));
-            ret.Add((PowerAttackNormal, null));
-            ret.Add((PowerAttackForward, null));
-            ret.Add((PowerAttackBack, null));
-            ret.Add((PowerAttackLeft, null));
-            ret.Add((PowerAttackRight, null));
-            ret.Add((HoldTimerMin, null));
-            ret.Add((HoldTimerMax, null));
-            ret.Add((Flags, null));
-            ret.Add((AcrobaticDodgePercentChance, null));
-            ret.Add((RangeMultOptimal, null));
-            ret.Add((RangeMultMax, null));
-            ret.Add((SwitchDistanceMelee, null));
-            ret.Add((SwitchDistanceRanged, null));
-            ret.Add((BuffStandoffDistance, null));
-            ret.Add((RangedStandoffDistance, null));
-            ret.Add((GroupStandoffDistance, null));
-            ret.Add((RushingAttackPercentChance, null));
-            ret.Add((RushingAttackDistanceMult, null));
-            ret.Add((Advanced?.Overall ?? true, Advanced?.Specific?.GetCrystal()));
-            ret.Add((CSTDDataTypeState, null));
-        }
-    }
 }
 #endregion
 

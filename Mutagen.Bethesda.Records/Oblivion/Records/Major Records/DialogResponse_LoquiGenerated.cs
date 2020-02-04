@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static DialogResponse CreateFromXml(
             XElement node,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -196,15 +196,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static DialogResponse CreateFromXml(
             XElement node,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DialogResponse.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             string path,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             string path,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             Stream stream,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse CreateFromXml(
             Stream stream,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -292,6 +292,455 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Emotion = initialValue;
+                this.EmotionValue = initialValue;
+                this.Fluff1 = initialValue;
+                this.ResponseNumber = initialValue;
+                this.Fluff2 = initialValue;
+                this.ResponseText = initialValue;
+                this.ActorNotes = initialValue;
+                this.TRDTDataTypeState = initialValue;
+            }
+
+            public Mask(
+                T Emotion,
+                T EmotionValue,
+                T Fluff1,
+                T ResponseNumber,
+                T Fluff2,
+                T ResponseText,
+                T ActorNotes,
+                T TRDTDataTypeState)
+            {
+                this.Emotion = Emotion;
+                this.EmotionValue = EmotionValue;
+                this.Fluff1 = Fluff1;
+                this.ResponseNumber = ResponseNumber;
+                this.Fluff2 = Fluff2;
+                this.ResponseText = ResponseText;
+                this.ActorNotes = ActorNotes;
+                this.TRDTDataTypeState = TRDTDataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Emotion;
+            public T EmotionValue;
+            public T Fluff1;
+            public T ResponseNumber;
+            public T Fluff2;
+            public T ResponseText;
+            public T ActorNotes;
+            public T TRDTDataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Emotion, rhs.Emotion)) return false;
+                if (!object.Equals(this.EmotionValue, rhs.EmotionValue)) return false;
+                if (!object.Equals(this.Fluff1, rhs.Fluff1)) return false;
+                if (!object.Equals(this.ResponseNumber, rhs.ResponseNumber)) return false;
+                if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
+                if (!object.Equals(this.ResponseText, rhs.ResponseText)) return false;
+                if (!object.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
+                if (!object.Equals(this.TRDTDataTypeState, rhs.TRDTDataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Emotion?.GetHashCode());
+                ret = ret.CombineHashCode(this.EmotionValue?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
+                ret = ret.CombineHashCode(this.ResponseNumber?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
+                ret = ret.CombineHashCode(this.ResponseText?.GetHashCode());
+                ret = ret.CombineHashCode(this.ActorNotes?.GetHashCode());
+                ret = ret.CombineHashCode(this.TRDTDataTypeState?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Emotion)) return false;
+                if (!eval(this.EmotionValue)) return false;
+                if (!eval(this.Fluff1)) return false;
+                if (!eval(this.ResponseNumber)) return false;
+                if (!eval(this.Fluff2)) return false;
+                if (!eval(this.ResponseText)) return false;
+                if (!eval(this.ActorNotes)) return false;
+                if (!eval(this.TRDTDataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new DialogResponse.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Emotion = eval(this.Emotion);
+                obj.EmotionValue = eval(this.EmotionValue);
+                obj.Fluff1 = eval(this.Fluff1);
+                obj.ResponseNumber = eval(this.ResponseNumber);
+                obj.Fluff2 = eval(this.Fluff2);
+                obj.ResponseText = eval(this.ResponseText);
+                obj.ActorNotes = eval(this.ActorNotes);
+                obj.TRDTDataTypeState = eval(this.TRDTDataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(DialogResponse.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, DialogResponse.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(DialogResponse.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Emotion ?? true)
+                    {
+                        fg.AppendLine($"Emotion => {Emotion}");
+                    }
+                    if (printMask?.EmotionValue ?? true)
+                    {
+                        fg.AppendLine($"EmotionValue => {EmotionValue}");
+                    }
+                    if (printMask?.Fluff1 ?? true)
+                    {
+                        fg.AppendLine($"Fluff1 => {Fluff1}");
+                    }
+                    if (printMask?.ResponseNumber ?? true)
+                    {
+                        fg.AppendLine($"ResponseNumber => {ResponseNumber}");
+                    }
+                    if (printMask?.Fluff2 ?? true)
+                    {
+                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                    }
+                    if (printMask?.ResponseText ?? true)
+                    {
+                        fg.AppendLine($"ResponseText => {ResponseText}");
+                    }
+                    if (printMask?.ActorNotes ?? true)
+                    {
+                        fg.AppendLine($"ActorNotes => {ActorNotes}");
+                    }
+                    if (printMask?.TRDTDataTypeState ?? true)
+                    {
+                        fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Emotion;
+            public Exception? EmotionValue;
+            public Exception? Fluff1;
+            public Exception? ResponseNumber;
+            public Exception? Fluff2;
+            public Exception? ResponseText;
+            public Exception? ActorNotes;
+            public Exception? TRDTDataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
+                switch (enu)
+                {
+                    case DialogResponse_FieldIndex.Emotion:
+                        return Emotion;
+                    case DialogResponse_FieldIndex.EmotionValue:
+                        return EmotionValue;
+                    case DialogResponse_FieldIndex.Fluff1:
+                        return Fluff1;
+                    case DialogResponse_FieldIndex.ResponseNumber:
+                        return ResponseNumber;
+                    case DialogResponse_FieldIndex.Fluff2:
+                        return Fluff2;
+                    case DialogResponse_FieldIndex.ResponseText:
+                        return ResponseText;
+                    case DialogResponse_FieldIndex.ActorNotes:
+                        return ActorNotes;
+                    case DialogResponse_FieldIndex.TRDTDataTypeState:
+                        return TRDTDataTypeState;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
+                switch (enu)
+                {
+                    case DialogResponse_FieldIndex.Emotion:
+                        this.Emotion = ex;
+                        break;
+                    case DialogResponse_FieldIndex.EmotionValue:
+                        this.EmotionValue = ex;
+                        break;
+                    case DialogResponse_FieldIndex.Fluff1:
+                        this.Fluff1 = ex;
+                        break;
+                    case DialogResponse_FieldIndex.ResponseNumber:
+                        this.ResponseNumber = ex;
+                        break;
+                    case DialogResponse_FieldIndex.Fluff2:
+                        this.Fluff2 = ex;
+                        break;
+                    case DialogResponse_FieldIndex.ResponseText:
+                        this.ResponseText = ex;
+                        break;
+                    case DialogResponse_FieldIndex.ActorNotes:
+                        this.ActorNotes = ex;
+                        break;
+                    case DialogResponse_FieldIndex.TRDTDataTypeState:
+                        this.TRDTDataTypeState = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
+                switch (enu)
+                {
+                    case DialogResponse_FieldIndex.Emotion:
+                        this.Emotion = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.EmotionValue:
+                        this.EmotionValue = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.Fluff1:
+                        this.Fluff1 = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.ResponseNumber:
+                        this.ResponseNumber = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.Fluff2:
+                        this.Fluff2 = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.ResponseText:
+                        this.ResponseText = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.ActorNotes:
+                        this.ActorNotes = (Exception)obj;
+                        break;
+                    case DialogResponse_FieldIndex.TRDTDataTypeState:
+                        this.TRDTDataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Emotion != null) return true;
+                if (EmotionValue != null) return true;
+                if (Fluff1 != null) return true;
+                if (ResponseNumber != null) return true;
+                if (Fluff2 != null) return true;
+                if (ResponseText != null) return true;
+                if (ActorNotes != null) return true;
+                if (TRDTDataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Emotion => {Emotion}");
+                fg.AppendLine($"EmotionValue => {EmotionValue}");
+                fg.AppendLine($"Fluff1 => {Fluff1}");
+                fg.AppendLine($"ResponseNumber => {ResponseNumber}");
+                fg.AppendLine($"Fluff2 => {Fluff2}");
+                fg.AppendLine($"ResponseText => {ResponseText}");
+                fg.AppendLine($"ActorNotes => {ActorNotes}");
+                fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Emotion = this.Emotion.Combine(rhs.Emotion);
+                ret.EmotionValue = this.EmotionValue.Combine(rhs.EmotionValue);
+                ret.Fluff1 = this.Fluff1.Combine(rhs.Fluff1);
+                ret.ResponseNumber = this.ResponseNumber.Combine(rhs.ResponseNumber);
+                ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
+                ret.ResponseText = this.ResponseText.Combine(rhs.ResponseText);
+                ret.ActorNotes = this.ActorNotes.Combine(rhs.ActorNotes);
+                ret.TRDTDataTypeState = this.TRDTDataTypeState.Combine(rhs.TRDTDataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Emotion;
+            public bool EmotionValue;
+            public bool Fluff1;
+            public bool ResponseNumber;
+            public bool Fluff2;
+            public bool ResponseText;
+            public bool ActorNotes;
+            public bool TRDTDataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Emotion = defaultOn;
+                this.EmotionValue = defaultOn;
+                this.Fluff1 = defaultOn;
+                this.ResponseNumber = defaultOn;
+                this.Fluff2 = defaultOn;
+                this.ResponseText = defaultOn;
+                this.ActorNotes = defaultOn;
+                this.TRDTDataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Emotion, null));
+                ret.Add((EmotionValue, null));
+                ret.Add((Fluff1, null));
+                ret.Add((ResponseNumber, null));
+                ret.Add((Fluff2, null));
+                ret.Add((ResponseText, null));
+                ret.Add((ActorNotes, null));
+                ret.Add((TRDTDataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -414,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static DialogResponse_Mask<bool> GetEqualsMask(
+        public static DialogResponse.Mask<bool> GetEqualsMask(
             this IDialogResponseGetter item,
             IDialogResponseGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -428,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IDialogResponseGetter item,
             string? name = null,
-            DialogResponse_Mask<bool>? printMask = null)
+            DialogResponse.Mask<bool>? printMask = null)
         {
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -440,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogResponse_Mask<bool>? printMask = null)
+            DialogResponse.Mask<bool>? printMask = null)
         {
             ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -451,16 +900,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IDialogResponseGetter item,
-            DialogResponse_Mask<bool?> checkMask)
+            DialogResponse.Mask<bool?> checkMask)
         {
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DialogResponse_Mask<bool> GetHasBeenSetMask(this IDialogResponseGetter item)
+        public static DialogResponse.Mask<bool> GetHasBeenSetMask(this IDialogResponseGetter item)
         {
-            var ret = new DialogResponse_Mask<bool>(false);
+            var ret = new DialogResponse.Mask<bool>(false);
             ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -479,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
-            DialogResponse_TranslationMask? copyMask = null)
+            DialogResponse.TranslationMask? copyMask = null)
         {
             ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -491,8 +940,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? copyMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -500,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DialogResponse.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -518,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse DeepCopy(
             this IDialogResponseGetter item,
-            DialogResponse_TranslationMask? copyMask = null)
+            DialogResponse.TranslationMask? copyMask = null)
         {
             return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -527,8 +976,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static DialogResponse DeepCopy(
             this IDialogResponseGetter item,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? copyMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? copyMask = null)
         {
             return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -552,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             XElement node,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -565,8 +1014,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             XElement node,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -574,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DialogResponse.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -593,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             string path,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -605,8 +1054,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             string path,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -620,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -633,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             Stream stream,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -645,8 +1094,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IDialogResponse item,
             Stream stream,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -660,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -740,9 +1189,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(DialogResponse_Mask<>);
+        public static readonly Type MaskType = typeof(DialogResponse.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DialogResponse_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(DialogResponse.ErrorMask);
 
         public static readonly Type ClassType = typeof(DialogResponse);
 
@@ -1103,12 +1552,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly DialogResponseCommon Instance = new DialogResponseCommon();
 
-        public DialogResponse_Mask<bool> GetEqualsMask(
+        public DialogResponse.Mask<bool> GetEqualsMask(
             IDialogResponseGetter item,
             IDialogResponseGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DialogResponse_Mask<bool>(false);
+            var ret = new DialogResponse.Mask<bool>(false);
             ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1120,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IDialogResponseGetter item,
             IDialogResponseGetter rhs,
-            DialogResponse_Mask<bool> ret,
+            DialogResponse.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1137,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IDialogResponseGetter item,
             string? name = null,
-            DialogResponse_Mask<bool>? printMask = null)
+            DialogResponse.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1152,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogResponse_Mask<bool>? printMask = null)
+            DialogResponse.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1176,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IDialogResponseGetter item,
             FileGeneration fg,
-            DialogResponse_Mask<bool>? printMask = null)
+            DialogResponse.Mask<bool>? printMask = null)
         {
             if (printMask?.Emotion ?? true)
             {
@@ -1214,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IDialogResponseGetter item,
-            DialogResponse_Mask<bool?> checkMask)
+            DialogResponse.Mask<bool?> checkMask)
         {
             if (checkMask.ResponseText.HasValue && checkMask.ResponseText.Value != (item.ResponseText != null)) return false;
             if (checkMask.ActorNotes.HasValue && checkMask.ActorNotes.Value != (item.ActorNotes != null)) return false;
@@ -1223,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IDialogResponseGetter item,
-            DialogResponse_Mask<bool> mask)
+            DialogResponse.Mask<bool> mask)
         {
             mask.Emotion = true;
             mask.EmotionValue = true;
@@ -1339,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DialogResponse DeepCopy(
             IDialogResponseGetter item,
-            DialogResponse_TranslationMask? copyMask = null)
+            DialogResponse.TranslationMask? copyMask = null)
         {
             DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1350,8 +1799,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DialogResponse DeepCopy(
             IDialogResponseGetter item,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? copyMask = null)
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? copyMask = null)
         {
             DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1768,8 +2217,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             XElement node,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null,
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1779,14 +2228,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = DialogResponse.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IDialogResponseGetter item,
             string path,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null,
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1819,8 +2268,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IDialogResponseGetter item,
             Stream stream,
-            out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask? translationMask = null,
+            out DialogResponse.ErrorMask errorMask,
+            DialogResponse.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1869,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             XElement node,
             string? name = null,
-            DialogResponse_TranslationMask? translationMask = null)
+            DialogResponse.TranslationMask? translationMask = null)
         {
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1913,456 +2362,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class DialogResponse_Mask<T> :
-        IMask<T>,
-        IEquatable<DialogResponse_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public DialogResponse_Mask(T initialValue)
-        {
-            this.Emotion = initialValue;
-            this.EmotionValue = initialValue;
-            this.Fluff1 = initialValue;
-            this.ResponseNumber = initialValue;
-            this.Fluff2 = initialValue;
-            this.ResponseText = initialValue;
-            this.ActorNotes = initialValue;
-            this.TRDTDataTypeState = initialValue;
-        }
-
-        public DialogResponse_Mask(
-            T Emotion,
-            T EmotionValue,
-            T Fluff1,
-            T ResponseNumber,
-            T Fluff2,
-            T ResponseText,
-            T ActorNotes,
-            T TRDTDataTypeState)
-        {
-            this.Emotion = Emotion;
-            this.EmotionValue = EmotionValue;
-            this.Fluff1 = Fluff1;
-            this.ResponseNumber = ResponseNumber;
-            this.Fluff2 = Fluff2;
-            this.ResponseText = ResponseText;
-            this.ActorNotes = ActorNotes;
-            this.TRDTDataTypeState = TRDTDataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected DialogResponse_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Emotion;
-        public T EmotionValue;
-        public T Fluff1;
-        public T ResponseNumber;
-        public T Fluff2;
-        public T ResponseText;
-        public T ActorNotes;
-        public T TRDTDataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is DialogResponse_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(DialogResponse_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Emotion, rhs.Emotion)) return false;
-            if (!object.Equals(this.EmotionValue, rhs.EmotionValue)) return false;
-            if (!object.Equals(this.Fluff1, rhs.Fluff1)) return false;
-            if (!object.Equals(this.ResponseNumber, rhs.ResponseNumber)) return false;
-            if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
-            if (!object.Equals(this.ResponseText, rhs.ResponseText)) return false;
-            if (!object.Equals(this.ActorNotes, rhs.ActorNotes)) return false;
-            if (!object.Equals(this.TRDTDataTypeState, rhs.TRDTDataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Emotion?.GetHashCode());
-            ret = ret.CombineHashCode(this.EmotionValue?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
-            ret = ret.CombineHashCode(this.ResponseNumber?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-            ret = ret.CombineHashCode(this.ResponseText?.GetHashCode());
-            ret = ret.CombineHashCode(this.ActorNotes?.GetHashCode());
-            ret = ret.CombineHashCode(this.TRDTDataTypeState?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Emotion)) return false;
-            if (!eval(this.EmotionValue)) return false;
-            if (!eval(this.Fluff1)) return false;
-            if (!eval(this.ResponseNumber)) return false;
-            if (!eval(this.Fluff2)) return false;
-            if (!eval(this.ResponseText)) return false;
-            if (!eval(this.ActorNotes)) return false;
-            if (!eval(this.TRDTDataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public DialogResponse_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new DialogResponse_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(DialogResponse_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Emotion = eval(this.Emotion);
-            obj.EmotionValue = eval(this.EmotionValue);
-            obj.Fluff1 = eval(this.Fluff1);
-            obj.ResponseNumber = eval(this.ResponseNumber);
-            obj.Fluff2 = eval(this.Fluff2);
-            obj.ResponseText = eval(this.ResponseText);
-            obj.ActorNotes = eval(this.ActorNotes);
-            obj.TRDTDataTypeState = eval(this.TRDTDataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(DialogResponse_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, DialogResponse_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(DialogResponse_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Emotion ?? true)
-                {
-                    fg.AppendLine($"Emotion => {Emotion}");
-                }
-                if (printMask?.EmotionValue ?? true)
-                {
-                    fg.AppendLine($"EmotionValue => {EmotionValue}");
-                }
-                if (printMask?.Fluff1 ?? true)
-                {
-                    fg.AppendLine($"Fluff1 => {Fluff1}");
-                }
-                if (printMask?.ResponseNumber ?? true)
-                {
-                    fg.AppendLine($"ResponseNumber => {ResponseNumber}");
-                }
-                if (printMask?.Fluff2 ?? true)
-                {
-                    fg.AppendLine($"Fluff2 => {Fluff2}");
-                }
-                if (printMask?.ResponseText ?? true)
-                {
-                    fg.AppendLine($"ResponseText => {ResponseText}");
-                }
-                if (printMask?.ActorNotes ?? true)
-                {
-                    fg.AppendLine($"ActorNotes => {ActorNotes}");
-                }
-                if (printMask?.TRDTDataTypeState ?? true)
-                {
-                    fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class DialogResponse_ErrorMask : IErrorMask, IErrorMask<DialogResponse_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Emotion;
-        public Exception? EmotionValue;
-        public Exception? Fluff1;
-        public Exception? ResponseNumber;
-        public Exception? Fluff2;
-        public Exception? ResponseText;
-        public Exception? ActorNotes;
-        public Exception? TRDTDataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    return Emotion;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    return EmotionValue;
-                case DialogResponse_FieldIndex.Fluff1:
-                    return Fluff1;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    return ResponseNumber;
-                case DialogResponse_FieldIndex.Fluff2:
-                    return Fluff2;
-                case DialogResponse_FieldIndex.ResponseText:
-                    return ResponseText;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    return ActorNotes;
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    return TRDTDataTypeState;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    this.Emotion = ex;
-                    break;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    this.EmotionValue = ex;
-                    break;
-                case DialogResponse_FieldIndex.Fluff1:
-                    this.Fluff1 = ex;
-                    break;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    this.ResponseNumber = ex;
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    this.Fluff2 = ex;
-                    break;
-                case DialogResponse_FieldIndex.ResponseText:
-                    this.ResponseText = ex;
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    this.ActorNotes = ex;
-                    break;
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    this.TRDTDataTypeState = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            DialogResponse_FieldIndex enu = (DialogResponse_FieldIndex)index;
-            switch (enu)
-            {
-                case DialogResponse_FieldIndex.Emotion:
-                    this.Emotion = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.EmotionValue:
-                    this.EmotionValue = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.Fluff1:
-                    this.Fluff1 = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.ResponseNumber:
-                    this.ResponseNumber = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.Fluff2:
-                    this.Fluff2 = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.ResponseText:
-                    this.ResponseText = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.ActorNotes:
-                    this.ActorNotes = (Exception)obj;
-                    break;
-                case DialogResponse_FieldIndex.TRDTDataTypeState:
-                    this.TRDTDataTypeState = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Emotion != null) return true;
-            if (EmotionValue != null) return true;
-            if (Fluff1 != null) return true;
-            if (ResponseNumber != null) return true;
-            if (Fluff2 != null) return true;
-            if (ResponseText != null) return true;
-            if (ActorNotes != null) return true;
-            if (TRDTDataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("DialogResponse_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Emotion => {Emotion}");
-            fg.AppendLine($"EmotionValue => {EmotionValue}");
-            fg.AppendLine($"Fluff1 => {Fluff1}");
-            fg.AppendLine($"ResponseNumber => {ResponseNumber}");
-            fg.AppendLine($"Fluff2 => {Fluff2}");
-            fg.AppendLine($"ResponseText => {ResponseText}");
-            fg.AppendLine($"ActorNotes => {ActorNotes}");
-            fg.AppendLine($"TRDTDataTypeState => {TRDTDataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public DialogResponse_ErrorMask Combine(DialogResponse_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new DialogResponse_ErrorMask();
-            ret.Emotion = this.Emotion.Combine(rhs.Emotion);
-            ret.EmotionValue = this.EmotionValue.Combine(rhs.EmotionValue);
-            ret.Fluff1 = this.Fluff1.Combine(rhs.Fluff1);
-            ret.ResponseNumber = this.ResponseNumber.Combine(rhs.ResponseNumber);
-            ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
-            ret.ResponseText = this.ResponseText.Combine(rhs.ResponseText);
-            ret.ActorNotes = this.ActorNotes.Combine(rhs.ActorNotes);
-            ret.TRDTDataTypeState = this.TRDTDataTypeState.Combine(rhs.TRDTDataTypeState);
-            return ret;
-        }
-        public static DialogResponse_ErrorMask? Combine(DialogResponse_ErrorMask? lhs, DialogResponse_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static DialogResponse_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new DialogResponse_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class DialogResponse_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Emotion;
-        public bool EmotionValue;
-        public bool Fluff1;
-        public bool ResponseNumber;
-        public bool Fluff2;
-        public bool ResponseText;
-        public bool ActorNotes;
-        public bool TRDTDataTypeState;
-        #endregion
-
-        #region Ctors
-        public DialogResponse_TranslationMask(bool defaultOn)
-        {
-            this.Emotion = defaultOn;
-            this.EmotionValue = defaultOn;
-            this.Fluff1 = defaultOn;
-            this.ResponseNumber = defaultOn;
-            this.Fluff2 = defaultOn;
-            this.ResponseText = defaultOn;
-            this.ActorNotes = defaultOn;
-            this.TRDTDataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Emotion, null));
-            ret.Add((EmotionValue, null));
-            ret.Add((Fluff1, null));
-            ret.Add((ResponseNumber, null));
-            ret.Add((Fluff2, null));
-            ret.Add((ResponseText, null));
-            ret.Add((ActorNotes, null));
-            ret.Add((TRDTDataTypeState, null));
-        }
-    }
 }
 #endregion
 

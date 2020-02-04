@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ScriptMetaSummary CreateFromXml(
             XElement node,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -133,15 +133,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ScriptMetaSummary CreateFromXml(
             XElement node,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptMetaSummary.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptMetaSummary CreateFromXml(
             string path,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptMetaSummary CreateFromXml(
             string path,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptMetaSummary CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptMetaSummary CreateFromXml(
             Stream stream,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,8 +205,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptMetaSummary CreateFromXml(
             Stream stream,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptMetaSummary CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -229,6 +229,374 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Fluff = initialValue;
+                this.RefCount = initialValue;
+                this.CompiledSize = initialValue;
+                this.VariableCount = initialValue;
+                this.Type = initialValue;
+            }
+
+            public Mask(
+                T Fluff,
+                T RefCount,
+                T CompiledSize,
+                T VariableCount,
+                T Type)
+            {
+                this.Fluff = Fluff;
+                this.RefCount = RefCount;
+                this.CompiledSize = CompiledSize;
+                this.VariableCount = VariableCount;
+                this.Type = Type;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Fluff;
+            public T RefCount;
+            public T CompiledSize;
+            public T VariableCount;
+            public T Type;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.RefCount, rhs.RefCount)) return false;
+                if (!object.Equals(this.CompiledSize, rhs.CompiledSize)) return false;
+                if (!object.Equals(this.VariableCount, rhs.VariableCount)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+                ret = ret.CombineHashCode(this.RefCount?.GetHashCode());
+                ret = ret.CombineHashCode(this.CompiledSize?.GetHashCode());
+                ret = ret.CombineHashCode(this.VariableCount?.GetHashCode());
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Fluff)) return false;
+                if (!eval(this.RefCount)) return false;
+                if (!eval(this.CompiledSize)) return false;
+                if (!eval(this.VariableCount)) return false;
+                if (!eval(this.Type)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ScriptMetaSummary.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Fluff = eval(this.Fluff);
+                obj.RefCount = eval(this.RefCount);
+                obj.CompiledSize = eval(this.CompiledSize);
+                obj.VariableCount = eval(this.VariableCount);
+                obj.Type = eval(this.Type);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ScriptMetaSummary.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ScriptMetaSummary.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ScriptMetaSummary.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Fluff ?? true)
+                    {
+                        fg.AppendLine($"Fluff => {Fluff}");
+                    }
+                    if (printMask?.RefCount ?? true)
+                    {
+                        fg.AppendLine($"RefCount => {RefCount}");
+                    }
+                    if (printMask?.CompiledSize ?? true)
+                    {
+                        fg.AppendLine($"CompiledSize => {CompiledSize}");
+                    }
+                    if (printMask?.VariableCount ?? true)
+                    {
+                        fg.AppendLine($"VariableCount => {VariableCount}");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Fluff;
+            public Exception? RefCount;
+            public Exception? CompiledSize;
+            public Exception? VariableCount;
+            public Exception? Type;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptMetaSummary_FieldIndex.Fluff:
+                        return Fluff;
+                    case ScriptMetaSummary_FieldIndex.RefCount:
+                        return RefCount;
+                    case ScriptMetaSummary_FieldIndex.CompiledSize:
+                        return CompiledSize;
+                    case ScriptMetaSummary_FieldIndex.VariableCount:
+                        return VariableCount;
+                    case ScriptMetaSummary_FieldIndex.Type:
+                        return Type;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptMetaSummary_FieldIndex.Fluff:
+                        this.Fluff = ex;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.RefCount:
+                        this.RefCount = ex;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.CompiledSize:
+                        this.CompiledSize = ex;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.VariableCount:
+                        this.VariableCount = ex;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptMetaSummary_FieldIndex.Fluff:
+                        this.Fluff = (Exception)obj;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.RefCount:
+                        this.RefCount = (Exception)obj;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.CompiledSize:
+                        this.CompiledSize = (Exception)obj;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.VariableCount:
+                        this.VariableCount = (Exception)obj;
+                        break;
+                    case ScriptMetaSummary_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Fluff != null) return true;
+                if (RefCount != null) return true;
+                if (CompiledSize != null) return true;
+                if (VariableCount != null) return true;
+                if (Type != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Fluff => {Fluff}");
+                fg.AppendLine($"RefCount => {RefCount}");
+                fg.AppendLine($"CompiledSize => {CompiledSize}");
+                fg.AppendLine($"VariableCount => {VariableCount}");
+                fg.AppendLine($"Type => {Type}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.RefCount = this.RefCount.Combine(rhs.RefCount);
+                ret.CompiledSize = this.CompiledSize.Combine(rhs.CompiledSize);
+                ret.VariableCount = this.VariableCount.Combine(rhs.VariableCount);
+                ret.Type = this.Type.Combine(rhs.Type);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Fluff;
+            public bool RefCount;
+            public bool CompiledSize;
+            public bool VariableCount;
+            public bool Type;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Fluff = defaultOn;
+                this.RefCount = defaultOn;
+                this.CompiledSize = defaultOn;
+                this.VariableCount = defaultOn;
+                this.Type = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Fluff, null));
+                ret.Add((RefCount, null));
+                ret.Add((CompiledSize, null));
+                ret.Add((VariableCount, null));
+                ret.Add((Type, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -339,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
+        public static ScriptMetaSummary.Mask<bool> GetEqualsMask(
             this IScriptMetaSummaryGetter item,
             IScriptMetaSummaryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -353,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IScriptMetaSummaryGetter item,
             string? name = null,
-            ScriptMetaSummary_Mask<bool>? printMask = null)
+            ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -365,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummaryGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptMetaSummary_Mask<bool>? printMask = null)
+            ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -376,16 +744,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IScriptMetaSummaryGetter item,
-            ScriptMetaSummary_Mask<bool?> checkMask)
+            ScriptMetaSummary.Mask<bool?> checkMask)
         {
             return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptMetaSummary_Mask<bool> GetHasBeenSetMask(this IScriptMetaSummaryGetter item)
+        public static ScriptMetaSummary.Mask<bool> GetHasBeenSetMask(this IScriptMetaSummaryGetter item)
         {
-            var ret = new ScriptMetaSummary_Mask<bool>(false);
+            var ret = new ScriptMetaSummary.Mask<bool>(false);
             ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -404,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs,
-            ScriptMetaSummary_TranslationMask? copyMask = null)
+            ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -416,8 +784,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? copyMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -425,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptMetaSummary.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -443,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptMetaSummary DeepCopy(
             this IScriptMetaSummaryGetter item,
-            ScriptMetaSummary_TranslationMask? copyMask = null)
+            ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             return ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -452,8 +820,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptMetaSummary DeepCopy(
             this IScriptMetaSummaryGetter item,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? copyMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             return ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -477,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             XElement node,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -490,8 +858,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             XElement node,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -499,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptMetaSummary.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -518,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             string path,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -530,8 +898,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             string path,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -545,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummary item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -558,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             Stream stream,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -570,8 +938,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             Stream stream,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -585,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummary item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -662,9 +1030,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(ScriptMetaSummary_Mask<>);
+        public static readonly Type MaskType = typeof(ScriptMetaSummary.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptMetaSummary_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ScriptMetaSummary.ErrorMask);
 
         public static readonly Type ClassType = typeof(ScriptMetaSummary);
 
@@ -969,12 +1337,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ScriptMetaSummaryCommon Instance = new ScriptMetaSummaryCommon();
 
-        public ScriptMetaSummary_Mask<bool> GetEqualsMask(
+        public ScriptMetaSummary.Mask<bool> GetEqualsMask(
             IScriptMetaSummaryGetter item,
             IScriptMetaSummaryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptMetaSummary_Mask<bool>(false);
+            var ret = new ScriptMetaSummary.Mask<bool>(false);
             ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -986,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IScriptMetaSummaryGetter item,
             IScriptMetaSummaryGetter rhs,
-            ScriptMetaSummary_Mask<bool> ret,
+            ScriptMetaSummary.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1000,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IScriptMetaSummaryGetter item,
             string? name = null,
-            ScriptMetaSummary_Mask<bool>? printMask = null)
+            ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1015,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummaryGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptMetaSummary_Mask<bool>? printMask = null)
+            ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1039,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IScriptMetaSummaryGetter item,
             FileGeneration fg,
-            ScriptMetaSummary_Mask<bool>? printMask = null)
+            ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             if (printMask?.Fluff ?? true)
             {
@@ -1065,14 +1433,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IScriptMetaSummaryGetter item,
-            ScriptMetaSummary_Mask<bool?> checkMask)
+            ScriptMetaSummary.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IScriptMetaSummaryGetter item,
-            ScriptMetaSummary_Mask<bool> mask)
+            ScriptMetaSummary.Mask<bool> mask)
         {
             mask.Fluff = true;
             mask.RefCount = true;
@@ -1157,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptMetaSummary DeepCopy(
             IScriptMetaSummaryGetter item,
-            ScriptMetaSummary_TranslationMask? copyMask = null)
+            ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1168,8 +1536,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptMetaSummary DeepCopy(
             IScriptMetaSummaryGetter item,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? copyMask = null)
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? copyMask = null)
         {
             ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1471,8 +1839,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptMetaSummaryGetter item,
             XElement node,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null,
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1482,14 +1850,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptMetaSummary.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IScriptMetaSummaryGetter item,
             string path,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null,
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1522,8 +1890,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptMetaSummaryGetter item,
             Stream stream,
-            out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask? translationMask = null,
+            out ScriptMetaSummary.ErrorMask errorMask,
+            ScriptMetaSummary.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1572,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummaryGetter item,
             XElement node,
             string? name = null,
-            ScriptMetaSummary_TranslationMask? translationMask = null)
+            ScriptMetaSummary.TranslationMask? translationMask = null)
         {
             ((ScriptMetaSummaryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1616,375 +1984,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class ScriptMetaSummary_Mask<T> :
-        IMask<T>,
-        IEquatable<ScriptMetaSummary_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ScriptMetaSummary_Mask(T initialValue)
-        {
-            this.Fluff = initialValue;
-            this.RefCount = initialValue;
-            this.CompiledSize = initialValue;
-            this.VariableCount = initialValue;
-            this.Type = initialValue;
-        }
-
-        public ScriptMetaSummary_Mask(
-            T Fluff,
-            T RefCount,
-            T CompiledSize,
-            T VariableCount,
-            T Type)
-        {
-            this.Fluff = Fluff;
-            this.RefCount = RefCount;
-            this.CompiledSize = CompiledSize;
-            this.VariableCount = VariableCount;
-            this.Type = Type;
-        }
-
-        #pragma warning disable CS8618
-        protected ScriptMetaSummary_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Fluff;
-        public T RefCount;
-        public T CompiledSize;
-        public T VariableCount;
-        public T Type;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ScriptMetaSummary_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ScriptMetaSummary_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-            if (!object.Equals(this.RefCount, rhs.RefCount)) return false;
-            if (!object.Equals(this.CompiledSize, rhs.CompiledSize)) return false;
-            if (!object.Equals(this.VariableCount, rhs.VariableCount)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
-            ret = ret.CombineHashCode(this.RefCount?.GetHashCode());
-            ret = ret.CombineHashCode(this.CompiledSize?.GetHashCode());
-            ret = ret.CombineHashCode(this.VariableCount?.GetHashCode());
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Fluff)) return false;
-            if (!eval(this.RefCount)) return false;
-            if (!eval(this.CompiledSize)) return false;
-            if (!eval(this.VariableCount)) return false;
-            if (!eval(this.Type)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ScriptMetaSummary_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ScriptMetaSummary_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ScriptMetaSummary_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Fluff = eval(this.Fluff);
-            obj.RefCount = eval(this.RefCount);
-            obj.CompiledSize = eval(this.CompiledSize);
-            obj.VariableCount = eval(this.VariableCount);
-            obj.Type = eval(this.Type);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ScriptMetaSummary_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ScriptMetaSummary_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ScriptMetaSummary_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff}");
-                }
-                if (printMask?.RefCount ?? true)
-                {
-                    fg.AppendLine($"RefCount => {RefCount}");
-                }
-                if (printMask?.CompiledSize ?? true)
-                {
-                    fg.AppendLine($"CompiledSize => {CompiledSize}");
-                }
-                if (printMask?.VariableCount ?? true)
-                {
-                    fg.AppendLine($"VariableCount => {VariableCount}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ScriptMetaSummary_ErrorMask : IErrorMask, IErrorMask<ScriptMetaSummary_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Fluff;
-        public Exception? RefCount;
-        public Exception? CompiledSize;
-        public Exception? VariableCount;
-        public Exception? Type;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    return Fluff;
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    return RefCount;
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    return CompiledSize;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    return VariableCount;
-                case ScriptMetaSummary_FieldIndex.Type:
-                    return Type;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    this.Fluff = ex;
-                    break;
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    this.RefCount = ex;
-                    break;
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    this.CompiledSize = ex;
-                    break;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    this.VariableCount = ex;
-                    break;
-                case ScriptMetaSummary_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
-                    break;
-                case ScriptMetaSummary_FieldIndex.RefCount:
-                    this.RefCount = (Exception)obj;
-                    break;
-                case ScriptMetaSummary_FieldIndex.CompiledSize:
-                    this.CompiledSize = (Exception)obj;
-                    break;
-                case ScriptMetaSummary_FieldIndex.VariableCount:
-                    this.VariableCount = (Exception)obj;
-                    break;
-                case ScriptMetaSummary_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Fluff != null) return true;
-            if (RefCount != null) return true;
-            if (CompiledSize != null) return true;
-            if (VariableCount != null) return true;
-            if (Type != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ScriptMetaSummary_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Fluff => {Fluff}");
-            fg.AppendLine($"RefCount => {RefCount}");
-            fg.AppendLine($"CompiledSize => {CompiledSize}");
-            fg.AppendLine($"VariableCount => {VariableCount}");
-            fg.AppendLine($"Type => {Type}");
-        }
-        #endregion
-
-        #region Combine
-        public ScriptMetaSummary_ErrorMask Combine(ScriptMetaSummary_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ScriptMetaSummary_ErrorMask();
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.RefCount = this.RefCount.Combine(rhs.RefCount);
-            ret.CompiledSize = this.CompiledSize.Combine(rhs.CompiledSize);
-            ret.VariableCount = this.VariableCount.Combine(rhs.VariableCount);
-            ret.Type = this.Type.Combine(rhs.Type);
-            return ret;
-        }
-        public static ScriptMetaSummary_ErrorMask? Combine(ScriptMetaSummary_ErrorMask? lhs, ScriptMetaSummary_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ScriptMetaSummary_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ScriptMetaSummary_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ScriptMetaSummary_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Fluff;
-        public bool RefCount;
-        public bool CompiledSize;
-        public bool VariableCount;
-        public bool Type;
-        #endregion
-
-        #region Ctors
-        public ScriptMetaSummary_TranslationMask(bool defaultOn)
-        {
-            this.Fluff = defaultOn;
-            this.RefCount = defaultOn;
-            this.CompiledSize = defaultOn;
-            this.VariableCount = defaultOn;
-            this.Type = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Fluff, null));
-            ret.Add((RefCount, null));
-            ret.Add((CompiledSize, null));
-            ret.Add((VariableCount, null));
-            ret.Add((Type, null));
-        }
-    }
 }
 #endregion
 

@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static FaceGenData CreateFromXml(
             XElement node,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -146,15 +146,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static FaceGenData CreateFromXml(
             XElement node,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceGenData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FaceGenData CreateFromXml(
             string path,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,8 +184,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FaceGenData CreateFromXml(
             string path,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FaceGenData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FaceGenData CreateFromXml(
             Stream stream,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,8 +218,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FaceGenData CreateFromXml(
             Stream stream,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static FaceGenData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -242,6 +242,320 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.SymmetricGeometry = initialValue;
+                this.AsymmetricGeometry = initialValue;
+                this.SymmetricTexture = initialValue;
+            }
+
+            public Mask(
+                T SymmetricGeometry,
+                T AsymmetricGeometry,
+                T SymmetricTexture)
+            {
+                this.SymmetricGeometry = SymmetricGeometry;
+                this.AsymmetricGeometry = AsymmetricGeometry;
+                this.SymmetricTexture = SymmetricTexture;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T SymmetricGeometry;
+            public T AsymmetricGeometry;
+            public T SymmetricTexture;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
+                if (!object.Equals(this.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
+                if (!object.Equals(this.SymmetricTexture, rhs.SymmetricTexture)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.SymmetricGeometry?.GetHashCode());
+                ret = ret.CombineHashCode(this.AsymmetricGeometry?.GetHashCode());
+                ret = ret.CombineHashCode(this.SymmetricTexture?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.SymmetricGeometry)) return false;
+                if (!eval(this.AsymmetricGeometry)) return false;
+                if (!eval(this.SymmetricTexture)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new FaceGenData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.SymmetricGeometry = eval(this.SymmetricGeometry);
+                obj.AsymmetricGeometry = eval(this.AsymmetricGeometry);
+                obj.SymmetricTexture = eval(this.SymmetricTexture);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(FaceGenData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, FaceGenData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(FaceGenData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.SymmetricGeometry ?? true)
+                    {
+                        fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
+                    }
+                    if (printMask?.AsymmetricGeometry ?? true)
+                    {
+                        fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
+                    }
+                    if (printMask?.SymmetricTexture ?? true)
+                    {
+                        fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? SymmetricGeometry;
+            public Exception? AsymmetricGeometry;
+            public Exception? SymmetricTexture;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
+                switch (enu)
+                {
+                    case FaceGenData_FieldIndex.SymmetricGeometry:
+                        return SymmetricGeometry;
+                    case FaceGenData_FieldIndex.AsymmetricGeometry:
+                        return AsymmetricGeometry;
+                    case FaceGenData_FieldIndex.SymmetricTexture:
+                        return SymmetricTexture;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
+                switch (enu)
+                {
+                    case FaceGenData_FieldIndex.SymmetricGeometry:
+                        this.SymmetricGeometry = ex;
+                        break;
+                    case FaceGenData_FieldIndex.AsymmetricGeometry:
+                        this.AsymmetricGeometry = ex;
+                        break;
+                    case FaceGenData_FieldIndex.SymmetricTexture:
+                        this.SymmetricTexture = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
+                switch (enu)
+                {
+                    case FaceGenData_FieldIndex.SymmetricGeometry:
+                        this.SymmetricGeometry = (Exception)obj;
+                        break;
+                    case FaceGenData_FieldIndex.AsymmetricGeometry:
+                        this.AsymmetricGeometry = (Exception)obj;
+                        break;
+                    case FaceGenData_FieldIndex.SymmetricTexture:
+                        this.SymmetricTexture = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (SymmetricGeometry != null) return true;
+                if (AsymmetricGeometry != null) return true;
+                if (SymmetricTexture != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
+                fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
+                fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.SymmetricGeometry = this.SymmetricGeometry.Combine(rhs.SymmetricGeometry);
+                ret.AsymmetricGeometry = this.AsymmetricGeometry.Combine(rhs.AsymmetricGeometry);
+                ret.SymmetricTexture = this.SymmetricTexture.Combine(rhs.SymmetricTexture);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool SymmetricGeometry;
+            public bool AsymmetricGeometry;
+            public bool SymmetricTexture;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.SymmetricGeometry = defaultOn;
+                this.AsymmetricGeometry = defaultOn;
+                this.SymmetricTexture = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((SymmetricGeometry, null));
+                ret.Add((AsymmetricGeometry, null));
+                ret.Add((SymmetricTexture, null));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -354,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FaceGenData_Mask<bool> GetEqualsMask(
+        public static FaceGenData.Mask<bool> GetEqualsMask(
             this IFaceGenDataGetter item,
             IFaceGenDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -368,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IFaceGenDataGetter item,
             string? name = null,
-            FaceGenData_Mask<bool>? printMask = null)
+            FaceGenData.Mask<bool>? printMask = null)
         {
             return ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -380,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenDataGetter item,
             FileGeneration fg,
             string? name = null,
-            FaceGenData_Mask<bool>? printMask = null)
+            FaceGenData.Mask<bool>? printMask = null)
         {
             ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -391,16 +705,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IFaceGenDataGetter item,
-            FaceGenData_Mask<bool?> checkMask)
+            FaceGenData.Mask<bool?> checkMask)
         {
             return ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static FaceGenData_Mask<bool> GetHasBeenSetMask(this IFaceGenDataGetter item)
+        public static FaceGenData.Mask<bool> GetHasBeenSetMask(this IFaceGenDataGetter item)
         {
-            var ret = new FaceGenData_Mask<bool>(false);
+            var ret = new FaceGenData.Mask<bool>(false);
             ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -419,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IFaceGenData lhs,
             IFaceGenDataGetter rhs,
-            FaceGenData_TranslationMask? copyMask = null)
+            FaceGenData.TranslationMask? copyMask = null)
         {
             ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -431,8 +745,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IFaceGenData lhs,
             IFaceGenDataGetter rhs,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? copyMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -440,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceGenData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -458,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FaceGenData DeepCopy(
             this IFaceGenDataGetter item,
-            FaceGenData_TranslationMask? copyMask = null)
+            FaceGenData.TranslationMask? copyMask = null)
         {
             return ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,8 +781,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static FaceGenData DeepCopy(
             this IFaceGenDataGetter item,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? copyMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? copyMask = null)
         {
             return ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -492,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFaceGenData item,
             XElement node,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -505,8 +819,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFaceGenData item,
             XElement node,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -514,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceGenData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -533,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFaceGenData item,
             string path,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -545,8 +859,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFaceGenData item,
             string path,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -560,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -573,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFaceGenData item,
             Stream stream,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -585,8 +899,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IFaceGenData item,
             Stream stream,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -600,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -675,9 +989,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(FaceGenData_Mask<>);
+        public static readonly Type MaskType = typeof(FaceGenData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FaceGenData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FaceGenData.ErrorMask);
 
         public static readonly Type ClassType = typeof(FaceGenData);
 
@@ -979,12 +1293,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly FaceGenDataCommon Instance = new FaceGenDataCommon();
 
-        public FaceGenData_Mask<bool> GetEqualsMask(
+        public FaceGenData.Mask<bool> GetEqualsMask(
             IFaceGenDataGetter item,
             IFaceGenDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FaceGenData_Mask<bool>(false);
+            var ret = new FaceGenData.Mask<bool>(false);
             ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -996,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IFaceGenDataGetter item,
             IFaceGenDataGetter rhs,
-            FaceGenData_Mask<bool> ret,
+            FaceGenData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1008,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IFaceGenDataGetter item,
             string? name = null,
-            FaceGenData_Mask<bool>? printMask = null)
+            FaceGenData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1023,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenDataGetter item,
             FileGeneration fg,
             string? name = null,
-            FaceGenData_Mask<bool>? printMask = null)
+            FaceGenData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1047,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IFaceGenDataGetter item,
             FileGeneration fg,
-            FaceGenData_Mask<bool>? printMask = null)
+            FaceGenData.Mask<bool>? printMask = null)
         {
             if (printMask?.SymmetricGeometry ?? true)
             {
@@ -1065,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IFaceGenDataGetter item,
-            FaceGenData_Mask<bool?> checkMask)
+            FaceGenData.Mask<bool?> checkMask)
         {
             if (checkMask.SymmetricGeometry.HasValue && checkMask.SymmetricGeometry.Value != item.SymmetricGeometry_IsSet) return false;
             if (checkMask.AsymmetricGeometry.HasValue && checkMask.AsymmetricGeometry.Value != item.AsymmetricGeometry_IsSet) return false;
@@ -1075,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IFaceGenDataGetter item,
-            FaceGenData_Mask<bool> mask)
+            FaceGenData.Mask<bool> mask)
         {
             mask.SymmetricGeometry = item.SymmetricGeometry_IsSet;
             mask.AsymmetricGeometry = item.AsymmetricGeometry_IsSet;
@@ -1180,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public FaceGenData DeepCopy(
             IFaceGenDataGetter item,
-            FaceGenData_TranslationMask? copyMask = null)
+            FaceGenData.TranslationMask? copyMask = null)
         {
             FaceGenData ret = (FaceGenData)((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1191,8 +1505,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public FaceGenData DeepCopy(
             IFaceGenDataGetter item,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? copyMask = null)
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? copyMask = null)
         {
             FaceGenData ret = (FaceGenData)((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1469,8 +1783,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFaceGenDataGetter item,
             XElement node,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null,
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1480,14 +1794,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceGenData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IFaceGenDataGetter item,
             string path,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null,
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1520,8 +1834,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IFaceGenDataGetter item,
             Stream stream,
-            out FaceGenData_ErrorMask errorMask,
-            FaceGenData_TranslationMask? translationMask = null,
+            out FaceGenData.ErrorMask errorMask,
+            FaceGenData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1570,7 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenDataGetter item,
             XElement node,
             string? name = null,
-            FaceGenData_TranslationMask? translationMask = null)
+            FaceGenData.TranslationMask? translationMask = null)
         {
             ((FaceGenDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1614,321 +1928,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class FaceGenData_Mask<T> :
-        IMask<T>,
-        IEquatable<FaceGenData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public FaceGenData_Mask(T initialValue)
-        {
-            this.SymmetricGeometry = initialValue;
-            this.AsymmetricGeometry = initialValue;
-            this.SymmetricTexture = initialValue;
-        }
-
-        public FaceGenData_Mask(
-            T SymmetricGeometry,
-            T AsymmetricGeometry,
-            T SymmetricTexture)
-        {
-            this.SymmetricGeometry = SymmetricGeometry;
-            this.AsymmetricGeometry = AsymmetricGeometry;
-            this.SymmetricTexture = SymmetricTexture;
-        }
-
-        #pragma warning disable CS8618
-        protected FaceGenData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T SymmetricGeometry;
-        public T AsymmetricGeometry;
-        public T SymmetricTexture;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is FaceGenData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(FaceGenData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.SymmetricGeometry, rhs.SymmetricGeometry)) return false;
-            if (!object.Equals(this.AsymmetricGeometry, rhs.AsymmetricGeometry)) return false;
-            if (!object.Equals(this.SymmetricTexture, rhs.SymmetricTexture)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.SymmetricGeometry?.GetHashCode());
-            ret = ret.CombineHashCode(this.AsymmetricGeometry?.GetHashCode());
-            ret = ret.CombineHashCode(this.SymmetricTexture?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.SymmetricGeometry)) return false;
-            if (!eval(this.AsymmetricGeometry)) return false;
-            if (!eval(this.SymmetricTexture)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public FaceGenData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new FaceGenData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(FaceGenData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.SymmetricGeometry = eval(this.SymmetricGeometry);
-            obj.AsymmetricGeometry = eval(this.AsymmetricGeometry);
-            obj.SymmetricTexture = eval(this.SymmetricTexture);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(FaceGenData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, FaceGenData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(FaceGenData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.SymmetricGeometry ?? true)
-                {
-                    fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
-                }
-                if (printMask?.AsymmetricGeometry ?? true)
-                {
-                    fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
-                }
-                if (printMask?.SymmetricTexture ?? true)
-                {
-                    fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class FaceGenData_ErrorMask : IErrorMask, IErrorMask<FaceGenData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? SymmetricGeometry;
-        public Exception? AsymmetricGeometry;
-        public Exception? SymmetricTexture;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    return SymmetricGeometry;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    return AsymmetricGeometry;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    return SymmetricTexture;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    this.SymmetricGeometry = ex;
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    this.AsymmetricGeometry = ex;
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    this.SymmetricTexture = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            FaceGenData_FieldIndex enu = (FaceGenData_FieldIndex)index;
-            switch (enu)
-            {
-                case FaceGenData_FieldIndex.SymmetricGeometry:
-                    this.SymmetricGeometry = (Exception)obj;
-                    break;
-                case FaceGenData_FieldIndex.AsymmetricGeometry:
-                    this.AsymmetricGeometry = (Exception)obj;
-                    break;
-                case FaceGenData_FieldIndex.SymmetricTexture:
-                    this.SymmetricTexture = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (SymmetricGeometry != null) return true;
-            if (AsymmetricGeometry != null) return true;
-            if (SymmetricTexture != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("FaceGenData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
-            fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
-            fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
-        }
-        #endregion
-
-        #region Combine
-        public FaceGenData_ErrorMask Combine(FaceGenData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new FaceGenData_ErrorMask();
-            ret.SymmetricGeometry = this.SymmetricGeometry.Combine(rhs.SymmetricGeometry);
-            ret.AsymmetricGeometry = this.AsymmetricGeometry.Combine(rhs.AsymmetricGeometry);
-            ret.SymmetricTexture = this.SymmetricTexture.Combine(rhs.SymmetricTexture);
-            return ret;
-        }
-        public static FaceGenData_ErrorMask? Combine(FaceGenData_ErrorMask? lhs, FaceGenData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static FaceGenData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new FaceGenData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class FaceGenData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool SymmetricGeometry;
-        public bool AsymmetricGeometry;
-        public bool SymmetricTexture;
-        #endregion
-
-        #region Ctors
-        public FaceGenData_TranslationMask(bool defaultOn)
-        {
-            this.SymmetricGeometry = defaultOn;
-            this.AsymmetricGeometry = defaultOn;
-            this.SymmetricTexture = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((SymmetricGeometry, null));
-            ret.Add((AsymmetricGeometry, null));
-            ret.Add((SymmetricTexture, null));
-        }
-    }
 }
 #endregion
 

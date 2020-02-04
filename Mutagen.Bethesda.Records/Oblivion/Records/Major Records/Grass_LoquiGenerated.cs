@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Grass CreateFromXml(
             XElement node,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -281,15 +281,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Grass CreateFromXml(
             XElement node,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             string path,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             string path,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             Stream stream,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -353,8 +353,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass CreateFromXml(
             Stream stream,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -377,6 +377,622 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Density = initialValue;
+                this.MinSlope = initialValue;
+                this.MaxSlope = initialValue;
+                this.Fluff1 = initialValue;
+                this.UnitFromWaterAmount = initialValue;
+                this.Fluff2 = initialValue;
+                this.UnitFromWaterMode = initialValue;
+                this.PositionRange = initialValue;
+                this.HeightRange = initialValue;
+                this.ColorRange = initialValue;
+                this.WavePeriod = initialValue;
+                this.Flags = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Model,
+                T Density,
+                T MinSlope,
+                T MaxSlope,
+                T Fluff1,
+                T UnitFromWaterAmount,
+                T Fluff2,
+                T UnitFromWaterMode,
+                T PositionRange,
+                T HeightRange,
+                T ColorRange,
+                T WavePeriod,
+                T Flags,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Density = Density;
+                this.MinSlope = MinSlope;
+                this.MaxSlope = MaxSlope;
+                this.Fluff1 = Fluff1;
+                this.UnitFromWaterAmount = UnitFromWaterAmount;
+                this.Fluff2 = Fluff2;
+                this.UnitFromWaterMode = UnitFromWaterMode;
+                this.PositionRange = PositionRange;
+                this.HeightRange = HeightRange;
+                this.ColorRange = ColorRange;
+                this.WavePeriod = WavePeriod;
+                this.Flags = Flags;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Density;
+            public T MinSlope;
+            public T MaxSlope;
+            public T Fluff1;
+            public T UnitFromWaterAmount;
+            public T Fluff2;
+            public T UnitFromWaterMode;
+            public T PositionRange;
+            public T HeightRange;
+            public T ColorRange;
+            public T WavePeriod;
+            public T Flags;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Density, rhs.Density)) return false;
+                if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
+                if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
+                if (!object.Equals(this.Fluff1, rhs.Fluff1)) return false;
+                if (!object.Equals(this.UnitFromWaterAmount, rhs.UnitFromWaterAmount)) return false;
+                if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
+                if (!object.Equals(this.UnitFromWaterMode, rhs.UnitFromWaterMode)) return false;
+                if (!object.Equals(this.PositionRange, rhs.PositionRange)) return false;
+                if (!object.Equals(this.HeightRange, rhs.HeightRange)) return false;
+                if (!object.Equals(this.ColorRange, rhs.ColorRange)) return false;
+                if (!object.Equals(this.WavePeriod, rhs.WavePeriod)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Density?.GetHashCode());
+                ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
+                ret = ret.CombineHashCode(this.UnitFromWaterAmount?.GetHashCode());
+                ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
+                ret = ret.CombineHashCode(this.UnitFromWaterMode?.GetHashCode());
+                ret = ret.CombineHashCode(this.PositionRange?.GetHashCode());
+                ret = ret.CombineHashCode(this.HeightRange?.GetHashCode());
+                ret = ret.CombineHashCode(this.ColorRange?.GetHashCode());
+                ret = ret.CombineHashCode(this.WavePeriod?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Density)) return false;
+                if (!eval(this.MinSlope)) return false;
+                if (!eval(this.MaxSlope)) return false;
+                if (!eval(this.Fluff1)) return false;
+                if (!eval(this.UnitFromWaterAmount)) return false;
+                if (!eval(this.Fluff2)) return false;
+                if (!eval(this.UnitFromWaterMode)) return false;
+                if (!eval(this.PositionRange)) return false;
+                if (!eval(this.HeightRange)) return false;
+                if (!eval(this.ColorRange)) return false;
+                if (!eval(this.WavePeriod)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Grass.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Density = eval(this.Density);
+                obj.MinSlope = eval(this.MinSlope);
+                obj.MaxSlope = eval(this.MaxSlope);
+                obj.Fluff1 = eval(this.Fluff1);
+                obj.UnitFromWaterAmount = eval(this.UnitFromWaterAmount);
+                obj.Fluff2 = eval(this.Fluff2);
+                obj.UnitFromWaterMode = eval(this.UnitFromWaterMode);
+                obj.PositionRange = eval(this.PositionRange);
+                obj.HeightRange = eval(this.HeightRange);
+                obj.ColorRange = eval(this.ColorRange);
+                obj.WavePeriod = eval(this.WavePeriod);
+                obj.Flags = eval(this.Flags);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Grass.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Grass.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Grass.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Density ?? true)
+                    {
+                        fg.AppendLine($"Density => {Density}");
+                    }
+                    if (printMask?.MinSlope ?? true)
+                    {
+                        fg.AppendLine($"MinSlope => {MinSlope}");
+                    }
+                    if (printMask?.MaxSlope ?? true)
+                    {
+                        fg.AppendLine($"MaxSlope => {MaxSlope}");
+                    }
+                    if (printMask?.Fluff1 ?? true)
+                    {
+                        fg.AppendLine($"Fluff1 => {Fluff1}");
+                    }
+                    if (printMask?.UnitFromWaterAmount ?? true)
+                    {
+                        fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
+                    }
+                    if (printMask?.Fluff2 ?? true)
+                    {
+                        fg.AppendLine($"Fluff2 => {Fluff2}");
+                    }
+                    if (printMask?.UnitFromWaterMode ?? true)
+                    {
+                        fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
+                    }
+                    if (printMask?.PositionRange ?? true)
+                    {
+                        fg.AppendLine($"PositionRange => {PositionRange}");
+                    }
+                    if (printMask?.HeightRange ?? true)
+                    {
+                        fg.AppendLine($"HeightRange => {HeightRange}");
+                    }
+                    if (printMask?.ColorRange ?? true)
+                    {
+                        fg.AppendLine($"ColorRange => {ColorRange}");
+                    }
+                    if (printMask?.WavePeriod ?? true)
+                    {
+                        fg.AppendLine($"WavePeriod => {WavePeriod}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Density;
+            public Exception? MinSlope;
+            public Exception? MaxSlope;
+            public Exception? Fluff1;
+            public Exception? UnitFromWaterAmount;
+            public Exception? Fluff2;
+            public Exception? UnitFromWaterMode;
+            public Exception? PositionRange;
+            public Exception? HeightRange;
+            public Exception? ColorRange;
+            public Exception? WavePeriod;
+            public Exception? Flags;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Grass_FieldIndex enu = (Grass_FieldIndex)index;
+                switch (enu)
+                {
+                    case Grass_FieldIndex.Model:
+                        return Model;
+                    case Grass_FieldIndex.Density:
+                        return Density;
+                    case Grass_FieldIndex.MinSlope:
+                        return MinSlope;
+                    case Grass_FieldIndex.MaxSlope:
+                        return MaxSlope;
+                    case Grass_FieldIndex.Fluff1:
+                        return Fluff1;
+                    case Grass_FieldIndex.UnitFromWaterAmount:
+                        return UnitFromWaterAmount;
+                    case Grass_FieldIndex.Fluff2:
+                        return Fluff2;
+                    case Grass_FieldIndex.UnitFromWaterMode:
+                        return UnitFromWaterMode;
+                    case Grass_FieldIndex.PositionRange:
+                        return PositionRange;
+                    case Grass_FieldIndex.HeightRange:
+                        return HeightRange;
+                    case Grass_FieldIndex.ColorRange:
+                        return ColorRange;
+                    case Grass_FieldIndex.WavePeriod:
+                        return WavePeriod;
+                    case Grass_FieldIndex.Flags:
+                        return Flags;
+                    case Grass_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Grass_FieldIndex enu = (Grass_FieldIndex)index;
+                switch (enu)
+                {
+                    case Grass_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Grass_FieldIndex.Density:
+                        this.Density = ex;
+                        break;
+                    case Grass_FieldIndex.MinSlope:
+                        this.MinSlope = ex;
+                        break;
+                    case Grass_FieldIndex.MaxSlope:
+                        this.MaxSlope = ex;
+                        break;
+                    case Grass_FieldIndex.Fluff1:
+                        this.Fluff1 = ex;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterAmount:
+                        this.UnitFromWaterAmount = ex;
+                        break;
+                    case Grass_FieldIndex.Fluff2:
+                        this.Fluff2 = ex;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterMode:
+                        this.UnitFromWaterMode = ex;
+                        break;
+                    case Grass_FieldIndex.PositionRange:
+                        this.PositionRange = ex;
+                        break;
+                    case Grass_FieldIndex.HeightRange:
+                        this.HeightRange = ex;
+                        break;
+                    case Grass_FieldIndex.ColorRange:
+                        this.ColorRange = ex;
+                        break;
+                    case Grass_FieldIndex.WavePeriod:
+                        this.WavePeriod = ex;
+                        break;
+                    case Grass_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Grass_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Grass_FieldIndex enu = (Grass_FieldIndex)index;
+                switch (enu)
+                {
+                    case Grass_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Grass_FieldIndex.Density:
+                        this.Density = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.MinSlope:
+                        this.MinSlope = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.MaxSlope:
+                        this.MaxSlope = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.Fluff1:
+                        this.Fluff1 = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterAmount:
+                        this.UnitFromWaterAmount = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.Fluff2:
+                        this.Fluff2 = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterMode:
+                        this.UnitFromWaterMode = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.PositionRange:
+                        this.PositionRange = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.HeightRange:
+                        this.HeightRange = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.ColorRange:
+                        this.ColorRange = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.WavePeriod:
+                        this.WavePeriod = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Grass_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Density != null) return true;
+                if (MinSlope != null) return true;
+                if (MaxSlope != null) return true;
+                if (Fluff1 != null) return true;
+                if (UnitFromWaterAmount != null) return true;
+                if (Fluff2 != null) return true;
+                if (UnitFromWaterMode != null) return true;
+                if (PositionRange != null) return true;
+                if (HeightRange != null) return true;
+                if (ColorRange != null) return true;
+                if (WavePeriod != null) return true;
+                if (Flags != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                Model?.ToString(fg);
+                fg.AppendLine($"Density => {Density}");
+                fg.AppendLine($"MinSlope => {MinSlope}");
+                fg.AppendLine($"MaxSlope => {MaxSlope}");
+                fg.AppendLine($"Fluff1 => {Fluff1}");
+                fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
+                fg.AppendLine($"Fluff2 => {Fluff2}");
+                fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
+                fg.AppendLine($"PositionRange => {PositionRange}");
+                fg.AppendLine($"HeightRange => {HeightRange}");
+                fg.AppendLine($"ColorRange => {ColorRange}");
+                fg.AppendLine($"WavePeriod => {WavePeriod}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Density = this.Density.Combine(rhs.Density);
+                ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
+                ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
+                ret.Fluff1 = this.Fluff1.Combine(rhs.Fluff1);
+                ret.UnitFromWaterAmount = this.UnitFromWaterAmount.Combine(rhs.UnitFromWaterAmount);
+                ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
+                ret.UnitFromWaterMode = this.UnitFromWaterMode.Combine(rhs.UnitFromWaterMode);
+                ret.PositionRange = this.PositionRange.Combine(rhs.PositionRange);
+                ret.HeightRange = this.HeightRange.Combine(rhs.HeightRange);
+                ret.ColorRange = this.ColorRange.Combine(rhs.ColorRange);
+                ret.WavePeriod = this.WavePeriod.Combine(rhs.WavePeriod);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Density;
+            public bool MinSlope;
+            public bool MaxSlope;
+            public bool Fluff1;
+            public bool UnitFromWaterAmount;
+            public bool Fluff2;
+            public bool UnitFromWaterMode;
+            public bool PositionRange;
+            public bool HeightRange;
+            public bool ColorRange;
+            public bool WavePeriod;
+            public bool Flags;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Density = defaultOn;
+                this.MinSlope = defaultOn;
+                this.MaxSlope = defaultOn;
+                this.Fluff1 = defaultOn;
+                this.UnitFromWaterAmount = defaultOn;
+                this.Fluff2 = defaultOn;
+                this.UnitFromWaterMode = defaultOn;
+                this.PositionRange = defaultOn;
+                this.HeightRange = defaultOn;
+                this.ColorRange = defaultOn;
+                this.WavePeriod = defaultOn;
+                this.Flags = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Density, null));
+                ret.Add((MinSlope, null));
+                ret.Add((MaxSlope, null));
+                ret.Add((Fluff1, null));
+                ret.Add((UnitFromWaterAmount, null));
+                ret.Add((Fluff2, null));
+                ret.Add((UnitFromWaterMode, null));
+                ret.Add((PositionRange, null));
+                ret.Add((HeightRange, null));
+                ret.Add((ColorRange, null));
+                ret.Add((WavePeriod, null));
+                ret.Add((Flags, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -522,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Grass_Mask<bool> GetEqualsMask(
+        public static Grass.Mask<bool> GetEqualsMask(
             this IGrassGetter item,
             IGrassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -536,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IGrassGetter item,
             string? name = null,
-            Grass_Mask<bool>? printMask = null)
+            Grass.Mask<bool>? printMask = null)
         {
             return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -548,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             FileGeneration fg,
             string? name = null,
-            Grass_Mask<bool>? printMask = null)
+            Grass.Mask<bool>? printMask = null)
         {
             ((GrassCommon)((IGrassGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -559,16 +1175,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IGrassGetter item,
-            Grass_Mask<bool?> checkMask)
+            Grass.Mask<bool?> checkMask)
         {
             return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Grass_Mask<bool> GetHasBeenSetMask(this IGrassGetter item)
+        public static Grass.Mask<bool> GetHasBeenSetMask(this IGrassGetter item)
         {
-            var ret = new Grass_Mask<bool>(false);
+            var ret = new Grass.Mask<bool>(false);
             ((GrassCommon)((IGrassGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -587,8 +1203,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IGrassInternal lhs,
             IGrassGetter rhs,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? copyMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -596,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -614,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass DeepCopy(
             this IGrassGetter item,
-            Grass_TranslationMask? copyMask = null)
+            Grass.TranslationMask? copyMask = null)
         {
             return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -623,8 +1239,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Grass DeepCopy(
             this IGrassGetter item,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? copyMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? copyMask = null)
         {
             return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -648,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             XElement node,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -661,8 +1277,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             XElement node,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -670,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -689,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             string path,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -701,8 +1317,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             string path,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -716,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -729,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             Stream stream,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -741,8 +1357,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGrassInternal item,
             Stream stream,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -756,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Grass_TranslationMask? translationMask = null)
+            Grass.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -847,9 +1463,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 19;
 
-        public static readonly Type MaskType = typeof(Grass_Mask<>);
+        public static readonly Type MaskType = typeof(Grass.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Grass_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Grass.ErrorMask);
 
         public static readonly Type ClassType = typeof(Grass);
 
@@ -1331,12 +1947,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly GrassCommon Instance = new GrassCommon();
 
-        public Grass_Mask<bool> GetEqualsMask(
+        public Grass.Mask<bool> GetEqualsMask(
             IGrassGetter item,
             IGrassGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Grass_Mask<bool>(false);
+            var ret = new Grass.Mask<bool>(false);
             ((GrassCommon)((IGrassGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1348,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IGrassGetter item,
             IGrassGetter rhs,
-            Grass_Mask<bool> ret,
+            Grass.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1376,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IGrassGetter item,
             string? name = null,
-            Grass_Mask<bool>? printMask = null)
+            Grass.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1391,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrassGetter item,
             FileGeneration fg,
             string? name = null,
-            Grass_Mask<bool>? printMask = null)
+            Grass.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1415,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IGrassGetter item,
             FileGeneration fg,
-            Grass_Mask<bool>? printMask = null)
+            Grass.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1481,7 +2097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IGrassGetter item,
-            Grass_Mask<bool?> checkMask)
+            Grass.Mask<bool?> checkMask)
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
@@ -1492,10 +2108,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IGrassGetter item,
-            Grass_Mask<bool> mask)
+            Grass.Mask<bool> mask)
         {
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Density = true;
             mask.MinSlope = true;
             mask.MaxSlope = true;
@@ -1824,7 +2440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Grass DeepCopy(
             IGrassGetter item,
-            Grass_TranslationMask? copyMask = null)
+            Grass.TranslationMask? copyMask = null)
         {
             Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1835,8 +2451,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Grass DeepCopy(
             IGrassGetter item,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? copyMask = null)
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? copyMask = null)
         {
             Grass ret = (Grass)((GrassCommon)((IGrassGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2423,8 +3039,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGrassGetter item,
             XElement node,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null,
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2434,14 +3050,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IGrassGetter item,
             string path,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null,
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2457,8 +3073,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGrassGetter item,
             Stream stream,
-            out Grass_ErrorMask errorMask,
-            Grass_TranslationMask? translationMask = null,
+            out Grass.ErrorMask errorMask,
+            Grass.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2475,621 +3091,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Grass_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Grass_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Grass_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Density = initialValue;
-            this.MinSlope = initialValue;
-            this.MaxSlope = initialValue;
-            this.Fluff1 = initialValue;
-            this.UnitFromWaterAmount = initialValue;
-            this.Fluff2 = initialValue;
-            this.UnitFromWaterMode = initialValue;
-            this.PositionRange = initialValue;
-            this.HeightRange = initialValue;
-            this.ColorRange = initialValue;
-            this.WavePeriod = initialValue;
-            this.Flags = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Grass_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Model,
-            T Density,
-            T MinSlope,
-            T MaxSlope,
-            T Fluff1,
-            T UnitFromWaterAmount,
-            T Fluff2,
-            T UnitFromWaterMode,
-            T PositionRange,
-            T HeightRange,
-            T ColorRange,
-            T WavePeriod,
-            T Flags,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Density = Density;
-            this.MinSlope = MinSlope;
-            this.MaxSlope = MaxSlope;
-            this.Fluff1 = Fluff1;
-            this.UnitFromWaterAmount = UnitFromWaterAmount;
-            this.Fluff2 = Fluff2;
-            this.UnitFromWaterMode = UnitFromWaterMode;
-            this.PositionRange = PositionRange;
-            this.HeightRange = HeightRange;
-            this.ColorRange = ColorRange;
-            this.WavePeriod = WavePeriod;
-            this.Flags = Flags;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Grass_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Density;
-        public T MinSlope;
-        public T MaxSlope;
-        public T Fluff1;
-        public T UnitFromWaterAmount;
-        public T Fluff2;
-        public T UnitFromWaterMode;
-        public T PositionRange;
-        public T HeightRange;
-        public T ColorRange;
-        public T WavePeriod;
-        public T Flags;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Grass_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Grass_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Density, rhs.Density)) return false;
-            if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
-            if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
-            if (!object.Equals(this.Fluff1, rhs.Fluff1)) return false;
-            if (!object.Equals(this.UnitFromWaterAmount, rhs.UnitFromWaterAmount)) return false;
-            if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
-            if (!object.Equals(this.UnitFromWaterMode, rhs.UnitFromWaterMode)) return false;
-            if (!object.Equals(this.PositionRange, rhs.PositionRange)) return false;
-            if (!object.Equals(this.HeightRange, rhs.HeightRange)) return false;
-            if (!object.Equals(this.ColorRange, rhs.ColorRange)) return false;
-            if (!object.Equals(this.WavePeriod, rhs.WavePeriod)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Density?.GetHashCode());
-            ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff1?.GetHashCode());
-            ret = ret.CombineHashCode(this.UnitFromWaterAmount?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff2?.GetHashCode());
-            ret = ret.CombineHashCode(this.UnitFromWaterMode?.GetHashCode());
-            ret = ret.CombineHashCode(this.PositionRange?.GetHashCode());
-            ret = ret.CombineHashCode(this.HeightRange?.GetHashCode());
-            ret = ret.CombineHashCode(this.ColorRange?.GetHashCode());
-            ret = ret.CombineHashCode(this.WavePeriod?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Density)) return false;
-            if (!eval(this.MinSlope)) return false;
-            if (!eval(this.MaxSlope)) return false;
-            if (!eval(this.Fluff1)) return false;
-            if (!eval(this.UnitFromWaterAmount)) return false;
-            if (!eval(this.Fluff2)) return false;
-            if (!eval(this.UnitFromWaterMode)) return false;
-            if (!eval(this.PositionRange)) return false;
-            if (!eval(this.HeightRange)) return false;
-            if (!eval(this.ColorRange)) return false;
-            if (!eval(this.WavePeriod)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Grass_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Grass_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Grass_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Density = eval(this.Density);
-            obj.MinSlope = eval(this.MinSlope);
-            obj.MaxSlope = eval(this.MaxSlope);
-            obj.Fluff1 = eval(this.Fluff1);
-            obj.UnitFromWaterAmount = eval(this.UnitFromWaterAmount);
-            obj.Fluff2 = eval(this.Fluff2);
-            obj.UnitFromWaterMode = eval(this.UnitFromWaterMode);
-            obj.PositionRange = eval(this.PositionRange);
-            obj.HeightRange = eval(this.HeightRange);
-            obj.ColorRange = eval(this.ColorRange);
-            obj.WavePeriod = eval(this.WavePeriod);
-            obj.Flags = eval(this.Flags);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Grass_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Grass_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Grass_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Density ?? true)
-                {
-                    fg.AppendLine($"Density => {Density}");
-                }
-                if (printMask?.MinSlope ?? true)
-                {
-                    fg.AppendLine($"MinSlope => {MinSlope}");
-                }
-                if (printMask?.MaxSlope ?? true)
-                {
-                    fg.AppendLine($"MaxSlope => {MaxSlope}");
-                }
-                if (printMask?.Fluff1 ?? true)
-                {
-                    fg.AppendLine($"Fluff1 => {Fluff1}");
-                }
-                if (printMask?.UnitFromWaterAmount ?? true)
-                {
-                    fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
-                }
-                if (printMask?.Fluff2 ?? true)
-                {
-                    fg.AppendLine($"Fluff2 => {Fluff2}");
-                }
-                if (printMask?.UnitFromWaterMode ?? true)
-                {
-                    fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
-                }
-                if (printMask?.PositionRange ?? true)
-                {
-                    fg.AppendLine($"PositionRange => {PositionRange}");
-                }
-                if (printMask?.HeightRange ?? true)
-                {
-                    fg.AppendLine($"HeightRange => {HeightRange}");
-                }
-                if (printMask?.ColorRange ?? true)
-                {
-                    fg.AppendLine($"ColorRange => {ColorRange}");
-                }
-                if (printMask?.WavePeriod ?? true)
-                {
-                    fg.AppendLine($"WavePeriod => {WavePeriod}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Grass_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Grass_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Density;
-        public Exception? MinSlope;
-        public Exception? MaxSlope;
-        public Exception? Fluff1;
-        public Exception? UnitFromWaterAmount;
-        public Exception? Fluff2;
-        public Exception? UnitFromWaterMode;
-        public Exception? PositionRange;
-        public Exception? HeightRange;
-        public Exception? ColorRange;
-        public Exception? WavePeriod;
-        public Exception? Flags;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    return Model;
-                case Grass_FieldIndex.Density:
-                    return Density;
-                case Grass_FieldIndex.MinSlope:
-                    return MinSlope;
-                case Grass_FieldIndex.MaxSlope:
-                    return MaxSlope;
-                case Grass_FieldIndex.Fluff1:
-                    return Fluff1;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    return UnitFromWaterAmount;
-                case Grass_FieldIndex.Fluff2:
-                    return Fluff2;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    return UnitFromWaterMode;
-                case Grass_FieldIndex.PositionRange:
-                    return PositionRange;
-                case Grass_FieldIndex.HeightRange:
-                    return HeightRange;
-                case Grass_FieldIndex.ColorRange:
-                    return ColorRange;
-                case Grass_FieldIndex.WavePeriod:
-                    return WavePeriod;
-                case Grass_FieldIndex.Flags:
-                    return Flags;
-                case Grass_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Grass_FieldIndex.Density:
-                    this.Density = ex;
-                    break;
-                case Grass_FieldIndex.MinSlope:
-                    this.MinSlope = ex;
-                    break;
-                case Grass_FieldIndex.MaxSlope:
-                    this.MaxSlope = ex;
-                    break;
-                case Grass_FieldIndex.Fluff1:
-                    this.Fluff1 = ex;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    this.UnitFromWaterAmount = ex;
-                    break;
-                case Grass_FieldIndex.Fluff2:
-                    this.Fluff2 = ex;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    this.UnitFromWaterMode = ex;
-                    break;
-                case Grass_FieldIndex.PositionRange:
-                    this.PositionRange = ex;
-                    break;
-                case Grass_FieldIndex.HeightRange:
-                    this.HeightRange = ex;
-                    break;
-                case Grass_FieldIndex.ColorRange:
-                    this.ColorRange = ex;
-                    break;
-                case Grass_FieldIndex.WavePeriod:
-                    this.WavePeriod = ex;
-                    break;
-                case Grass_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Grass_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
-            switch (enu)
-            {
-                case Grass_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Grass_FieldIndex.Density:
-                    this.Density = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.MinSlope:
-                    this.MinSlope = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.MaxSlope:
-                    this.MaxSlope = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.Fluff1:
-                    this.Fluff1 = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterAmount:
-                    this.UnitFromWaterAmount = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.Fluff2:
-                    this.Fluff2 = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.UnitFromWaterMode:
-                    this.UnitFromWaterMode = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.PositionRange:
-                    this.PositionRange = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.HeightRange:
-                    this.HeightRange = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.ColorRange:
-                    this.ColorRange = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.WavePeriod:
-                    this.WavePeriod = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Grass_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Model != null) return true;
-            if (Density != null) return true;
-            if (MinSlope != null) return true;
-            if (MaxSlope != null) return true;
-            if (Fluff1 != null) return true;
-            if (UnitFromWaterAmount != null) return true;
-            if (Fluff2 != null) return true;
-            if (UnitFromWaterMode != null) return true;
-            if (PositionRange != null) return true;
-            if (HeightRange != null) return true;
-            if (ColorRange != null) return true;
-            if (WavePeriod != null) return true;
-            if (Flags != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Grass_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            Model?.ToString(fg);
-            fg.AppendLine($"Density => {Density}");
-            fg.AppendLine($"MinSlope => {MinSlope}");
-            fg.AppendLine($"MaxSlope => {MaxSlope}");
-            fg.AppendLine($"Fluff1 => {Fluff1}");
-            fg.AppendLine($"UnitFromWaterAmount => {UnitFromWaterAmount}");
-            fg.AppendLine($"Fluff2 => {Fluff2}");
-            fg.AppendLine($"UnitFromWaterMode => {UnitFromWaterMode}");
-            fg.AppendLine($"PositionRange => {PositionRange}");
-            fg.AppendLine($"HeightRange => {HeightRange}");
-            fg.AppendLine($"ColorRange => {ColorRange}");
-            fg.AppendLine($"WavePeriod => {WavePeriod}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Grass_ErrorMask Combine(Grass_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Grass_ErrorMask();
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Density = this.Density.Combine(rhs.Density);
-            ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
-            ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
-            ret.Fluff1 = this.Fluff1.Combine(rhs.Fluff1);
-            ret.UnitFromWaterAmount = this.UnitFromWaterAmount.Combine(rhs.UnitFromWaterAmount);
-            ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
-            ret.UnitFromWaterMode = this.UnitFromWaterMode.Combine(rhs.UnitFromWaterMode);
-            ret.PositionRange = this.PositionRange.Combine(rhs.PositionRange);
-            ret.HeightRange = this.HeightRange.Combine(rhs.HeightRange);
-            ret.ColorRange = this.ColorRange.Combine(rhs.ColorRange);
-            ret.WavePeriod = this.WavePeriod.Combine(rhs.WavePeriod);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Grass_ErrorMask? Combine(Grass_ErrorMask? lhs, Grass_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Grass_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Grass_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Grass_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Density;
-        public bool MinSlope;
-        public bool MaxSlope;
-        public bool Fluff1;
-        public bool UnitFromWaterAmount;
-        public bool Fluff2;
-        public bool UnitFromWaterMode;
-        public bool PositionRange;
-        public bool HeightRange;
-        public bool ColorRange;
-        public bool WavePeriod;
-        public bool Flags;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Grass_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Density = defaultOn;
-            this.MinSlope = defaultOn;
-            this.MaxSlope = defaultOn;
-            this.Fluff1 = defaultOn;
-            this.UnitFromWaterAmount = defaultOn;
-            this.Fluff2 = defaultOn;
-            this.UnitFromWaterMode = defaultOn;
-            this.PositionRange = defaultOn;
-            this.HeightRange = defaultOn;
-            this.ColorRange = defaultOn;
-            this.WavePeriod = defaultOn;
-            this.Flags = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Density, null));
-            ret.Add((MinSlope, null));
-            ret.Add((MaxSlope, null));
-            ret.Add((Fluff1, null));
-            ret.Add((UnitFromWaterAmount, null));
-            ret.Add((Fluff2, null));
-            ret.Add((UnitFromWaterMode, null));
-            ret.Add((PositionRange, null));
-            ret.Add((HeightRange, null));
-            ret.Add((ColorRange, null));
-            ret.Add((WavePeriod, null));
-            ret.Add((Flags, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

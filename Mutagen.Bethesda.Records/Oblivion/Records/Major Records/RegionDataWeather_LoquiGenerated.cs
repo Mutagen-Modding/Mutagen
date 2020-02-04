@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new RegionDataWeather CreateFromXml(
             XElement node,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionDataWeather CreateFromXml(
             XElement node,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataWeather.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather CreateFromXml(
             string path,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather CreateFromXml(
             string path,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataWeather CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather CreateFromXml(
             Stream stream,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather CreateFromXml(
             Stream stream,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataWeather CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,6 +218,338 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            RegionData.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+            }
+
+            public Mask(
+                T DataType,
+                T Flags,
+                T Priority,
+                T RDATDataTypeState,
+                T Weathers)
+            : base(
+                DataType: DataType,
+                Flags: Flags,
+                Priority: Priority,
+                RDATDataTypeState: RDATDataTypeState)
+            {
+                this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance.Mask<T>?>>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance.Mask<T>?>>>? Weathers;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (this.Weathers != null)
+                {
+                    if (!eval(this.Weathers.Overall)) return false;
+                    if (this.Weathers.Specific != null)
+                    {
+                        foreach (var item in this.Weathers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RegionDataWeather.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                if (Weathers != null)
+                {
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance.Mask<R>?>>>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance.Mask<R>?>>());
+                    if (Weathers.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WeatherChance.Mask<R>?>>();
+                        obj.Weathers.Specific = l;
+                        foreach (var item in Weathers.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, WeatherChance.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherChance.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RegionDataWeather.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RegionDataWeather.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RegionDataWeather.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Weathers?.Overall ?? true)
+                    {
+                        fg.AppendLine("Weathers =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Weathers != null)
+                            {
+                                if (Weathers.Overall != null)
+                                {
+                                    fg.AppendLine(Weathers.Overall.ToString());
+                                }
+                                if (Weathers.Specific != null)
+                                {
+                                    foreach (var subItem in Weathers.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            RegionData.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>? Weathers;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataWeather_FieldIndex.Weathers:
+                        return Weathers;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataWeather_FieldIndex.Weathers:
+                        this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataWeather_FieldIndex.Weathers:
+                        this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Weathers != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine("Weathers =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Weathers != null)
+                    {
+                        if (Weathers.Overall != null)
+                        {
+                            fg.AppendLine(Weathers.Overall.ToString());
+                        }
+                        if (Weathers.Specific != null)
+                        {
+                            foreach (var subItem in Weathers.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance.ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            RegionData.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public MaskItem<bool, WeatherChance.TranslationMask?> Weathers;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Weathers = new MaskItem<bool, WeatherChance.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -324,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionDataWeather_Mask<bool> GetEqualsMask(
+        public static RegionDataWeather.Mask<bool> GetEqualsMask(
             this IRegionDataWeatherGetter item,
             IRegionDataWeatherGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -338,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionDataWeatherGetter item,
             string? name = null,
-            RegionDataWeather_Mask<bool>? printMask = null)
+            RegionDataWeather.Mask<bool>? printMask = null)
         {
             return ((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -350,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataWeatherGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionDataWeather_Mask<bool>? printMask = null)
+            RegionDataWeather.Mask<bool>? printMask = null)
         {
             ((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -361,16 +693,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionDataWeatherGetter item,
-            RegionDataWeather_Mask<bool?> checkMask)
+            RegionDataWeather.Mask<bool?> checkMask)
         {
             return ((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionDataWeather_Mask<bool> GetHasBeenSetMask(this IRegionDataWeatherGetter item)
+        public static RegionDataWeather.Mask<bool> GetHasBeenSetMask(this IRegionDataWeatherGetter item)
         {
-            var ret = new RegionDataWeather_Mask<bool>(false);
+            var ret = new RegionDataWeather.Mask<bool>(false);
             ((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -389,8 +721,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionDataWeatherInternal lhs,
             IRegionDataWeatherGetter rhs,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? copyMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -398,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataWeather.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -416,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather DeepCopy(
             this IRegionDataWeatherGetter item,
-            RegionDataWeather_TranslationMask? copyMask = null)
+            RegionDataWeather.TranslationMask? copyMask = null)
         {
             return ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -425,8 +757,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataWeather DeepCopy(
             this IRegionDataWeatherGetter item,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? copyMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? copyMask = null)
         {
             return ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -450,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             XElement node,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -463,8 +795,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             XElement node,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -472,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataWeather.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -491,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             string path,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -503,8 +835,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             string path,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -518,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataWeatherInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -531,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             Stream stream,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -543,8 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             Stream stream,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -558,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataWeatherInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null)
+            RegionDataWeather.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -635,9 +967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(RegionDataWeather_Mask<>);
+        public static readonly Type MaskType = typeof(RegionDataWeather.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionDataWeather_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionDataWeather.ErrorMask);
 
         public static readonly Type ClassType = typeof(RegionDataWeather);
 
@@ -938,12 +1270,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly RegionDataWeatherCommon Instance = new RegionDataWeatherCommon();
 
-        public RegionDataWeather_Mask<bool> GetEqualsMask(
+        public RegionDataWeather.Mask<bool> GetEqualsMask(
             IRegionDataWeatherGetter item,
             IRegionDataWeatherGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionDataWeather_Mask<bool>(false);
+            var ret = new RegionDataWeather.Mask<bool>(false);
             ((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -955,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionDataWeatherGetter item,
             IRegionDataWeatherGetter rhs,
-            RegionDataWeather_Mask<bool> ret,
+            RegionDataWeather.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -969,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionDataWeatherGetter item,
             string? name = null,
-            RegionDataWeather_Mask<bool>? printMask = null)
+            RegionDataWeather.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -984,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataWeatherGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionDataWeather_Mask<bool>? printMask = null)
+            RegionDataWeather.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1008,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionDataWeatherGetter item,
             FileGeneration fg,
-            RegionDataWeather_Mask<bool>? printMask = null)
+            RegionDataWeather.Mask<bool>? printMask = null)
         {
             RegionDataCommon.ToStringFields(
                 item: item,
@@ -1036,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionDataWeatherGetter item,
-            RegionDataWeather_Mask<bool?> checkMask)
+            RegionDataWeather.Mask<bool?> checkMask)
         {
             if (checkMask.Weathers?.Overall.HasValue ?? false && checkMask.Weathers!.Overall.Value != item.Weathers.HasBeenSet) return false;
             return base.HasBeenSet(
@@ -1046,9 +1378,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IRegionDataWeatherGetter item,
-            RegionDataWeather_Mask<bool> mask)
+            RegionDataWeather.Mask<bool> mask)
         {
-            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance_Mask<bool>?>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Weathers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherChance.Mask<bool>?>>>(item.Weathers.HasBeenSet, item.Weathers.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherChance.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1222,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataWeather DeepCopy(
             IRegionDataWeatherGetter item,
-            RegionDataWeather_TranslationMask? copyMask = null)
+            RegionDataWeather.TranslationMask? copyMask = null)
         {
             RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1233,8 +1565,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataWeather DeepCopy(
             IRegionDataWeatherGetter item,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? copyMask = null)
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? copyMask = null)
         {
             RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1469,8 +1801,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataWeatherGetter item,
             XElement node,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null,
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1480,14 +1812,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataWeather.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionDataWeatherGetter item,
             string path,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null,
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1503,8 +1835,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataWeatherGetter item,
             Stream stream,
-            out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_TranslationMask? translationMask = null,
+            out RegionDataWeather.ErrorMask errorMask,
+            RegionDataWeather.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1521,337 +1853,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RegionDataWeather_Mask<T> :
-        RegionData_Mask<T>,
-        IMask<T>,
-        IEquatable<RegionDataWeather_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RegionDataWeather_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, WeatherChance_Mask<T>?>>());
-        }
-
-        public RegionDataWeather_Mask(
-            T DataType,
-            T Flags,
-            T Priority,
-            T RDATDataTypeState,
-            T Weathers)
-        : base(
-            DataType: DataType,
-            Flags: Flags,
-            Priority: Priority,
-            RDATDataTypeState: RDATDataTypeState)
-        {
-            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>?>>>(Weathers, Enumerable.Empty<MaskItemIndexed<T, WeatherChance_Mask<T>?>>());
-        }
-
-        #pragma warning disable CS8618
-        protected RegionDataWeather_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>?>>>? Weathers;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RegionDataWeather_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RegionDataWeather_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (this.Weathers != null)
-            {
-                if (!eval(this.Weathers.Overall)) return false;
-                if (this.Weathers.Specific != null)
-                {
-                    foreach (var item in this.Weathers.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new RegionDataWeather_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RegionDataWeather_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RegionDataWeather_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            if (Weathers != null)
-            {
-                obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherChance_Mask<R>?>>>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherChance_Mask<R>?>>());
-                if (Weathers.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, WeatherChance_Mask<R>?>>();
-                    obj.Weathers.Specific = l;
-                    foreach (var item in Weathers.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, WeatherChance_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherChance_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RegionDataWeather_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RegionDataWeather_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RegionDataWeather_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Weathers?.Overall ?? true)
-                {
-                    fg.AppendLine("Weathers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Weathers != null)
-                        {
-                            if (Weathers.Overall != null)
-                            {
-                                fg.AppendLine(Weathers.Overall.ToString());
-                            }
-                            if (Weathers.Specific != null)
-                            {
-                                foreach (var subItem in Weathers.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RegionDataWeather_ErrorMask : RegionData_ErrorMask, IErrorMask<RegionDataWeather_ErrorMask>
-    {
-        #region Members
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>? Weathers;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    return Weathers;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            RegionDataWeather_FieldIndex enu = (RegionDataWeather_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataWeather_FieldIndex.Weathers:
-                    this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Weathers != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RegionDataWeather_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine("Weathers =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Weathers != null)
-                {
-                    if (Weathers.Overall != null)
-                    {
-                        fg.AppendLine(Weathers.Overall.ToString());
-                    }
-                    if (Weathers.Specific != null)
-                    {
-                        foreach (var subItem in Weathers.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public RegionDataWeather_ErrorMask Combine(RegionDataWeather_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RegionDataWeather_ErrorMask();
-            ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherChance_ErrorMask?>>?>(ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
-            return ret;
-        }
-        public static RegionDataWeather_ErrorMask? Combine(RegionDataWeather_ErrorMask? lhs, RegionDataWeather_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new RegionDataWeather_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RegionDataWeather_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RegionDataWeather_TranslationMask : RegionData_TranslationMask
-    {
-        #region Members
-        public MaskItem<bool, WeatherChance_TranslationMask?> Weathers;
-        #endregion
-
-        #region Ctors
-        public RegionDataWeather_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Weathers = new MaskItem<bool, WeatherChance_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

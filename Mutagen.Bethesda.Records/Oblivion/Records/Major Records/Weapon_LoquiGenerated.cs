@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Weapon CreateFromXml(
             XElement node,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -277,15 +277,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Weapon CreateFromXml(
             XElement node,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Weapon CreateFromXml(
             string path,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -315,8 +315,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Weapon CreateFromXml(
             string path,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Weapon CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Weapon CreateFromXml(
             Stream stream,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -349,8 +349,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Weapon CreateFromXml(
             Stream stream,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Weapon CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -373,6 +373,649 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ItemAbstract.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(initialValue, new Model.Mask<T>(initialValue));
+                this.Icon = initialValue;
+                this.Script = initialValue;
+                this.Enchantment = initialValue;
+                this.EnchantmentPoints = initialValue;
+                this.Type = initialValue;
+                this.Speed = initialValue;
+                this.Reach = initialValue;
+                this.Flags = initialValue;
+                this.Value = initialValue;
+                this.Health = initialValue;
+                this.Weight = initialValue;
+                this.Damage = initialValue;
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Model,
+                T Icon,
+                T Script,
+                T Enchantment,
+                T EnchantmentPoints,
+                T Type,
+                T Speed,
+                T Reach,
+                T Flags,
+                T Value,
+                T Health,
+                T Weight,
+                T Damage,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Model = new MaskItem<T, Model.Mask<T>?>(Model, new Model.Mask<T>(Model));
+                this.Icon = Icon;
+                this.Script = Script;
+                this.Enchantment = Enchantment;
+                this.EnchantmentPoints = EnchantmentPoints;
+                this.Type = Type;
+                this.Speed = Speed;
+                this.Reach = Reach;
+                this.Flags = Flags;
+                this.Value = Value;
+                this.Health = Health;
+                this.Weight = Weight;
+                this.Damage = Damage;
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public MaskItem<T, Model.Mask<T>?>? Model { get; set; }
+            public T Icon;
+            public T Script;
+            public T Enchantment;
+            public T EnchantmentPoints;
+            public T Type;
+            public T Speed;
+            public T Reach;
+            public T Flags;
+            public T Value;
+            public T Health;
+            public T Weight;
+            public T Damage;
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
+                if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Speed, rhs.Speed)) return false;
+                if (!object.Equals(this.Reach, rhs.Reach)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Damage, rhs.Damage)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Model?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Script?.GetHashCode());
+                ret = ret.CombineHashCode(this.Enchantment?.GetHashCode());
+                ret = ret.CombineHashCode(this.EnchantmentPoints?.GetHashCode());
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.Speed?.GetHashCode());
+                ret = ret.CombineHashCode(this.Reach?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.Value?.GetHashCode());
+                ret = ret.CombineHashCode(this.Health?.GetHashCode());
+                ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Damage?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Enchantment)) return false;
+                if (!eval(this.EnchantmentPoints)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Speed)) return false;
+                if (!eval(this.Reach)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Health)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.Damage)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Weapon.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icon = eval(this.Icon);
+                obj.Script = eval(this.Script);
+                obj.Enchantment = eval(this.Enchantment);
+                obj.EnchantmentPoints = eval(this.EnchantmentPoints);
+                obj.Type = eval(this.Type);
+                obj.Speed = eval(this.Speed);
+                obj.Reach = eval(this.Reach);
+                obj.Flags = eval(this.Flags);
+                obj.Value = eval(this.Value);
+                obj.Health = eval(this.Health);
+                obj.Weight = eval(this.Weight);
+                obj.Damage = eval(this.Damage);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Weapon.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Weapon.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Weapon.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendLine($"Script => {Script}");
+                    }
+                    if (printMask?.Enchantment ?? true)
+                    {
+                        fg.AppendLine($"Enchantment => {Enchantment}");
+                    }
+                    if (printMask?.EnchantmentPoints ?? true)
+                    {
+                        fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.Speed ?? true)
+                    {
+                        fg.AppendLine($"Speed => {Speed}");
+                    }
+                    if (printMask?.Reach ?? true)
+                    {
+                        fg.AppendLine($"Reach => {Reach}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendLine($"Value => {Value}");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        fg.AppendLine($"Health => {Health}");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.Damage ?? true)
+                    {
+                        fg.AppendLine($"Damage => {Damage}");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ItemAbstract.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Icon;
+            public Exception? Script;
+            public Exception? Enchantment;
+            public Exception? EnchantmentPoints;
+            public Exception? Type;
+            public Exception? Speed;
+            public Exception? Reach;
+            public Exception? Flags;
+            public Exception? Value;
+            public Exception? Health;
+            public Exception? Weight;
+            public Exception? Damage;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
+                switch (enu)
+                {
+                    case Weapon_FieldIndex.Name:
+                        return Name;
+                    case Weapon_FieldIndex.Model:
+                        return Model;
+                    case Weapon_FieldIndex.Icon:
+                        return Icon;
+                    case Weapon_FieldIndex.Script:
+                        return Script;
+                    case Weapon_FieldIndex.Enchantment:
+                        return Enchantment;
+                    case Weapon_FieldIndex.EnchantmentPoints:
+                        return EnchantmentPoints;
+                    case Weapon_FieldIndex.Type:
+                        return Type;
+                    case Weapon_FieldIndex.Speed:
+                        return Speed;
+                    case Weapon_FieldIndex.Reach:
+                        return Reach;
+                    case Weapon_FieldIndex.Flags:
+                        return Flags;
+                    case Weapon_FieldIndex.Value:
+                        return Value;
+                    case Weapon_FieldIndex.Health:
+                        return Health;
+                    case Weapon_FieldIndex.Weight:
+                        return Weight;
+                    case Weapon_FieldIndex.Damage:
+                        return Damage;
+                    case Weapon_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
+                switch (enu)
+                {
+                    case Weapon_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Weapon_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Weapon_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Weapon_FieldIndex.Enchantment:
+                        this.Enchantment = ex;
+                        break;
+                    case Weapon_FieldIndex.EnchantmentPoints:
+                        this.EnchantmentPoints = ex;
+                        break;
+                    case Weapon_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Weapon_FieldIndex.Speed:
+                        this.Speed = ex;
+                        break;
+                    case Weapon_FieldIndex.Reach:
+                        this.Reach = ex;
+                        break;
+                    case Weapon_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Weapon_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Weapon_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case Weapon_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Weapon_FieldIndex.Damage:
+                        this.Damage = ex;
+                        break;
+                    case Weapon_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
+                switch (enu)
+                {
+                    case Weapon_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Script:
+                        this.Script = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Enchantment:
+                        this.Enchantment = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.EnchantmentPoints:
+                        this.EnchantmentPoints = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Speed:
+                        this.Speed = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Reach:
+                        this.Reach = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Value:
+                        this.Value = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Health:
+                        this.Health = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Weight:
+                        this.Weight = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.Damage:
+                        this.Damage = (Exception)obj;
+                        break;
+                    case Weapon_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icon != null) return true;
+                if (Script != null) return true;
+                if (Enchantment != null) return true;
+                if (EnchantmentPoints != null) return true;
+                if (Type != null) return true;
+                if (Speed != null) return true;
+                if (Reach != null) return true;
+                if (Flags != null) return true;
+                if (Value != null) return true;
+                if (Health != null) return true;
+                if (Weight != null) return true;
+                if (Damage != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                Model?.ToString(fg);
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Script => {Script}");
+                fg.AppendLine($"Enchantment => {Enchantment}");
+                fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"Speed => {Speed}");
+                fg.AppendLine($"Reach => {Reach}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"Value => {Value}");
+                fg.AppendLine($"Health => {Health}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendLine($"Damage => {Damage}");
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = new MaskItem<Exception?, Model.ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model.ErrorMask>)?.Combine(rhs.Model?.Specific));
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
+                ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Speed = this.Speed.Combine(rhs.Speed);
+                ret.Reach = this.Reach.Combine(rhs.Reach);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Damage = this.Damage.Combine(rhs.Damage);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ItemAbstract.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Icon;
+            public bool Script;
+            public bool Enchantment;
+            public bool EnchantmentPoints;
+            public bool Type;
+            public bool Speed;
+            public bool Reach;
+            public bool Flags;
+            public bool Value;
+            public bool Health;
+            public bool Weight;
+            public bool Damage;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icon = defaultOn;
+                this.Script = defaultOn;
+                this.Enchantment = defaultOn;
+                this.EnchantmentPoints = defaultOn;
+                this.Type = defaultOn;
+                this.Speed = defaultOn;
+                this.Reach = defaultOn;
+                this.Flags = defaultOn;
+                this.Value = defaultOn;
+                this.Health = defaultOn;
+                this.Weight = defaultOn;
+                this.Damage = defaultOn;
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icon, null));
+                ret.Add((Script, null));
+                ret.Add((Enchantment, null));
+                ret.Add((EnchantmentPoints, null));
+                ret.Add((Type, null));
+                ret.Add((Speed, null));
+                ret.Add((Reach, null));
+                ret.Add((Flags, null));
+                ret.Add((Value, null));
+                ret.Add((Health, null));
+                ret.Add((Weight, null));
+                ret.Add((Damage, null));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -523,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Weapon_Mask<bool> GetEqualsMask(
+        public static Weapon.Mask<bool> GetEqualsMask(
             this IWeaponGetter item,
             IWeaponGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -537,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IWeaponGetter item,
             string? name = null,
-            Weapon_Mask<bool>? printMask = null)
+            Weapon.Mask<bool>? printMask = null)
         {
             return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -549,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeaponGetter item,
             FileGeneration fg,
             string? name = null,
-            Weapon_Mask<bool>? printMask = null)
+            Weapon.Mask<bool>? printMask = null)
         {
             ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -560,16 +1203,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IWeaponGetter item,
-            Weapon_Mask<bool?> checkMask)
+            Weapon.Mask<bool?> checkMask)
         {
             return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Weapon_Mask<bool> GetHasBeenSetMask(this IWeaponGetter item)
+        public static Weapon.Mask<bool> GetHasBeenSetMask(this IWeaponGetter item)
         {
-            var ret = new Weapon_Mask<bool>(false);
+            var ret = new Weapon.Mask<bool>(false);
             ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -588,8 +1231,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWeaponInternal lhs,
             IWeaponGetter rhs,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? copyMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((WeaponSetterTranslationCommon)((IWeaponGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -597,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -615,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Weapon DeepCopy(
             this IWeaponGetter item,
-            Weapon_TranslationMask? copyMask = null)
+            Weapon.TranslationMask? copyMask = null)
         {
             return ((WeaponSetterTranslationCommon)((IWeaponGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -624,8 +1267,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Weapon DeepCopy(
             this IWeaponGetter item,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? copyMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? copyMask = null)
         {
             return ((WeaponSetterTranslationCommon)((IWeaponGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -649,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeaponInternal item,
             XElement node,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -662,8 +1305,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeaponInternal item,
             XElement node,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -671,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -690,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeaponInternal item,
             string path,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -702,8 +1345,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeaponInternal item,
             string path,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -717,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeaponInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -730,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeaponInternal item,
             Stream stream,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -742,8 +1385,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWeaponInternal item,
             Stream stream,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -757,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeaponInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Weapon_TranslationMask? translationMask = null)
+            Weapon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -849,9 +1492,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 20;
 
-        public static readonly Type MaskType = typeof(Weapon_Mask<>);
+        public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Weapon_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Weapon.ErrorMask);
 
         public static readonly Type ClassType = typeof(Weapon);
 
@@ -1391,12 +2034,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly WeaponCommon Instance = new WeaponCommon();
 
-        public Weapon_Mask<bool> GetEqualsMask(
+        public Weapon.Mask<bool> GetEqualsMask(
             IWeaponGetter item,
             IWeaponGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Weapon_Mask<bool>(false);
+            var ret = new Weapon.Mask<bool>(false);
             ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1408,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IWeaponGetter item,
             IWeaponGetter rhs,
-            Weapon_Mask<bool> ret,
+            Weapon.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1437,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IWeaponGetter item,
             string? name = null,
-            Weapon_Mask<bool>? printMask = null)
+            Weapon.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1452,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponGetter item,
             FileGeneration fg,
             string? name = null,
-            Weapon_Mask<bool>? printMask = null)
+            Weapon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1476,7 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWeaponGetter item,
             FileGeneration fg,
-            Weapon_Mask<bool>? printMask = null)
+            Weapon.Mask<bool>? printMask = null)
         {
             ItemAbstractCommon.ToStringFields(
                 item: item,
@@ -1546,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IWeaponGetter item,
-            Weapon_Mask<bool?> checkMask)
+            Weapon.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1562,11 +2205,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IWeaponGetter item,
-            Weapon_Mask<bool> mask)
+            Weapon.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model_Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.Script = item.Script.HasBeenSet;
             mask.Enchantment = item.Enchantment.HasBeenSet;
@@ -1977,7 +2620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Weapon DeepCopy(
             IWeaponGetter item,
-            Weapon_TranslationMask? copyMask = null)
+            Weapon.TranslationMask? copyMask = null)
         {
             Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1988,8 +2631,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Weapon DeepCopy(
             IWeaponGetter item,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? copyMask = null)
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? copyMask = null)
         {
             Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2625,8 +3268,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeaponGetter item,
             XElement node,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null,
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2636,14 +3279,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IWeaponGetter item,
             string path,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null,
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2659,8 +3302,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWeaponGetter item,
             Stream stream,
-            out Weapon_ErrorMask errorMask,
-            Weapon_TranslationMask? translationMask = null,
+            out Weapon.ErrorMask errorMask,
+            Weapon.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2677,648 +3320,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Weapon_Mask<T> :
-        ItemAbstract_Mask<T>,
-        IMask<T>,
-        IEquatable<Weapon_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Weapon_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Script = initialValue;
-            this.Enchantment = initialValue;
-            this.EnchantmentPoints = initialValue;
-            this.Type = initialValue;
-            this.Speed = initialValue;
-            this.Reach = initialValue;
-            this.Flags = initialValue;
-            this.Value = initialValue;
-            this.Health = initialValue;
-            this.Weight = initialValue;
-            this.Damage = initialValue;
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Weapon_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Model,
-            T Icon,
-            T Script,
-            T Enchantment,
-            T EnchantmentPoints,
-            T Type,
-            T Speed,
-            T Reach,
-            T Flags,
-            T Value,
-            T Health,
-            T Weight,
-            T Damage,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Model = new MaskItem<T, Model_Mask<T>?>(Model, new Model_Mask<T>(Model));
-            this.Icon = Icon;
-            this.Script = Script;
-            this.Enchantment = Enchantment;
-            this.EnchantmentPoints = EnchantmentPoints;
-            this.Type = Type;
-            this.Speed = Speed;
-            this.Reach = Reach;
-            this.Flags = Flags;
-            this.Value = Value;
-            this.Health = Health;
-            this.Weight = Weight;
-            this.Damage = Damage;
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Weapon_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public MaskItem<T, Model_Mask<T>?>? Model { get; set; }
-        public T Icon;
-        public T Script;
-        public T Enchantment;
-        public T EnchantmentPoints;
-        public T Type;
-        public T Speed;
-        public T Reach;
-        public T Flags;
-        public T Value;
-        public T Health;
-        public T Weight;
-        public T Damage;
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Weapon_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Weapon_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
-            if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.Speed, rhs.Speed)) return false;
-            if (!object.Equals(this.Reach, rhs.Reach)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Health, rhs.Health)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.Damage, rhs.Damage)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Enchantment?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnchantmentPoints?.GetHashCode());
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.Speed?.GetHashCode());
-            ret = ret.CombineHashCode(this.Reach?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Health?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Damage?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (Model != null)
-            {
-                if (!eval(this.Model.Overall)) return false;
-                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Script)) return false;
-            if (!eval(this.Enchantment)) return false;
-            if (!eval(this.EnchantmentPoints)) return false;
-            if (!eval(this.Type)) return false;
-            if (!eval(this.Speed)) return false;
-            if (!eval(this.Reach)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.Value)) return false;
-            if (!eval(this.Health)) return false;
-            if (!eval(this.Weight)) return false;
-            if (!eval(this.Damage)) return false;
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Weapon_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Weapon_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Weapon_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Model = this.Model == null ? null : new MaskItem<R, Model_Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-            obj.Icon = eval(this.Icon);
-            obj.Script = eval(this.Script);
-            obj.Enchantment = eval(this.Enchantment);
-            obj.EnchantmentPoints = eval(this.EnchantmentPoints);
-            obj.Type = eval(this.Type);
-            obj.Speed = eval(this.Speed);
-            obj.Reach = eval(this.Reach);
-            obj.Flags = eval(this.Flags);
-            obj.Value = eval(this.Value);
-            obj.Health = eval(this.Health);
-            obj.Weight = eval(this.Weight);
-            obj.Damage = eval(this.Damage);
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Weapon_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Weapon_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Weapon_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Model?.Overall ?? true)
-                {
-                    Model?.ToString(fg);
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Script ?? true)
-                {
-                    fg.AppendLine($"Script => {Script}");
-                }
-                if (printMask?.Enchantment ?? true)
-                {
-                    fg.AppendLine($"Enchantment => {Enchantment}");
-                }
-                if (printMask?.EnchantmentPoints ?? true)
-                {
-                    fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
-                }
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.Speed ?? true)
-                {
-                    fg.AppendLine($"Speed => {Speed}");
-                }
-                if (printMask?.Reach ?? true)
-                {
-                    fg.AppendLine($"Reach => {Reach}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Value ?? true)
-                {
-                    fg.AppendLine($"Value => {Value}");
-                }
-                if (printMask?.Health ?? true)
-                {
-                    fg.AppendLine($"Health => {Health}");
-                }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
-                if (printMask?.Damage ?? true)
-                {
-                    fg.AppendLine($"Damage => {Damage}");
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Weapon_ErrorMask : ItemAbstract_ErrorMask, IErrorMask<Weapon_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public MaskItem<Exception?, Model_ErrorMask?>? Model;
-        public Exception? Icon;
-        public Exception? Script;
-        public Exception? Enchantment;
-        public Exception? EnchantmentPoints;
-        public Exception? Type;
-        public Exception? Speed;
-        public Exception? Reach;
-        public Exception? Flags;
-        public Exception? Value;
-        public Exception? Health;
-        public Exception? Weight;
-        public Exception? Damage;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    return Name;
-                case Weapon_FieldIndex.Model:
-                    return Model;
-                case Weapon_FieldIndex.Icon:
-                    return Icon;
-                case Weapon_FieldIndex.Script:
-                    return Script;
-                case Weapon_FieldIndex.Enchantment:
-                    return Enchantment;
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    return EnchantmentPoints;
-                case Weapon_FieldIndex.Type:
-                    return Type;
-                case Weapon_FieldIndex.Speed:
-                    return Speed;
-                case Weapon_FieldIndex.Reach:
-                    return Reach;
-                case Weapon_FieldIndex.Flags:
-                    return Flags;
-                case Weapon_FieldIndex.Value:
-                    return Value;
-                case Weapon_FieldIndex.Health:
-                    return Health;
-                case Weapon_FieldIndex.Weight:
-                    return Weight;
-                case Weapon_FieldIndex.Damage:
-                    return Damage;
-                case Weapon_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Weapon_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception?, Model_ErrorMask?>(ex, null);
-                    break;
-                case Weapon_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Weapon_FieldIndex.Script:
-                    this.Script = ex;
-                    break;
-                case Weapon_FieldIndex.Enchantment:
-                    this.Enchantment = ex;
-                    break;
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = ex;
-                    break;
-                case Weapon_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case Weapon_FieldIndex.Speed:
-                    this.Speed = ex;
-                    break;
-                case Weapon_FieldIndex.Reach:
-                    this.Reach = ex;
-                    break;
-                case Weapon_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Weapon_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case Weapon_FieldIndex.Health:
-                    this.Health = ex;
-                    break;
-                case Weapon_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Weapon_FieldIndex.Damage:
-                    this.Damage = ex;
-                    break;
-                case Weapon_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
-            switch (enu)
-            {
-                case Weapon_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception?, Model_ErrorMask?>?)obj;
-                    break;
-                case Weapon_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Script:
-                    this.Script = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Enchantment:
-                    this.Enchantment = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.EnchantmentPoints:
-                    this.EnchantmentPoints = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Speed:
-                    this.Speed = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Reach:
-                    this.Reach = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Health:
-                    this.Health = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.Damage:
-                    this.Damage = (Exception)obj;
-                    break;
-                case Weapon_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Model != null) return true;
-            if (Icon != null) return true;
-            if (Script != null) return true;
-            if (Enchantment != null) return true;
-            if (EnchantmentPoints != null) return true;
-            if (Type != null) return true;
-            if (Speed != null) return true;
-            if (Reach != null) return true;
-            if (Flags != null) return true;
-            if (Value != null) return true;
-            if (Health != null) return true;
-            if (Weight != null) return true;
-            if (Damage != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Weapon_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            Model?.ToString(fg);
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Enchantment => {Enchantment}");
-            fg.AppendLine($"EnchantmentPoints => {EnchantmentPoints}");
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"Speed => {Speed}");
-            fg.AppendLine($"Reach => {Reach}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Health => {Health}");
-            fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"Damage => {Damage}");
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Weapon_ErrorMask Combine(Weapon_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Weapon_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Model = new MaskItem<Exception?, Model_ErrorMask?>(ExceptionExt.Combine(this.Model?.Overall, rhs.Model?.Overall), (this.Model?.Specific as IErrorMask<Model_ErrorMask>)?.Combine(rhs.Model?.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Script = this.Script.Combine(rhs.Script);
-            ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
-            ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.Speed = this.Speed.Combine(rhs.Speed);
-            ret.Reach = this.Reach.Combine(rhs.Reach);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Value = this.Value.Combine(rhs.Value);
-            ret.Health = this.Health.Combine(rhs.Health);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.Damage = this.Damage.Combine(rhs.Damage);
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Weapon_ErrorMask? Combine(Weapon_ErrorMask? lhs, Weapon_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Weapon_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Weapon_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Weapon_TranslationMask : ItemAbstract_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public MaskItem<bool, Model_TranslationMask?> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Enchantment;
-        public bool EnchantmentPoints;
-        public bool Type;
-        public bool Speed;
-        public bool Reach;
-        public bool Flags;
-        public bool Value;
-        public bool Health;
-        public bool Weight;
-        public bool Damage;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Weapon_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<bool, Model_TranslationMask?>(defaultOn, null);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Enchantment = defaultOn;
-            this.EnchantmentPoints = defaultOn;
-            this.Type = defaultOn;
-            this.Speed = defaultOn;
-            this.Reach = defaultOn;
-            this.Flags = defaultOn;
-            this.Value = defaultOn;
-            this.Health = defaultOn;
-            this.Weight = defaultOn;
-            this.Damage = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-            ret.Add((Icon, null));
-            ret.Add((Script, null));
-            ret.Add((Enchantment, null));
-            ret.Add((EnchantmentPoints, null));
-            ret.Add((Type, null));
-            ret.Add((Speed, null));
-            ret.Add((Reach, null));
-            ret.Add((Flags, null));
-            ret.Add((Value, null));
-            ret.Add((Health, null));
-            ret.Add((Weight, null));
-            ret.Add((Damage, null));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

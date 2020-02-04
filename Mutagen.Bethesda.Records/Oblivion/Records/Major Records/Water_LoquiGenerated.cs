@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Water CreateFromXml(
             XElement node,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -574,15 +574,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Water CreateFromXml(
             XElement node,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             string path,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -612,8 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             string path,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             Stream stream,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -646,8 +646,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water CreateFromXml(
             Stream stream,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -670,6 +670,1135 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Texture = initialValue;
+                this.Opacity = initialValue;
+                this.Flags = initialValue;
+                this.MaterialID = initialValue;
+                this.Sound = initialValue;
+                this.WindVelocity = initialValue;
+                this.WindDirection = initialValue;
+                this.WaveAmplitude = initialValue;
+                this.WaveFrequency = initialValue;
+                this.SunPower = initialValue;
+                this.ReflectivityAmount = initialValue;
+                this.FresnelAmount = initialValue;
+                this.ScrollXSpeed = initialValue;
+                this.ScrollYSpeed = initialValue;
+                this.FogDistanceNearPlane = initialValue;
+                this.FogDistanceFarPlane = initialValue;
+                this.ShallowColor = initialValue;
+                this.DeepColor = initialValue;
+                this.ReflectionColor = initialValue;
+                this.TextureBlend = initialValue;
+                this.RainSimulatorForce = initialValue;
+                this.RainSimulatorVelocity = initialValue;
+                this.RainSimulatorFalloff = initialValue;
+                this.RainSimulatorDampner = initialValue;
+                this.RainSimulatorStartingSize = initialValue;
+                this.DisplacementSimulatorForce = initialValue;
+                this.DisplacementSimulatorVelocity = initialValue;
+                this.DisplacementSimulatorFalloff = initialValue;
+                this.DisplacementSimulatorDampner = initialValue;
+                this.DisplacementSimulatorStartingSize = initialValue;
+                this.Damage = initialValue;
+                this.RelatedWaters = new MaskItem<T, RelatedWaters.Mask<T>?>(initialValue, new RelatedWaters.Mask<T>(initialValue));
+                this.DATADataTypeState = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Texture,
+                T Opacity,
+                T Flags,
+                T MaterialID,
+                T Sound,
+                T WindVelocity,
+                T WindDirection,
+                T WaveAmplitude,
+                T WaveFrequency,
+                T SunPower,
+                T ReflectivityAmount,
+                T FresnelAmount,
+                T ScrollXSpeed,
+                T ScrollYSpeed,
+                T FogDistanceNearPlane,
+                T FogDistanceFarPlane,
+                T ShallowColor,
+                T DeepColor,
+                T ReflectionColor,
+                T TextureBlend,
+                T RainSimulatorForce,
+                T RainSimulatorVelocity,
+                T RainSimulatorFalloff,
+                T RainSimulatorDampner,
+                T RainSimulatorStartingSize,
+                T DisplacementSimulatorForce,
+                T DisplacementSimulatorVelocity,
+                T DisplacementSimulatorFalloff,
+                T DisplacementSimulatorDampner,
+                T DisplacementSimulatorStartingSize,
+                T Damage,
+                T RelatedWaters,
+                T DATADataTypeState)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Texture = Texture;
+                this.Opacity = Opacity;
+                this.Flags = Flags;
+                this.MaterialID = MaterialID;
+                this.Sound = Sound;
+                this.WindVelocity = WindVelocity;
+                this.WindDirection = WindDirection;
+                this.WaveAmplitude = WaveAmplitude;
+                this.WaveFrequency = WaveFrequency;
+                this.SunPower = SunPower;
+                this.ReflectivityAmount = ReflectivityAmount;
+                this.FresnelAmount = FresnelAmount;
+                this.ScrollXSpeed = ScrollXSpeed;
+                this.ScrollYSpeed = ScrollYSpeed;
+                this.FogDistanceNearPlane = FogDistanceNearPlane;
+                this.FogDistanceFarPlane = FogDistanceFarPlane;
+                this.ShallowColor = ShallowColor;
+                this.DeepColor = DeepColor;
+                this.ReflectionColor = ReflectionColor;
+                this.TextureBlend = TextureBlend;
+                this.RainSimulatorForce = RainSimulatorForce;
+                this.RainSimulatorVelocity = RainSimulatorVelocity;
+                this.RainSimulatorFalloff = RainSimulatorFalloff;
+                this.RainSimulatorDampner = RainSimulatorDampner;
+                this.RainSimulatorStartingSize = RainSimulatorStartingSize;
+                this.DisplacementSimulatorForce = DisplacementSimulatorForce;
+                this.DisplacementSimulatorVelocity = DisplacementSimulatorVelocity;
+                this.DisplacementSimulatorFalloff = DisplacementSimulatorFalloff;
+                this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
+                this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
+                this.Damage = Damage;
+                this.RelatedWaters = new MaskItem<T, RelatedWaters.Mask<T>?>(RelatedWaters, new RelatedWaters.Mask<T>(RelatedWaters));
+                this.DATADataTypeState = DATADataTypeState;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Texture;
+            public T Opacity;
+            public T Flags;
+            public T MaterialID;
+            public T Sound;
+            public T WindVelocity;
+            public T WindDirection;
+            public T WaveAmplitude;
+            public T WaveFrequency;
+            public T SunPower;
+            public T ReflectivityAmount;
+            public T FresnelAmount;
+            public T ScrollXSpeed;
+            public T ScrollYSpeed;
+            public T FogDistanceNearPlane;
+            public T FogDistanceFarPlane;
+            public T ShallowColor;
+            public T DeepColor;
+            public T ReflectionColor;
+            public T TextureBlend;
+            public T RainSimulatorForce;
+            public T RainSimulatorVelocity;
+            public T RainSimulatorFalloff;
+            public T RainSimulatorDampner;
+            public T RainSimulatorStartingSize;
+            public T DisplacementSimulatorForce;
+            public T DisplacementSimulatorVelocity;
+            public T DisplacementSimulatorFalloff;
+            public T DisplacementSimulatorDampner;
+            public T DisplacementSimulatorStartingSize;
+            public T Damage;
+            public MaskItem<T, RelatedWaters.Mask<T>?>? RelatedWaters { get; set; }
+            public T DATADataTypeState;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Texture, rhs.Texture)) return false;
+                if (!object.Equals(this.Opacity, rhs.Opacity)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.MaterialID, rhs.MaterialID)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.WindVelocity, rhs.WindVelocity)) return false;
+                if (!object.Equals(this.WindDirection, rhs.WindDirection)) return false;
+                if (!object.Equals(this.WaveAmplitude, rhs.WaveAmplitude)) return false;
+                if (!object.Equals(this.WaveFrequency, rhs.WaveFrequency)) return false;
+                if (!object.Equals(this.SunPower, rhs.SunPower)) return false;
+                if (!object.Equals(this.ReflectivityAmount, rhs.ReflectivityAmount)) return false;
+                if (!object.Equals(this.FresnelAmount, rhs.FresnelAmount)) return false;
+                if (!object.Equals(this.ScrollXSpeed, rhs.ScrollXSpeed)) return false;
+                if (!object.Equals(this.ScrollYSpeed, rhs.ScrollYSpeed)) return false;
+                if (!object.Equals(this.FogDistanceNearPlane, rhs.FogDistanceNearPlane)) return false;
+                if (!object.Equals(this.FogDistanceFarPlane, rhs.FogDistanceFarPlane)) return false;
+                if (!object.Equals(this.ShallowColor, rhs.ShallowColor)) return false;
+                if (!object.Equals(this.DeepColor, rhs.DeepColor)) return false;
+                if (!object.Equals(this.ReflectionColor, rhs.ReflectionColor)) return false;
+                if (!object.Equals(this.TextureBlend, rhs.TextureBlend)) return false;
+                if (!object.Equals(this.RainSimulatorForce, rhs.RainSimulatorForce)) return false;
+                if (!object.Equals(this.RainSimulatorVelocity, rhs.RainSimulatorVelocity)) return false;
+                if (!object.Equals(this.RainSimulatorFalloff, rhs.RainSimulatorFalloff)) return false;
+                if (!object.Equals(this.RainSimulatorDampner, rhs.RainSimulatorDampner)) return false;
+                if (!object.Equals(this.RainSimulatorStartingSize, rhs.RainSimulatorStartingSize)) return false;
+                if (!object.Equals(this.DisplacementSimulatorForce, rhs.DisplacementSimulatorForce)) return false;
+                if (!object.Equals(this.DisplacementSimulatorVelocity, rhs.DisplacementSimulatorVelocity)) return false;
+                if (!object.Equals(this.DisplacementSimulatorFalloff, rhs.DisplacementSimulatorFalloff)) return false;
+                if (!object.Equals(this.DisplacementSimulatorDampner, rhs.DisplacementSimulatorDampner)) return false;
+                if (!object.Equals(this.DisplacementSimulatorStartingSize, rhs.DisplacementSimulatorStartingSize)) return false;
+                if (!object.Equals(this.Damage, rhs.Damage)) return false;
+                if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Texture?.GetHashCode());
+                ret = ret.CombineHashCode(this.Opacity?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaterialID?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
+                ret = ret.CombineHashCode(this.WindVelocity?.GetHashCode());
+                ret = ret.CombineHashCode(this.WindDirection?.GetHashCode());
+                ret = ret.CombineHashCode(this.WaveAmplitude?.GetHashCode());
+                ret = ret.CombineHashCode(this.WaveFrequency?.GetHashCode());
+                ret = ret.CombineHashCode(this.SunPower?.GetHashCode());
+                ret = ret.CombineHashCode(this.ReflectivityAmount?.GetHashCode());
+                ret = ret.CombineHashCode(this.FresnelAmount?.GetHashCode());
+                ret = ret.CombineHashCode(this.ScrollXSpeed?.GetHashCode());
+                ret = ret.CombineHashCode(this.ScrollYSpeed?.GetHashCode());
+                ret = ret.CombineHashCode(this.FogDistanceNearPlane?.GetHashCode());
+                ret = ret.CombineHashCode(this.FogDistanceFarPlane?.GetHashCode());
+                ret = ret.CombineHashCode(this.ShallowColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.DeepColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.ReflectionColor?.GetHashCode());
+                ret = ret.CombineHashCode(this.TextureBlend?.GetHashCode());
+                ret = ret.CombineHashCode(this.RainSimulatorForce?.GetHashCode());
+                ret = ret.CombineHashCode(this.RainSimulatorVelocity?.GetHashCode());
+                ret = ret.CombineHashCode(this.RainSimulatorFalloff?.GetHashCode());
+                ret = ret.CombineHashCode(this.RainSimulatorDampner?.GetHashCode());
+                ret = ret.CombineHashCode(this.RainSimulatorStartingSize?.GetHashCode());
+                ret = ret.CombineHashCode(this.DisplacementSimulatorForce?.GetHashCode());
+                ret = ret.CombineHashCode(this.DisplacementSimulatorVelocity?.GetHashCode());
+                ret = ret.CombineHashCode(this.DisplacementSimulatorFalloff?.GetHashCode());
+                ret = ret.CombineHashCode(this.DisplacementSimulatorDampner?.GetHashCode());
+                ret = ret.CombineHashCode(this.DisplacementSimulatorStartingSize?.GetHashCode());
+                ret = ret.CombineHashCode(this.Damage?.GetHashCode());
+                ret = ret.CombineHashCode(this.RelatedWaters?.GetHashCode());
+                ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Texture)) return false;
+                if (!eval(this.Opacity)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.MaterialID)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.WindVelocity)) return false;
+                if (!eval(this.WindDirection)) return false;
+                if (!eval(this.WaveAmplitude)) return false;
+                if (!eval(this.WaveFrequency)) return false;
+                if (!eval(this.SunPower)) return false;
+                if (!eval(this.ReflectivityAmount)) return false;
+                if (!eval(this.FresnelAmount)) return false;
+                if (!eval(this.ScrollXSpeed)) return false;
+                if (!eval(this.ScrollYSpeed)) return false;
+                if (!eval(this.FogDistanceNearPlane)) return false;
+                if (!eval(this.FogDistanceFarPlane)) return false;
+                if (!eval(this.ShallowColor)) return false;
+                if (!eval(this.DeepColor)) return false;
+                if (!eval(this.ReflectionColor)) return false;
+                if (!eval(this.TextureBlend)) return false;
+                if (!eval(this.RainSimulatorForce)) return false;
+                if (!eval(this.RainSimulatorVelocity)) return false;
+                if (!eval(this.RainSimulatorFalloff)) return false;
+                if (!eval(this.RainSimulatorDampner)) return false;
+                if (!eval(this.RainSimulatorStartingSize)) return false;
+                if (!eval(this.DisplacementSimulatorForce)) return false;
+                if (!eval(this.DisplacementSimulatorVelocity)) return false;
+                if (!eval(this.DisplacementSimulatorFalloff)) return false;
+                if (!eval(this.DisplacementSimulatorDampner)) return false;
+                if (!eval(this.DisplacementSimulatorStartingSize)) return false;
+                if (!eval(this.Damage)) return false;
+                if (RelatedWaters != null)
+                {
+                    if (!eval(this.RelatedWaters.Overall)) return false;
+                    if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.AllEqual(eval)) return false;
+                }
+                if (!eval(this.DATADataTypeState)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Water.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Texture = eval(this.Texture);
+                obj.Opacity = eval(this.Opacity);
+                obj.Flags = eval(this.Flags);
+                obj.MaterialID = eval(this.MaterialID);
+                obj.Sound = eval(this.Sound);
+                obj.WindVelocity = eval(this.WindVelocity);
+                obj.WindDirection = eval(this.WindDirection);
+                obj.WaveAmplitude = eval(this.WaveAmplitude);
+                obj.WaveFrequency = eval(this.WaveFrequency);
+                obj.SunPower = eval(this.SunPower);
+                obj.ReflectivityAmount = eval(this.ReflectivityAmount);
+                obj.FresnelAmount = eval(this.FresnelAmount);
+                obj.ScrollXSpeed = eval(this.ScrollXSpeed);
+                obj.ScrollYSpeed = eval(this.ScrollYSpeed);
+                obj.FogDistanceNearPlane = eval(this.FogDistanceNearPlane);
+                obj.FogDistanceFarPlane = eval(this.FogDistanceFarPlane);
+                obj.ShallowColor = eval(this.ShallowColor);
+                obj.DeepColor = eval(this.DeepColor);
+                obj.ReflectionColor = eval(this.ReflectionColor);
+                obj.TextureBlend = eval(this.TextureBlend);
+                obj.RainSimulatorForce = eval(this.RainSimulatorForce);
+                obj.RainSimulatorVelocity = eval(this.RainSimulatorVelocity);
+                obj.RainSimulatorFalloff = eval(this.RainSimulatorFalloff);
+                obj.RainSimulatorDampner = eval(this.RainSimulatorDampner);
+                obj.RainSimulatorStartingSize = eval(this.RainSimulatorStartingSize);
+                obj.DisplacementSimulatorForce = eval(this.DisplacementSimulatorForce);
+                obj.DisplacementSimulatorVelocity = eval(this.DisplacementSimulatorVelocity);
+                obj.DisplacementSimulatorFalloff = eval(this.DisplacementSimulatorFalloff);
+                obj.DisplacementSimulatorDampner = eval(this.DisplacementSimulatorDampner);
+                obj.DisplacementSimulatorStartingSize = eval(this.DisplacementSimulatorStartingSize);
+                obj.Damage = eval(this.Damage);
+                obj.RelatedWaters = this.RelatedWaters == null ? null : new MaskItem<R, RelatedWaters.Mask<R>?>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Water.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Water.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Water.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Texture ?? true)
+                    {
+                        fg.AppendLine($"Texture => {Texture}");
+                    }
+                    if (printMask?.Opacity ?? true)
+                    {
+                        fg.AppendLine($"Opacity => {Opacity}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.MaterialID ?? true)
+                    {
+                        fg.AppendLine($"MaterialID => {MaterialID}");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        fg.AppendLine($"Sound => {Sound}");
+                    }
+                    if (printMask?.WindVelocity ?? true)
+                    {
+                        fg.AppendLine($"WindVelocity => {WindVelocity}");
+                    }
+                    if (printMask?.WindDirection ?? true)
+                    {
+                        fg.AppendLine($"WindDirection => {WindDirection}");
+                    }
+                    if (printMask?.WaveAmplitude ?? true)
+                    {
+                        fg.AppendLine($"WaveAmplitude => {WaveAmplitude}");
+                    }
+                    if (printMask?.WaveFrequency ?? true)
+                    {
+                        fg.AppendLine($"WaveFrequency => {WaveFrequency}");
+                    }
+                    if (printMask?.SunPower ?? true)
+                    {
+                        fg.AppendLine($"SunPower => {SunPower}");
+                    }
+                    if (printMask?.ReflectivityAmount ?? true)
+                    {
+                        fg.AppendLine($"ReflectivityAmount => {ReflectivityAmount}");
+                    }
+                    if (printMask?.FresnelAmount ?? true)
+                    {
+                        fg.AppendLine($"FresnelAmount => {FresnelAmount}");
+                    }
+                    if (printMask?.ScrollXSpeed ?? true)
+                    {
+                        fg.AppendLine($"ScrollXSpeed => {ScrollXSpeed}");
+                    }
+                    if (printMask?.ScrollYSpeed ?? true)
+                    {
+                        fg.AppendLine($"ScrollYSpeed => {ScrollYSpeed}");
+                    }
+                    if (printMask?.FogDistanceNearPlane ?? true)
+                    {
+                        fg.AppendLine($"FogDistanceNearPlane => {FogDistanceNearPlane}");
+                    }
+                    if (printMask?.FogDistanceFarPlane ?? true)
+                    {
+                        fg.AppendLine($"FogDistanceFarPlane => {FogDistanceFarPlane}");
+                    }
+                    if (printMask?.ShallowColor ?? true)
+                    {
+                        fg.AppendLine($"ShallowColor => {ShallowColor}");
+                    }
+                    if (printMask?.DeepColor ?? true)
+                    {
+                        fg.AppendLine($"DeepColor => {DeepColor}");
+                    }
+                    if (printMask?.ReflectionColor ?? true)
+                    {
+                        fg.AppendLine($"ReflectionColor => {ReflectionColor}");
+                    }
+                    if (printMask?.TextureBlend ?? true)
+                    {
+                        fg.AppendLine($"TextureBlend => {TextureBlend}");
+                    }
+                    if (printMask?.RainSimulatorForce ?? true)
+                    {
+                        fg.AppendLine($"RainSimulatorForce => {RainSimulatorForce}");
+                    }
+                    if (printMask?.RainSimulatorVelocity ?? true)
+                    {
+                        fg.AppendLine($"RainSimulatorVelocity => {RainSimulatorVelocity}");
+                    }
+                    if (printMask?.RainSimulatorFalloff ?? true)
+                    {
+                        fg.AppendLine($"RainSimulatorFalloff => {RainSimulatorFalloff}");
+                    }
+                    if (printMask?.RainSimulatorDampner ?? true)
+                    {
+                        fg.AppendLine($"RainSimulatorDampner => {RainSimulatorDampner}");
+                    }
+                    if (printMask?.RainSimulatorStartingSize ?? true)
+                    {
+                        fg.AppendLine($"RainSimulatorStartingSize => {RainSimulatorStartingSize}");
+                    }
+                    if (printMask?.DisplacementSimulatorForce ?? true)
+                    {
+                        fg.AppendLine($"DisplacementSimulatorForce => {DisplacementSimulatorForce}");
+                    }
+                    if (printMask?.DisplacementSimulatorVelocity ?? true)
+                    {
+                        fg.AppendLine($"DisplacementSimulatorVelocity => {DisplacementSimulatorVelocity}");
+                    }
+                    if (printMask?.DisplacementSimulatorFalloff ?? true)
+                    {
+                        fg.AppendLine($"DisplacementSimulatorFalloff => {DisplacementSimulatorFalloff}");
+                    }
+                    if (printMask?.DisplacementSimulatorDampner ?? true)
+                    {
+                        fg.AppendLine($"DisplacementSimulatorDampner => {DisplacementSimulatorDampner}");
+                    }
+                    if (printMask?.DisplacementSimulatorStartingSize ?? true)
+                    {
+                        fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
+                    }
+                    if (printMask?.Damage ?? true)
+                    {
+                        fg.AppendLine($"Damage => {Damage}");
+                    }
+                    if (printMask?.RelatedWaters?.Overall ?? true)
+                    {
+                        RelatedWaters?.ToString(fg);
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Texture;
+            public Exception? Opacity;
+            public Exception? Flags;
+            public Exception? MaterialID;
+            public Exception? Sound;
+            public Exception? WindVelocity;
+            public Exception? WindDirection;
+            public Exception? WaveAmplitude;
+            public Exception? WaveFrequency;
+            public Exception? SunPower;
+            public Exception? ReflectivityAmount;
+            public Exception? FresnelAmount;
+            public Exception? ScrollXSpeed;
+            public Exception? ScrollYSpeed;
+            public Exception? FogDistanceNearPlane;
+            public Exception? FogDistanceFarPlane;
+            public Exception? ShallowColor;
+            public Exception? DeepColor;
+            public Exception? ReflectionColor;
+            public Exception? TextureBlend;
+            public Exception? RainSimulatorForce;
+            public Exception? RainSimulatorVelocity;
+            public Exception? RainSimulatorFalloff;
+            public Exception? RainSimulatorDampner;
+            public Exception? RainSimulatorStartingSize;
+            public Exception? DisplacementSimulatorForce;
+            public Exception? DisplacementSimulatorVelocity;
+            public Exception? DisplacementSimulatorFalloff;
+            public Exception? DisplacementSimulatorDampner;
+            public Exception? DisplacementSimulatorStartingSize;
+            public Exception? Damage;
+            public MaskItem<Exception?, RelatedWaters.ErrorMask?>? RelatedWaters;
+            public Exception? DATADataTypeState;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Water_FieldIndex enu = (Water_FieldIndex)index;
+                switch (enu)
+                {
+                    case Water_FieldIndex.Texture:
+                        return Texture;
+                    case Water_FieldIndex.Opacity:
+                        return Opacity;
+                    case Water_FieldIndex.Flags:
+                        return Flags;
+                    case Water_FieldIndex.MaterialID:
+                        return MaterialID;
+                    case Water_FieldIndex.Sound:
+                        return Sound;
+                    case Water_FieldIndex.WindVelocity:
+                        return WindVelocity;
+                    case Water_FieldIndex.WindDirection:
+                        return WindDirection;
+                    case Water_FieldIndex.WaveAmplitude:
+                        return WaveAmplitude;
+                    case Water_FieldIndex.WaveFrequency:
+                        return WaveFrequency;
+                    case Water_FieldIndex.SunPower:
+                        return SunPower;
+                    case Water_FieldIndex.ReflectivityAmount:
+                        return ReflectivityAmount;
+                    case Water_FieldIndex.FresnelAmount:
+                        return FresnelAmount;
+                    case Water_FieldIndex.ScrollXSpeed:
+                        return ScrollXSpeed;
+                    case Water_FieldIndex.ScrollYSpeed:
+                        return ScrollYSpeed;
+                    case Water_FieldIndex.FogDistanceNearPlane:
+                        return FogDistanceNearPlane;
+                    case Water_FieldIndex.FogDistanceFarPlane:
+                        return FogDistanceFarPlane;
+                    case Water_FieldIndex.ShallowColor:
+                        return ShallowColor;
+                    case Water_FieldIndex.DeepColor:
+                        return DeepColor;
+                    case Water_FieldIndex.ReflectionColor:
+                        return ReflectionColor;
+                    case Water_FieldIndex.TextureBlend:
+                        return TextureBlend;
+                    case Water_FieldIndex.RainSimulatorForce:
+                        return RainSimulatorForce;
+                    case Water_FieldIndex.RainSimulatorVelocity:
+                        return RainSimulatorVelocity;
+                    case Water_FieldIndex.RainSimulatorFalloff:
+                        return RainSimulatorFalloff;
+                    case Water_FieldIndex.RainSimulatorDampner:
+                        return RainSimulatorDampner;
+                    case Water_FieldIndex.RainSimulatorStartingSize:
+                        return RainSimulatorStartingSize;
+                    case Water_FieldIndex.DisplacementSimulatorForce:
+                        return DisplacementSimulatorForce;
+                    case Water_FieldIndex.DisplacementSimulatorVelocity:
+                        return DisplacementSimulatorVelocity;
+                    case Water_FieldIndex.DisplacementSimulatorFalloff:
+                        return DisplacementSimulatorFalloff;
+                    case Water_FieldIndex.DisplacementSimulatorDampner:
+                        return DisplacementSimulatorDampner;
+                    case Water_FieldIndex.DisplacementSimulatorStartingSize:
+                        return DisplacementSimulatorStartingSize;
+                    case Water_FieldIndex.Damage:
+                        return Damage;
+                    case Water_FieldIndex.RelatedWaters:
+                        return RelatedWaters;
+                    case Water_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Water_FieldIndex enu = (Water_FieldIndex)index;
+                switch (enu)
+                {
+                    case Water_FieldIndex.Texture:
+                        this.Texture = ex;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = ex;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Water_FieldIndex.MaterialID:
+                        this.MaterialID = ex;
+                        break;
+                    case Water_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case Water_FieldIndex.WindVelocity:
+                        this.WindVelocity = ex;
+                        break;
+                    case Water_FieldIndex.WindDirection:
+                        this.WindDirection = ex;
+                        break;
+                    case Water_FieldIndex.WaveAmplitude:
+                        this.WaveAmplitude = ex;
+                        break;
+                    case Water_FieldIndex.WaveFrequency:
+                        this.WaveFrequency = ex;
+                        break;
+                    case Water_FieldIndex.SunPower:
+                        this.SunPower = ex;
+                        break;
+                    case Water_FieldIndex.ReflectivityAmount:
+                        this.ReflectivityAmount = ex;
+                        break;
+                    case Water_FieldIndex.FresnelAmount:
+                        this.FresnelAmount = ex;
+                        break;
+                    case Water_FieldIndex.ScrollXSpeed:
+                        this.ScrollXSpeed = ex;
+                        break;
+                    case Water_FieldIndex.ScrollYSpeed:
+                        this.ScrollYSpeed = ex;
+                        break;
+                    case Water_FieldIndex.FogDistanceNearPlane:
+                        this.FogDistanceNearPlane = ex;
+                        break;
+                    case Water_FieldIndex.FogDistanceFarPlane:
+                        this.FogDistanceFarPlane = ex;
+                        break;
+                    case Water_FieldIndex.ShallowColor:
+                        this.ShallowColor = ex;
+                        break;
+                    case Water_FieldIndex.DeepColor:
+                        this.DeepColor = ex;
+                        break;
+                    case Water_FieldIndex.ReflectionColor:
+                        this.ReflectionColor = ex;
+                        break;
+                    case Water_FieldIndex.TextureBlend:
+                        this.TextureBlend = ex;
+                        break;
+                    case Water_FieldIndex.RainSimulatorForce:
+                        this.RainSimulatorForce = ex;
+                        break;
+                    case Water_FieldIndex.RainSimulatorVelocity:
+                        this.RainSimulatorVelocity = ex;
+                        break;
+                    case Water_FieldIndex.RainSimulatorFalloff:
+                        this.RainSimulatorFalloff = ex;
+                        break;
+                    case Water_FieldIndex.RainSimulatorDampner:
+                        this.RainSimulatorDampner = ex;
+                        break;
+                    case Water_FieldIndex.RainSimulatorStartingSize:
+                        this.RainSimulatorStartingSize = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorForce:
+                        this.DisplacementSimulatorForce = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorVelocity:
+                        this.DisplacementSimulatorVelocity = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorFalloff:
+                        this.DisplacementSimulatorFalloff = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorDampner:
+                        this.DisplacementSimulatorDampner = ex;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorStartingSize:
+                        this.DisplacementSimulatorStartingSize = ex;
+                        break;
+                    case Water_FieldIndex.Damage:
+                        this.Damage = ex;
+                        break;
+                    case Water_FieldIndex.RelatedWaters:
+                        this.RelatedWaters = new MaskItem<Exception?, RelatedWaters.ErrorMask?>(ex, null);
+                        break;
+                    case Water_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Water_FieldIndex enu = (Water_FieldIndex)index;
+                switch (enu)
+                {
+                    case Water_FieldIndex.Texture:
+                        this.Texture = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.MaterialID:
+                        this.MaterialID = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.Sound:
+                        this.Sound = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.WindVelocity:
+                        this.WindVelocity = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.WindDirection:
+                        this.WindDirection = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.WaveAmplitude:
+                        this.WaveAmplitude = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.WaveFrequency:
+                        this.WaveFrequency = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.SunPower:
+                        this.SunPower = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.ReflectivityAmount:
+                        this.ReflectivityAmount = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.FresnelAmount:
+                        this.FresnelAmount = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.ScrollXSpeed:
+                        this.ScrollXSpeed = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.ScrollYSpeed:
+                        this.ScrollYSpeed = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.FogDistanceNearPlane:
+                        this.FogDistanceNearPlane = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.FogDistanceFarPlane:
+                        this.FogDistanceFarPlane = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.ShallowColor:
+                        this.ShallowColor = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.DeepColor:
+                        this.DeepColor = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.ReflectionColor:
+                        this.ReflectionColor = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.TextureBlend:
+                        this.TextureBlend = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.RainSimulatorForce:
+                        this.RainSimulatorForce = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.RainSimulatorVelocity:
+                        this.RainSimulatorVelocity = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.RainSimulatorFalloff:
+                        this.RainSimulatorFalloff = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.RainSimulatorDampner:
+                        this.RainSimulatorDampner = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.RainSimulatorStartingSize:
+                        this.RainSimulatorStartingSize = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorForce:
+                        this.DisplacementSimulatorForce = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorVelocity:
+                        this.DisplacementSimulatorVelocity = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorFalloff:
+                        this.DisplacementSimulatorFalloff = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorDampner:
+                        this.DisplacementSimulatorDampner = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.DisplacementSimulatorStartingSize:
+                        this.DisplacementSimulatorStartingSize = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.Damage:
+                        this.Damage = (Exception)obj;
+                        break;
+                    case Water_FieldIndex.RelatedWaters:
+                        this.RelatedWaters = (MaskItem<Exception?, RelatedWaters.ErrorMask?>?)obj;
+                        break;
+                    case Water_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Texture != null) return true;
+                if (Opacity != null) return true;
+                if (Flags != null) return true;
+                if (MaterialID != null) return true;
+                if (Sound != null) return true;
+                if (WindVelocity != null) return true;
+                if (WindDirection != null) return true;
+                if (WaveAmplitude != null) return true;
+                if (WaveFrequency != null) return true;
+                if (SunPower != null) return true;
+                if (ReflectivityAmount != null) return true;
+                if (FresnelAmount != null) return true;
+                if (ScrollXSpeed != null) return true;
+                if (ScrollYSpeed != null) return true;
+                if (FogDistanceNearPlane != null) return true;
+                if (FogDistanceFarPlane != null) return true;
+                if (ShallowColor != null) return true;
+                if (DeepColor != null) return true;
+                if (ReflectionColor != null) return true;
+                if (TextureBlend != null) return true;
+                if (RainSimulatorForce != null) return true;
+                if (RainSimulatorVelocity != null) return true;
+                if (RainSimulatorFalloff != null) return true;
+                if (RainSimulatorDampner != null) return true;
+                if (RainSimulatorStartingSize != null) return true;
+                if (DisplacementSimulatorForce != null) return true;
+                if (DisplacementSimulatorVelocity != null) return true;
+                if (DisplacementSimulatorFalloff != null) return true;
+                if (DisplacementSimulatorDampner != null) return true;
+                if (DisplacementSimulatorStartingSize != null) return true;
+                if (Damage != null) return true;
+                if (RelatedWaters != null) return true;
+                if (DATADataTypeState != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Texture => {Texture}");
+                fg.AppendLine($"Opacity => {Opacity}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"MaterialID => {MaterialID}");
+                fg.AppendLine($"Sound => {Sound}");
+                fg.AppendLine($"WindVelocity => {WindVelocity}");
+                fg.AppendLine($"WindDirection => {WindDirection}");
+                fg.AppendLine($"WaveAmplitude => {WaveAmplitude}");
+                fg.AppendLine($"WaveFrequency => {WaveFrequency}");
+                fg.AppendLine($"SunPower => {SunPower}");
+                fg.AppendLine($"ReflectivityAmount => {ReflectivityAmount}");
+                fg.AppendLine($"FresnelAmount => {FresnelAmount}");
+                fg.AppendLine($"ScrollXSpeed => {ScrollXSpeed}");
+                fg.AppendLine($"ScrollYSpeed => {ScrollYSpeed}");
+                fg.AppendLine($"FogDistanceNearPlane => {FogDistanceNearPlane}");
+                fg.AppendLine($"FogDistanceFarPlane => {FogDistanceFarPlane}");
+                fg.AppendLine($"ShallowColor => {ShallowColor}");
+                fg.AppendLine($"DeepColor => {DeepColor}");
+                fg.AppendLine($"ReflectionColor => {ReflectionColor}");
+                fg.AppendLine($"TextureBlend => {TextureBlend}");
+                fg.AppendLine($"RainSimulatorForce => {RainSimulatorForce}");
+                fg.AppendLine($"RainSimulatorVelocity => {RainSimulatorVelocity}");
+                fg.AppendLine($"RainSimulatorFalloff => {RainSimulatorFalloff}");
+                fg.AppendLine($"RainSimulatorDampner => {RainSimulatorDampner}");
+                fg.AppendLine($"RainSimulatorStartingSize => {RainSimulatorStartingSize}");
+                fg.AppendLine($"DisplacementSimulatorForce => {DisplacementSimulatorForce}");
+                fg.AppendLine($"DisplacementSimulatorVelocity => {DisplacementSimulatorVelocity}");
+                fg.AppendLine($"DisplacementSimulatorFalloff => {DisplacementSimulatorFalloff}");
+                fg.AppendLine($"DisplacementSimulatorDampner => {DisplacementSimulatorDampner}");
+                fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
+                fg.AppendLine($"Damage => {Damage}");
+                RelatedWaters?.ToString(fg);
+                fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Texture = this.Texture.Combine(rhs.Texture);
+                ret.Opacity = this.Opacity.Combine(rhs.Opacity);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.MaterialID = this.MaterialID.Combine(rhs.MaterialID);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.WindVelocity = this.WindVelocity.Combine(rhs.WindVelocity);
+                ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
+                ret.WaveAmplitude = this.WaveAmplitude.Combine(rhs.WaveAmplitude);
+                ret.WaveFrequency = this.WaveFrequency.Combine(rhs.WaveFrequency);
+                ret.SunPower = this.SunPower.Combine(rhs.SunPower);
+                ret.ReflectivityAmount = this.ReflectivityAmount.Combine(rhs.ReflectivityAmount);
+                ret.FresnelAmount = this.FresnelAmount.Combine(rhs.FresnelAmount);
+                ret.ScrollXSpeed = this.ScrollXSpeed.Combine(rhs.ScrollXSpeed);
+                ret.ScrollYSpeed = this.ScrollYSpeed.Combine(rhs.ScrollYSpeed);
+                ret.FogDistanceNearPlane = this.FogDistanceNearPlane.Combine(rhs.FogDistanceNearPlane);
+                ret.FogDistanceFarPlane = this.FogDistanceFarPlane.Combine(rhs.FogDistanceFarPlane);
+                ret.ShallowColor = this.ShallowColor.Combine(rhs.ShallowColor);
+                ret.DeepColor = this.DeepColor.Combine(rhs.DeepColor);
+                ret.ReflectionColor = this.ReflectionColor.Combine(rhs.ReflectionColor);
+                ret.TextureBlend = this.TextureBlend.Combine(rhs.TextureBlend);
+                ret.RainSimulatorForce = this.RainSimulatorForce.Combine(rhs.RainSimulatorForce);
+                ret.RainSimulatorVelocity = this.RainSimulatorVelocity.Combine(rhs.RainSimulatorVelocity);
+                ret.RainSimulatorFalloff = this.RainSimulatorFalloff.Combine(rhs.RainSimulatorFalloff);
+                ret.RainSimulatorDampner = this.RainSimulatorDampner.Combine(rhs.RainSimulatorDampner);
+                ret.RainSimulatorStartingSize = this.RainSimulatorStartingSize.Combine(rhs.RainSimulatorStartingSize);
+                ret.DisplacementSimulatorForce = this.DisplacementSimulatorForce.Combine(rhs.DisplacementSimulatorForce);
+                ret.DisplacementSimulatorVelocity = this.DisplacementSimulatorVelocity.Combine(rhs.DisplacementSimulatorVelocity);
+                ret.DisplacementSimulatorFalloff = this.DisplacementSimulatorFalloff.Combine(rhs.DisplacementSimulatorFalloff);
+                ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
+                ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
+                ret.Damage = this.Damage.Combine(rhs.Damage);
+                ret.RelatedWaters = new MaskItem<Exception?, RelatedWaters.ErrorMask?>(ExceptionExt.Combine(this.RelatedWaters?.Overall, rhs.RelatedWaters?.Overall), (this.RelatedWaters?.Specific as IErrorMask<RelatedWaters.ErrorMask>)?.Combine(rhs.RelatedWaters?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Texture;
+            public bool Opacity;
+            public bool Flags;
+            public bool MaterialID;
+            public bool Sound;
+            public bool WindVelocity;
+            public bool WindDirection;
+            public bool WaveAmplitude;
+            public bool WaveFrequency;
+            public bool SunPower;
+            public bool ReflectivityAmount;
+            public bool FresnelAmount;
+            public bool ScrollXSpeed;
+            public bool ScrollYSpeed;
+            public bool FogDistanceNearPlane;
+            public bool FogDistanceFarPlane;
+            public bool ShallowColor;
+            public bool DeepColor;
+            public bool ReflectionColor;
+            public bool TextureBlend;
+            public bool RainSimulatorForce;
+            public bool RainSimulatorVelocity;
+            public bool RainSimulatorFalloff;
+            public bool RainSimulatorDampner;
+            public bool RainSimulatorStartingSize;
+            public bool DisplacementSimulatorForce;
+            public bool DisplacementSimulatorVelocity;
+            public bool DisplacementSimulatorFalloff;
+            public bool DisplacementSimulatorDampner;
+            public bool DisplacementSimulatorStartingSize;
+            public bool Damage;
+            public MaskItem<bool, RelatedWaters.TranslationMask?> RelatedWaters;
+            public bool DATADataTypeState;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Texture = defaultOn;
+                this.Opacity = defaultOn;
+                this.Flags = defaultOn;
+                this.MaterialID = defaultOn;
+                this.Sound = defaultOn;
+                this.WindVelocity = defaultOn;
+                this.WindDirection = defaultOn;
+                this.WaveAmplitude = defaultOn;
+                this.WaveFrequency = defaultOn;
+                this.SunPower = defaultOn;
+                this.ReflectivityAmount = defaultOn;
+                this.FresnelAmount = defaultOn;
+                this.ScrollXSpeed = defaultOn;
+                this.ScrollYSpeed = defaultOn;
+                this.FogDistanceNearPlane = defaultOn;
+                this.FogDistanceFarPlane = defaultOn;
+                this.ShallowColor = defaultOn;
+                this.DeepColor = defaultOn;
+                this.ReflectionColor = defaultOn;
+                this.TextureBlend = defaultOn;
+                this.RainSimulatorForce = defaultOn;
+                this.RainSimulatorVelocity = defaultOn;
+                this.RainSimulatorFalloff = defaultOn;
+                this.RainSimulatorDampner = defaultOn;
+                this.RainSimulatorStartingSize = defaultOn;
+                this.DisplacementSimulatorForce = defaultOn;
+                this.DisplacementSimulatorVelocity = defaultOn;
+                this.DisplacementSimulatorFalloff = defaultOn;
+                this.DisplacementSimulatorDampner = defaultOn;
+                this.DisplacementSimulatorStartingSize = defaultOn;
+                this.Damage = defaultOn;
+                this.RelatedWaters = new MaskItem<bool, RelatedWaters.TranslationMask?>(defaultOn, null);
+                this.DATADataTypeState = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Texture, null));
+                ret.Add((Opacity, null));
+                ret.Add((Flags, null));
+                ret.Add((MaterialID, null));
+                ret.Add((Sound, null));
+                ret.Add((WindVelocity, null));
+                ret.Add((WindDirection, null));
+                ret.Add((WaveAmplitude, null));
+                ret.Add((WaveFrequency, null));
+                ret.Add((SunPower, null));
+                ret.Add((ReflectivityAmount, null));
+                ret.Add((FresnelAmount, null));
+                ret.Add((ScrollXSpeed, null));
+                ret.Add((ScrollYSpeed, null));
+                ret.Add((FogDistanceNearPlane, null));
+                ret.Add((FogDistanceFarPlane, null));
+                ret.Add((ShallowColor, null));
+                ret.Add((DeepColor, null));
+                ret.Add((ReflectionColor, null));
+                ret.Add((TextureBlend, null));
+                ret.Add((RainSimulatorForce, null));
+                ret.Add((RainSimulatorVelocity, null));
+                ret.Add((RainSimulatorFalloff, null));
+                ret.Add((RainSimulatorDampner, null));
+                ret.Add((RainSimulatorStartingSize, null));
+                ret.Add((DisplacementSimulatorForce, null));
+                ret.Add((DisplacementSimulatorVelocity, null));
+                ret.Add((DisplacementSimulatorFalloff, null));
+                ret.Add((DisplacementSimulatorDampner, null));
+                ret.Add((DisplacementSimulatorStartingSize, null));
+                ret.Add((Damage, null));
+                ret.Add((RelatedWaters?.Overall ?? true, RelatedWaters?.Specific?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -860,7 +1989,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Water_Mask<bool> GetEqualsMask(
+        public static Water.Mask<bool> GetEqualsMask(
             this IWaterGetter item,
             IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -874,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IWaterGetter item,
             string? name = null,
-            Water_Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -886,7 +2015,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             FileGeneration fg,
             string? name = null,
-            Water_Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -897,16 +2026,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IWaterGetter item,
-            Water_Mask<bool?> checkMask)
+            Water.Mask<bool?> checkMask)
         {
             return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Water_Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
+        public static Water.Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
         {
-            var ret = new Water_Mask<bool>(false);
+            var ret = new Water.Mask<bool>(false);
             ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -925,8 +2054,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IWaterInternal lhs,
             IWaterGetter rhs,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? copyMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -934,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -952,7 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water DeepCopy(
             this IWaterGetter item,
-            Water_TranslationMask? copyMask = null)
+            Water.TranslationMask? copyMask = null)
         {
             return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -961,8 +2090,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Water DeepCopy(
             this IWaterGetter item,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? copyMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
             return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -986,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             XElement node,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -999,8 +2128,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             XElement node,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1008,7 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -1027,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             string path,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1039,8 +2168,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             string path,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1054,7 +2183,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1067,7 +2196,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             Stream stream,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1079,8 +2208,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IWaterInternal item,
             Stream stream,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1094,7 +2223,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Water_TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1204,9 +2333,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 38;
 
-        public static readonly Type MaskType = typeof(Water_Mask<>);
+        public static readonly Type MaskType = typeof(Water.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Water_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Water.ErrorMask);
 
         public static readonly Type ClassType = typeof(Water);
 
@@ -2019,12 +3148,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly WaterCommon Instance = new WaterCommon();
 
-        public Water_Mask<bool> GetEqualsMask(
+        public Water.Mask<bool> GetEqualsMask(
             IWaterGetter item,
             IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Water_Mask<bool>(false);
+            var ret = new Water.Mask<bool>(false);
             ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -2036,7 +3165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IWaterGetter item,
             IWaterGetter rhs,
-            Water_Mask<bool> ret,
+            Water.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -2083,7 +3212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IWaterGetter item,
             string? name = null,
-            Water_Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -2098,7 +3227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter item,
             FileGeneration fg,
             string? name = null,
-            Water_Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -2122,7 +3251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IWaterGetter item,
             FileGeneration fg,
-            Water_Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -2264,7 +3393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IWaterGetter item,
-            Water_Mask<bool?> checkMask)
+            Water.Mask<bool?> checkMask)
         {
             if (checkMask.Texture.HasValue && checkMask.Texture.Value != (item.Texture != null)) return false;
             if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != (item.Opacity != null)) return false;
@@ -2280,7 +3409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IWaterGetter item,
-            Water_Mask<bool> mask)
+            Water.Mask<bool> mask)
         {
             mask.Texture = (item.Texture != null);
             mask.Opacity = (item.Opacity != null);
@@ -2314,7 +3443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.DisplacementSimulatorStartingSize = true;
             mask.Damage = true;
             var itemRelatedWaters = item.RelatedWaters;
-            mask.RelatedWaters = new MaskItem<bool, RelatedWaters_Mask<bool>?>(itemRelatedWaters != null, itemRelatedWaters?.GetHasBeenSetMask());
+            mask.RelatedWaters = new MaskItem<bool, RelatedWaters.Mask<bool>?>(itemRelatedWaters != null, itemRelatedWaters?.GetHasBeenSetMask());
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -2768,7 +3897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Water DeepCopy(
             IWaterGetter item,
-            Water_TranslationMask? copyMask = null)
+            Water.TranslationMask? copyMask = null)
         {
             Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2779,8 +3908,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Water DeepCopy(
             IWaterGetter item,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? copyMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
             Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -3905,8 +5034,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWaterGetter item,
             XElement node,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -3916,14 +5045,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IWaterGetter item,
             string path,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3939,8 +5068,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IWaterGetter item,
             Stream stream,
-            out Water_ErrorMask errorMask,
-            Water_TranslationMask? translationMask = null,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3957,1134 +5086,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Water_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Water_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Water_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Texture = initialValue;
-            this.Opacity = initialValue;
-            this.Flags = initialValue;
-            this.MaterialID = initialValue;
-            this.Sound = initialValue;
-            this.WindVelocity = initialValue;
-            this.WindDirection = initialValue;
-            this.WaveAmplitude = initialValue;
-            this.WaveFrequency = initialValue;
-            this.SunPower = initialValue;
-            this.ReflectivityAmount = initialValue;
-            this.FresnelAmount = initialValue;
-            this.ScrollXSpeed = initialValue;
-            this.ScrollYSpeed = initialValue;
-            this.FogDistanceNearPlane = initialValue;
-            this.FogDistanceFarPlane = initialValue;
-            this.ShallowColor = initialValue;
-            this.DeepColor = initialValue;
-            this.ReflectionColor = initialValue;
-            this.TextureBlend = initialValue;
-            this.RainSimulatorForce = initialValue;
-            this.RainSimulatorVelocity = initialValue;
-            this.RainSimulatorFalloff = initialValue;
-            this.RainSimulatorDampner = initialValue;
-            this.RainSimulatorStartingSize = initialValue;
-            this.DisplacementSimulatorForce = initialValue;
-            this.DisplacementSimulatorVelocity = initialValue;
-            this.DisplacementSimulatorFalloff = initialValue;
-            this.DisplacementSimulatorDampner = initialValue;
-            this.DisplacementSimulatorStartingSize = initialValue;
-            this.Damage = initialValue;
-            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>?>(initialValue, new RelatedWaters_Mask<T>(initialValue));
-            this.DATADataTypeState = initialValue;
-        }
-
-        public Water_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Texture,
-            T Opacity,
-            T Flags,
-            T MaterialID,
-            T Sound,
-            T WindVelocity,
-            T WindDirection,
-            T WaveAmplitude,
-            T WaveFrequency,
-            T SunPower,
-            T ReflectivityAmount,
-            T FresnelAmount,
-            T ScrollXSpeed,
-            T ScrollYSpeed,
-            T FogDistanceNearPlane,
-            T FogDistanceFarPlane,
-            T ShallowColor,
-            T DeepColor,
-            T ReflectionColor,
-            T TextureBlend,
-            T RainSimulatorForce,
-            T RainSimulatorVelocity,
-            T RainSimulatorFalloff,
-            T RainSimulatorDampner,
-            T RainSimulatorStartingSize,
-            T DisplacementSimulatorForce,
-            T DisplacementSimulatorVelocity,
-            T DisplacementSimulatorFalloff,
-            T DisplacementSimulatorDampner,
-            T DisplacementSimulatorStartingSize,
-            T Damage,
-            T RelatedWaters,
-            T DATADataTypeState)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Texture = Texture;
-            this.Opacity = Opacity;
-            this.Flags = Flags;
-            this.MaterialID = MaterialID;
-            this.Sound = Sound;
-            this.WindVelocity = WindVelocity;
-            this.WindDirection = WindDirection;
-            this.WaveAmplitude = WaveAmplitude;
-            this.WaveFrequency = WaveFrequency;
-            this.SunPower = SunPower;
-            this.ReflectivityAmount = ReflectivityAmount;
-            this.FresnelAmount = FresnelAmount;
-            this.ScrollXSpeed = ScrollXSpeed;
-            this.ScrollYSpeed = ScrollYSpeed;
-            this.FogDistanceNearPlane = FogDistanceNearPlane;
-            this.FogDistanceFarPlane = FogDistanceFarPlane;
-            this.ShallowColor = ShallowColor;
-            this.DeepColor = DeepColor;
-            this.ReflectionColor = ReflectionColor;
-            this.TextureBlend = TextureBlend;
-            this.RainSimulatorForce = RainSimulatorForce;
-            this.RainSimulatorVelocity = RainSimulatorVelocity;
-            this.RainSimulatorFalloff = RainSimulatorFalloff;
-            this.RainSimulatorDampner = RainSimulatorDampner;
-            this.RainSimulatorStartingSize = RainSimulatorStartingSize;
-            this.DisplacementSimulatorForce = DisplacementSimulatorForce;
-            this.DisplacementSimulatorVelocity = DisplacementSimulatorVelocity;
-            this.DisplacementSimulatorFalloff = DisplacementSimulatorFalloff;
-            this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
-            this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
-            this.Damage = Damage;
-            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>?>(RelatedWaters, new RelatedWaters_Mask<T>(RelatedWaters));
-            this.DATADataTypeState = DATADataTypeState;
-        }
-
-        #pragma warning disable CS8618
-        protected Water_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Texture;
-        public T Opacity;
-        public T Flags;
-        public T MaterialID;
-        public T Sound;
-        public T WindVelocity;
-        public T WindDirection;
-        public T WaveAmplitude;
-        public T WaveFrequency;
-        public T SunPower;
-        public T ReflectivityAmount;
-        public T FresnelAmount;
-        public T ScrollXSpeed;
-        public T ScrollYSpeed;
-        public T FogDistanceNearPlane;
-        public T FogDistanceFarPlane;
-        public T ShallowColor;
-        public T DeepColor;
-        public T ReflectionColor;
-        public T TextureBlend;
-        public T RainSimulatorForce;
-        public T RainSimulatorVelocity;
-        public T RainSimulatorFalloff;
-        public T RainSimulatorDampner;
-        public T RainSimulatorStartingSize;
-        public T DisplacementSimulatorForce;
-        public T DisplacementSimulatorVelocity;
-        public T DisplacementSimulatorFalloff;
-        public T DisplacementSimulatorDampner;
-        public T DisplacementSimulatorStartingSize;
-        public T Damage;
-        public MaskItem<T, RelatedWaters_Mask<T>?>? RelatedWaters { get; set; }
-        public T DATADataTypeState;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Water_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Water_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Texture, rhs.Texture)) return false;
-            if (!object.Equals(this.Opacity, rhs.Opacity)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.MaterialID, rhs.MaterialID)) return false;
-            if (!object.Equals(this.Sound, rhs.Sound)) return false;
-            if (!object.Equals(this.WindVelocity, rhs.WindVelocity)) return false;
-            if (!object.Equals(this.WindDirection, rhs.WindDirection)) return false;
-            if (!object.Equals(this.WaveAmplitude, rhs.WaveAmplitude)) return false;
-            if (!object.Equals(this.WaveFrequency, rhs.WaveFrequency)) return false;
-            if (!object.Equals(this.SunPower, rhs.SunPower)) return false;
-            if (!object.Equals(this.ReflectivityAmount, rhs.ReflectivityAmount)) return false;
-            if (!object.Equals(this.FresnelAmount, rhs.FresnelAmount)) return false;
-            if (!object.Equals(this.ScrollXSpeed, rhs.ScrollXSpeed)) return false;
-            if (!object.Equals(this.ScrollYSpeed, rhs.ScrollYSpeed)) return false;
-            if (!object.Equals(this.FogDistanceNearPlane, rhs.FogDistanceNearPlane)) return false;
-            if (!object.Equals(this.FogDistanceFarPlane, rhs.FogDistanceFarPlane)) return false;
-            if (!object.Equals(this.ShallowColor, rhs.ShallowColor)) return false;
-            if (!object.Equals(this.DeepColor, rhs.DeepColor)) return false;
-            if (!object.Equals(this.ReflectionColor, rhs.ReflectionColor)) return false;
-            if (!object.Equals(this.TextureBlend, rhs.TextureBlend)) return false;
-            if (!object.Equals(this.RainSimulatorForce, rhs.RainSimulatorForce)) return false;
-            if (!object.Equals(this.RainSimulatorVelocity, rhs.RainSimulatorVelocity)) return false;
-            if (!object.Equals(this.RainSimulatorFalloff, rhs.RainSimulatorFalloff)) return false;
-            if (!object.Equals(this.RainSimulatorDampner, rhs.RainSimulatorDampner)) return false;
-            if (!object.Equals(this.RainSimulatorStartingSize, rhs.RainSimulatorStartingSize)) return false;
-            if (!object.Equals(this.DisplacementSimulatorForce, rhs.DisplacementSimulatorForce)) return false;
-            if (!object.Equals(this.DisplacementSimulatorVelocity, rhs.DisplacementSimulatorVelocity)) return false;
-            if (!object.Equals(this.DisplacementSimulatorFalloff, rhs.DisplacementSimulatorFalloff)) return false;
-            if (!object.Equals(this.DisplacementSimulatorDampner, rhs.DisplacementSimulatorDampner)) return false;
-            if (!object.Equals(this.DisplacementSimulatorStartingSize, rhs.DisplacementSimulatorStartingSize)) return false;
-            if (!object.Equals(this.Damage, rhs.Damage)) return false;
-            if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
-            if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Texture?.GetHashCode());
-            ret = ret.CombineHashCode(this.Opacity?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaterialID?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-            ret = ret.CombineHashCode(this.WindVelocity?.GetHashCode());
-            ret = ret.CombineHashCode(this.WindDirection?.GetHashCode());
-            ret = ret.CombineHashCode(this.WaveAmplitude?.GetHashCode());
-            ret = ret.CombineHashCode(this.WaveFrequency?.GetHashCode());
-            ret = ret.CombineHashCode(this.SunPower?.GetHashCode());
-            ret = ret.CombineHashCode(this.ReflectivityAmount?.GetHashCode());
-            ret = ret.CombineHashCode(this.FresnelAmount?.GetHashCode());
-            ret = ret.CombineHashCode(this.ScrollXSpeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.ScrollYSpeed?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogDistanceNearPlane?.GetHashCode());
-            ret = ret.CombineHashCode(this.FogDistanceFarPlane?.GetHashCode());
-            ret = ret.CombineHashCode(this.ShallowColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.DeepColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.ReflectionColor?.GetHashCode());
-            ret = ret.CombineHashCode(this.TextureBlend?.GetHashCode());
-            ret = ret.CombineHashCode(this.RainSimulatorForce?.GetHashCode());
-            ret = ret.CombineHashCode(this.RainSimulatorVelocity?.GetHashCode());
-            ret = ret.CombineHashCode(this.RainSimulatorFalloff?.GetHashCode());
-            ret = ret.CombineHashCode(this.RainSimulatorDampner?.GetHashCode());
-            ret = ret.CombineHashCode(this.RainSimulatorStartingSize?.GetHashCode());
-            ret = ret.CombineHashCode(this.DisplacementSimulatorForce?.GetHashCode());
-            ret = ret.CombineHashCode(this.DisplacementSimulatorVelocity?.GetHashCode());
-            ret = ret.CombineHashCode(this.DisplacementSimulatorFalloff?.GetHashCode());
-            ret = ret.CombineHashCode(this.DisplacementSimulatorDampner?.GetHashCode());
-            ret = ret.CombineHashCode(this.DisplacementSimulatorStartingSize?.GetHashCode());
-            ret = ret.CombineHashCode(this.Damage?.GetHashCode());
-            ret = ret.CombineHashCode(this.RelatedWaters?.GetHashCode());
-            ret = ret.CombineHashCode(this.DATADataTypeState?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Texture)) return false;
-            if (!eval(this.Opacity)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.MaterialID)) return false;
-            if (!eval(this.Sound)) return false;
-            if (!eval(this.WindVelocity)) return false;
-            if (!eval(this.WindDirection)) return false;
-            if (!eval(this.WaveAmplitude)) return false;
-            if (!eval(this.WaveFrequency)) return false;
-            if (!eval(this.SunPower)) return false;
-            if (!eval(this.ReflectivityAmount)) return false;
-            if (!eval(this.FresnelAmount)) return false;
-            if (!eval(this.ScrollXSpeed)) return false;
-            if (!eval(this.ScrollYSpeed)) return false;
-            if (!eval(this.FogDistanceNearPlane)) return false;
-            if (!eval(this.FogDistanceFarPlane)) return false;
-            if (!eval(this.ShallowColor)) return false;
-            if (!eval(this.DeepColor)) return false;
-            if (!eval(this.ReflectionColor)) return false;
-            if (!eval(this.TextureBlend)) return false;
-            if (!eval(this.RainSimulatorForce)) return false;
-            if (!eval(this.RainSimulatorVelocity)) return false;
-            if (!eval(this.RainSimulatorFalloff)) return false;
-            if (!eval(this.RainSimulatorDampner)) return false;
-            if (!eval(this.RainSimulatorStartingSize)) return false;
-            if (!eval(this.DisplacementSimulatorForce)) return false;
-            if (!eval(this.DisplacementSimulatorVelocity)) return false;
-            if (!eval(this.DisplacementSimulatorFalloff)) return false;
-            if (!eval(this.DisplacementSimulatorDampner)) return false;
-            if (!eval(this.DisplacementSimulatorStartingSize)) return false;
-            if (!eval(this.Damage)) return false;
-            if (RelatedWaters != null)
-            {
-                if (!eval(this.RelatedWaters.Overall)) return false;
-                if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.AllEqual(eval)) return false;
-            }
-            if (!eval(this.DATADataTypeState)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Water_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Water_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Water_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Texture = eval(this.Texture);
-            obj.Opacity = eval(this.Opacity);
-            obj.Flags = eval(this.Flags);
-            obj.MaterialID = eval(this.MaterialID);
-            obj.Sound = eval(this.Sound);
-            obj.WindVelocity = eval(this.WindVelocity);
-            obj.WindDirection = eval(this.WindDirection);
-            obj.WaveAmplitude = eval(this.WaveAmplitude);
-            obj.WaveFrequency = eval(this.WaveFrequency);
-            obj.SunPower = eval(this.SunPower);
-            obj.ReflectivityAmount = eval(this.ReflectivityAmount);
-            obj.FresnelAmount = eval(this.FresnelAmount);
-            obj.ScrollXSpeed = eval(this.ScrollXSpeed);
-            obj.ScrollYSpeed = eval(this.ScrollYSpeed);
-            obj.FogDistanceNearPlane = eval(this.FogDistanceNearPlane);
-            obj.FogDistanceFarPlane = eval(this.FogDistanceFarPlane);
-            obj.ShallowColor = eval(this.ShallowColor);
-            obj.DeepColor = eval(this.DeepColor);
-            obj.ReflectionColor = eval(this.ReflectionColor);
-            obj.TextureBlend = eval(this.TextureBlend);
-            obj.RainSimulatorForce = eval(this.RainSimulatorForce);
-            obj.RainSimulatorVelocity = eval(this.RainSimulatorVelocity);
-            obj.RainSimulatorFalloff = eval(this.RainSimulatorFalloff);
-            obj.RainSimulatorDampner = eval(this.RainSimulatorDampner);
-            obj.RainSimulatorStartingSize = eval(this.RainSimulatorStartingSize);
-            obj.DisplacementSimulatorForce = eval(this.DisplacementSimulatorForce);
-            obj.DisplacementSimulatorVelocity = eval(this.DisplacementSimulatorVelocity);
-            obj.DisplacementSimulatorFalloff = eval(this.DisplacementSimulatorFalloff);
-            obj.DisplacementSimulatorDampner = eval(this.DisplacementSimulatorDampner);
-            obj.DisplacementSimulatorStartingSize = eval(this.DisplacementSimulatorStartingSize);
-            obj.Damage = eval(this.Damage);
-            obj.RelatedWaters = this.RelatedWaters == null ? null : new MaskItem<R, RelatedWaters_Mask<R>?>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
-            obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Water_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Water_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Water_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Texture ?? true)
-                {
-                    fg.AppendLine($"Texture => {Texture}");
-                }
-                if (printMask?.Opacity ?? true)
-                {
-                    fg.AppendLine($"Opacity => {Opacity}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.MaterialID ?? true)
-                {
-                    fg.AppendLine($"MaterialID => {MaterialID}");
-                }
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {Sound}");
-                }
-                if (printMask?.WindVelocity ?? true)
-                {
-                    fg.AppendLine($"WindVelocity => {WindVelocity}");
-                }
-                if (printMask?.WindDirection ?? true)
-                {
-                    fg.AppendLine($"WindDirection => {WindDirection}");
-                }
-                if (printMask?.WaveAmplitude ?? true)
-                {
-                    fg.AppendLine($"WaveAmplitude => {WaveAmplitude}");
-                }
-                if (printMask?.WaveFrequency ?? true)
-                {
-                    fg.AppendLine($"WaveFrequency => {WaveFrequency}");
-                }
-                if (printMask?.SunPower ?? true)
-                {
-                    fg.AppendLine($"SunPower => {SunPower}");
-                }
-                if (printMask?.ReflectivityAmount ?? true)
-                {
-                    fg.AppendLine($"ReflectivityAmount => {ReflectivityAmount}");
-                }
-                if (printMask?.FresnelAmount ?? true)
-                {
-                    fg.AppendLine($"FresnelAmount => {FresnelAmount}");
-                }
-                if (printMask?.ScrollXSpeed ?? true)
-                {
-                    fg.AppendLine($"ScrollXSpeed => {ScrollXSpeed}");
-                }
-                if (printMask?.ScrollYSpeed ?? true)
-                {
-                    fg.AppendLine($"ScrollYSpeed => {ScrollYSpeed}");
-                }
-                if (printMask?.FogDistanceNearPlane ?? true)
-                {
-                    fg.AppendLine($"FogDistanceNearPlane => {FogDistanceNearPlane}");
-                }
-                if (printMask?.FogDistanceFarPlane ?? true)
-                {
-                    fg.AppendLine($"FogDistanceFarPlane => {FogDistanceFarPlane}");
-                }
-                if (printMask?.ShallowColor ?? true)
-                {
-                    fg.AppendLine($"ShallowColor => {ShallowColor}");
-                }
-                if (printMask?.DeepColor ?? true)
-                {
-                    fg.AppendLine($"DeepColor => {DeepColor}");
-                }
-                if (printMask?.ReflectionColor ?? true)
-                {
-                    fg.AppendLine($"ReflectionColor => {ReflectionColor}");
-                }
-                if (printMask?.TextureBlend ?? true)
-                {
-                    fg.AppendLine($"TextureBlend => {TextureBlend}");
-                }
-                if (printMask?.RainSimulatorForce ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorForce => {RainSimulatorForce}");
-                }
-                if (printMask?.RainSimulatorVelocity ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorVelocity => {RainSimulatorVelocity}");
-                }
-                if (printMask?.RainSimulatorFalloff ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorFalloff => {RainSimulatorFalloff}");
-                }
-                if (printMask?.RainSimulatorDampner ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorDampner => {RainSimulatorDampner}");
-                }
-                if (printMask?.RainSimulatorStartingSize ?? true)
-                {
-                    fg.AppendLine($"RainSimulatorStartingSize => {RainSimulatorStartingSize}");
-                }
-                if (printMask?.DisplacementSimulatorForce ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorForce => {DisplacementSimulatorForce}");
-                }
-                if (printMask?.DisplacementSimulatorVelocity ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorVelocity => {DisplacementSimulatorVelocity}");
-                }
-                if (printMask?.DisplacementSimulatorFalloff ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorFalloff => {DisplacementSimulatorFalloff}");
-                }
-                if (printMask?.DisplacementSimulatorDampner ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorDampner => {DisplacementSimulatorDampner}");
-                }
-                if (printMask?.DisplacementSimulatorStartingSize ?? true)
-                {
-                    fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
-                }
-                if (printMask?.Damage ?? true)
-                {
-                    fg.AppendLine($"Damage => {Damage}");
-                }
-                if (printMask?.RelatedWaters?.Overall ?? true)
-                {
-                    RelatedWaters?.ToString(fg);
-                }
-                if (printMask?.DATADataTypeState ?? true)
-                {
-                    fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Water_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Water_ErrorMask>
-    {
-        #region Members
-        public Exception? Texture;
-        public Exception? Opacity;
-        public Exception? Flags;
-        public Exception? MaterialID;
-        public Exception? Sound;
-        public Exception? WindVelocity;
-        public Exception? WindDirection;
-        public Exception? WaveAmplitude;
-        public Exception? WaveFrequency;
-        public Exception? SunPower;
-        public Exception? ReflectivityAmount;
-        public Exception? FresnelAmount;
-        public Exception? ScrollXSpeed;
-        public Exception? ScrollYSpeed;
-        public Exception? FogDistanceNearPlane;
-        public Exception? FogDistanceFarPlane;
-        public Exception? ShallowColor;
-        public Exception? DeepColor;
-        public Exception? ReflectionColor;
-        public Exception? TextureBlend;
-        public Exception? RainSimulatorForce;
-        public Exception? RainSimulatorVelocity;
-        public Exception? RainSimulatorFalloff;
-        public Exception? RainSimulatorDampner;
-        public Exception? RainSimulatorStartingSize;
-        public Exception? DisplacementSimulatorForce;
-        public Exception? DisplacementSimulatorVelocity;
-        public Exception? DisplacementSimulatorFalloff;
-        public Exception? DisplacementSimulatorDampner;
-        public Exception? DisplacementSimulatorStartingSize;
-        public Exception? Damage;
-        public MaskItem<Exception?, RelatedWaters_ErrorMask?>? RelatedWaters;
-        public Exception? DATADataTypeState;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    return Texture;
-                case Water_FieldIndex.Opacity:
-                    return Opacity;
-                case Water_FieldIndex.Flags:
-                    return Flags;
-                case Water_FieldIndex.MaterialID:
-                    return MaterialID;
-                case Water_FieldIndex.Sound:
-                    return Sound;
-                case Water_FieldIndex.WindVelocity:
-                    return WindVelocity;
-                case Water_FieldIndex.WindDirection:
-                    return WindDirection;
-                case Water_FieldIndex.WaveAmplitude:
-                    return WaveAmplitude;
-                case Water_FieldIndex.WaveFrequency:
-                    return WaveFrequency;
-                case Water_FieldIndex.SunPower:
-                    return SunPower;
-                case Water_FieldIndex.ReflectivityAmount:
-                    return ReflectivityAmount;
-                case Water_FieldIndex.FresnelAmount:
-                    return FresnelAmount;
-                case Water_FieldIndex.ScrollXSpeed:
-                    return ScrollXSpeed;
-                case Water_FieldIndex.ScrollYSpeed:
-                    return ScrollYSpeed;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    return FogDistanceNearPlane;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    return FogDistanceFarPlane;
-                case Water_FieldIndex.ShallowColor:
-                    return ShallowColor;
-                case Water_FieldIndex.DeepColor:
-                    return DeepColor;
-                case Water_FieldIndex.ReflectionColor:
-                    return ReflectionColor;
-                case Water_FieldIndex.TextureBlend:
-                    return TextureBlend;
-                case Water_FieldIndex.RainSimulatorForce:
-                    return RainSimulatorForce;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    return RainSimulatorVelocity;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    return RainSimulatorFalloff;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    return RainSimulatorDampner;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    return RainSimulatorStartingSize;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    return DisplacementSimulatorForce;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    return DisplacementSimulatorVelocity;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    return DisplacementSimulatorFalloff;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    return DisplacementSimulatorDampner;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    return DisplacementSimulatorStartingSize;
-                case Water_FieldIndex.Damage:
-                    return Damage;
-                case Water_FieldIndex.RelatedWaters:
-                    return RelatedWaters;
-                case Water_FieldIndex.DATADataTypeState:
-                    return DATADataTypeState;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    this.Texture = ex;
-                    break;
-                case Water_FieldIndex.Opacity:
-                    this.Opacity = ex;
-                    break;
-                case Water_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    this.MaterialID = ex;
-                    break;
-                case Water_FieldIndex.Sound:
-                    this.Sound = ex;
-                    break;
-                case Water_FieldIndex.WindVelocity:
-                    this.WindVelocity = ex;
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    this.WindDirection = ex;
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    this.WaveAmplitude = ex;
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    this.WaveFrequency = ex;
-                    break;
-                case Water_FieldIndex.SunPower:
-                    this.SunPower = ex;
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    this.ReflectivityAmount = ex;
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    this.FresnelAmount = ex;
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    this.ScrollXSpeed = ex;
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    this.ScrollYSpeed = ex;
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    this.FogDistanceNearPlane = ex;
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    this.FogDistanceFarPlane = ex;
-                    break;
-                case Water_FieldIndex.ShallowColor:
-                    this.ShallowColor = ex;
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    this.DeepColor = ex;
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    this.ReflectionColor = ex;
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    this.TextureBlend = ex;
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    this.RainSimulatorForce = ex;
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    this.RainSimulatorVelocity = ex;
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    this.RainSimulatorFalloff = ex;
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    this.RainSimulatorDampner = ex;
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    this.RainSimulatorStartingSize = ex;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    this.DisplacementSimulatorForce = ex;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    this.DisplacementSimulatorVelocity = ex;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    this.DisplacementSimulatorFalloff = ex;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    this.DisplacementSimulatorDampner = ex;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    this.DisplacementSimulatorStartingSize = ex;
-                    break;
-                case Water_FieldIndex.Damage:
-                    this.Damage = ex;
-                    break;
-                case Water_FieldIndex.RelatedWaters:
-                    this.RelatedWaters = new MaskItem<Exception?, RelatedWaters_ErrorMask?>(ex, null);
-                    break;
-                case Water_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Water_FieldIndex enu = (Water_FieldIndex)index;
-            switch (enu)
-            {
-                case Water_FieldIndex.Texture:
-                    this.Texture = (Exception)obj;
-                    break;
-                case Water_FieldIndex.Opacity:
-                    this.Opacity = (Exception)obj;
-                    break;
-                case Water_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Water_FieldIndex.MaterialID:
-                    this.MaterialID = (Exception)obj;
-                    break;
-                case Water_FieldIndex.Sound:
-                    this.Sound = (Exception)obj;
-                    break;
-                case Water_FieldIndex.WindVelocity:
-                    this.WindVelocity = (Exception)obj;
-                    break;
-                case Water_FieldIndex.WindDirection:
-                    this.WindDirection = (Exception)obj;
-                    break;
-                case Water_FieldIndex.WaveAmplitude:
-                    this.WaveAmplitude = (Exception)obj;
-                    break;
-                case Water_FieldIndex.WaveFrequency:
-                    this.WaveFrequency = (Exception)obj;
-                    break;
-                case Water_FieldIndex.SunPower:
-                    this.SunPower = (Exception)obj;
-                    break;
-                case Water_FieldIndex.ReflectivityAmount:
-                    this.ReflectivityAmount = (Exception)obj;
-                    break;
-                case Water_FieldIndex.FresnelAmount:
-                    this.FresnelAmount = (Exception)obj;
-                    break;
-                case Water_FieldIndex.ScrollXSpeed:
-                    this.ScrollXSpeed = (Exception)obj;
-                    break;
-                case Water_FieldIndex.ScrollYSpeed:
-                    this.ScrollYSpeed = (Exception)obj;
-                    break;
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    this.FogDistanceNearPlane = (Exception)obj;
-                    break;
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    this.FogDistanceFarPlane = (Exception)obj;
-                    break;
-                case Water_FieldIndex.ShallowColor:
-                    this.ShallowColor = (Exception)obj;
-                    break;
-                case Water_FieldIndex.DeepColor:
-                    this.DeepColor = (Exception)obj;
-                    break;
-                case Water_FieldIndex.ReflectionColor:
-                    this.ReflectionColor = (Exception)obj;
-                    break;
-                case Water_FieldIndex.TextureBlend:
-                    this.TextureBlend = (Exception)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorForce:
-                    this.RainSimulatorForce = (Exception)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    this.RainSimulatorVelocity = (Exception)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    this.RainSimulatorFalloff = (Exception)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorDampner:
-                    this.RainSimulatorDampner = (Exception)obj;
-                    break;
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    this.RainSimulatorStartingSize = (Exception)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    this.DisplacementSimulatorForce = (Exception)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    this.DisplacementSimulatorVelocity = (Exception)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    this.DisplacementSimulatorFalloff = (Exception)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    this.DisplacementSimulatorDampner = (Exception)obj;
-                    break;
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    this.DisplacementSimulatorStartingSize = (Exception)obj;
-                    break;
-                case Water_FieldIndex.Damage:
-                    this.Damage = (Exception)obj;
-                    break;
-                case Water_FieldIndex.RelatedWaters:
-                    this.RelatedWaters = (MaskItem<Exception?, RelatedWaters_ErrorMask?>?)obj;
-                    break;
-                case Water_FieldIndex.DATADataTypeState:
-                    this.DATADataTypeState = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Texture != null) return true;
-            if (Opacity != null) return true;
-            if (Flags != null) return true;
-            if (MaterialID != null) return true;
-            if (Sound != null) return true;
-            if (WindVelocity != null) return true;
-            if (WindDirection != null) return true;
-            if (WaveAmplitude != null) return true;
-            if (WaveFrequency != null) return true;
-            if (SunPower != null) return true;
-            if (ReflectivityAmount != null) return true;
-            if (FresnelAmount != null) return true;
-            if (ScrollXSpeed != null) return true;
-            if (ScrollYSpeed != null) return true;
-            if (FogDistanceNearPlane != null) return true;
-            if (FogDistanceFarPlane != null) return true;
-            if (ShallowColor != null) return true;
-            if (DeepColor != null) return true;
-            if (ReflectionColor != null) return true;
-            if (TextureBlend != null) return true;
-            if (RainSimulatorForce != null) return true;
-            if (RainSimulatorVelocity != null) return true;
-            if (RainSimulatorFalloff != null) return true;
-            if (RainSimulatorDampner != null) return true;
-            if (RainSimulatorStartingSize != null) return true;
-            if (DisplacementSimulatorForce != null) return true;
-            if (DisplacementSimulatorVelocity != null) return true;
-            if (DisplacementSimulatorFalloff != null) return true;
-            if (DisplacementSimulatorDampner != null) return true;
-            if (DisplacementSimulatorStartingSize != null) return true;
-            if (Damage != null) return true;
-            if (RelatedWaters != null) return true;
-            if (DATADataTypeState != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Water_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Texture => {Texture}");
-            fg.AppendLine($"Opacity => {Opacity}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"MaterialID => {MaterialID}");
-            fg.AppendLine($"Sound => {Sound}");
-            fg.AppendLine($"WindVelocity => {WindVelocity}");
-            fg.AppendLine($"WindDirection => {WindDirection}");
-            fg.AppendLine($"WaveAmplitude => {WaveAmplitude}");
-            fg.AppendLine($"WaveFrequency => {WaveFrequency}");
-            fg.AppendLine($"SunPower => {SunPower}");
-            fg.AppendLine($"ReflectivityAmount => {ReflectivityAmount}");
-            fg.AppendLine($"FresnelAmount => {FresnelAmount}");
-            fg.AppendLine($"ScrollXSpeed => {ScrollXSpeed}");
-            fg.AppendLine($"ScrollYSpeed => {ScrollYSpeed}");
-            fg.AppendLine($"FogDistanceNearPlane => {FogDistanceNearPlane}");
-            fg.AppendLine($"FogDistanceFarPlane => {FogDistanceFarPlane}");
-            fg.AppendLine($"ShallowColor => {ShallowColor}");
-            fg.AppendLine($"DeepColor => {DeepColor}");
-            fg.AppendLine($"ReflectionColor => {ReflectionColor}");
-            fg.AppendLine($"TextureBlend => {TextureBlend}");
-            fg.AppendLine($"RainSimulatorForce => {RainSimulatorForce}");
-            fg.AppendLine($"RainSimulatorVelocity => {RainSimulatorVelocity}");
-            fg.AppendLine($"RainSimulatorFalloff => {RainSimulatorFalloff}");
-            fg.AppendLine($"RainSimulatorDampner => {RainSimulatorDampner}");
-            fg.AppendLine($"RainSimulatorStartingSize => {RainSimulatorStartingSize}");
-            fg.AppendLine($"DisplacementSimulatorForce => {DisplacementSimulatorForce}");
-            fg.AppendLine($"DisplacementSimulatorVelocity => {DisplacementSimulatorVelocity}");
-            fg.AppendLine($"DisplacementSimulatorFalloff => {DisplacementSimulatorFalloff}");
-            fg.AppendLine($"DisplacementSimulatorDampner => {DisplacementSimulatorDampner}");
-            fg.AppendLine($"DisplacementSimulatorStartingSize => {DisplacementSimulatorStartingSize}");
-            fg.AppendLine($"Damage => {Damage}");
-            RelatedWaters?.ToString(fg);
-            fg.AppendLine($"DATADataTypeState => {DATADataTypeState}");
-        }
-        #endregion
-
-        #region Combine
-        public Water_ErrorMask Combine(Water_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Water_ErrorMask();
-            ret.Texture = this.Texture.Combine(rhs.Texture);
-            ret.Opacity = this.Opacity.Combine(rhs.Opacity);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.MaterialID = this.MaterialID.Combine(rhs.MaterialID);
-            ret.Sound = this.Sound.Combine(rhs.Sound);
-            ret.WindVelocity = this.WindVelocity.Combine(rhs.WindVelocity);
-            ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
-            ret.WaveAmplitude = this.WaveAmplitude.Combine(rhs.WaveAmplitude);
-            ret.WaveFrequency = this.WaveFrequency.Combine(rhs.WaveFrequency);
-            ret.SunPower = this.SunPower.Combine(rhs.SunPower);
-            ret.ReflectivityAmount = this.ReflectivityAmount.Combine(rhs.ReflectivityAmount);
-            ret.FresnelAmount = this.FresnelAmount.Combine(rhs.FresnelAmount);
-            ret.ScrollXSpeed = this.ScrollXSpeed.Combine(rhs.ScrollXSpeed);
-            ret.ScrollYSpeed = this.ScrollYSpeed.Combine(rhs.ScrollYSpeed);
-            ret.FogDistanceNearPlane = this.FogDistanceNearPlane.Combine(rhs.FogDistanceNearPlane);
-            ret.FogDistanceFarPlane = this.FogDistanceFarPlane.Combine(rhs.FogDistanceFarPlane);
-            ret.ShallowColor = this.ShallowColor.Combine(rhs.ShallowColor);
-            ret.DeepColor = this.DeepColor.Combine(rhs.DeepColor);
-            ret.ReflectionColor = this.ReflectionColor.Combine(rhs.ReflectionColor);
-            ret.TextureBlend = this.TextureBlend.Combine(rhs.TextureBlend);
-            ret.RainSimulatorForce = this.RainSimulatorForce.Combine(rhs.RainSimulatorForce);
-            ret.RainSimulatorVelocity = this.RainSimulatorVelocity.Combine(rhs.RainSimulatorVelocity);
-            ret.RainSimulatorFalloff = this.RainSimulatorFalloff.Combine(rhs.RainSimulatorFalloff);
-            ret.RainSimulatorDampner = this.RainSimulatorDampner.Combine(rhs.RainSimulatorDampner);
-            ret.RainSimulatorStartingSize = this.RainSimulatorStartingSize.Combine(rhs.RainSimulatorStartingSize);
-            ret.DisplacementSimulatorForce = this.DisplacementSimulatorForce.Combine(rhs.DisplacementSimulatorForce);
-            ret.DisplacementSimulatorVelocity = this.DisplacementSimulatorVelocity.Combine(rhs.DisplacementSimulatorVelocity);
-            ret.DisplacementSimulatorFalloff = this.DisplacementSimulatorFalloff.Combine(rhs.DisplacementSimulatorFalloff);
-            ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
-            ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
-            ret.Damage = this.Damage.Combine(rhs.Damage);
-            ret.RelatedWaters = new MaskItem<Exception?, RelatedWaters_ErrorMask?>(ExceptionExt.Combine(this.RelatedWaters?.Overall, rhs.RelatedWaters?.Overall), (this.RelatedWaters?.Specific as IErrorMask<RelatedWaters_ErrorMask>)?.Combine(rhs.RelatedWaters?.Specific));
-            ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-            return ret;
-        }
-        public static Water_ErrorMask? Combine(Water_ErrorMask? lhs, Water_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Water_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Water_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Water_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Texture;
-        public bool Opacity;
-        public bool Flags;
-        public bool MaterialID;
-        public bool Sound;
-        public bool WindVelocity;
-        public bool WindDirection;
-        public bool WaveAmplitude;
-        public bool WaveFrequency;
-        public bool SunPower;
-        public bool ReflectivityAmount;
-        public bool FresnelAmount;
-        public bool ScrollXSpeed;
-        public bool ScrollYSpeed;
-        public bool FogDistanceNearPlane;
-        public bool FogDistanceFarPlane;
-        public bool ShallowColor;
-        public bool DeepColor;
-        public bool ReflectionColor;
-        public bool TextureBlend;
-        public bool RainSimulatorForce;
-        public bool RainSimulatorVelocity;
-        public bool RainSimulatorFalloff;
-        public bool RainSimulatorDampner;
-        public bool RainSimulatorStartingSize;
-        public bool DisplacementSimulatorForce;
-        public bool DisplacementSimulatorVelocity;
-        public bool DisplacementSimulatorFalloff;
-        public bool DisplacementSimulatorDampner;
-        public bool DisplacementSimulatorStartingSize;
-        public bool Damage;
-        public MaskItem<bool, RelatedWaters_TranslationMask?> RelatedWaters;
-        public bool DATADataTypeState;
-        #endregion
-
-        #region Ctors
-        public Water_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Texture = defaultOn;
-            this.Opacity = defaultOn;
-            this.Flags = defaultOn;
-            this.MaterialID = defaultOn;
-            this.Sound = defaultOn;
-            this.WindVelocity = defaultOn;
-            this.WindDirection = defaultOn;
-            this.WaveAmplitude = defaultOn;
-            this.WaveFrequency = defaultOn;
-            this.SunPower = defaultOn;
-            this.ReflectivityAmount = defaultOn;
-            this.FresnelAmount = defaultOn;
-            this.ScrollXSpeed = defaultOn;
-            this.ScrollYSpeed = defaultOn;
-            this.FogDistanceNearPlane = defaultOn;
-            this.FogDistanceFarPlane = defaultOn;
-            this.ShallowColor = defaultOn;
-            this.DeepColor = defaultOn;
-            this.ReflectionColor = defaultOn;
-            this.TextureBlend = defaultOn;
-            this.RainSimulatorForce = defaultOn;
-            this.RainSimulatorVelocity = defaultOn;
-            this.RainSimulatorFalloff = defaultOn;
-            this.RainSimulatorDampner = defaultOn;
-            this.RainSimulatorStartingSize = defaultOn;
-            this.DisplacementSimulatorForce = defaultOn;
-            this.DisplacementSimulatorVelocity = defaultOn;
-            this.DisplacementSimulatorFalloff = defaultOn;
-            this.DisplacementSimulatorDampner = defaultOn;
-            this.DisplacementSimulatorStartingSize = defaultOn;
-            this.Damage = defaultOn;
-            this.RelatedWaters = new MaskItem<bool, RelatedWaters_TranslationMask?>(defaultOn, null);
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Texture, null));
-            ret.Add((Opacity, null));
-            ret.Add((Flags, null));
-            ret.Add((MaterialID, null));
-            ret.Add((Sound, null));
-            ret.Add((WindVelocity, null));
-            ret.Add((WindDirection, null));
-            ret.Add((WaveAmplitude, null));
-            ret.Add((WaveFrequency, null));
-            ret.Add((SunPower, null));
-            ret.Add((ReflectivityAmount, null));
-            ret.Add((FresnelAmount, null));
-            ret.Add((ScrollXSpeed, null));
-            ret.Add((ScrollYSpeed, null));
-            ret.Add((FogDistanceNearPlane, null));
-            ret.Add((FogDistanceFarPlane, null));
-            ret.Add((ShallowColor, null));
-            ret.Add((DeepColor, null));
-            ret.Add((ReflectionColor, null));
-            ret.Add((TextureBlend, null));
-            ret.Add((RainSimulatorForce, null));
-            ret.Add((RainSimulatorVelocity, null));
-            ret.Add((RainSimulatorFalloff, null));
-            ret.Add((RainSimulatorDampner, null));
-            ret.Add((RainSimulatorStartingSize, null));
-            ret.Add((DisplacementSimulatorForce, null));
-            ret.Add((DisplacementSimulatorVelocity, null));
-            ret.Add((DisplacementSimulatorFalloff, null));
-            ret.Add((DisplacementSimulatorDampner, null));
-            ret.Add((DisplacementSimulatorStartingSize, null));
-            ret.Add((Damage, null));
-            ret.Add((RelatedWaters?.Overall ?? true, RelatedWaters?.Specific?.GetCrystal()));
-            ret.Add((DATADataTypeState, null));
-        }
-    }
 }
 #endregion
 

@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new Birthsign CreateFromXml(
             XElement node,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -157,15 +157,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static Birthsign CreateFromXml(
             XElement node,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Birthsign.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Birthsign CreateFromXml(
             string path,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Birthsign CreateFromXml(
             string path,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Birthsign CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Birthsign CreateFromXml(
             Stream stream,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -229,8 +229,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Birthsign CreateFromXml(
             Stream stream,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Birthsign CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -253,6 +253,419 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            OblivionMajorRecord.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Name = initialValue;
+                this.Icon = initialValue;
+                this.Description = initialValue;
+                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T OblivionMajorRecordFlags,
+                T Name,
+                T Icon,
+                T Description,
+                T Spells)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
+            {
+                this.Name = Name;
+                this.Icon = Icon;
+                this.Description = Description;
+                this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Name;
+            public T Icon;
+            public T Description;
+            public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Icon, rhs.Icon)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Spells, rhs.Spells)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Name?.GetHashCode());
+                ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+                ret = ret.CombineHashCode(this.Description?.GetHashCode());
+                ret = ret.CombineHashCode(this.Spells?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Icon)) return false;
+                if (!eval(this.Description)) return false;
+                if (this.Spells != null)
+                {
+                    if (!eval(this.Spells.Overall)) return false;
+                    if (this.Spells.Specific != null)
+                    {
+                        foreach (var item in this.Spells.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new Birthsign.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Icon = eval(this.Icon);
+                obj.Description = eval(this.Description);
+                if (Spells != null)
+                {
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Spells.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Spells.Specific = l;
+                        foreach (var item in Spells.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(Birthsign.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, Birthsign.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(Birthsign.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendLine($"Name => {Name}");
+                    }
+                    if (printMask?.Icon ?? true)
+                    {
+                        fg.AppendLine($"Icon => {Icon}");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendLine($"Description => {Description}");
+                    }
+                    if (printMask?.Spells?.Overall ?? true)
+                    {
+                        fg.AppendLine("Spells =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Spells != null)
+                            {
+                                if (Spells.Overall != null)
+                                {
+                                    fg.AppendLine(Spells.Overall.ToString());
+                                }
+                                if (Spells.Specific != null)
+                                {
+                                    foreach (var subItem in Spells.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine($" => {subItem}");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            OblivionMajorRecord.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Name;
+            public Exception? Icon;
+            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
+                switch (enu)
+                {
+                    case Birthsign_FieldIndex.Name:
+                        return Name;
+                    case Birthsign_FieldIndex.Icon:
+                        return Icon;
+                    case Birthsign_FieldIndex.Description:
+                        return Description;
+                    case Birthsign_FieldIndex.Spells:
+                        return Spells;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
+                switch (enu)
+                {
+                    case Birthsign_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Birthsign_FieldIndex.Icon:
+                        this.Icon = ex;
+                        break;
+                    case Birthsign_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Birthsign_FieldIndex.Spells:
+                        this.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
+                switch (enu)
+                {
+                    case Birthsign_FieldIndex.Name:
+                        this.Name = (Exception)obj;
+                        break;
+                    case Birthsign_FieldIndex.Icon:
+                        this.Icon = (Exception)obj;
+                        break;
+                    case Birthsign_FieldIndex.Description:
+                        this.Description = (Exception)obj;
+                        break;
+                    case Birthsign_FieldIndex.Spells:
+                        this.Spells = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Icon != null) return true;
+                if (Description != null) return true;
+                if (Spells != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Name => {Name}");
+                fg.AppendLine($"Icon => {Icon}");
+                fg.AppendLine($"Description => {Description}");
+                fg.AppendLine("Spells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Spells != null)
+                    {
+                        if (Spells.Overall != null)
+                        {
+                            fg.AppendLine(Spells.Overall.ToString());
+                        }
+                        if (Spells.Specific != null)
+                        {
+                            foreach (var subItem in Spells.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Icon = this.Icon.Combine(rhs.Icon);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            OblivionMajorRecord.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Name;
+            public bool Icon;
+            public bool Description;
+            public bool Spells;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Name = defaultOn;
+                this.Icon = defaultOn;
+                this.Description = defaultOn;
+                this.Spells = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Icon, null));
+                ret.Add((Description, null));
+                ret.Add((Spells, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -376,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Birthsign_Mask<bool> GetEqualsMask(
+        public static Birthsign.Mask<bool> GetEqualsMask(
             this IBirthsignGetter item,
             IBirthsignGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -390,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IBirthsignGetter item,
             string? name = null,
-            Birthsign_Mask<bool>? printMask = null)
+            Birthsign.Mask<bool>? printMask = null)
         {
             return ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -402,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignGetter item,
             FileGeneration fg,
             string? name = null,
-            Birthsign_Mask<bool>? printMask = null)
+            Birthsign.Mask<bool>? printMask = null)
         {
             ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -413,16 +826,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IBirthsignGetter item,
-            Birthsign_Mask<bool?> checkMask)
+            Birthsign.Mask<bool?> checkMask)
         {
             return ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Birthsign_Mask<bool> GetHasBeenSetMask(this IBirthsignGetter item)
+        public static Birthsign.Mask<bool> GetHasBeenSetMask(this IBirthsignGetter item)
         {
-            var ret = new Birthsign_Mask<bool>(false);
+            var ret = new Birthsign.Mask<bool>(false);
             ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -441,8 +854,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IBirthsignInternal lhs,
             IBirthsignGetter rhs,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? copyMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -450,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Birthsign.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -468,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Birthsign DeepCopy(
             this IBirthsignGetter item,
-            Birthsign_TranslationMask? copyMask = null)
+            Birthsign.TranslationMask? copyMask = null)
         {
             return ((BirthsignSetterTranslationCommon)((IBirthsignGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -477,8 +890,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static Birthsign DeepCopy(
             this IBirthsignGetter item,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? copyMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? copyMask = null)
         {
             return ((BirthsignSetterTranslationCommon)((IBirthsignGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -502,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             XElement node,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -515,8 +928,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             XElement node,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -524,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Birthsign.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -543,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             string path,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -555,8 +968,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             string path,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -570,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -583,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             Stream stream,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -595,8 +1008,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             Stream stream,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -610,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Birthsign_TranslationMask? translationMask = null)
+            Birthsign.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -691,9 +1104,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(Birthsign_Mask<>);
+        public static readonly Type MaskType = typeof(Birthsign.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Birthsign_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Birthsign.ErrorMask);
 
         public static readonly Type ClassType = typeof(Birthsign);
 
@@ -1059,12 +1472,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly BirthsignCommon Instance = new BirthsignCommon();
 
-        public Birthsign_Mask<bool> GetEqualsMask(
+        public Birthsign.Mask<bool> GetEqualsMask(
             IBirthsignGetter item,
             IBirthsignGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Birthsign_Mask<bool>(false);
+            var ret = new Birthsign.Mask<bool>(false);
             ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1076,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IBirthsignGetter item,
             IBirthsignGetter rhs,
-            Birthsign_Mask<bool> ret,
+            Birthsign.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1093,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IBirthsignGetter item,
             string? name = null,
-            Birthsign_Mask<bool>? printMask = null)
+            Birthsign.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1108,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsignGetter item,
             FileGeneration fg,
             string? name = null,
-            Birthsign_Mask<bool>? printMask = null)
+            Birthsign.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1132,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IBirthsignGetter item,
             FileGeneration fg,
-            Birthsign_Mask<bool>? printMask = null)
+            Birthsign.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1172,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IBirthsignGetter item,
-            Birthsign_Mask<bool?> checkMask)
+            Birthsign.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
@@ -1185,7 +1598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IBirthsignGetter item,
-            Birthsign_Mask<bool> mask)
+            Birthsign.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Icon = (item.Icon != null);
@@ -1456,7 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Birthsign DeepCopy(
             IBirthsignGetter item,
-            Birthsign_TranslationMask? copyMask = null)
+            Birthsign.TranslationMask? copyMask = null)
         {
             Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1467,8 +1880,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Birthsign DeepCopy(
             IBirthsignGetter item,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? copyMask = null)
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? copyMask = null)
         {
             Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1800,8 +2213,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IBirthsignGetter item,
             XElement node,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null,
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1811,14 +2224,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Birthsign.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IBirthsignGetter item,
             string path,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null,
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1834,8 +2247,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IBirthsignGetter item,
             Stream stream,
-            out Birthsign_ErrorMask errorMask,
-            Birthsign_TranslationMask? translationMask = null,
+            out Birthsign.ErrorMask errorMask,
+            Birthsign.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1852,418 +2265,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class Birthsign_Mask<T> :
-        OblivionMajorRecord_Mask<T>,
-        IMask<T>,
-        IEquatable<Birthsign_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public Birthsign_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Name = initialValue;
-            this.Icon = initialValue;
-            this.Description = initialValue;
-            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        public Birthsign_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T OblivionMajorRecordFlags,
-            T Name,
-            T Icon,
-            T Description,
-            T Spells)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            OblivionMajorRecordFlags: OblivionMajorRecordFlags)
-        {
-            this.Name = Name;
-            this.Icon = Icon;
-            this.Description = Description;
-            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, Enumerable.Empty<(int Index, T Value)>());
-        }
-
-        #pragma warning disable CS8618
-        protected Birthsign_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Name;
-        public T Icon;
-        public T Description;
-        public MaskItem<T, IEnumerable<(int Index, T Value)>>? Spells;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Birthsign_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(Birthsign_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Description, rhs.Description)) return false;
-            if (!object.Equals(this.Spells, rhs.Spells)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Description?.GetHashCode());
-            ret = ret.CombineHashCode(this.Spells?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Description)) return false;
-            if (this.Spells != null)
-            {
-                if (!eval(this.Spells.Overall)) return false;
-                if (this.Spells.Specific != null)
-                {
-                    foreach (var item in this.Spells.Specific)
-                    {
-                        if (!eval(item.Value)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new Birthsign_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new Birthsign_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(Birthsign_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
-            obj.Icon = eval(this.Icon);
-            obj.Description = eval(this.Description);
-            if (Spells != null)
-            {
-                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
-                if (Spells.Specific != null)
-                {
-                    var l = new List<(int Index, R Item)>();
-                    obj.Spells.Specific = l;
-                    foreach (var item in Spells.Specific.WithIndex())
-                    {
-                        R mask = eval(item.Item.Value);
-                        l.Add((item.Index, mask));
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(Birthsign_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, Birthsign_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(Birthsign_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
-                if (printMask?.Icon ?? true)
-                {
-                    fg.AppendLine($"Icon => {Icon}");
-                }
-                if (printMask?.Description ?? true)
-                {
-                    fg.AppendLine($"Description => {Description}");
-                }
-                if (printMask?.Spells?.Overall ?? true)
-                {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Spells != null)
-                        {
-                            if (Spells.Overall != null)
-                            {
-                                fg.AppendLine(Spells.Overall.ToString());
-                            }
-                            if (Spells.Specific != null)
-                            {
-                                foreach (var subItem in Spells.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($" => {subItem}");
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class Birthsign_ErrorMask : OblivionMajorRecord_ErrorMask, IErrorMask<Birthsign_ErrorMask>
-    {
-        #region Members
-        public Exception? Name;
-        public Exception? Icon;
-        public Exception? Description;
-        public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    return Name;
-                case Birthsign_FieldIndex.Icon:
-                    return Icon;
-                case Birthsign_FieldIndex.Description:
-                    return Description;
-                case Birthsign_FieldIndex.Spells:
-                    return Spells;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    this.Description = ex;
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
-            switch (enu)
-            {
-                case Birthsign_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
-                case Birthsign_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Birthsign_FieldIndex.Description:
-                    this.Description = (Exception)obj;
-                    break;
-                case Birthsign_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Name != null) return true;
-            if (Icon != null) return true;
-            if (Description != null) return true;
-            if (Spells != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("Birthsign_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
-            fg.AppendLine($"Icon => {Icon}");
-            fg.AppendLine($"Description => {Description}");
-            fg.AppendLine("Spells =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Spells != null)
-                {
-                    if (Spells.Overall != null)
-                    {
-                        fg.AppendLine(Spells.Overall.ToString());
-                    }
-                    if (Spells.Specific != null)
-                    {
-                        foreach (var subItem in Spells.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem}");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public Birthsign_ErrorMask Combine(Birthsign_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new Birthsign_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Description = this.Description.Combine(rhs.Description);
-            ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
-            return ret;
-        }
-        public static Birthsign_ErrorMask? Combine(Birthsign_ErrorMask? lhs, Birthsign_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new Birthsign_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new Birthsign_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class Birthsign_TranslationMask : OblivionMajorRecord_TranslationMask
-    {
-        #region Members
-        public bool Name;
-        public bool Icon;
-        public bool Description;
-        public bool Spells;
-        #endregion
-
-        #region Ctors
-        public Birthsign_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Name = defaultOn;
-            this.Icon = defaultOn;
-            this.Description = defaultOn;
-            this.Spells = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Name, null));
-            ret.Add((Icon, null));
-            ret.Add((Description, null));
-            ret.Add((Spells, null));
-        }
-    }
 }
 #endregion
 

@@ -15,9 +15,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellSubBlock
     {
-        public static CellSubBlock_TranslationMask duplicateMask = new CellSubBlock_TranslationMask(true)
+        public static CellSubBlock.TranslationMask duplicateMask = new CellSubBlock.TranslationMask(true)
         {
-            Cells = new Loqui.MaskItem<bool, Cell_TranslationMask?>(false, default)
+            Cells = new Loqui.MaskItem<bool, Cell.TranslationMask?>(false, default)
         };
 
         public void WriteToXmlFolder(

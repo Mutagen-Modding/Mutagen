@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CellSubBlock CreateFromXml(
             XElement node,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -140,15 +140,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static CellSubBlock CreateFromXml(
             XElement node,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CellSubBlock_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellSubBlock CreateFromXml(
             string path,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,8 +178,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellSubBlock CreateFromXml(
             string path,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellSubBlock CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellSubBlock CreateFromXml(
             Stream stream,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,8 +212,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellSubBlock CreateFromXml(
             Stream stream,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellSubBlock CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -236,6 +236,420 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.BlockNumber = initialValue;
+                this.GroupType = initialValue;
+                this.LastModified = initialValue;
+                this.Cells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
+            }
+
+            public Mask(
+                T BlockNumber,
+                T GroupType,
+                T LastModified,
+                T Cells)
+            {
+                this.BlockNumber = BlockNumber;
+                this.GroupType = GroupType;
+                this.LastModified = LastModified;
+                this.Cells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>(Cells, Enumerable.Empty<MaskItemIndexed<T, Cell.Mask<T>?>>());
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T BlockNumber;
+            public T GroupType;
+            public T LastModified;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell.Mask<T>?>>>? Cells;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
+                if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
+                if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
+                if (!object.Equals(this.Cells, rhs.Cells)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.BlockNumber?.GetHashCode());
+                ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
+                ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
+                ret = ret.CombineHashCode(this.Cells?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.BlockNumber)) return false;
+                if (!eval(this.GroupType)) return false;
+                if (!eval(this.LastModified)) return false;
+                if (this.Cells != null)
+                {
+                    if (!eval(this.Cells.Overall)) return false;
+                    if (this.Cells.Specific != null)
+                    {
+                        foreach (var item in this.Cells.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new CellSubBlock.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.BlockNumber = eval(this.BlockNumber);
+                obj.GroupType = eval(this.GroupType);
+                obj.LastModified = eval(this.LastModified);
+                if (Cells != null)
+                {
+                    obj.Cells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>>(eval(this.Cells.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell.Mask<R>?>>());
+                    if (Cells.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Cell.Mask<R>?>>();
+                        obj.Cells.Specific = l;
+                        foreach (var item in Cells.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Cell.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Cell.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(CellSubBlock.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, CellSubBlock.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(CellSubBlock.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.BlockNumber ?? true)
+                    {
+                        fg.AppendLine($"BlockNumber => {BlockNumber}");
+                    }
+                    if (printMask?.GroupType ?? true)
+                    {
+                        fg.AppendLine($"GroupType => {GroupType}");
+                    }
+                    if (printMask?.LastModified ?? true)
+                    {
+                        fg.AppendLine($"LastModified => {LastModified}");
+                    }
+                    if (printMask?.Cells?.Overall ?? true)
+                    {
+                        fg.AppendLine("Cells =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Cells != null)
+                            {
+                                if (Cells.Overall != null)
+                                {
+                                    fg.AppendLine(Cells.Overall.ToString());
+                                }
+                                if (Cells.Specific != null)
+                                {
+                                    foreach (var subItem in Cells.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? BlockNumber;
+            public Exception? GroupType;
+            public Exception? LastModified;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>? Cells;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
+                switch (enu)
+                {
+                    case CellSubBlock_FieldIndex.BlockNumber:
+                        return BlockNumber;
+                    case CellSubBlock_FieldIndex.GroupType:
+                        return GroupType;
+                    case CellSubBlock_FieldIndex.LastModified:
+                        return LastModified;
+                    case CellSubBlock_FieldIndex.Cells:
+                        return Cells;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
+                switch (enu)
+                {
+                    case CellSubBlock_FieldIndex.BlockNumber:
+                        this.BlockNumber = ex;
+                        break;
+                    case CellSubBlock_FieldIndex.GroupType:
+                        this.GroupType = ex;
+                        break;
+                    case CellSubBlock_FieldIndex.LastModified:
+                        this.LastModified = ex;
+                        break;
+                    case CellSubBlock_FieldIndex.Cells:
+                        this.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
+                switch (enu)
+                {
+                    case CellSubBlock_FieldIndex.BlockNumber:
+                        this.BlockNumber = (Exception)obj;
+                        break;
+                    case CellSubBlock_FieldIndex.GroupType:
+                        this.GroupType = (Exception)obj;
+                        break;
+                    case CellSubBlock_FieldIndex.LastModified:
+                        this.LastModified = (Exception)obj;
+                        break;
+                    case CellSubBlock_FieldIndex.Cells:
+                        this.Cells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (BlockNumber != null) return true;
+                if (GroupType != null) return true;
+                if (LastModified != null) return true;
+                if (Cells != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"BlockNumber => {BlockNumber}");
+                fg.AppendLine($"GroupType => {GroupType}");
+                fg.AppendLine($"LastModified => {LastModified}");
+                fg.AppendLine("Cells =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Cells != null)
+                    {
+                        if (Cells.Overall != null)
+                        {
+                            fg.AppendLine(Cells.Overall.ToString());
+                        }
+                        if (Cells.Specific != null)
+                        {
+                            foreach (var subItem in Cells.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
+                ret.GroupType = this.GroupType.Combine(rhs.GroupType);
+                ret.LastModified = this.LastModified.Combine(rhs.LastModified);
+                ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool BlockNumber;
+            public bool GroupType;
+            public bool LastModified;
+            public MaskItem<bool, Cell.TranslationMask?> Cells;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.BlockNumber = defaultOn;
+                this.GroupType = defaultOn;
+                this.LastModified = defaultOn;
+                this.Cells = new MaskItem<bool, Cell.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((BlockNumber, null));
+                ret.Add((GroupType, null));
+                ret.Add((LastModified, null));
+                ret.Add((Cells?.Overall ?? true, Cells?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -358,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellSubBlockSetterCommon)((ICellSubBlockGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellSubBlock_Mask<bool> GetEqualsMask(
+        public static CellSubBlock.Mask<bool> GetEqualsMask(
             this ICellSubBlockGetter item,
             ICellSubBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -372,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ICellSubBlockGetter item,
             string? name = null,
-            CellSubBlock_Mask<bool>? printMask = null)
+            CellSubBlock.Mask<bool>? printMask = null)
         {
             return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -384,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellSubBlockGetter item,
             FileGeneration fg,
             string? name = null,
-            CellSubBlock_Mask<bool>? printMask = null)
+            CellSubBlock.Mask<bool>? printMask = null)
         {
             ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -395,16 +809,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ICellSubBlockGetter item,
-            CellSubBlock_Mask<bool?> checkMask)
+            CellSubBlock.Mask<bool?> checkMask)
         {
             return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static CellSubBlock_Mask<bool> GetHasBeenSetMask(this ICellSubBlockGetter item)
+        public static CellSubBlock.Mask<bool> GetHasBeenSetMask(this ICellSubBlockGetter item)
         {
-            var ret = new CellSubBlock_Mask<bool>(false);
+            var ret = new CellSubBlock.Mask<bool>(false);
             ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -423,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICellSubBlock lhs,
             ICellSubBlockGetter rhs,
-            CellSubBlock_TranslationMask? copyMask = null)
+            CellSubBlock.TranslationMask? copyMask = null)
         {
             ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -435,8 +849,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ICellSubBlock lhs,
             ICellSubBlockGetter rhs,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? copyMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -444,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = CellSubBlock_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -462,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellSubBlock DeepCopy(
             this ICellSubBlockGetter item,
-            CellSubBlock_TranslationMask? copyMask = null)
+            CellSubBlock.TranslationMask? copyMask = null)
         {
             return ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -471,8 +885,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CellSubBlock DeepCopy(
             this ICellSubBlockGetter item,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? copyMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? copyMask = null)
         {
             return ((CellSubBlockSetterTranslationCommon)((ICellSubBlockGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -496,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellSubBlock item,
             XElement node,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -509,8 +923,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellSubBlock item,
             XElement node,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -518,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CellSubBlock_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -537,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellSubBlock item,
             string path,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -549,8 +963,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellSubBlock item,
             string path,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -564,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellSubBlock item,
             string path,
             ErrorMaskBuilder? errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -577,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellSubBlock item,
             Stream stream,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -589,8 +1003,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ICellSubBlock item,
             Stream stream,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -604,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellSubBlock item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -709,9 +1123,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(CellSubBlock_Mask<>);
+        public static readonly Type MaskType = typeof(CellSubBlock.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellSubBlock_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CellSubBlock.ErrorMask);
 
         public static readonly Type ClassType = typeof(CellSubBlock);
 
@@ -1030,12 +1444,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly CellSubBlockCommon Instance = new CellSubBlockCommon();
 
-        public CellSubBlock_Mask<bool> GetEqualsMask(
+        public CellSubBlock.Mask<bool> GetEqualsMask(
             ICellSubBlockGetter item,
             ICellSubBlockGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellSubBlock_Mask<bool>(false);
+            var ret = new CellSubBlock.Mask<bool>(false);
             ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1047,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ICellSubBlockGetter item,
             ICellSubBlockGetter rhs,
-            CellSubBlock_Mask<bool> ret,
+            CellSubBlock.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1063,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ICellSubBlockGetter item,
             string? name = null,
-            CellSubBlock_Mask<bool>? printMask = null)
+            CellSubBlock.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1078,7 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellSubBlockGetter item,
             FileGeneration fg,
             string? name = null,
-            CellSubBlock_Mask<bool>? printMask = null)
+            CellSubBlock.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1102,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ICellSubBlockGetter item,
             FileGeneration fg,
-            CellSubBlock_Mask<bool>? printMask = null)
+            CellSubBlock.Mask<bool>? printMask = null)
         {
             if (printMask?.BlockNumber ?? true)
             {
@@ -1138,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ICellSubBlockGetter item,
-            CellSubBlock_Mask<bool?> checkMask)
+            CellSubBlock.Mask<bool?> checkMask)
         {
             if (checkMask.Cells?.Overall.HasValue ?? false && checkMask.Cells!.Overall.Value != item.Cells.HasBeenSet) return false;
             return true;
@@ -1146,12 +1560,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ICellSubBlockGetter item,
-            CellSubBlock_Mask<bool> mask)
+            CellSubBlock.Mask<bool> mask)
         {
             mask.BlockNumber = true;
             mask.GroupType = true;
             mask.LastModified = true;
-            mask.Cells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell_Mask<bool>?>>>(item.Cells.HasBeenSet, item.Cells.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Cells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell.Mask<bool>?>>>(item.Cells.HasBeenSet, item.Cells.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1308,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CellSubBlock DeepCopy(
             ICellSubBlockGetter item,
-            CellSubBlock_TranslationMask? copyMask = null)
+            CellSubBlock.TranslationMask? copyMask = null)
         {
             CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1319,8 +1733,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CellSubBlock DeepCopy(
             ICellSubBlockGetter item,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? copyMask = null)
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? copyMask = null)
         {
             CellSubBlock ret = (CellSubBlock)((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1644,8 +2058,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICellSubBlockGetter item,
             XElement node,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null,
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1655,14 +2069,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = CellSubBlock_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ICellSubBlockGetter item,
             string path,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null,
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1695,8 +2109,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ICellSubBlockGetter item,
             Stream stream,
-            out CellSubBlock_ErrorMask errorMask,
-            CellSubBlock_TranslationMask? translationMask = null,
+            out CellSubBlock.ErrorMask errorMask,
+            CellSubBlock.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1745,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellSubBlockGetter item,
             XElement node,
             string? name = null,
-            CellSubBlock_TranslationMask? translationMask = null)
+            CellSubBlock.TranslationMask? translationMask = null)
         {
             ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1789,421 +2203,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class CellSubBlock_Mask<T> :
-        IMask<T>,
-        IEquatable<CellSubBlock_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public CellSubBlock_Mask(T initialValue)
-        {
-            this.BlockNumber = initialValue;
-            this.GroupType = initialValue;
-            this.LastModified = initialValue;
-            this.Cells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, Cell_Mask<T>?>>());
-        }
-
-        public CellSubBlock_Mask(
-            T BlockNumber,
-            T GroupType,
-            T LastModified,
-            T Cells)
-        {
-            this.BlockNumber = BlockNumber;
-            this.GroupType = GroupType;
-            this.LastModified = LastModified;
-            this.Cells = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell_Mask<T>?>>>(Cells, Enumerable.Empty<MaskItemIndexed<T, Cell_Mask<T>?>>());
-        }
-
-        #pragma warning disable CS8618
-        protected CellSubBlock_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T BlockNumber;
-        public T GroupType;
-        public T LastModified;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, Cell_Mask<T>?>>>? Cells;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is CellSubBlock_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(CellSubBlock_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
-            if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
-            if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
-            if (!object.Equals(this.Cells, rhs.Cells)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.BlockNumber?.GetHashCode());
-            ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
-            ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
-            ret = ret.CombineHashCode(this.Cells?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.BlockNumber)) return false;
-            if (!eval(this.GroupType)) return false;
-            if (!eval(this.LastModified)) return false;
-            if (this.Cells != null)
-            {
-                if (!eval(this.Cells.Overall)) return false;
-                if (this.Cells.Specific != null)
-                {
-                    foreach (var item in this.Cells.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public CellSubBlock_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new CellSubBlock_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(CellSubBlock_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.BlockNumber = eval(this.BlockNumber);
-            obj.GroupType = eval(this.GroupType);
-            obj.LastModified = eval(this.LastModified);
-            if (Cells != null)
-            {
-                obj.Cells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell_Mask<R>?>>>(eval(this.Cells.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell_Mask<R>?>>());
-                if (Cells.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, Cell_Mask<R>?>>();
-                    obj.Cells.Specific = l;
-                    foreach (var item in Cells.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, Cell_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Cell_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(CellSubBlock_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, CellSubBlock_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(CellSubBlock_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.BlockNumber ?? true)
-                {
-                    fg.AppendLine($"BlockNumber => {BlockNumber}");
-                }
-                if (printMask?.GroupType ?? true)
-                {
-                    fg.AppendLine($"GroupType => {GroupType}");
-                }
-                if (printMask?.LastModified ?? true)
-                {
-                    fg.AppendLine($"LastModified => {LastModified}");
-                }
-                if (printMask?.Cells?.Overall ?? true)
-                {
-                    fg.AppendLine("Cells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Cells != null)
-                        {
-                            if (Cells.Overall != null)
-                            {
-                                fg.AppendLine(Cells.Overall.ToString());
-                            }
-                            if (Cells.Specific != null)
-                            {
-                                foreach (var subItem in Cells.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class CellSubBlock_ErrorMask : IErrorMask, IErrorMask<CellSubBlock_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? BlockNumber;
-        public Exception? GroupType;
-        public Exception? LastModified;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell_ErrorMask?>>?>? Cells;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                    return BlockNumber;
-                case CellSubBlock_FieldIndex.GroupType:
-                    return GroupType;
-                case CellSubBlock_FieldIndex.LastModified:
-                    return LastModified;
-                case CellSubBlock_FieldIndex.Cells:
-                    return Cells;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = ex;
-                    break;
-                case CellSubBlock_FieldIndex.GroupType:
-                    this.GroupType = ex;
-                    break;
-                case CellSubBlock_FieldIndex.LastModified:
-                    this.LastModified = ex;
-                    break;
-                case CellSubBlock_FieldIndex.Cells:
-                    this.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell_ErrorMask?>>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            CellSubBlock_FieldIndex enu = (CellSubBlock_FieldIndex)index;
-            switch (enu)
-            {
-                case CellSubBlock_FieldIndex.BlockNumber:
-                    this.BlockNumber = (Exception)obj;
-                    break;
-                case CellSubBlock_FieldIndex.GroupType:
-                    this.GroupType = (Exception)obj;
-                    break;
-                case CellSubBlock_FieldIndex.LastModified:
-                    this.LastModified = (Exception)obj;
-                    break;
-                case CellSubBlock_FieldIndex.Cells:
-                    this.Cells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell_ErrorMask?>>?>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (BlockNumber != null) return true;
-            if (GroupType != null) return true;
-            if (LastModified != null) return true;
-            if (Cells != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("CellSubBlock_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"BlockNumber => {BlockNumber}");
-            fg.AppendLine($"GroupType => {GroupType}");
-            fg.AppendLine($"LastModified => {LastModified}");
-            fg.AppendLine("Cells =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Cells != null)
-                {
-                    if (Cells.Overall != null)
-                    {
-                        fg.AppendLine(Cells.Overall.ToString());
-                    }
-                    if (Cells.Specific != null)
-                    {
-                        foreach (var subItem in Cells.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public CellSubBlock_ErrorMask Combine(CellSubBlock_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new CellSubBlock_ErrorMask();
-            ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
-            ret.GroupType = this.GroupType.Combine(rhs.GroupType);
-            ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-            ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell_ErrorMask?>>?>(ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
-            return ret;
-        }
-        public static CellSubBlock_ErrorMask? Combine(CellSubBlock_ErrorMask? lhs, CellSubBlock_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static CellSubBlock_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new CellSubBlock_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class CellSubBlock_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool BlockNumber;
-        public bool GroupType;
-        public bool LastModified;
-        public MaskItem<bool, Cell_TranslationMask?> Cells;
-        #endregion
-
-        #region Ctors
-        public CellSubBlock_TranslationMask(bool defaultOn)
-        {
-            this.BlockNumber = defaultOn;
-            this.GroupType = defaultOn;
-            this.LastModified = defaultOn;
-            this.Cells = new MaskItem<bool, Cell_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((BlockNumber, null));
-            ret.Add((GroupType, null));
-            ret.Add((LastModified, null));
-            ret.Add((Cells?.Overall ?? true, Cells?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

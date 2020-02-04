@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static VendorLocation CreateFromXml(
             XElement node,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -123,15 +123,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static VendorLocation CreateFromXml(
             XElement node,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorLocation CreateFromXml(
             string path,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorLocation CreateFromXml(
             string path,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorLocation CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorLocation CreateFromXml(
             Stream stream,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -195,8 +195,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorLocation CreateFromXml(
             Stream stream,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorLocation CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,6 +219,320 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Type = initialValue;
+                this.Reference = initialValue;
+                this.Radius = initialValue;
+            }
+
+            public Mask(
+                T Type,
+                T Reference,
+                T Radius)
+            {
+                this.Type = Type;
+                this.Reference = Reference;
+                this.Radius = Radius;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Type;
+            public T Reference;
+            public T Radius;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Reference, rhs.Reference)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Type?.GetHashCode());
+                ret = ret.CombineHashCode(this.Reference?.GetHashCode());
+                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Reference)) return false;
+                if (!eval(this.Radius)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new VendorLocation.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Type = eval(this.Type);
+                obj.Reference = eval(this.Reference);
+                obj.Radius = eval(this.Radius);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(VendorLocation.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, VendorLocation.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(VendorLocation.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendLine($"Type => {Type}");
+                    }
+                    if (printMask?.Reference ?? true)
+                    {
+                        fg.AppendLine($"Reference => {Reference}");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendLine($"Radius => {Radius}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Type;
+            public Exception? Reference;
+            public Exception? Radius;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case VendorLocation_FieldIndex.Type:
+                        return Type;
+                    case VendorLocation_FieldIndex.Reference:
+                        return Reference;
+                    case VendorLocation_FieldIndex.Radius:
+                        return Radius;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case VendorLocation_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case VendorLocation_FieldIndex.Reference:
+                        this.Reference = ex;
+                        break;
+                    case VendorLocation_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+                switch (enu)
+                {
+                    case VendorLocation_FieldIndex.Type:
+                        this.Type = (Exception)obj;
+                        break;
+                    case VendorLocation_FieldIndex.Reference:
+                        this.Reference = (Exception)obj;
+                        break;
+                    case VendorLocation_FieldIndex.Radius:
+                        this.Radius = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Type != null) return true;
+                if (Reference != null) return true;
+                if (Radius != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Type => {Type}");
+                fg.AppendLine($"Reference => {Reference}");
+                fg.AppendLine($"Radius => {Radius}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Reference = this.Reference.Combine(rhs.Reference);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Type;
+            public bool Reference;
+            public bool Radius;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Type = defaultOn;
+                this.Reference = defaultOn;
+                this.Radius = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Type, null));
+                ret.Add((Reference, null));
+                ret.Add((Radius, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -329,7 +643,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((VendorLocationSetterCommon)((IVendorLocationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static VendorLocation_Mask<bool> GetEqualsMask(
+        public static VendorLocation.Mask<bool> GetEqualsMask(
             this IVendorLocationGetter item,
             IVendorLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -343,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IVendorLocationGetter item,
             string? name = null,
-            VendorLocation_Mask<bool>? printMask = null)
+            VendorLocation.Mask<bool>? printMask = null)
         {
             return ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -355,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocationGetter item,
             FileGeneration fg,
             string? name = null,
-            VendorLocation_Mask<bool>? printMask = null)
+            VendorLocation.Mask<bool>? printMask = null)
         {
             ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -366,16 +680,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IVendorLocationGetter item,
-            VendorLocation_Mask<bool?> checkMask)
+            VendorLocation.Mask<bool?> checkMask)
         {
             return ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static VendorLocation_Mask<bool> GetHasBeenSetMask(this IVendorLocationGetter item)
+        public static VendorLocation.Mask<bool> GetHasBeenSetMask(this IVendorLocationGetter item)
         {
-            var ret = new VendorLocation_Mask<bool>(false);
+            var ret = new VendorLocation.Mask<bool>(false);
             ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -394,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IVendorLocation lhs,
             IVendorLocationGetter rhs,
-            VendorLocation_TranslationMask? copyMask = null)
+            VendorLocation.TranslationMask? copyMask = null)
         {
             ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -406,8 +720,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IVendorLocation lhs,
             IVendorLocationGetter rhs,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? copyMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -415,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = VendorLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -433,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorLocation DeepCopy(
             this IVendorLocationGetter item,
-            VendorLocation_TranslationMask? copyMask = null)
+            VendorLocation.TranslationMask? copyMask = null)
         {
             return ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -442,8 +756,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static VendorLocation DeepCopy(
             this IVendorLocationGetter item,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? copyMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? copyMask = null)
         {
             return ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -467,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorLocation item,
             XElement node,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -480,8 +794,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorLocation item,
             XElement node,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -489,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -508,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorLocation item,
             string path,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -520,8 +834,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorLocation item,
             string path,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -535,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocation item,
             string path,
             ErrorMaskBuilder? errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -548,7 +862,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorLocation item,
             Stream stream,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -560,8 +874,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IVendorLocation item,
             Stream stream,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -575,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocation item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +964,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(VendorLocation_Mask<>);
+        public static readonly Type MaskType = typeof(VendorLocation.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(VendorLocation_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(VendorLocation.ErrorMask);
 
         public static readonly Type ClassType = typeof(VendorLocation);
 
@@ -910,12 +1224,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly VendorLocationCommon Instance = new VendorLocationCommon();
 
-        public VendorLocation_Mask<bool> GetEqualsMask(
+        public VendorLocation.Mask<bool> GetEqualsMask(
             IVendorLocationGetter item,
             IVendorLocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new VendorLocation_Mask<bool>(false);
+            var ret = new VendorLocation.Mask<bool>(false);
             ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -927,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IVendorLocationGetter item,
             IVendorLocationGetter rhs,
-            VendorLocation_Mask<bool> ret,
+            VendorLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -939,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IVendorLocationGetter item,
             string? name = null,
-            VendorLocation_Mask<bool>? printMask = null)
+            VendorLocation.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -954,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVendorLocationGetter item,
             FileGeneration fg,
             string? name = null,
-            VendorLocation_Mask<bool>? printMask = null)
+            VendorLocation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -978,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IVendorLocationGetter item,
             FileGeneration fg,
-            VendorLocation_Mask<bool>? printMask = null)
+            VendorLocation.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
@@ -996,14 +1310,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IVendorLocationGetter item,
-            VendorLocation_Mask<bool?> checkMask)
+            VendorLocation.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IVendorLocationGetter item,
-            VendorLocation_Mask<bool> mask)
+            VendorLocation.Mask<bool> mask)
         {
             mask.Type = true;
             mask.Reference = true;
@@ -1079,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public VendorLocation DeepCopy(
             IVendorLocationGetter item,
-            VendorLocation_TranslationMask? copyMask = null)
+            VendorLocation.TranslationMask? copyMask = null)
         {
             VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1090,8 +1404,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public VendorLocation DeepCopy(
             IVendorLocationGetter item,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? copyMask = null)
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? copyMask = null)
         {
             VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1366,8 +1680,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorLocationGetter item,
             XElement node,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null,
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1377,14 +1691,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorLocation_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IVendorLocationGetter item,
             string path,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null,
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1417,8 +1731,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IVendorLocationGetter item,
             Stream stream,
-            out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask? translationMask = null,
+            out VendorLocation.ErrorMask errorMask,
+            VendorLocation.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1467,7 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocationGetter item,
             XElement node,
             string? name = null,
-            VendorLocation_TranslationMask? translationMask = null)
+            VendorLocation.TranslationMask? translationMask = null)
         {
             ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1511,321 +1825,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class VendorLocation_Mask<T> :
-        IMask<T>,
-        IEquatable<VendorLocation_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public VendorLocation_Mask(T initialValue)
-        {
-            this.Type = initialValue;
-            this.Reference = initialValue;
-            this.Radius = initialValue;
-        }
-
-        public VendorLocation_Mask(
-            T Type,
-            T Reference,
-            T Radius)
-        {
-            this.Type = Type;
-            this.Reference = Reference;
-            this.Radius = Radius;
-        }
-
-        #pragma warning disable CS8618
-        protected VendorLocation_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Type;
-        public T Reference;
-        public T Radius;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is VendorLocation_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(VendorLocation_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.Reference, rhs.Reference)) return false;
-            if (!object.Equals(this.Radius, rhs.Radius)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.Reference?.GetHashCode());
-            ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Type)) return false;
-            if (!eval(this.Reference)) return false;
-            if (!eval(this.Radius)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public VendorLocation_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new VendorLocation_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(VendorLocation_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Type = eval(this.Type);
-            obj.Reference = eval(this.Reference);
-            obj.Radius = eval(this.Radius);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(VendorLocation_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, VendorLocation_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(VendorLocation_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Type ?? true)
-                {
-                    fg.AppendLine($"Type => {Type}");
-                }
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {Reference}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {Radius}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class VendorLocation_ErrorMask : IErrorMask, IErrorMask<VendorLocation_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Type;
-        public Exception? Reference;
-        public Exception? Radius;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case VendorLocation_FieldIndex.Type:
-                    return Type;
-                case VendorLocation_FieldIndex.Reference:
-                    return Reference;
-                case VendorLocation_FieldIndex.Radius:
-                    return Radius;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case VendorLocation_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case VendorLocation_FieldIndex.Reference:
-                    this.Reference = ex;
-                    break;
-                case VendorLocation_FieldIndex.Radius:
-                    this.Radius = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
-            switch (enu)
-            {
-                case VendorLocation_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case VendorLocation_FieldIndex.Reference:
-                    this.Reference = (Exception)obj;
-                    break;
-                case VendorLocation_FieldIndex.Radius:
-                    this.Radius = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Type != null) return true;
-            if (Reference != null) return true;
-            if (Radius != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("VendorLocation_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"Reference => {Reference}");
-            fg.AppendLine($"Radius => {Radius}");
-        }
-        #endregion
-
-        #region Combine
-        public VendorLocation_ErrorMask Combine(VendorLocation_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new VendorLocation_ErrorMask();
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.Reference = this.Reference.Combine(rhs.Reference);
-            ret.Radius = this.Radius.Combine(rhs.Radius);
-            return ret;
-        }
-        public static VendorLocation_ErrorMask? Combine(VendorLocation_ErrorMask? lhs, VendorLocation_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static VendorLocation_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new VendorLocation_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class VendorLocation_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Type;
-        public bool Reference;
-        public bool Radius;
-        #endregion
-
-        #region Ctors
-        public VendorLocation_TranslationMask(bool defaultOn)
-        {
-            this.Type = defaultOn;
-            this.Reference = defaultOn;
-            this.Radius = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Type, null));
-            ret.Add((Reference, null));
-            ret.Add((Radius, null));
-        }
-    }
 }
 #endregion
 

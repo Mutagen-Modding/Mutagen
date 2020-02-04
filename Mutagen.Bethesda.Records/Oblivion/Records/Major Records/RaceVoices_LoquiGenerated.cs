@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RaceVoices CreateFromXml(
             XElement node,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -124,15 +124,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RaceVoices CreateFromXml(
             XElement node,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceVoices.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceVoices CreateFromXml(
             string path,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceVoices CreateFromXml(
             string path,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceVoices CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceVoices CreateFromXml(
             Stream stream,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,8 +196,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceVoices CreateFromXml(
             Stream stream,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceVoices CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -220,6 +220,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Male = initialValue;
+                this.Female = initialValue;
+            }
+
+            public Mask(
+                T Male,
+                T Female)
+            {
+                this.Male = Male;
+                this.Female = Female;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Male;
+            public T Female;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Male, rhs.Male)) return false;
+                if (!object.Equals(this.Female, rhs.Female)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Male?.GetHashCode());
+                ret = ret.CombineHashCode(this.Female?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Male)) return false;
+                if (!eval(this.Female)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RaceVoices.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Male = eval(this.Male);
+                obj.Female = eval(this.Female);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RaceVoices.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RaceVoices.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RaceVoices.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Male ?? true)
+                    {
+                        fg.AppendLine($"Male => {Male}");
+                    }
+                    if (printMask?.Female ?? true)
+                    {
+                        fg.AppendLine($"Female => {Female}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Male;
+            public Exception? Female;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
+                switch (enu)
+                {
+                    case RaceVoices_FieldIndex.Male:
+                        return Male;
+                    case RaceVoices_FieldIndex.Female:
+                        return Female;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
+                switch (enu)
+                {
+                    case RaceVoices_FieldIndex.Male:
+                        this.Male = ex;
+                        break;
+                    case RaceVoices_FieldIndex.Female:
+                        this.Female = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
+                switch (enu)
+                {
+                    case RaceVoices_FieldIndex.Male:
+                        this.Male = (Exception)obj;
+                        break;
+                    case RaceVoices_FieldIndex.Female:
+                        this.Female = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Male != null) return true;
+                if (Female != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Male => {Male}");
+                fg.AppendLine($"Female => {Female}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Male = this.Male.Combine(rhs.Male);
+                ret.Female = this.Female.Combine(rhs.Female);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Male;
+            public bool Female;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Male = defaultOn;
+                this.Female = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Male, null));
+                ret.Add((Female, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -328,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceVoicesSetterCommon)((IRaceVoicesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RaceVoices_Mask<bool> GetEqualsMask(
+        public static RaceVoices.Mask<bool> GetEqualsMask(
             this IRaceVoicesGetter item,
             IRaceVoicesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -342,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRaceVoicesGetter item,
             string? name = null,
-            RaceVoices_Mask<bool>? printMask = null)
+            RaceVoices.Mask<bool>? printMask = null)
         {
             return ((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -354,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoicesGetter item,
             FileGeneration fg,
             string? name = null,
-            RaceVoices_Mask<bool>? printMask = null)
+            RaceVoices.Mask<bool>? printMask = null)
         {
             ((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -365,16 +652,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRaceVoicesGetter item,
-            RaceVoices_Mask<bool?> checkMask)
+            RaceVoices.Mask<bool?> checkMask)
         {
             return ((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RaceVoices_Mask<bool> GetHasBeenSetMask(this IRaceVoicesGetter item)
+        public static RaceVoices.Mask<bool> GetHasBeenSetMask(this IRaceVoicesGetter item)
         {
-            var ret = new RaceVoices_Mask<bool>(false);
+            var ret = new RaceVoices.Mask<bool>(false);
             ((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -393,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRaceVoices lhs,
             IRaceVoicesGetter rhs,
-            RaceVoices_TranslationMask? copyMask = null)
+            RaceVoices.TranslationMask? copyMask = null)
         {
             ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -405,8 +692,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRaceVoices lhs,
             IRaceVoicesGetter rhs,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? copyMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -414,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceVoices.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -432,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceVoices DeepCopy(
             this IRaceVoicesGetter item,
-            RaceVoices_TranslationMask? copyMask = null)
+            RaceVoices.TranslationMask? copyMask = null)
         {
             return ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -441,8 +728,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RaceVoices DeepCopy(
             this IRaceVoicesGetter item,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? copyMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? copyMask = null)
         {
             return ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -466,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceVoices item,
             XElement node,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -479,8 +766,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceVoices item,
             XElement node,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -488,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceVoices.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -507,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceVoices item,
             string path,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -519,8 +806,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceVoices item,
             string path,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -534,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoices item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -547,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceVoices item,
             Stream stream,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -559,8 +846,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRaceVoices item,
             Stream stream,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -574,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoices item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -648,9 +935,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(RaceVoices_Mask<>);
+        public static readonly Type MaskType = typeof(RaceVoices.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RaceVoices_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RaceVoices.ErrorMask);
 
         public static readonly Type ClassType = typeof(RaceVoices);
 
@@ -898,12 +1185,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RaceVoicesCommon Instance = new RaceVoicesCommon();
 
-        public RaceVoices_Mask<bool> GetEqualsMask(
+        public RaceVoices.Mask<bool> GetEqualsMask(
             IRaceVoicesGetter item,
             IRaceVoicesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RaceVoices_Mask<bool>(false);
+            var ret = new RaceVoices.Mask<bool>(false);
             ((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -915,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRaceVoicesGetter item,
             IRaceVoicesGetter rhs,
-            RaceVoices_Mask<bool> ret,
+            RaceVoices.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -926,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRaceVoicesGetter item,
             string? name = null,
-            RaceVoices_Mask<bool>? printMask = null)
+            RaceVoices.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -941,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceVoicesGetter item,
             FileGeneration fg,
             string? name = null,
-            RaceVoices_Mask<bool>? printMask = null)
+            RaceVoices.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -965,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRaceVoicesGetter item,
             FileGeneration fg,
-            RaceVoices_Mask<bool>? printMask = null)
+            RaceVoices.Mask<bool>? printMask = null)
         {
             if (printMask?.Male ?? true)
             {
@@ -979,14 +1266,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRaceVoicesGetter item,
-            RaceVoices_Mask<bool?> checkMask)
+            RaceVoices.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRaceVoicesGetter item,
-            RaceVoices_Mask<bool> mask)
+            RaceVoices.Mask<bool> mask)
         {
             mask.Male = true;
             mask.Female = true;
@@ -1056,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceVoices DeepCopy(
             IRaceVoicesGetter item,
-            RaceVoices_TranslationMask? copyMask = null)
+            RaceVoices.TranslationMask? copyMask = null)
         {
             RaceVoices ret = (RaceVoices)((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1067,8 +1354,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceVoices DeepCopy(
             IRaceVoicesGetter item,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? copyMask = null)
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? copyMask = null)
         {
             RaceVoices ret = (RaceVoices)((RaceVoicesCommon)((IRaceVoicesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1317,8 +1604,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRaceVoicesGetter item,
             XElement node,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null,
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1328,14 +1615,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RaceVoices.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRaceVoicesGetter item,
             string path,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null,
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1368,8 +1655,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRaceVoicesGetter item,
             Stream stream,
-            out RaceVoices_ErrorMask errorMask,
-            RaceVoices_TranslationMask? translationMask = null,
+            out RaceVoices.ErrorMask errorMask,
+            RaceVoices.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1418,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoicesGetter item,
             XElement node,
             string? name = null,
-            RaceVoices_TranslationMask? translationMask = null)
+            RaceVoices.TranslationMask? translationMask = null)
         {
             ((RaceVoicesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1462,294 +1749,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RaceVoices_Mask<T> :
-        IMask<T>,
-        IEquatable<RaceVoices_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RaceVoices_Mask(T initialValue)
-        {
-            this.Male = initialValue;
-            this.Female = initialValue;
-        }
-
-        public RaceVoices_Mask(
-            T Male,
-            T Female)
-        {
-            this.Male = Male;
-            this.Female = Female;
-        }
-
-        #pragma warning disable CS8618
-        protected RaceVoices_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Male;
-        public T Female;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RaceVoices_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RaceVoices_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Male, rhs.Male)) return false;
-            if (!object.Equals(this.Female, rhs.Female)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Male?.GetHashCode());
-            ret = ret.CombineHashCode(this.Female?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Male)) return false;
-            if (!eval(this.Female)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RaceVoices_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RaceVoices_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RaceVoices_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Male = eval(this.Male);
-            obj.Female = eval(this.Female);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RaceVoices_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RaceVoices_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RaceVoices_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Male ?? true)
-                {
-                    fg.AppendLine($"Male => {Male}");
-                }
-                if (printMask?.Female ?? true)
-                {
-                    fg.AppendLine($"Female => {Female}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RaceVoices_ErrorMask : IErrorMask, IErrorMask<RaceVoices_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Male;
-        public Exception? Female;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    return Male;
-                case RaceVoices_FieldIndex.Female:
-                    return Female;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    this.Male = ex;
-                    break;
-                case RaceVoices_FieldIndex.Female:
-                    this.Female = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RaceVoices_FieldIndex enu = (RaceVoices_FieldIndex)index;
-            switch (enu)
-            {
-                case RaceVoices_FieldIndex.Male:
-                    this.Male = (Exception)obj;
-                    break;
-                case RaceVoices_FieldIndex.Female:
-                    this.Female = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Male != null) return true;
-            if (Female != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RaceVoices_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Male => {Male}");
-            fg.AppendLine($"Female => {Female}");
-        }
-        #endregion
-
-        #region Combine
-        public RaceVoices_ErrorMask Combine(RaceVoices_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RaceVoices_ErrorMask();
-            ret.Male = this.Male.Combine(rhs.Male);
-            ret.Female = this.Female.Combine(rhs.Female);
-            return ret;
-        }
-        public static RaceVoices_ErrorMask? Combine(RaceVoices_ErrorMask? lhs, RaceVoices_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RaceVoices_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RaceVoices_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RaceVoices_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Male;
-        public bool Female;
-        #endregion
-
-        #region Ctors
-        public RaceVoices_TranslationMask(bool defaultOn)
-        {
-            this.Male = defaultOn;
-            this.Female = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Male, null));
-            ret.Add((Female, null));
-        }
-    }
 }
 #endregion
 

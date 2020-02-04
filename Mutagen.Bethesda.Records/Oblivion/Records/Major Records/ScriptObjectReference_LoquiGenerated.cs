@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static new ScriptObjectReference CreateFromXml(
             XElement node,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -117,15 +117,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ScriptObjectReference CreateFromXml(
             XElement node,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptObjectReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptObjectReference CreateFromXml(
             string path,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptObjectReference CreateFromXml(
             string path,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptObjectReference CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptObjectReference CreateFromXml(
             Stream stream,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptObjectReference CreateFromXml(
             Stream stream,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptObjectReference CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,6 +213,250 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            ScriptReference.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T Reference)
+            : base()
+            {
+                this.Reference = Reference;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Reference;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Reference, rhs.Reference)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Reference?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Reference)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ScriptObjectReference.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Reference = eval(this.Reference);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(ScriptObjectReference.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, ScriptObjectReference.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ScriptObjectReference.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Reference ?? true)
+                    {
+                        fg.AppendLine($"Reference => {Reference}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            ScriptReference.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Reference;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptObjectReference_FieldIndex.Reference:
+                        return Reference;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptObjectReference_FieldIndex.Reference:
+                        this.Reference = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
+                switch (enu)
+                {
+                    case ScriptObjectReference_FieldIndex.Reference:
+                        this.Reference = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Reference != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Reference => {Reference}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Reference = this.Reference.Combine(rhs.Reference);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            ScriptReference.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Reference;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Reference = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Reference, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -312,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptObjectReference_Mask<bool> GetEqualsMask(
+        public static ScriptObjectReference.Mask<bool> GetEqualsMask(
             this IScriptObjectReferenceGetter item,
             IScriptObjectReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -326,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IScriptObjectReferenceGetter item,
             string? name = null,
-            ScriptObjectReference_Mask<bool>? printMask = null)
+            ScriptObjectReference.Mask<bool>? printMask = null)
         {
             return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -338,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptObjectReferenceGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptObjectReference_Mask<bool>? printMask = null)
+            ScriptObjectReference.Mask<bool>? printMask = null)
         {
             ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -349,16 +593,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IScriptObjectReferenceGetter item,
-            ScriptObjectReference_Mask<bool?> checkMask)
+            ScriptObjectReference.Mask<bool?> checkMask)
         {
             return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptObjectReference_Mask<bool> GetHasBeenSetMask(this IScriptObjectReferenceGetter item)
+        public static ScriptObjectReference.Mask<bool> GetHasBeenSetMask(this IScriptObjectReferenceGetter item)
         {
-            var ret = new ScriptObjectReference_Mask<bool>(false);
+            var ret = new ScriptObjectReference.Mask<bool>(false);
             ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -377,8 +621,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IScriptObjectReference lhs,
             IScriptObjectReferenceGetter rhs,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? copyMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptObjectReferenceSetterTranslationCommon)((IScriptObjectReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -386,7 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptObjectReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -404,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptObjectReference DeepCopy(
             this IScriptObjectReferenceGetter item,
-            ScriptObjectReference_TranslationMask? copyMask = null)
+            ScriptObjectReference.TranslationMask? copyMask = null)
         {
             return ((ScriptObjectReferenceSetterTranslationCommon)((IScriptObjectReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -413,8 +657,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ScriptObjectReference DeepCopy(
             this IScriptObjectReferenceGetter item,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? copyMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? copyMask = null)
         {
             return ((ScriptObjectReferenceSetterTranslationCommon)((IScriptObjectReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -438,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptObjectReference item,
             XElement node,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -451,8 +695,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptObjectReference item,
             XElement node,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -460,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptObjectReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -479,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptObjectReference item,
             string path,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -491,8 +735,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptObjectReference item,
             string path,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -506,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptObjectReference item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -519,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptObjectReference item,
             Stream stream,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -531,8 +775,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IScriptObjectReference item,
             Stream stream,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -546,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptObjectReference item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null)
+            ScriptObjectReference.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -619,9 +863,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(ScriptObjectReference_Mask<>);
+        public static readonly Type MaskType = typeof(ScriptObjectReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptObjectReference_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ScriptObjectReference.ErrorMask);
 
         public static readonly Type ClassType = typeof(ScriptObjectReference);
 
@@ -880,12 +1124,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new static readonly ScriptObjectReferenceCommon Instance = new ScriptObjectReferenceCommon();
 
-        public ScriptObjectReference_Mask<bool> GetEqualsMask(
+        public ScriptObjectReference.Mask<bool> GetEqualsMask(
             IScriptObjectReferenceGetter item,
             IScriptObjectReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptObjectReference_Mask<bool>(false);
+            var ret = new ScriptObjectReference.Mask<bool>(false);
             ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -897,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IScriptObjectReferenceGetter item,
             IScriptObjectReferenceGetter rhs,
-            ScriptObjectReference_Mask<bool> ret,
+            ScriptObjectReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -908,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IScriptObjectReferenceGetter item,
             string? name = null,
-            ScriptObjectReference_Mask<bool>? printMask = null)
+            ScriptObjectReference.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -923,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReferenceGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptObjectReference_Mask<bool>? printMask = null)
+            ScriptObjectReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -947,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IScriptObjectReferenceGetter item,
             FileGeneration fg,
-            ScriptObjectReference_Mask<bool>? printMask = null)
+            ScriptObjectReference.Mask<bool>? printMask = null)
         {
             ScriptReferenceCommon.ToStringFields(
                 item: item,
@@ -961,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IScriptObjectReferenceGetter item,
-            ScriptObjectReference_Mask<bool?> checkMask)
+            ScriptObjectReference.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -970,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IScriptObjectReferenceGetter item,
-            ScriptObjectReference_Mask<bool> mask)
+            ScriptObjectReference.Mask<bool> mask)
         {
             mask.Reference = true;
             base.FillHasBeenSetMask(
@@ -1083,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptObjectReference DeepCopy(
             IScriptObjectReferenceGetter item,
-            ScriptObjectReference_TranslationMask? copyMask = null)
+            ScriptObjectReference.TranslationMask? copyMask = null)
         {
             ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1094,8 +1338,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptObjectReference DeepCopy(
             IScriptObjectReferenceGetter item,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? copyMask = null)
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? copyMask = null)
         {
             ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1309,8 +1553,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptObjectReferenceGetter item,
             XElement node,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null,
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1320,14 +1564,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptObjectReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IScriptObjectReferenceGetter item,
             string path,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null,
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1343,8 +1587,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IScriptObjectReferenceGetter item,
             Stream stream,
-            out ScriptObjectReference_ErrorMask errorMask,
-            ScriptObjectReference_TranslationMask? translationMask = null,
+            out ScriptObjectReference.ErrorMask errorMask,
+            ScriptObjectReference.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1361,249 +1605,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class ScriptObjectReference_Mask<T> :
-        ScriptReference_Mask<T>,
-        IMask<T>,
-        IEquatable<ScriptObjectReference_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ScriptObjectReference_Mask(T Reference)
-        : base()
-        {
-            this.Reference = Reference;
-        }
-
-        #pragma warning disable CS8618
-        protected ScriptObjectReference_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Reference;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ScriptObjectReference_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ScriptObjectReference_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Reference, rhs.Reference)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Reference?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Reference)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new ScriptObjectReference_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ScriptObjectReference_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ScriptObjectReference_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Reference = eval(this.Reference);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ScriptObjectReference_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ScriptObjectReference_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ScriptObjectReference_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {Reference}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ScriptObjectReference_ErrorMask : ScriptReference_ErrorMask, IErrorMask<ScriptObjectReference_ErrorMask>
-    {
-        #region Members
-        public Exception? Reference;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    return Reference;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    this.Reference = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
-            switch (enu)
-            {
-                case ScriptObjectReference_FieldIndex.Reference:
-                    this.Reference = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Reference != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ScriptObjectReference_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Reference => {Reference}");
-        }
-        #endregion
-
-        #region Combine
-        public ScriptObjectReference_ErrorMask Combine(ScriptObjectReference_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ScriptObjectReference_ErrorMask();
-            ret.Reference = this.Reference.Combine(rhs.Reference);
-            return ret;
-        }
-        public static ScriptObjectReference_ErrorMask? Combine(ScriptObjectReference_ErrorMask? lhs, ScriptObjectReference_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new ScriptObjectReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ScriptObjectReference_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class ScriptObjectReference_TranslationMask : ScriptReference_TranslationMask
-    {
-        #region Members
-        public bool Reference;
-        #endregion
-
-        #region Ctors
-        public ScriptObjectReference_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Reference = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Reference, null));
-        }
-    }
 }
 #endregion
 

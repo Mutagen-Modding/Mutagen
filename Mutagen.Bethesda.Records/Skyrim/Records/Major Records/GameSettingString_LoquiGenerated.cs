@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static new GameSettingString CreateFromXml(
             XElement node,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static GameSettingString CreateFromXml(
             XElement node,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingString.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSettingString CreateFromXml(
             string path,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSettingString CreateFromXml(
             string path,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static GameSettingString CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSettingString CreateFromXml(
             Stream stream,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSettingString CreateFromXml(
             Stream stream,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static GameSettingString CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,6 +218,271 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public new class Mask<T> :
+            GameSetting.Mask<T>,
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            : base(initialValue)
+            {
+                this.Data = initialValue;
+            }
+
+            public Mask(
+                T MajorRecordFlagsRaw,
+                T FormKey,
+                T Version,
+                T EditorID,
+                T SkyrimMajorRecordFlags,
+                T FormVersion,
+                T Version2,
+                T Data)
+            : base(
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+                FormVersion: FormVersion,
+                Version2: Version2)
+            {
+                this.Data = Data;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Data;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Data?.GetHashCode());
+                ret = ret.CombineHashCode(base.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public override bool AllEqual(Func<T, bool> eval)
+            {
+                if (!base.AllEqual(eval)) return false;
+                if (!eval(this.Data)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public new Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new GameSettingString.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                base.Translate_InternalFill(obj, eval);
+                obj.Data = eval(this.Data);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(GameSettingString.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, GameSettingString.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(GameSettingString.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Data ?? true)
+                    {
+                        fg.AppendLine($"Data => {Data}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public new class ErrorMask :
+            GameSetting.ErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Data;
+            #endregion
+
+            #region IErrorMask
+            public override object? GetNthMask(int index)
+            {
+                GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+                switch (enu)
+                {
+                    case GameSettingString_FieldIndex.Data:
+                        return Data;
+                    default:
+                        return base.GetNthMask(index);
+                }
+            }
+
+            public override void SetNthException(int index, Exception ex)
+            {
+                GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+                switch (enu)
+                {
+                    case GameSettingString_FieldIndex.Data:
+                        this.Data = ex;
+                        break;
+                    default:
+                        base.SetNthException(index, ex);
+                        break;
+                }
+            }
+
+            public override void SetNthMask(int index, object obj)
+            {
+                GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
+                switch (enu)
+                {
+                    case GameSettingString_FieldIndex.Data:
+                        this.Data = (Exception)obj;
+                        break;
+                    default:
+                        base.SetNthMask(index, obj);
+                        break;
+                }
+            }
+
+            public override bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Data != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public override void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected override void ToString_FillInternal(FileGeneration fg)
+            {
+                base.ToString_FillInternal(fg);
+                fg.AppendLine($"Data => {Data}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Data = this.Data.Combine(rhs.Data);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public new class TranslationMask :
+            GameSetting.TranslationMask,
+            ITranslationMask
+        {
+            #region Members
+            public bool Data;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+                : base(defaultOn)
+            {
+                this.Data = defaultOn;
+            }
+
+            #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Data, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -332,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GameSettingStringSetterCommon)((IGameSettingStringGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static GameSettingString_Mask<bool> GetEqualsMask(
+        public static GameSettingString.Mask<bool> GetEqualsMask(
             this IGameSettingStringGetter item,
             IGameSettingStringGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -346,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this IGameSettingStringGetter item,
             string? name = null,
-            GameSettingString_Mask<bool>? printMask = null)
+            GameSettingString.Mask<bool>? printMask = null)
         {
             return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -358,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingStringGetter item,
             FileGeneration fg,
             string? name = null,
-            GameSettingString_Mask<bool>? printMask = null)
+            GameSettingString.Mask<bool>? printMask = null)
         {
             ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -369,16 +634,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this IGameSettingStringGetter item,
-            GameSettingString_Mask<bool?> checkMask)
+            GameSettingString.Mask<bool?> checkMask)
         {
             return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static GameSettingString_Mask<bool> GetHasBeenSetMask(this IGameSettingStringGetter item)
+        public static GameSettingString.Mask<bool> GetHasBeenSetMask(this IGameSettingStringGetter item)
         {
-            var ret = new GameSettingString_Mask<bool>(false);
+            var ret = new GameSettingString.Mask<bool>(false);
             ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -397,8 +662,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this IGameSettingStringInternal lhs,
             IGameSettingStringGetter rhs,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? copyMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((GameSettingStringSetterTranslationCommon)((IGameSettingStringGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -406,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingString.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -424,7 +689,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSettingString DeepCopy(
             this IGameSettingStringGetter item,
-            GameSettingString_TranslationMask? copyMask = null)
+            GameSettingString.TranslationMask? copyMask = null)
         {
             return ((GameSettingStringSetterTranslationCommon)((IGameSettingStringGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -433,8 +698,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static GameSettingString DeepCopy(
             this IGameSettingStringGetter item,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? copyMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? copyMask = null)
         {
             return ((GameSettingStringSetterTranslationCommon)((IGameSettingStringGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -458,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             XElement node,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -471,8 +736,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             XElement node,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -480,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingString.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -499,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             string path,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -511,8 +776,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             string path,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -526,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingStringInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -539,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             Stream stream,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -551,8 +816,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             Stream stream,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -566,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingStringInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GameSettingString_TranslationMask? translationMask = null)
+            GameSettingString.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -646,9 +911,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(GameSettingString_Mask<>);
+        public static readonly Type MaskType = typeof(GameSettingString.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GameSettingString_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GameSettingString.ErrorMask);
 
         public static readonly Type ClassType = typeof(GameSettingString);
 
@@ -952,12 +1217,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new static readonly GameSettingStringCommon Instance = new GameSettingStringCommon();
 
-        public GameSettingString_Mask<bool> GetEqualsMask(
+        public GameSettingString.Mask<bool> GetEqualsMask(
             IGameSettingStringGetter item,
             IGameSettingStringGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GameSettingString_Mask<bool>(false);
+            var ret = new GameSettingString.Mask<bool>(false);
             ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -969,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             IGameSettingStringGetter item,
             IGameSettingStringGetter rhs,
-            GameSettingString_Mask<bool> ret,
+            GameSettingString.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -980,7 +1245,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             IGameSettingStringGetter item,
             string? name = null,
-            GameSettingString_Mask<bool>? printMask = null)
+            GameSettingString.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -995,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingStringGetter item,
             FileGeneration fg,
             string? name = null,
-            GameSettingString_Mask<bool>? printMask = null)
+            GameSettingString.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1019,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             IGameSettingStringGetter item,
             FileGeneration fg,
-            GameSettingString_Mask<bool>? printMask = null)
+            GameSettingString.Mask<bool>? printMask = null)
         {
             GameSettingCommon.ToStringFields(
                 item: item,
@@ -1033,7 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             IGameSettingStringGetter item,
-            GameSettingString_Mask<bool?> checkMask)
+            GameSettingString.Mask<bool?> checkMask)
         {
             if (checkMask.Data.HasValue && checkMask.Data.Value != (item.Data != null)) return false;
             return base.HasBeenSet(
@@ -1043,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public void FillHasBeenSetMask(
             IGameSettingStringGetter item,
-            GameSettingString_Mask<bool> mask)
+            GameSettingString.Mask<bool> mask)
         {
             mask.Data = (item.Data != null);
             base.FillHasBeenSetMask(
@@ -1328,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public GameSettingString DeepCopy(
             IGameSettingStringGetter item,
-            GameSettingString_TranslationMask? copyMask = null)
+            GameSettingString.TranslationMask? copyMask = null)
         {
             GameSettingString ret = (GameSettingString)((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1339,8 +1604,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public GameSettingString DeepCopy(
             IGameSettingStringGetter item,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? copyMask = null)
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? copyMask = null)
         {
             GameSettingString ret = (GameSettingString)((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1584,8 +1849,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IGameSettingStringGetter item,
             XElement node,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null,
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1595,14 +1860,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingString.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IGameSettingStringGetter item,
             string path,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null,
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1618,8 +1883,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this IGameSettingStringGetter item,
             Stream stream,
-            out GameSettingString_ErrorMask errorMask,
-            GameSettingString_TranslationMask? translationMask = null,
+            out GameSettingString.ErrorMask errorMask,
+            GameSettingString.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1636,270 +1901,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class GameSettingString_Mask<T> :
-        GameSetting_Mask<T>,
-        IMask<T>,
-        IEquatable<GameSettingString_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public GameSettingString_Mask(T initialValue)
-        : base(initialValue)
-        {
-            this.Data = initialValue;
-        }
-
-        public GameSettingString_Mask(
-            T MajorRecordFlagsRaw,
-            T FormKey,
-            T Version,
-            T EditorID,
-            T SkyrimMajorRecordFlags,
-            T FormVersion,
-            T Version2,
-            T Data)
-        : base(
-            MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-            FormKey: FormKey,
-            Version: Version,
-            EditorID: EditorID,
-            SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
-            FormVersion: FormVersion,
-            Version2: Version2)
-        {
-            this.Data = Data;
-        }
-
-        #pragma warning disable CS8618
-        protected GameSettingString_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Data;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is GameSettingString_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(GameSettingString_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Data, rhs.Data)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Data?.GetHashCode());
-            ret = ret.CombineHashCode(base.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public override bool AllEqual(Func<T, bool> eval)
-        {
-            if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Data)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public new GameSettingString_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new GameSettingString_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(GameSettingString_Mask<R> obj, Func<T, R> eval)
-        {
-            base.Translate_InternalFill(obj, eval);
-            obj.Data = eval(this.Data);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(GameSettingString_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, GameSettingString_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(GameSettingString_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Data ?? true)
-                {
-                    fg.AppendLine($"Data => {Data}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class GameSettingString_ErrorMask : GameSetting_ErrorMask, IErrorMask<GameSettingString_ErrorMask>
-    {
-        #region Members
-        public Exception? Data;
-        #endregion
-
-        #region IErrorMask
-        public override object? GetNthMask(int index)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    return Data;
-                default:
-                    return base.GetNthMask(index);
-            }
-        }
-
-        public override void SetNthException(int index, Exception ex)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    this.Data = ex;
-                    break;
-                default:
-                    base.SetNthException(index, ex);
-                    break;
-            }
-        }
-
-        public override void SetNthMask(int index, object obj)
-        {
-            GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
-            switch (enu)
-            {
-                case GameSettingString_FieldIndex.Data:
-                    this.Data = (Exception)obj;
-                    break;
-                default:
-                    base.SetNthMask(index, obj);
-                    break;
-            }
-        }
-
-        public override bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Data != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public override void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("GameSettingString_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected override void ToString_FillInternal(FileGeneration fg)
-        {
-            base.ToString_FillInternal(fg);
-            fg.AppendLine($"Data => {Data}");
-        }
-        #endregion
-
-        #region Combine
-        public GameSettingString_ErrorMask Combine(GameSettingString_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new GameSettingString_ErrorMask();
-            ret.Data = this.Data.Combine(rhs.Data);
-            return ret;
-        }
-        public static GameSettingString_ErrorMask? Combine(GameSettingString_ErrorMask? lhs, GameSettingString_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static new GameSettingString_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new GameSettingString_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class GameSettingString_TranslationMask : GameSetting_TranslationMask
-    {
-        #region Members
-        public bool Data;
-        #endregion
-
-        #region Ctors
-        public GameSettingString_TranslationMask(bool defaultOn)
-            : base(defaultOn)
-        {
-            this.Data = defaultOn;
-        }
-
-        #endregion
-
-        protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            base.GetCrystal(ret);
-            ret.Add((Data, null));
-        }
-    }
 }
 #endregion
 

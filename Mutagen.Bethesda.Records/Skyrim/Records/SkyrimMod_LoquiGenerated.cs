@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static SkyrimMod CreateFromXml(
             XElement node,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -183,15 +183,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static SkyrimMod CreateFromXml(
             XElement node,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromXml(
             string path,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -221,8 +221,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromXml(
             string path,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromXml(
             Stream stream,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -255,8 +255,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromXml(
             Stream stream,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -279,6 +279,518 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(initialValue, new ModHeader.Mask<T>(initialValue));
+                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Keywords = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.LocationReferenceTypes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Actions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.TextureSets = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Globals = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Classes = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+                this.Factions = new MaskItem<T, Group.Mask<T>?>(initialValue, new Group.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T ModHeader,
+                T GameSettings,
+                T Keywords,
+                T LocationReferenceTypes,
+                T Actions,
+                T TextureSets,
+                T Globals,
+                T Classes,
+                T Factions)
+            {
+                this.ModHeader = new MaskItem<T, ModHeader.Mask<T>?>(ModHeader, new ModHeader.Mask<T>(ModHeader));
+                this.GameSettings = new MaskItem<T, Group.Mask<T>?>(GameSettings, new Group.Mask<T>(GameSettings));
+                this.Keywords = new MaskItem<T, Group.Mask<T>?>(Keywords, new Group.Mask<T>(Keywords));
+                this.LocationReferenceTypes = new MaskItem<T, Group.Mask<T>?>(LocationReferenceTypes, new Group.Mask<T>(LocationReferenceTypes));
+                this.Actions = new MaskItem<T, Group.Mask<T>?>(Actions, new Group.Mask<T>(Actions));
+                this.TextureSets = new MaskItem<T, Group.Mask<T>?>(TextureSets, new Group.Mask<T>(TextureSets));
+                this.Globals = new MaskItem<T, Group.Mask<T>?>(Globals, new Group.Mask<T>(Globals));
+                this.Classes = new MaskItem<T, Group.Mask<T>?>(Classes, new Group.Mask<T>(Classes));
+                this.Factions = new MaskItem<T, Group.Mask<T>?>(Factions, new Group.Mask<T>(Factions));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, ModHeader.Mask<T>?>? ModHeader { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? GameSettings { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Keywords { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? LocationReferenceTypes { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Actions { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? TextureSets { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Globals { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Classes { get; set; }
+            public MaskItem<T, Group.Mask<T>?>? Factions { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
+                if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
+                if (!object.Equals(this.Actions, rhs.Actions)) return false;
+                if (!object.Equals(this.TextureSets, rhs.TextureSets)) return false;
+                if (!object.Equals(this.Globals, rhs.Globals)) return false;
+                if (!object.Equals(this.Classes, rhs.Classes)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
+                ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
+                ret = ret.CombineHashCode(this.Keywords?.GetHashCode());
+                ret = ret.CombineHashCode(this.LocationReferenceTypes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Actions?.GetHashCode());
+                ret = ret.CombineHashCode(this.TextureSets?.GetHashCode());
+                ret = ret.CombineHashCode(this.Globals?.GetHashCode());
+                ret = ret.CombineHashCode(this.Classes?.GetHashCode());
+                ret = ret.CombineHashCode(this.Factions?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (ModHeader != null)
+                {
+                    if (!eval(this.ModHeader.Overall)) return false;
+                    if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
+                }
+                if (GameSettings != null)
+                {
+                    if (!eval(this.GameSettings.Overall)) return false;
+                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
+                }
+                if (Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null && !this.Keywords.Specific.AllEqual(eval)) return false;
+                }
+                if (LocationReferenceTypes != null)
+                {
+                    if (!eval(this.LocationReferenceTypes.Overall)) return false;
+                    if (this.LocationReferenceTypes.Specific != null && !this.LocationReferenceTypes.Specific.AllEqual(eval)) return false;
+                }
+                if (Actions != null)
+                {
+                    if (!eval(this.Actions.Overall)) return false;
+                    if (this.Actions.Specific != null && !this.Actions.Specific.AllEqual(eval)) return false;
+                }
+                if (TextureSets != null)
+                {
+                    if (!eval(this.TextureSets.Overall)) return false;
+                    if (this.TextureSets.Specific != null && !this.TextureSets.Specific.AllEqual(eval)) return false;
+                }
+                if (Globals != null)
+                {
+                    if (!eval(this.Globals.Overall)) return false;
+                    if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
+                }
+                if (Classes != null)
+                {
+                    if (!eval(this.Classes.Overall)) return false;
+                    if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
+                }
+                if (Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SkyrimMod.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
+                obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
+                obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
+                obj.Actions = this.Actions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
+                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
+                obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
+                obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SkyrimMod.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SkyrimMod.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SkyrimMod.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.ModHeader?.Overall ?? true)
+                    {
+                        ModHeader?.ToString(fg);
+                    }
+                    if (printMask?.GameSettings?.Overall ?? true)
+                    {
+                        GameSettings?.ToString(fg);
+                    }
+                    if (printMask?.Keywords?.Overall ?? true)
+                    {
+                        Keywords?.ToString(fg);
+                    }
+                    if (printMask?.LocationReferenceTypes?.Overall ?? true)
+                    {
+                        LocationReferenceTypes?.ToString(fg);
+                    }
+                    if (printMask?.Actions?.Overall ?? true)
+                    {
+                        Actions?.ToString(fg);
+                    }
+                    if (printMask?.TextureSets?.Overall ?? true)
+                    {
+                        TextureSets?.ToString(fg);
+                    }
+                    if (printMask?.Globals?.Overall ?? true)
+                    {
+                        Globals?.ToString(fg);
+                    }
+                    if (printMask?.Classes?.Overall ?? true)
+                    {
+                        Classes?.ToString(fg);
+                    }
+                    if (printMask?.Factions?.Overall ?? true)
+                    {
+                        Factions?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public MaskItem<Exception?, ModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
+            public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
+            public MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
+            public MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
+            public MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
+            public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
+            public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
+                switch (enu)
+                {
+                    case SkyrimMod_FieldIndex.ModHeader:
+                        return ModHeader;
+                    case SkyrimMod_FieldIndex.GameSettings:
+                        return GameSettings;
+                    case SkyrimMod_FieldIndex.Keywords:
+                        return Keywords;
+                    case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                        return LocationReferenceTypes;
+                    case SkyrimMod_FieldIndex.Actions:
+                        return Actions;
+                    case SkyrimMod_FieldIndex.TextureSets:
+                        return TextureSets;
+                    case SkyrimMod_FieldIndex.Globals:
+                        return Globals;
+                    case SkyrimMod_FieldIndex.Classes:
+                        return Classes;
+                    case SkyrimMod_FieldIndex.Factions:
+                        return Factions;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
+                switch (enu)
+                {
+                    case SkyrimMod_FieldIndex.ModHeader:
+                        this.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.GameSettings:
+                        this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                        this.LocationReferenceTypes = new MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Actions:
+                        this.Actions = new MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.TextureSets:
+                        this.TextureSets = new MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Globals:
+                        this.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Classes:
+                        this.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
+                switch (enu)
+                {
+                    case SkyrimMod_FieldIndex.ModHeader:
+                        this.ModHeader = (MaskItem<Exception?, ModHeader.ErrorMask?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.GameSettings:
+                        this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.LocationReferenceTypes:
+                        this.LocationReferenceTypes = (MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Actions:
+                        this.Actions = (MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.TextureSets:
+                        this.TextureSets = (MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Globals:
+                        this.Globals = (MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Classes:
+                        this.Classes = (MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (ModHeader != null) return true;
+                if (GameSettings != null) return true;
+                if (Keywords != null) return true;
+                if (LocationReferenceTypes != null) return true;
+                if (Actions != null) return true;
+                if (TextureSets != null) return true;
+                if (Globals != null) return true;
+                if (Classes != null) return true;
+                if (Factions != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                ModHeader?.ToString(fg);
+                GameSettings?.ToString(fg);
+                Keywords?.ToString(fg);
+                LocationReferenceTypes?.ToString(fg);
+                Actions?.ToString(fg);
+                TextureSets?.ToString(fg);
+                Globals?.ToString(fg);
+                Classes?.ToString(fg);
+                Factions?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ExceptionExt.Combine(this.ModHeader?.Overall, rhs.ModHeader?.Overall), (this.ModHeader?.Specific as IErrorMask<ModHeader.ErrorMask>)?.Combine(rhs.ModHeader?.Specific));
+                ret.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ExceptionExt.Combine(this.GameSettings?.Overall, rhs.GameSettings?.Overall), (this.GameSettings?.Specific as IErrorMask<Group.ErrorMask<GameSetting.ErrorMask>>)?.Combine(rhs.GameSettings?.Specific));
+                ret.Keywords = new MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), (this.Keywords?.Specific as IErrorMask<Group.ErrorMask<Keyword.ErrorMask>>)?.Combine(rhs.Keywords?.Specific));
+                ret.LocationReferenceTypes = new MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>(ExceptionExt.Combine(this.LocationReferenceTypes?.Overall, rhs.LocationReferenceTypes?.Overall), (this.LocationReferenceTypes?.Specific as IErrorMask<Group.ErrorMask<LocationReferenceType.ErrorMask>>)?.Combine(rhs.LocationReferenceTypes?.Specific));
+                ret.Actions = new MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>(ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), (this.Actions?.Specific as IErrorMask<Group.ErrorMask<ActionRecord.ErrorMask>>)?.Combine(rhs.Actions?.Specific));
+                ret.TextureSets = new MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>(ExceptionExt.Combine(this.TextureSets?.Overall, rhs.TextureSets?.Overall), (this.TextureSets?.Specific as IErrorMask<Group.ErrorMask<TextureSet.ErrorMask>>)?.Combine(rhs.TextureSets?.Specific));
+                ret.Globals = new MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>(ExceptionExt.Combine(this.Globals?.Overall, rhs.Globals?.Overall), (this.Globals?.Specific as IErrorMask<Group.ErrorMask<Global.ErrorMask>>)?.Combine(rhs.Globals?.Specific));
+                ret.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ExceptionExt.Combine(this.Classes?.Overall, rhs.Classes?.Overall), (this.Classes?.Specific as IErrorMask<Group.ErrorMask<Class.ErrorMask>>)?.Combine(rhs.Classes?.Specific));
+                ret.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), (this.Factions?.Specific as IErrorMask<Group.ErrorMask<Faction.ErrorMask>>)?.Combine(rhs.Factions?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public MaskItem<bool, ModHeader.TranslationMask?> ModHeader;
+            public MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?> GameSettings;
+            public MaskItem<bool, Group.TranslationMask<Keyword.TranslationMask>?> Keywords;
+            public MaskItem<bool, Group.TranslationMask<LocationReferenceType.TranslationMask>?> LocationReferenceTypes;
+            public MaskItem<bool, Group.TranslationMask<ActionRecord.TranslationMask>?> Actions;
+            public MaskItem<bool, Group.TranslationMask<TextureSet.TranslationMask>?> TextureSets;
+            public MaskItem<bool, Group.TranslationMask<Global.TranslationMask>?> Globals;
+            public MaskItem<bool, Group.TranslationMask<Class.TranslationMask>?> Classes;
+            public MaskItem<bool, Group.TranslationMask<Faction.TranslationMask>?> Factions;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.ModHeader = new MaskItem<bool, ModHeader.TranslationMask?>(defaultOn, null);
+                this.GameSettings = new MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?>(defaultOn, null);
+                this.Keywords = new MaskItem<bool, Group.TranslationMask<Keyword.TranslationMask>?>(defaultOn, null);
+                this.LocationReferenceTypes = new MaskItem<bool, Group.TranslationMask<LocationReferenceType.TranslationMask>?>(defaultOn, null);
+                this.Actions = new MaskItem<bool, Group.TranslationMask<ActionRecord.TranslationMask>?>(defaultOn, null);
+                this.TextureSets = new MaskItem<bool, Group.TranslationMask<TextureSet.TranslationMask>?>(defaultOn, null);
+                this.Globals = new MaskItem<bool, Group.TranslationMask<Global.TranslationMask>?>(defaultOn, null);
+                this.Classes = new MaskItem<bool, Group.TranslationMask<Class.TranslationMask>?>(defaultOn, null);
+                this.Factions = new MaskItem<bool, Group.TranslationMask<Faction.TranslationMask>?>(defaultOn, null);
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((ModHeader?.Overall ?? true, ModHeader?.Specific?.GetCrystal()));
+                ret.Add((GameSettings?.Overall ?? true, GameSettings?.Specific?.GetCrystal()));
+                ret.Add((Keywords?.Overall ?? true, Keywords?.Specific?.GetCrystal()));
+                ret.Add((LocationReferenceTypes?.Overall ?? true, LocationReferenceTypes?.Specific?.GetCrystal()));
+                ret.Add((Actions?.Overall ?? true, Actions?.Specific?.GetCrystal()));
+                ret.Add((TextureSets?.Overall ?? true, TextureSets?.Specific?.GetCrystal()));
+                ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
+                ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
+                ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -438,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: null);
         }
 
-        public static async Task<(SkyrimMod Mod, SkyrimMod_ErrorMask ErrorMask)> CreateFromXmlFolderWithErrorMask(
+        public static async Task<(SkyrimMod Mod, SkyrimMod.ErrorMask ErrorMask)> CreateFromXmlFolderWithErrorMask(
             DirectoryPath dir,
             ModKey modKey)
         {
@@ -447,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
                 dir: dir,
                 modKey: modKey,
                 errorMask: errorMaskBuilder);
-            var errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+            var errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
             return (ret, errorMask);
         }
 
@@ -506,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
             return item;
         }
 
-        public async Task<SkyrimMod_ErrorMask?> WriteToXmlFolder(
+        public async Task<SkyrimMod.ErrorMask?> WriteToXmlFolder(
             DirectoryPath dir,
             bool doMasks = true)
         {
@@ -519,42 +1031,42 @@ namespace Mutagen.Bethesda.Skyrim
                     path: Path.Combine(dir.Path, "ModHeader.xml"),
                     errorMask: errorMaskBuilder,
                     translationMask: null)));
-                tasks.Add(Task.Run(() => GameSettings.WriteToXmlFolder<GameSetting, GameSetting_ErrorMask>(
+                tasks.Add(Task.Run(() => GameSettings.WriteToXmlFolder<GameSetting, GameSetting.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(GameSettings),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.GameSettings)));
-                tasks.Add(Task.Run(() => Keywords.WriteToXmlFolder<Keyword, Keyword_ErrorMask>(
+                tasks.Add(Task.Run(() => Keywords.WriteToXmlFolder<Keyword, Keyword.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Keywords),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.Keywords)));
-                tasks.Add(Task.Run(() => LocationReferenceTypes.WriteToXmlFolder<LocationReferenceType, LocationReferenceType_ErrorMask>(
+                tasks.Add(Task.Run(() => LocationReferenceTypes.WriteToXmlFolder<LocationReferenceType, LocationReferenceType.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(LocationReferenceTypes),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.LocationReferenceTypes)));
-                tasks.Add(Task.Run(() => Actions.WriteToXmlFolder<ActionRecord, ActionRecord_ErrorMask>(
+                tasks.Add(Task.Run(() => Actions.WriteToXmlFolder<ActionRecord, ActionRecord.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Actions),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.Actions)));
-                tasks.Add(Task.Run(() => TextureSets.WriteToXmlFolder<TextureSet, TextureSet_ErrorMask>(
+                tasks.Add(Task.Run(() => TextureSets.WriteToXmlFolder<TextureSet, TextureSet.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(TextureSets),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.TextureSets)));
-                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global_ErrorMask>(
+                tasks.Add(Task.Run(() => Globals.WriteToXmlFolder<Global, Global.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Globals),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.Globals)));
-                tasks.Add(Task.Run(() => Classes.WriteToXmlFolder<Class, Class_ErrorMask>(
+                tasks.Add(Task.Run(() => Classes.WriteToXmlFolder<Class, Class.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Classes),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.Classes)));
-                tasks.Add(Task.Run(() => Factions.WriteToXmlFolder<Faction, Faction_ErrorMask>(
+                tasks.Add(Task.Run(() => Factions.WriteToXmlFolder<Faction, Faction.ErrorMask>(
                     dir: dir.Path,
                     name: nameof(Factions),
                     errorMask: errorMaskBuilder,
@@ -775,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SkyrimMod_Mask<bool> GetEqualsMask(
+        public static SkyrimMod.Mask<bool> GetEqualsMask(
             this ISkyrimModGetter item,
             ISkyrimModGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -789,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static string ToString(
             this ISkyrimModGetter item,
             string? name = null,
-            SkyrimMod_Mask<bool>? printMask = null)
+            SkyrimMod.Mask<bool>? printMask = null)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -801,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             FileGeneration fg,
             string? name = null,
-            SkyrimMod_Mask<bool>? printMask = null)
+            SkyrimMod.Mask<bool>? printMask = null)
         {
             ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -812,16 +1324,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool HasBeenSet(
             this ISkyrimModGetter item,
-            SkyrimMod_Mask<bool?> checkMask)
+            SkyrimMod.Mask<bool?> checkMask)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SkyrimMod_Mask<bool> GetHasBeenSetMask(this ISkyrimModGetter item)
+        public static SkyrimMod.Mask<bool> GetHasBeenSetMask(this ISkyrimModGetter item)
         {
-            var ret = new SkyrimMod_Mask<bool>(false);
+            var ret = new SkyrimMod.Mask<bool>(false);
             ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -840,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this ISkyrimMod lhs,
             ISkyrimModGetter rhs,
-            SkyrimMod_TranslationMask? copyMask = null)
+            SkyrimMod.TranslationMask? copyMask = null)
         {
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -852,8 +1364,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn(
             this ISkyrimMod lhs,
             ISkyrimModGetter rhs,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? copyMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -861,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -879,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod DeepCopy(
             this ISkyrimModGetter item,
-            SkyrimMod_TranslationMask? copyMask = null)
+            SkyrimMod.TranslationMask? copyMask = null)
         {
             return ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -888,8 +1400,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod DeepCopy(
             this ISkyrimModGetter item,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? copyMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? copyMask = null)
         {
             return ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -913,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ISkyrimMod item,
             XElement node,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -926,8 +1438,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ISkyrimMod item,
             XElement node,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -935,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -954,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ISkyrimMod item,
             string path,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -966,8 +1478,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ISkyrimMod item,
             string path,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -981,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -994,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ISkyrimMod item,
             Stream stream,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1006,8 +1518,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromXml(
             this ISkyrimMod item,
             Stream stream,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1021,7 +1533,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1231,9 +1743,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(SkyrimMod_Mask<>);
+        public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SkyrimMod_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SkyrimMod.ErrorMask);
 
         public static readonly Type ClassType = typeof(SkyrimMod);
 
@@ -1788,12 +2300,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly SkyrimModCommon Instance = new SkyrimModCommon();
 
-        public SkyrimMod_Mask<bool> GetEqualsMask(
+        public SkyrimMod.Mask<bool> GetEqualsMask(
             ISkyrimModGetter item,
             ISkyrimModGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SkyrimMod_Mask<bool>(false);
+            var ret = new SkyrimMod.Mask<bool>(false);
             ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1805,7 +2317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void FillEqualsMask(
             ISkyrimModGetter item,
             ISkyrimModGetter rhs,
-            SkyrimMod_Mask<bool> ret,
+            SkyrimMod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1823,7 +2335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public string ToString(
             ISkyrimModGetter item,
             string? name = null,
-            SkyrimMod_Mask<bool>? printMask = null)
+            SkyrimMod.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1838,7 +2350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             FileGeneration fg,
             string? name = null,
-            SkyrimMod_Mask<bool>? printMask = null)
+            SkyrimMod.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1862,7 +2374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void ToStringFields(
             ISkyrimModGetter item,
             FileGeneration fg,
-            SkyrimMod_Mask<bool>? printMask = null)
+            SkyrimMod.Mask<bool>? printMask = null)
         {
             if (printMask?.ModHeader?.Overall ?? true)
             {
@@ -1904,24 +2416,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public bool HasBeenSet(
             ISkyrimModGetter item,
-            SkyrimMod_Mask<bool?> checkMask)
+            SkyrimMod.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             ISkyrimModGetter item,
-            SkyrimMod_Mask<bool> mask)
+            SkyrimMod.Mask<bool> mask)
         {
-            mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
-            mask.GameSettings = new MaskItem<bool, Group_Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, Group_Mask<bool>?>(true, item.Keywords?.GetHasBeenSetMask());
-            mask.LocationReferenceTypes = new MaskItem<bool, Group_Mask<bool>?>(true, item.LocationReferenceTypes?.GetHasBeenSetMask());
-            mask.Actions = new MaskItem<bool, Group_Mask<bool>?>(true, item.Actions?.GetHasBeenSetMask());
-            mask.TextureSets = new MaskItem<bool, Group_Mask<bool>?>(true, item.TextureSets?.GetHasBeenSetMask());
-            mask.Globals = new MaskItem<bool, Group_Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
-            mask.Classes = new MaskItem<bool, Group_Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
-            mask.Factions = new MaskItem<bool, Group_Mask<bool>?>(true, item.Factions?.GetHasBeenSetMask());
+            mask.ModHeader = new MaskItem<bool, ModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
+            mask.GameSettings = new MaskItem<bool, Group.Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
+            mask.Keywords = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keywords?.GetHasBeenSetMask());
+            mask.LocationReferenceTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.LocationReferenceTypes?.GetHasBeenSetMask());
+            mask.Actions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Actions?.GetHasBeenSetMask());
+            mask.TextureSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.TextureSets?.GetHasBeenSetMask());
+            mask.Globals = new MaskItem<bool, Group.Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
+            mask.Classes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
+            mask.Factions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Factions?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -2529,7 +3041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public SkyrimMod DeepCopy(
             ISkyrimModGetter item,
-            SkyrimMod_TranslationMask? copyMask = null)
+            SkyrimMod.TranslationMask? copyMask = null)
         {
             SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2540,8 +3052,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public SkyrimMod DeepCopy(
             ISkyrimModGetter item,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? copyMask = null)
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? copyMask = null)
         {
             SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2985,8 +3497,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this ISkyrimModGetter item,
             XElement node,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null,
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2996,14 +3508,14 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISkyrimModGetter item,
             string path,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null,
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3036,8 +3548,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToXml(
             this ISkyrimModGetter item,
             Stream stream,
-            out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask? translationMask = null,
+            out SkyrimMod.ErrorMask errorMask,
+            SkyrimMod.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3086,7 +3598,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             XElement node,
             string? name = null,
-            SkyrimMod_TranslationMask? translationMask = null)
+            SkyrimMod.TranslationMask? translationMask = null)
         {
             ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -3130,519 +3642,6 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public class SkyrimMod_Mask<T> :
-        IMask<T>,
-        IEquatable<SkyrimMod_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SkyrimMod_Mask(T initialValue)
-        {
-            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>?>(initialValue, new ModHeader_Mask<T>(initialValue));
-            this.GameSettings = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Keywords = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.LocationReferenceTypes = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Actions = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.TextureSets = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Globals = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Classes = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-            this.Factions = new MaskItem<T, Group_Mask<T>?>(initialValue, new Group_Mask<T>(initialValue));
-        }
-
-        public SkyrimMod_Mask(
-            T ModHeader,
-            T GameSettings,
-            T Keywords,
-            T LocationReferenceTypes,
-            T Actions,
-            T TextureSets,
-            T Globals,
-            T Classes,
-            T Factions)
-        {
-            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>?>(ModHeader, new ModHeader_Mask<T>(ModHeader));
-            this.GameSettings = new MaskItem<T, Group_Mask<T>?>(GameSettings, new Group_Mask<T>(GameSettings));
-            this.Keywords = new MaskItem<T, Group_Mask<T>?>(Keywords, new Group_Mask<T>(Keywords));
-            this.LocationReferenceTypes = new MaskItem<T, Group_Mask<T>?>(LocationReferenceTypes, new Group_Mask<T>(LocationReferenceTypes));
-            this.Actions = new MaskItem<T, Group_Mask<T>?>(Actions, new Group_Mask<T>(Actions));
-            this.TextureSets = new MaskItem<T, Group_Mask<T>?>(TextureSets, new Group_Mask<T>(TextureSets));
-            this.Globals = new MaskItem<T, Group_Mask<T>?>(Globals, new Group_Mask<T>(Globals));
-            this.Classes = new MaskItem<T, Group_Mask<T>?>(Classes, new Group_Mask<T>(Classes));
-            this.Factions = new MaskItem<T, Group_Mask<T>?>(Factions, new Group_Mask<T>(Factions));
-        }
-
-        #pragma warning disable CS8618
-        protected SkyrimMod_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, ModHeader_Mask<T>?>? ModHeader { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? GameSettings { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Keywords { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? LocationReferenceTypes { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Actions { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? TextureSets { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Globals { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Classes { get; set; }
-        public MaskItem<T, Group_Mask<T>?>? Factions { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SkyrimMod_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SkyrimMod_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
-            if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-            if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
-            if (!object.Equals(this.Actions, rhs.Actions)) return false;
-            if (!object.Equals(this.TextureSets, rhs.TextureSets)) return false;
-            if (!object.Equals(this.Globals, rhs.Globals)) return false;
-            if (!object.Equals(this.Classes, rhs.Classes)) return false;
-            if (!object.Equals(this.Factions, rhs.Factions)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.ModHeader?.GetHashCode());
-            ret = ret.CombineHashCode(this.GameSettings?.GetHashCode());
-            ret = ret.CombineHashCode(this.Keywords?.GetHashCode());
-            ret = ret.CombineHashCode(this.LocationReferenceTypes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Actions?.GetHashCode());
-            ret = ret.CombineHashCode(this.TextureSets?.GetHashCode());
-            ret = ret.CombineHashCode(this.Globals?.GetHashCode());
-            ret = ret.CombineHashCode(this.Classes?.GetHashCode());
-            ret = ret.CombineHashCode(this.Factions?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (ModHeader != null)
-            {
-                if (!eval(this.ModHeader.Overall)) return false;
-                if (this.ModHeader.Specific != null && !this.ModHeader.Specific.AllEqual(eval)) return false;
-            }
-            if (GameSettings != null)
-            {
-                if (!eval(this.GameSettings.Overall)) return false;
-                if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
-            }
-            if (Keywords != null)
-            {
-                if (!eval(this.Keywords.Overall)) return false;
-                if (this.Keywords.Specific != null && !this.Keywords.Specific.AllEqual(eval)) return false;
-            }
-            if (LocationReferenceTypes != null)
-            {
-                if (!eval(this.LocationReferenceTypes.Overall)) return false;
-                if (this.LocationReferenceTypes.Specific != null && !this.LocationReferenceTypes.Specific.AllEqual(eval)) return false;
-            }
-            if (Actions != null)
-            {
-                if (!eval(this.Actions.Overall)) return false;
-                if (this.Actions.Specific != null && !this.Actions.Specific.AllEqual(eval)) return false;
-            }
-            if (TextureSets != null)
-            {
-                if (!eval(this.TextureSets.Overall)) return false;
-                if (this.TextureSets.Specific != null && !this.TextureSets.Specific.AllEqual(eval)) return false;
-            }
-            if (Globals != null)
-            {
-                if (!eval(this.Globals.Overall)) return false;
-                if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
-            }
-            if (Classes != null)
-            {
-                if (!eval(this.Classes.Overall)) return false;
-                if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
-            }
-            if (Factions != null)
-            {
-                if (!eval(this.Factions.Overall)) return false;
-                if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public SkyrimMod_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SkyrimMod_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SkyrimMod_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader_Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
-            obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
-            obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
-            obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
-            obj.Actions = this.Actions == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
-            obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
-            obj.Globals = this.Globals == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
-            obj.Classes = this.Classes == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
-            obj.Factions = this.Factions == null ? null : new MaskItem<R, Group_Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SkyrimMod_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SkyrimMod_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SkyrimMod_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.ModHeader?.Overall ?? true)
-                {
-                    ModHeader?.ToString(fg);
-                }
-                if (printMask?.GameSettings?.Overall ?? true)
-                {
-                    GameSettings?.ToString(fg);
-                }
-                if (printMask?.Keywords?.Overall ?? true)
-                {
-                    Keywords?.ToString(fg);
-                }
-                if (printMask?.LocationReferenceTypes?.Overall ?? true)
-                {
-                    LocationReferenceTypes?.ToString(fg);
-                }
-                if (printMask?.Actions?.Overall ?? true)
-                {
-                    Actions?.ToString(fg);
-                }
-                if (printMask?.TextureSets?.Overall ?? true)
-                {
-                    TextureSets?.ToString(fg);
-                }
-                if (printMask?.Globals?.Overall ?? true)
-                {
-                    Globals?.ToString(fg);
-                }
-                if (printMask?.Classes?.Overall ?? true)
-                {
-                    Classes?.ToString(fg);
-                }
-                if (printMask?.Factions?.Overall ?? true)
-                {
-                    Factions?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SkyrimMod_ErrorMask : IErrorMask, IErrorMask<SkyrimMod_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public MaskItem<Exception?, ModHeader_ErrorMask?>? ModHeader;
-        public MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>? GameSettings;
-        public MaskItem<Exception?, Group_ErrorMask<Keyword_ErrorMask>?>? Keywords;
-        public MaskItem<Exception?, Group_ErrorMask<LocationReferenceType_ErrorMask>?>? LocationReferenceTypes;
-        public MaskItem<Exception?, Group_ErrorMask<ActionRecord_ErrorMask>?>? Actions;
-        public MaskItem<Exception?, Group_ErrorMask<TextureSet_ErrorMask>?>? TextureSets;
-        public MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>? Globals;
-        public MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>? Classes;
-        public MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>? Factions;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimMod_FieldIndex.ModHeader:
-                    return ModHeader;
-                case SkyrimMod_FieldIndex.GameSettings:
-                    return GameSettings;
-                case SkyrimMod_FieldIndex.Keywords:
-                    return Keywords;
-                case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                    return LocationReferenceTypes;
-                case SkyrimMod_FieldIndex.Actions:
-                    return Actions;
-                case SkyrimMod_FieldIndex.TextureSets:
-                    return TextureSets;
-                case SkyrimMod_FieldIndex.Globals:
-                    return Globals;
-                case SkyrimMod_FieldIndex.Classes:
-                    return Classes;
-                case SkyrimMod_FieldIndex.Factions:
-                    return Factions;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimMod_FieldIndex.ModHeader:
-                    this.ModHeader = new MaskItem<Exception?, ModHeader_ErrorMask?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.GameSettings:
-                    this.GameSettings = new MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.Keywords:
-                    this.Keywords = new MaskItem<Exception?, Group_ErrorMask<Keyword_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                    this.LocationReferenceTypes = new MaskItem<Exception?, Group_ErrorMask<LocationReferenceType_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.Actions:
-                    this.Actions = new MaskItem<Exception?, Group_ErrorMask<ActionRecord_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.TextureSets:
-                    this.TextureSets = new MaskItem<Exception?, Group_ErrorMask<TextureSet_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.Globals:
-                    this.Globals = new MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.Classes:
-                    this.Classes = new MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>(ex, null);
-                    break;
-                case SkyrimMod_FieldIndex.Factions:
-                    this.Factions = new MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            SkyrimMod_FieldIndex enu = (SkyrimMod_FieldIndex)index;
-            switch (enu)
-            {
-                case SkyrimMod_FieldIndex.ModHeader:
-                    this.ModHeader = (MaskItem<Exception?, ModHeader_ErrorMask?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.GameSettings:
-                    this.GameSettings = (MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.Keywords:
-                    this.Keywords = (MaskItem<Exception?, Group_ErrorMask<Keyword_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.LocationReferenceTypes:
-                    this.LocationReferenceTypes = (MaskItem<Exception?, Group_ErrorMask<LocationReferenceType_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.Actions:
-                    this.Actions = (MaskItem<Exception?, Group_ErrorMask<ActionRecord_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.TextureSets:
-                    this.TextureSets = (MaskItem<Exception?, Group_ErrorMask<TextureSet_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.Globals:
-                    this.Globals = (MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.Classes:
-                    this.Classes = (MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>?)obj;
-                    break;
-                case SkyrimMod_FieldIndex.Factions:
-                    this.Factions = (MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>?)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (ModHeader != null) return true;
-            if (GameSettings != null) return true;
-            if (Keywords != null) return true;
-            if (LocationReferenceTypes != null) return true;
-            if (Actions != null) return true;
-            if (TextureSets != null) return true;
-            if (Globals != null) return true;
-            if (Classes != null) return true;
-            if (Factions != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SkyrimMod_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            ModHeader?.ToString(fg);
-            GameSettings?.ToString(fg);
-            Keywords?.ToString(fg);
-            LocationReferenceTypes?.ToString(fg);
-            Actions?.ToString(fg);
-            TextureSets?.ToString(fg);
-            Globals?.ToString(fg);
-            Classes?.ToString(fg);
-            Factions?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public SkyrimMod_ErrorMask Combine(SkyrimMod_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SkyrimMod_ErrorMask();
-            ret.ModHeader = new MaskItem<Exception?, ModHeader_ErrorMask?>(ExceptionExt.Combine(this.ModHeader?.Overall, rhs.ModHeader?.Overall), (this.ModHeader?.Specific as IErrorMask<ModHeader_ErrorMask>)?.Combine(rhs.ModHeader?.Specific));
-            ret.GameSettings = new MaskItem<Exception?, Group_ErrorMask<GameSetting_ErrorMask>?>(ExceptionExt.Combine(this.GameSettings?.Overall, rhs.GameSettings?.Overall), (this.GameSettings?.Specific as IErrorMask<Group_ErrorMask<GameSetting_ErrorMask>>)?.Combine(rhs.GameSettings?.Specific));
-            ret.Keywords = new MaskItem<Exception?, Group_ErrorMask<Keyword_ErrorMask>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), (this.Keywords?.Specific as IErrorMask<Group_ErrorMask<Keyword_ErrorMask>>)?.Combine(rhs.Keywords?.Specific));
-            ret.LocationReferenceTypes = new MaskItem<Exception?, Group_ErrorMask<LocationReferenceType_ErrorMask>?>(ExceptionExt.Combine(this.LocationReferenceTypes?.Overall, rhs.LocationReferenceTypes?.Overall), (this.LocationReferenceTypes?.Specific as IErrorMask<Group_ErrorMask<LocationReferenceType_ErrorMask>>)?.Combine(rhs.LocationReferenceTypes?.Specific));
-            ret.Actions = new MaskItem<Exception?, Group_ErrorMask<ActionRecord_ErrorMask>?>(ExceptionExt.Combine(this.Actions?.Overall, rhs.Actions?.Overall), (this.Actions?.Specific as IErrorMask<Group_ErrorMask<ActionRecord_ErrorMask>>)?.Combine(rhs.Actions?.Specific));
-            ret.TextureSets = new MaskItem<Exception?, Group_ErrorMask<TextureSet_ErrorMask>?>(ExceptionExt.Combine(this.TextureSets?.Overall, rhs.TextureSets?.Overall), (this.TextureSets?.Specific as IErrorMask<Group_ErrorMask<TextureSet_ErrorMask>>)?.Combine(rhs.TextureSets?.Specific));
-            ret.Globals = new MaskItem<Exception?, Group_ErrorMask<Global_ErrorMask>?>(ExceptionExt.Combine(this.Globals?.Overall, rhs.Globals?.Overall), (this.Globals?.Specific as IErrorMask<Group_ErrorMask<Global_ErrorMask>>)?.Combine(rhs.Globals?.Specific));
-            ret.Classes = new MaskItem<Exception?, Group_ErrorMask<Class_ErrorMask>?>(ExceptionExt.Combine(this.Classes?.Overall, rhs.Classes?.Overall), (this.Classes?.Specific as IErrorMask<Group_ErrorMask<Class_ErrorMask>>)?.Combine(rhs.Classes?.Specific));
-            ret.Factions = new MaskItem<Exception?, Group_ErrorMask<Faction_ErrorMask>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), (this.Factions?.Specific as IErrorMask<Group_ErrorMask<Faction_ErrorMask>>)?.Combine(rhs.Factions?.Specific));
-            return ret;
-        }
-        public static SkyrimMod_ErrorMask? Combine(SkyrimMod_ErrorMask? lhs, SkyrimMod_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static SkyrimMod_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SkyrimMod_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SkyrimMod_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public MaskItem<bool, ModHeader_TranslationMask?> ModHeader;
-        public MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>?> GameSettings;
-        public MaskItem<bool, Group_TranslationMask<Keyword_TranslationMask>?> Keywords;
-        public MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>?> LocationReferenceTypes;
-        public MaskItem<bool, Group_TranslationMask<ActionRecord_TranslationMask>?> Actions;
-        public MaskItem<bool, Group_TranslationMask<TextureSet_TranslationMask>?> TextureSets;
-        public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>?> Globals;
-        public MaskItem<bool, Group_TranslationMask<Class_TranslationMask>?> Classes;
-        public MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>?> Factions;
-        #endregion
-
-        #region Ctors
-        public SkyrimMod_TranslationMask(bool defaultOn)
-        {
-            this.ModHeader = new MaskItem<bool, ModHeader_TranslationMask?>(defaultOn, null);
-            this.GameSettings = new MaskItem<bool, Group_TranslationMask<GameSetting_TranslationMask>?>(defaultOn, null);
-            this.Keywords = new MaskItem<bool, Group_TranslationMask<Keyword_TranslationMask>?>(defaultOn, null);
-            this.LocationReferenceTypes = new MaskItem<bool, Group_TranslationMask<LocationReferenceType_TranslationMask>?>(defaultOn, null);
-            this.Actions = new MaskItem<bool, Group_TranslationMask<ActionRecord_TranslationMask>?>(defaultOn, null);
-            this.TextureSets = new MaskItem<bool, Group_TranslationMask<TextureSet_TranslationMask>?>(defaultOn, null);
-            this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>?>(defaultOn, null);
-            this.Classes = new MaskItem<bool, Group_TranslationMask<Class_TranslationMask>?>(defaultOn, null);
-            this.Factions = new MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((ModHeader?.Overall ?? true, ModHeader?.Specific?.GetCrystal()));
-            ret.Add((GameSettings?.Overall ?? true, GameSettings?.Specific?.GetCrystal()));
-            ret.Add((Keywords?.Overall ?? true, Keywords?.Specific?.GetCrystal()));
-            ret.Add((LocationReferenceTypes?.Overall ?? true, LocationReferenceTypes?.Specific?.GetCrystal()));
-            ret.Add((Actions?.Overall ?? true, Actions?.Specific?.GetCrystal()));
-            ret.Add((TextureSets?.Overall ?? true, TextureSets?.Specific?.GetCrystal()));
-            ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
-            ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
-            ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

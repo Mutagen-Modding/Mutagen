@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static GenderedBodyData CreateFromXml(
             XElement node,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -133,15 +133,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static GenderedBodyData CreateFromXml(
             XElement node,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GenderedBodyData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GenderedBodyData CreateFromXml(
             string path,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GenderedBodyData CreateFromXml(
             string path,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GenderedBodyData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GenderedBodyData CreateFromXml(
             Stream stream,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -205,8 +205,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GenderedBodyData CreateFromXml(
             Stream stream,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static GenderedBodyData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -229,6 +229,301 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Male = new MaskItem<T, BodyData.Mask<T>?>(initialValue, new BodyData.Mask<T>(initialValue));
+                this.Female = new MaskItem<T, BodyData.Mask<T>?>(initialValue, new BodyData.Mask<T>(initialValue));
+            }
+
+            public Mask(
+                T Male,
+                T Female)
+            {
+                this.Male = new MaskItem<T, BodyData.Mask<T>?>(Male, new BodyData.Mask<T>(Male));
+                this.Female = new MaskItem<T, BodyData.Mask<T>?>(Female, new BodyData.Mask<T>(Female));
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public MaskItem<T, BodyData.Mask<T>?>? Male { get; set; }
+            public MaskItem<T, BodyData.Mask<T>?>? Female { get; set; }
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Male, rhs.Male)) return false;
+                if (!object.Equals(this.Female, rhs.Female)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Male?.GetHashCode());
+                ret = ret.CombineHashCode(this.Female?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (Male != null)
+                {
+                    if (!eval(this.Male.Overall)) return false;
+                    if (this.Male.Specific != null && !this.Male.Specific.AllEqual(eval)) return false;
+                }
+                if (Female != null)
+                {
+                    if (!eval(this.Female.Overall)) return false;
+                    if (this.Female.Specific != null && !this.Female.Specific.AllEqual(eval)) return false;
+                }
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new GenderedBodyData.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Male = this.Male == null ? null : new MaskItem<R, BodyData.Mask<R>?>(eval(this.Male.Overall), this.Male.Specific?.Translate(eval));
+                obj.Female = this.Female == null ? null : new MaskItem<R, BodyData.Mask<R>?>(eval(this.Female.Overall), this.Female.Specific?.Translate(eval));
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(GenderedBodyData.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, GenderedBodyData.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(GenderedBodyData.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Male?.Overall ?? true)
+                    {
+                        Male?.ToString(fg);
+                    }
+                    if (printMask?.Female?.Overall ?? true)
+                    {
+                        Female?.ToString(fg);
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public MaskItem<Exception?, BodyData.ErrorMask?>? Male;
+            public MaskItem<Exception?, BodyData.ErrorMask?>? Female;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
+                switch (enu)
+                {
+                    case GenderedBodyData_FieldIndex.Male:
+                        return Male;
+                    case GenderedBodyData_FieldIndex.Female:
+                        return Female;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
+                switch (enu)
+                {
+                    case GenderedBodyData_FieldIndex.Male:
+                        this.Male = new MaskItem<Exception?, BodyData.ErrorMask?>(ex, null);
+                        break;
+                    case GenderedBodyData_FieldIndex.Female:
+                        this.Female = new MaskItem<Exception?, BodyData.ErrorMask?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
+                switch (enu)
+                {
+                    case GenderedBodyData_FieldIndex.Male:
+                        this.Male = (MaskItem<Exception?, BodyData.ErrorMask?>?)obj;
+                        break;
+                    case GenderedBodyData_FieldIndex.Female:
+                        this.Female = (MaskItem<Exception?, BodyData.ErrorMask?>?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Male != null) return true;
+                if (Female != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                Male?.ToString(fg);
+                Female?.ToString(fg);
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Male = new MaskItem<Exception?, BodyData.ErrorMask?>(ExceptionExt.Combine(this.Male?.Overall, rhs.Male?.Overall), (this.Male?.Specific as IErrorMask<BodyData.ErrorMask>)?.Combine(rhs.Male?.Specific));
+                ret.Female = new MaskItem<Exception?, BodyData.ErrorMask?>(ExceptionExt.Combine(this.Female?.Overall, rhs.Female?.Overall), (this.Female?.Specific as IErrorMask<BodyData.ErrorMask>)?.Combine(rhs.Female?.Specific));
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public MaskItem<bool, BodyData.TranslationMask?> Male;
+            public MaskItem<bool, BodyData.TranslationMask?> Female;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Male = new MaskItem<bool, BodyData.TranslationMask?>(defaultOn, null);
+                this.Female = new MaskItem<bool, BodyData.TranslationMask?>(defaultOn, null);
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Male?.Overall ?? true, Male?.Specific?.GetCrystal()));
+                ret.Add((Female?.Overall ?? true, Female?.Specific?.GetCrystal()));
+            }
+        }
         #endregion
 
         #region Binary Translation
@@ -330,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GenderedBodyDataSetterCommon)((IGenderedBodyDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static GenderedBodyData_Mask<bool> GetEqualsMask(
+        public static GenderedBodyData.Mask<bool> GetEqualsMask(
             this IGenderedBodyDataGetter item,
             IGenderedBodyDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -344,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IGenderedBodyDataGetter item,
             string? name = null,
-            GenderedBodyData_Mask<bool>? printMask = null)
+            GenderedBodyData.Mask<bool>? printMask = null)
         {
             return ((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -356,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyDataGetter item,
             FileGeneration fg,
             string? name = null,
-            GenderedBodyData_Mask<bool>? printMask = null)
+            GenderedBodyData.Mask<bool>? printMask = null)
         {
             ((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -367,16 +662,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IGenderedBodyDataGetter item,
-            GenderedBodyData_Mask<bool?> checkMask)
+            GenderedBodyData.Mask<bool?> checkMask)
         {
             return ((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static GenderedBodyData_Mask<bool> GetHasBeenSetMask(this IGenderedBodyDataGetter item)
+        public static GenderedBodyData.Mask<bool> GetHasBeenSetMask(this IGenderedBodyDataGetter item)
         {
-            var ret = new GenderedBodyData_Mask<bool>(false);
+            var ret = new GenderedBodyData.Mask<bool>(false);
             ((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -395,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs,
-            GenderedBodyData_TranslationMask? copyMask = null)
+            GenderedBodyData.TranslationMask? copyMask = null)
         {
             ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -407,8 +702,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? copyMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -416,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GenderedBodyData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -434,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GenderedBodyData DeepCopy(
             this IGenderedBodyDataGetter item,
-            GenderedBodyData_TranslationMask? copyMask = null)
+            GenderedBodyData.TranslationMask? copyMask = null)
         {
             return ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -443,8 +738,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static GenderedBodyData DeepCopy(
             this IGenderedBodyDataGetter item,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? copyMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? copyMask = null)
         {
             return ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -468,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGenderedBodyData item,
             XElement node,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -481,8 +776,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGenderedBodyData item,
             XElement node,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -490,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GenderedBodyData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -509,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGenderedBodyData item,
             string path,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -521,8 +816,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGenderedBodyData item,
             string path,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -536,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -549,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGenderedBodyData item,
             Stream stream,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -561,8 +856,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IGenderedBodyData item,
             Stream stream,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -576,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -650,9 +945,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(GenderedBodyData_Mask<>);
+        public static readonly Type MaskType = typeof(GenderedBodyData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GenderedBodyData_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GenderedBodyData.ErrorMask);
 
         public static readonly Type ClassType = typeof(GenderedBodyData);
 
@@ -939,12 +1234,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly GenderedBodyDataCommon Instance = new GenderedBodyDataCommon();
 
-        public GenderedBodyData_Mask<bool> GetEqualsMask(
+        public GenderedBodyData.Mask<bool> GetEqualsMask(
             IGenderedBodyDataGetter item,
             IGenderedBodyDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GenderedBodyData_Mask<bool>(false);
+            var ret = new GenderedBodyData.Mask<bool>(false);
             ((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -956,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IGenderedBodyDataGetter item,
             IGenderedBodyDataGetter rhs,
-            GenderedBodyData_Mask<bool> ret,
+            GenderedBodyData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -975,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IGenderedBodyDataGetter item,
             string? name = null,
-            GenderedBodyData_Mask<bool>? printMask = null)
+            GenderedBodyData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -990,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGenderedBodyDataGetter item,
             FileGeneration fg,
             string? name = null,
-            GenderedBodyData_Mask<bool>? printMask = null)
+            GenderedBodyData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1014,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IGenderedBodyDataGetter item,
             FileGeneration fg,
-            GenderedBodyData_Mask<bool>? printMask = null)
+            GenderedBodyData.Mask<bool>? printMask = null)
         {
             if (printMask?.Male?.Overall ?? true)
             {
@@ -1028,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IGenderedBodyDataGetter item,
-            GenderedBodyData_Mask<bool?> checkMask)
+            GenderedBodyData.Mask<bool?> checkMask)
         {
             if (checkMask.Male?.Overall.HasValue ?? false && checkMask.Male.Overall.Value != (item.Male != null)) return false;
             if (checkMask.Male?.Specific != null && (item.Male == null || !item.Male.HasBeenSet(checkMask.Male.Specific))) return false;
@@ -1039,12 +1334,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             IGenderedBodyDataGetter item,
-            GenderedBodyData_Mask<bool> mask)
+            GenderedBodyData.Mask<bool> mask)
         {
             var itemMale = item.Male;
-            mask.Male = new MaskItem<bool, BodyData_Mask<bool>?>(itemMale != null, itemMale?.GetHasBeenSetMask());
+            mask.Male = new MaskItem<bool, BodyData.Mask<bool>?>(itemMale != null, itemMale?.GetHasBeenSetMask());
             var itemFemale = item.Female;
-            mask.Female = new MaskItem<bool, BodyData_Mask<bool>?>(itemFemale != null, itemFemale?.GetHasBeenSetMask());
+            mask.Female = new MaskItem<bool, BodyData.Mask<bool>?>(itemFemale != null, itemFemale?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1159,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public GenderedBodyData DeepCopy(
             IGenderedBodyDataGetter item,
-            GenderedBodyData_TranslationMask? copyMask = null)
+            GenderedBodyData.TranslationMask? copyMask = null)
         {
             GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1170,8 +1465,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public GenderedBodyData DeepCopy(
             IGenderedBodyDataGetter item,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? copyMask = null)
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? copyMask = null)
         {
             GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1426,8 +1721,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             XElement node,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null,
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1437,14 +1732,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = GenderedBodyData_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GenderedBodyData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             string path,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null,
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1477,8 +1772,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IGenderedBodyDataGetter item,
             Stream stream,
-            out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask? translationMask = null,
+            out GenderedBodyData.ErrorMask errorMask,
+            GenderedBodyData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1527,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyDataGetter item,
             XElement node,
             string? name = null,
-            GenderedBodyData_TranslationMask? translationMask = null)
+            GenderedBodyData.TranslationMask? translationMask = null)
         {
             ((GenderedBodyDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1571,302 +1866,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class GenderedBodyData_Mask<T> :
-        IMask<T>,
-        IEquatable<GenderedBodyData_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public GenderedBodyData_Mask(T initialValue)
-        {
-            this.Male = new MaskItem<T, BodyData_Mask<T>?>(initialValue, new BodyData_Mask<T>(initialValue));
-            this.Female = new MaskItem<T, BodyData_Mask<T>?>(initialValue, new BodyData_Mask<T>(initialValue));
-        }
-
-        public GenderedBodyData_Mask(
-            T Male,
-            T Female)
-        {
-            this.Male = new MaskItem<T, BodyData_Mask<T>?>(Male, new BodyData_Mask<T>(Male));
-            this.Female = new MaskItem<T, BodyData_Mask<T>?>(Female, new BodyData_Mask<T>(Female));
-        }
-
-        #pragma warning disable CS8618
-        protected GenderedBodyData_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public MaskItem<T, BodyData_Mask<T>?>? Male { get; set; }
-        public MaskItem<T, BodyData_Mask<T>?>? Female { get; set; }
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is GenderedBodyData_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(GenderedBodyData_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Male, rhs.Male)) return false;
-            if (!object.Equals(this.Female, rhs.Female)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Male?.GetHashCode());
-            ret = ret.CombineHashCode(this.Female?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (Male != null)
-            {
-                if (!eval(this.Male.Overall)) return false;
-                if (this.Male.Specific != null && !this.Male.Specific.AllEqual(eval)) return false;
-            }
-            if (Female != null)
-            {
-                if (!eval(this.Female.Overall)) return false;
-                if (this.Female.Specific != null && !this.Female.Specific.AllEqual(eval)) return false;
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public GenderedBodyData_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new GenderedBodyData_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(GenderedBodyData_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Male = this.Male == null ? null : new MaskItem<R, BodyData_Mask<R>?>(eval(this.Male.Overall), this.Male.Specific?.Translate(eval));
-            obj.Female = this.Female == null ? null : new MaskItem<R, BodyData_Mask<R>?>(eval(this.Female.Overall), this.Female.Specific?.Translate(eval));
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(GenderedBodyData_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, GenderedBodyData_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(GenderedBodyData_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Male?.Overall ?? true)
-                {
-                    Male?.ToString(fg);
-                }
-                if (printMask?.Female?.Overall ?? true)
-                {
-                    Female?.ToString(fg);
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class GenderedBodyData_ErrorMask : IErrorMask, IErrorMask<GenderedBodyData_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public MaskItem<Exception?, BodyData_ErrorMask?>? Male;
-        public MaskItem<Exception?, BodyData_ErrorMask?>? Female;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    return Male;
-                case GenderedBodyData_FieldIndex.Female:
-                    return Female;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    this.Male = new MaskItem<Exception?, BodyData_ErrorMask?>(ex, null);
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    this.Female = new MaskItem<Exception?, BodyData_ErrorMask?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
-            switch (enu)
-            {
-                case GenderedBodyData_FieldIndex.Male:
-                    this.Male = (MaskItem<Exception?, BodyData_ErrorMask?>?)obj;
-                    break;
-                case GenderedBodyData_FieldIndex.Female:
-                    this.Female = (MaskItem<Exception?, BodyData_ErrorMask?>?)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Male != null) return true;
-            if (Female != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("GenderedBodyData_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            Male?.ToString(fg);
-            Female?.ToString(fg);
-        }
-        #endregion
-
-        #region Combine
-        public GenderedBodyData_ErrorMask Combine(GenderedBodyData_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new GenderedBodyData_ErrorMask();
-            ret.Male = new MaskItem<Exception?, BodyData_ErrorMask?>(ExceptionExt.Combine(this.Male?.Overall, rhs.Male?.Overall), (this.Male?.Specific as IErrorMask<BodyData_ErrorMask>)?.Combine(rhs.Male?.Specific));
-            ret.Female = new MaskItem<Exception?, BodyData_ErrorMask?>(ExceptionExt.Combine(this.Female?.Overall, rhs.Female?.Overall), (this.Female?.Specific as IErrorMask<BodyData_ErrorMask>)?.Combine(rhs.Female?.Specific));
-            return ret;
-        }
-        public static GenderedBodyData_ErrorMask? Combine(GenderedBodyData_ErrorMask? lhs, GenderedBodyData_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static GenderedBodyData_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new GenderedBodyData_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class GenderedBodyData_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public MaskItem<bool, BodyData_TranslationMask?> Male;
-        public MaskItem<bool, BodyData_TranslationMask?> Female;
-        #endregion
-
-        #region Ctors
-        public GenderedBodyData_TranslationMask(bool defaultOn)
-        {
-            this.Male = new MaskItem<bool, BodyData_TranslationMask?>(defaultOn, null);
-            this.Female = new MaskItem<bool, BodyData_TranslationMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Male?.Overall ?? true, Male?.Specific?.GetCrystal()));
-            ret.Add((Female?.Overall ?? true, Female?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 

@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionDataObject CreateFromXml(
             XElement node,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -181,15 +181,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static RegionDataObject CreateFromXml(
             XElement node,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataObject CreateFromXml(
             string path,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -219,8 +219,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataObject CreateFromXml(
             string path,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataObject CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataObject CreateFromXml(
             Stream stream,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -253,8 +253,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataObject CreateFromXml(
             Stream stream,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataObject CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -277,6 +277,698 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Object = initialValue;
+                this.ParentIndex = initialValue;
+                this.Unknown1 = initialValue;
+                this.Density = initialValue;
+                this.Clustering = initialValue;
+                this.MinSlope = initialValue;
+                this.MaxSlope = initialValue;
+                this.Flags = initialValue;
+                this.RadiusWrtPercent = initialValue;
+                this.Radius = initialValue;
+                this.MinHeight = initialValue;
+                this.MaxHeight = initialValue;
+                this.Sink = initialValue;
+                this.SinkVariance = initialValue;
+                this.SizeVariance = initialValue;
+                this.AngleVariance = initialValue;
+                this.Unknown2 = initialValue;
+            }
+
+            public Mask(
+                T Object,
+                T ParentIndex,
+                T Unknown1,
+                T Density,
+                T Clustering,
+                T MinSlope,
+                T MaxSlope,
+                T Flags,
+                T RadiusWrtPercent,
+                T Radius,
+                T MinHeight,
+                T MaxHeight,
+                T Sink,
+                T SinkVariance,
+                T SizeVariance,
+                T AngleVariance,
+                T Unknown2)
+            {
+                this.Object = Object;
+                this.ParentIndex = ParentIndex;
+                this.Unknown1 = Unknown1;
+                this.Density = Density;
+                this.Clustering = Clustering;
+                this.MinSlope = MinSlope;
+                this.MaxSlope = MaxSlope;
+                this.Flags = Flags;
+                this.RadiusWrtPercent = RadiusWrtPercent;
+                this.Radius = Radius;
+                this.MinHeight = MinHeight;
+                this.MaxHeight = MaxHeight;
+                this.Sink = Sink;
+                this.SinkVariance = SinkVariance;
+                this.SizeVariance = SizeVariance;
+                this.AngleVariance = AngleVariance;
+                this.Unknown2 = Unknown2;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Object;
+            public T ParentIndex;
+            public T Unknown1;
+            public T Density;
+            public T Clustering;
+            public T MinSlope;
+            public T MaxSlope;
+            public T Flags;
+            public T RadiusWrtPercent;
+            public T Radius;
+            public T MinHeight;
+            public T MaxHeight;
+            public T Sink;
+            public T SinkVariance;
+            public T SizeVariance;
+            public T AngleVariance;
+            public T Unknown2;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Object, rhs.Object)) return false;
+                if (!object.Equals(this.ParentIndex, rhs.ParentIndex)) return false;
+                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.Density, rhs.Density)) return false;
+                if (!object.Equals(this.Clustering, rhs.Clustering)) return false;
+                if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
+                if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.RadiusWrtPercent, rhs.RadiusWrtPercent)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.MinHeight, rhs.MinHeight)) return false;
+                if (!object.Equals(this.MaxHeight, rhs.MaxHeight)) return false;
+                if (!object.Equals(this.Sink, rhs.Sink)) return false;
+                if (!object.Equals(this.SinkVariance, rhs.SinkVariance)) return false;
+                if (!object.Equals(this.SizeVariance, rhs.SizeVariance)) return false;
+                if (!object.Equals(this.AngleVariance, rhs.AngleVariance)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Object?.GetHashCode());
+                ret = ret.CombineHashCode(this.ParentIndex?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
+                ret = ret.CombineHashCode(this.Density?.GetHashCode());
+                ret = ret.CombineHashCode(this.Clustering?.GetHashCode());
+                ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
+                ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+                ret = ret.CombineHashCode(this.RadiusWrtPercent?.GetHashCode());
+                ret = ret.CombineHashCode(this.Radius?.GetHashCode());
+                ret = ret.CombineHashCode(this.MinHeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.MaxHeight?.GetHashCode());
+                ret = ret.CombineHashCode(this.Sink?.GetHashCode());
+                ret = ret.CombineHashCode(this.SinkVariance?.GetHashCode());
+                ret = ret.CombineHashCode(this.SizeVariance?.GetHashCode());
+                ret = ret.CombineHashCode(this.AngleVariance?.GetHashCode());
+                ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Object)) return false;
+                if (!eval(this.ParentIndex)) return false;
+                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.Density)) return false;
+                if (!eval(this.Clustering)) return false;
+                if (!eval(this.MinSlope)) return false;
+                if (!eval(this.MaxSlope)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.RadiusWrtPercent)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.MinHeight)) return false;
+                if (!eval(this.MaxHeight)) return false;
+                if (!eval(this.Sink)) return false;
+                if (!eval(this.SinkVariance)) return false;
+                if (!eval(this.SizeVariance)) return false;
+                if (!eval(this.AngleVariance)) return false;
+                if (!eval(this.Unknown2)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new RegionDataObject.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Object = eval(this.Object);
+                obj.ParentIndex = eval(this.ParentIndex);
+                obj.Unknown1 = eval(this.Unknown1);
+                obj.Density = eval(this.Density);
+                obj.Clustering = eval(this.Clustering);
+                obj.MinSlope = eval(this.MinSlope);
+                obj.MaxSlope = eval(this.MaxSlope);
+                obj.Flags = eval(this.Flags);
+                obj.RadiusWrtPercent = eval(this.RadiusWrtPercent);
+                obj.Radius = eval(this.Radius);
+                obj.MinHeight = eval(this.MinHeight);
+                obj.MaxHeight = eval(this.MaxHeight);
+                obj.Sink = eval(this.Sink);
+                obj.SinkVariance = eval(this.SinkVariance);
+                obj.SizeVariance = eval(this.SizeVariance);
+                obj.AngleVariance = eval(this.AngleVariance);
+                obj.Unknown2 = eval(this.Unknown2);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(RegionDataObject.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, RegionDataObject.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(RegionDataObject.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Object ?? true)
+                    {
+                        fg.AppendLine($"Object => {Object}");
+                    }
+                    if (printMask?.ParentIndex ?? true)
+                    {
+                        fg.AppendLine($"ParentIndex => {ParentIndex}");
+                    }
+                    if (printMask?.Unknown1 ?? true)
+                    {
+                        fg.AppendLine($"Unknown1 => {Unknown1}");
+                    }
+                    if (printMask?.Density ?? true)
+                    {
+                        fg.AppendLine($"Density => {Density}");
+                    }
+                    if (printMask?.Clustering ?? true)
+                    {
+                        fg.AppendLine($"Clustering => {Clustering}");
+                    }
+                    if (printMask?.MinSlope ?? true)
+                    {
+                        fg.AppendLine($"MinSlope => {MinSlope}");
+                    }
+                    if (printMask?.MaxSlope ?? true)
+                    {
+                        fg.AppendLine($"MaxSlope => {MaxSlope}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendLine($"Flags => {Flags}");
+                    }
+                    if (printMask?.RadiusWrtPercent ?? true)
+                    {
+                        fg.AppendLine($"RadiusWrtPercent => {RadiusWrtPercent}");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendLine($"Radius => {Radius}");
+                    }
+                    if (printMask?.MinHeight ?? true)
+                    {
+                        fg.AppendLine($"MinHeight => {MinHeight}");
+                    }
+                    if (printMask?.MaxHeight ?? true)
+                    {
+                        fg.AppendLine($"MaxHeight => {MaxHeight}");
+                    }
+                    if (printMask?.Sink ?? true)
+                    {
+                        fg.AppendLine($"Sink => {Sink}");
+                    }
+                    if (printMask?.SinkVariance ?? true)
+                    {
+                        fg.AppendLine($"SinkVariance => {SinkVariance}");
+                    }
+                    if (printMask?.SizeVariance ?? true)
+                    {
+                        fg.AppendLine($"SizeVariance => {SizeVariance}");
+                    }
+                    if (printMask?.AngleVariance ?? true)
+                    {
+                        fg.AppendLine($"AngleVariance => {AngleVariance}");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendLine($"Unknown2 => {Unknown2}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Object;
+            public Exception? ParentIndex;
+            public Exception? Unknown1;
+            public Exception? Density;
+            public Exception? Clustering;
+            public Exception? MinSlope;
+            public Exception? MaxSlope;
+            public Exception? Flags;
+            public Exception? RadiusWrtPercent;
+            public Exception? Radius;
+            public Exception? MinHeight;
+            public Exception? MaxHeight;
+            public Exception? Sink;
+            public Exception? SinkVariance;
+            public Exception? SizeVariance;
+            public Exception? AngleVariance;
+            public Exception? Unknown2;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataObject_FieldIndex.Object:
+                        return Object;
+                    case RegionDataObject_FieldIndex.ParentIndex:
+                        return ParentIndex;
+                    case RegionDataObject_FieldIndex.Unknown1:
+                        return Unknown1;
+                    case RegionDataObject_FieldIndex.Density:
+                        return Density;
+                    case RegionDataObject_FieldIndex.Clustering:
+                        return Clustering;
+                    case RegionDataObject_FieldIndex.MinSlope:
+                        return MinSlope;
+                    case RegionDataObject_FieldIndex.MaxSlope:
+                        return MaxSlope;
+                    case RegionDataObject_FieldIndex.Flags:
+                        return Flags;
+                    case RegionDataObject_FieldIndex.RadiusWrtPercent:
+                        return RadiusWrtPercent;
+                    case RegionDataObject_FieldIndex.Radius:
+                        return Radius;
+                    case RegionDataObject_FieldIndex.MinHeight:
+                        return MinHeight;
+                    case RegionDataObject_FieldIndex.MaxHeight:
+                        return MaxHeight;
+                    case RegionDataObject_FieldIndex.Sink:
+                        return Sink;
+                    case RegionDataObject_FieldIndex.SinkVariance:
+                        return SinkVariance;
+                    case RegionDataObject_FieldIndex.SizeVariance:
+                        return SizeVariance;
+                    case RegionDataObject_FieldIndex.AngleVariance:
+                        return AngleVariance;
+                    case RegionDataObject_FieldIndex.Unknown2:
+                        return Unknown2;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataObject_FieldIndex.Object:
+                        this.Object = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.ParentIndex:
+                        this.ParentIndex = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Unknown1:
+                        this.Unknown1 = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Density:
+                        this.Density = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Clustering:
+                        this.Clustering = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.MinSlope:
+                        this.MinSlope = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.MaxSlope:
+                        this.MaxSlope = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.RadiusWrtPercent:
+                        this.RadiusWrtPercent = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.MinHeight:
+                        this.MinHeight = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.MaxHeight:
+                        this.MaxHeight = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Sink:
+                        this.Sink = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.SinkVariance:
+                        this.SinkVariance = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.SizeVariance:
+                        this.SizeVariance = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.AngleVariance:
+                        this.AngleVariance = ex;
+                        break;
+                    case RegionDataObject_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
+                switch (enu)
+                {
+                    case RegionDataObject_FieldIndex.Object:
+                        this.Object = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.ParentIndex:
+                        this.ParentIndex = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Unknown1:
+                        this.Unknown1 = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Density:
+                        this.Density = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Clustering:
+                        this.Clustering = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.MinSlope:
+                        this.MinSlope = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.MaxSlope:
+                        this.MaxSlope = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Flags:
+                        this.Flags = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.RadiusWrtPercent:
+                        this.RadiusWrtPercent = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Radius:
+                        this.Radius = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.MinHeight:
+                        this.MinHeight = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.MaxHeight:
+                        this.MaxHeight = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Sink:
+                        this.Sink = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.SinkVariance:
+                        this.SinkVariance = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.SizeVariance:
+                        this.SizeVariance = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.AngleVariance:
+                        this.AngleVariance = (Exception)obj;
+                        break;
+                    case RegionDataObject_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Object != null) return true;
+                if (ParentIndex != null) return true;
+                if (Unknown1 != null) return true;
+                if (Density != null) return true;
+                if (Clustering != null) return true;
+                if (MinSlope != null) return true;
+                if (MaxSlope != null) return true;
+                if (Flags != null) return true;
+                if (RadiusWrtPercent != null) return true;
+                if (Radius != null) return true;
+                if (MinHeight != null) return true;
+                if (MaxHeight != null) return true;
+                if (Sink != null) return true;
+                if (SinkVariance != null) return true;
+                if (SizeVariance != null) return true;
+                if (AngleVariance != null) return true;
+                if (Unknown2 != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Object => {Object}");
+                fg.AppendLine($"ParentIndex => {ParentIndex}");
+                fg.AppendLine($"Unknown1 => {Unknown1}");
+                fg.AppendLine($"Density => {Density}");
+                fg.AppendLine($"Clustering => {Clustering}");
+                fg.AppendLine($"MinSlope => {MinSlope}");
+                fg.AppendLine($"MaxSlope => {MaxSlope}");
+                fg.AppendLine($"Flags => {Flags}");
+                fg.AppendLine($"RadiusWrtPercent => {RadiusWrtPercent}");
+                fg.AppendLine($"Radius => {Radius}");
+                fg.AppendLine($"MinHeight => {MinHeight}");
+                fg.AppendLine($"MaxHeight => {MaxHeight}");
+                fg.AppendLine($"Sink => {Sink}");
+                fg.AppendLine($"SinkVariance => {SinkVariance}");
+                fg.AppendLine($"SizeVariance => {SizeVariance}");
+                fg.AppendLine($"AngleVariance => {AngleVariance}");
+                fg.AppendLine($"Unknown2 => {Unknown2}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Object = this.Object.Combine(rhs.Object);
+                ret.ParentIndex = this.ParentIndex.Combine(rhs.ParentIndex);
+                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.Density = this.Density.Combine(rhs.Density);
+                ret.Clustering = this.Clustering.Combine(rhs.Clustering);
+                ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
+                ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.RadiusWrtPercent = this.RadiusWrtPercent.Combine(rhs.RadiusWrtPercent);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.MinHeight = this.MinHeight.Combine(rhs.MinHeight);
+                ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight);
+                ret.Sink = this.Sink.Combine(rhs.Sink);
+                ret.SinkVariance = this.SinkVariance.Combine(rhs.SinkVariance);
+                ret.SizeVariance = this.SizeVariance.Combine(rhs.SizeVariance);
+                ret.AngleVariance = this.AngleVariance.Combine(rhs.AngleVariance);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Object;
+            public bool ParentIndex;
+            public bool Unknown1;
+            public bool Density;
+            public bool Clustering;
+            public bool MinSlope;
+            public bool MaxSlope;
+            public bool Flags;
+            public bool RadiusWrtPercent;
+            public bool Radius;
+            public bool MinHeight;
+            public bool MaxHeight;
+            public bool Sink;
+            public bool SinkVariance;
+            public bool SizeVariance;
+            public bool AngleVariance;
+            public bool Unknown2;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Object = defaultOn;
+                this.ParentIndex = defaultOn;
+                this.Unknown1 = defaultOn;
+                this.Density = defaultOn;
+                this.Clustering = defaultOn;
+                this.MinSlope = defaultOn;
+                this.MaxSlope = defaultOn;
+                this.Flags = defaultOn;
+                this.RadiusWrtPercent = defaultOn;
+                this.Radius = defaultOn;
+                this.MinHeight = defaultOn;
+                this.MaxHeight = defaultOn;
+                this.Sink = defaultOn;
+                this.SinkVariance = defaultOn;
+                this.SizeVariance = defaultOn;
+                this.AngleVariance = defaultOn;
+                this.Unknown2 = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Object, null));
+                ret.Add((ParentIndex, null));
+                ret.Add((Unknown1, null));
+                ret.Add((Density, null));
+                ret.Add((Clustering, null));
+                ret.Add((MinSlope, null));
+                ret.Add((MaxSlope, null));
+                ret.Add((Flags, null));
+                ret.Add((RadiusWrtPercent, null));
+                ret.Add((Radius, null));
+                ret.Add((MinHeight, null));
+                ret.Add((MaxHeight, null));
+                ret.Add((Sink, null));
+                ret.Add((SinkVariance, null));
+                ret.Add((SizeVariance, null));
+                ret.Add((AngleVariance, null));
+                ret.Add((Unknown2, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -414,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataObjectSetterCommon)((IRegionDataObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionDataObject_Mask<bool> GetEqualsMask(
+        public static RegionDataObject.Mask<bool> GetEqualsMask(
             this IRegionDataObjectGetter item,
             IRegionDataObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -428,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this IRegionDataObjectGetter item,
             string? name = null,
-            RegionDataObject_Mask<bool>? printMask = null)
+            RegionDataObject.Mask<bool>? printMask = null)
         {
             return ((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -440,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObjectGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionDataObject_Mask<bool>? printMask = null)
+            RegionDataObject.Mask<bool>? printMask = null)
         {
             ((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -451,16 +1143,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this IRegionDataObjectGetter item,
-            RegionDataObject_Mask<bool?> checkMask)
+            RegionDataObject.Mask<bool?> checkMask)
         {
             return ((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static RegionDataObject_Mask<bool> GetHasBeenSetMask(this IRegionDataObjectGetter item)
+        public static RegionDataObject.Mask<bool> GetHasBeenSetMask(this IRegionDataObjectGetter item)
         {
-            var ret = new RegionDataObject_Mask<bool>(false);
+            var ret = new RegionDataObject.Mask<bool>(false);
             ((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -479,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionDataObject lhs,
             IRegionDataObjectGetter rhs,
-            RegionDataObject_TranslationMask? copyMask = null)
+            RegionDataObject.TranslationMask? copyMask = null)
         {
             ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -491,8 +1183,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this IRegionDataObject lhs,
             IRegionDataObjectGetter rhs,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? copyMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -500,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -518,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataObject DeepCopy(
             this IRegionDataObjectGetter item,
-            RegionDataObject_TranslationMask? copyMask = null)
+            RegionDataObject.TranslationMask? copyMask = null)
         {
             return ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -527,8 +1219,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static RegionDataObject DeepCopy(
             this IRegionDataObjectGetter item,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? copyMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? copyMask = null)
         {
             return ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -552,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataObject item,
             XElement node,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -565,8 +1257,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataObject item,
             XElement node,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -574,7 +1266,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -593,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataObject item,
             string path,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -605,8 +1297,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataObject item,
             string path,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -620,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObject item,
             string path,
             ErrorMaskBuilder? errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -633,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataObject item,
             Stream stream,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -645,8 +1337,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this IRegionDataObject item,
             Stream stream,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -660,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObject item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -749,9 +1441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 17;
 
-        public static readonly Type MaskType = typeof(RegionDataObject_Mask<>);
+        public static readonly Type MaskType = typeof(RegionDataObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionDataObject_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionDataObject.ErrorMask);
 
         public static readonly Type ClassType = typeof(RegionDataObject);
 
@@ -1186,12 +1878,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly RegionDataObjectCommon Instance = new RegionDataObjectCommon();
 
-        public RegionDataObject_Mask<bool> GetEqualsMask(
+        public RegionDataObject.Mask<bool> GetEqualsMask(
             IRegionDataObjectGetter item,
             IRegionDataObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionDataObject_Mask<bool>(false);
+            var ret = new RegionDataObject.Mask<bool>(false);
             ((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1203,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IRegionDataObjectGetter item,
             IRegionDataObjectGetter rhs,
-            RegionDataObject_Mask<bool> ret,
+            RegionDataObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1229,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IRegionDataObjectGetter item,
             string? name = null,
-            RegionDataObject_Mask<bool>? printMask = null)
+            RegionDataObject.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1244,7 +1936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectGetter item,
             FileGeneration fg,
             string? name = null,
-            RegionDataObject_Mask<bool>? printMask = null)
+            RegionDataObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1268,7 +1960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IRegionDataObjectGetter item,
             FileGeneration fg,
-            RegionDataObject_Mask<bool>? printMask = null)
+            RegionDataObject.Mask<bool>? printMask = null)
         {
             if (printMask?.Object ?? true)
             {
@@ -1342,14 +2034,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IRegionDataObjectGetter item,
-            RegionDataObject_Mask<bool?> checkMask)
+            RegionDataObject.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IRegionDataObjectGetter item,
-            RegionDataObject_Mask<bool> mask)
+            RegionDataObject.Mask<bool> mask)
         {
             mask.Object = true;
             mask.ParentIndex = true;
@@ -1523,7 +2215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataObject DeepCopy(
             IRegionDataObjectGetter item,
-            RegionDataObject_TranslationMask? copyMask = null)
+            RegionDataObject.TranslationMask? copyMask = null)
         {
             RegionDataObject ret = (RegionDataObject)((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1534,8 +2226,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataObject DeepCopy(
             IRegionDataObjectGetter item,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? copyMask = null)
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? copyMask = null)
         {
             RegionDataObject ret = (RegionDataObject)((RegionDataObjectCommon)((IRegionDataObjectGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -2190,8 +2882,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataObjectGetter item,
             XElement node,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null,
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -2201,14 +2893,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionDataObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this IRegionDataObjectGetter item,
             string path,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null,
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2241,8 +2933,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this IRegionDataObjectGetter item,
             Stream stream,
-            out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_TranslationMask? translationMask = null,
+            out RegionDataObject.ErrorMask errorMask,
+            RegionDataObject.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2291,7 +2983,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObjectGetter item,
             XElement node,
             string? name = null,
-            RegionDataObject_TranslationMask? translationMask = null)
+            RegionDataObject.TranslationMask? translationMask = null)
         {
             ((RegionDataObjectXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -2335,699 +3027,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class RegionDataObject_Mask<T> :
-        IMask<T>,
-        IEquatable<RegionDataObject_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public RegionDataObject_Mask(T initialValue)
-        {
-            this.Object = initialValue;
-            this.ParentIndex = initialValue;
-            this.Unknown1 = initialValue;
-            this.Density = initialValue;
-            this.Clustering = initialValue;
-            this.MinSlope = initialValue;
-            this.MaxSlope = initialValue;
-            this.Flags = initialValue;
-            this.RadiusWrtPercent = initialValue;
-            this.Radius = initialValue;
-            this.MinHeight = initialValue;
-            this.MaxHeight = initialValue;
-            this.Sink = initialValue;
-            this.SinkVariance = initialValue;
-            this.SizeVariance = initialValue;
-            this.AngleVariance = initialValue;
-            this.Unknown2 = initialValue;
-        }
-
-        public RegionDataObject_Mask(
-            T Object,
-            T ParentIndex,
-            T Unknown1,
-            T Density,
-            T Clustering,
-            T MinSlope,
-            T MaxSlope,
-            T Flags,
-            T RadiusWrtPercent,
-            T Radius,
-            T MinHeight,
-            T MaxHeight,
-            T Sink,
-            T SinkVariance,
-            T SizeVariance,
-            T AngleVariance,
-            T Unknown2)
-        {
-            this.Object = Object;
-            this.ParentIndex = ParentIndex;
-            this.Unknown1 = Unknown1;
-            this.Density = Density;
-            this.Clustering = Clustering;
-            this.MinSlope = MinSlope;
-            this.MaxSlope = MaxSlope;
-            this.Flags = Flags;
-            this.RadiusWrtPercent = RadiusWrtPercent;
-            this.Radius = Radius;
-            this.MinHeight = MinHeight;
-            this.MaxHeight = MaxHeight;
-            this.Sink = Sink;
-            this.SinkVariance = SinkVariance;
-            this.SizeVariance = SizeVariance;
-            this.AngleVariance = AngleVariance;
-            this.Unknown2 = Unknown2;
-        }
-
-        #pragma warning disable CS8618
-        protected RegionDataObject_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Object;
-        public T ParentIndex;
-        public T Unknown1;
-        public T Density;
-        public T Clustering;
-        public T MinSlope;
-        public T MaxSlope;
-        public T Flags;
-        public T RadiusWrtPercent;
-        public T Radius;
-        public T MinHeight;
-        public T MaxHeight;
-        public T Sink;
-        public T SinkVariance;
-        public T SizeVariance;
-        public T AngleVariance;
-        public T Unknown2;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RegionDataObject_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(RegionDataObject_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Object, rhs.Object)) return false;
-            if (!object.Equals(this.ParentIndex, rhs.ParentIndex)) return false;
-            if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-            if (!object.Equals(this.Density, rhs.Density)) return false;
-            if (!object.Equals(this.Clustering, rhs.Clustering)) return false;
-            if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
-            if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.RadiusWrtPercent, rhs.RadiusWrtPercent)) return false;
-            if (!object.Equals(this.Radius, rhs.Radius)) return false;
-            if (!object.Equals(this.MinHeight, rhs.MinHeight)) return false;
-            if (!object.Equals(this.MaxHeight, rhs.MaxHeight)) return false;
-            if (!object.Equals(this.Sink, rhs.Sink)) return false;
-            if (!object.Equals(this.SinkVariance, rhs.SinkVariance)) return false;
-            if (!object.Equals(this.SizeVariance, rhs.SizeVariance)) return false;
-            if (!object.Equals(this.AngleVariance, rhs.AngleVariance)) return false;
-            if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Object?.GetHashCode());
-            ret = ret.CombineHashCode(this.ParentIndex?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown1?.GetHashCode());
-            ret = ret.CombineHashCode(this.Density?.GetHashCode());
-            ret = ret.CombineHashCode(this.Clustering?.GetHashCode());
-            ret = ret.CombineHashCode(this.MinSlope?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaxSlope?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.RadiusWrtPercent?.GetHashCode());
-            ret = ret.CombineHashCode(this.Radius?.GetHashCode());
-            ret = ret.CombineHashCode(this.MinHeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaxHeight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sink?.GetHashCode());
-            ret = ret.CombineHashCode(this.SinkVariance?.GetHashCode());
-            ret = ret.CombineHashCode(this.SizeVariance?.GetHashCode());
-            ret = ret.CombineHashCode(this.AngleVariance?.GetHashCode());
-            ret = ret.CombineHashCode(this.Unknown2?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Object)) return false;
-            if (!eval(this.ParentIndex)) return false;
-            if (!eval(this.Unknown1)) return false;
-            if (!eval(this.Density)) return false;
-            if (!eval(this.Clustering)) return false;
-            if (!eval(this.MinSlope)) return false;
-            if (!eval(this.MaxSlope)) return false;
-            if (!eval(this.Flags)) return false;
-            if (!eval(this.RadiusWrtPercent)) return false;
-            if (!eval(this.Radius)) return false;
-            if (!eval(this.MinHeight)) return false;
-            if (!eval(this.MaxHeight)) return false;
-            if (!eval(this.Sink)) return false;
-            if (!eval(this.SinkVariance)) return false;
-            if (!eval(this.SizeVariance)) return false;
-            if (!eval(this.AngleVariance)) return false;
-            if (!eval(this.Unknown2)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public RegionDataObject_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new RegionDataObject_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(RegionDataObject_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Object = eval(this.Object);
-            obj.ParentIndex = eval(this.ParentIndex);
-            obj.Unknown1 = eval(this.Unknown1);
-            obj.Density = eval(this.Density);
-            obj.Clustering = eval(this.Clustering);
-            obj.MinSlope = eval(this.MinSlope);
-            obj.MaxSlope = eval(this.MaxSlope);
-            obj.Flags = eval(this.Flags);
-            obj.RadiusWrtPercent = eval(this.RadiusWrtPercent);
-            obj.Radius = eval(this.Radius);
-            obj.MinHeight = eval(this.MinHeight);
-            obj.MaxHeight = eval(this.MaxHeight);
-            obj.Sink = eval(this.Sink);
-            obj.SinkVariance = eval(this.SinkVariance);
-            obj.SizeVariance = eval(this.SizeVariance);
-            obj.AngleVariance = eval(this.AngleVariance);
-            obj.Unknown2 = eval(this.Unknown2);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(RegionDataObject_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, RegionDataObject_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(RegionDataObject_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Object ?? true)
-                {
-                    fg.AppendLine($"Object => {Object}");
-                }
-                if (printMask?.ParentIndex ?? true)
-                {
-                    fg.AppendLine($"ParentIndex => {ParentIndex}");
-                }
-                if (printMask?.Unknown1 ?? true)
-                {
-                    fg.AppendLine($"Unknown1 => {Unknown1}");
-                }
-                if (printMask?.Density ?? true)
-                {
-                    fg.AppendLine($"Density => {Density}");
-                }
-                if (printMask?.Clustering ?? true)
-                {
-                    fg.AppendLine($"Clustering => {Clustering}");
-                }
-                if (printMask?.MinSlope ?? true)
-                {
-                    fg.AppendLine($"MinSlope => {MinSlope}");
-                }
-                if (printMask?.MaxSlope ?? true)
-                {
-                    fg.AppendLine($"MaxSlope => {MaxSlope}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.RadiusWrtPercent ?? true)
-                {
-                    fg.AppendLine($"RadiusWrtPercent => {RadiusWrtPercent}");
-                }
-                if (printMask?.Radius ?? true)
-                {
-                    fg.AppendLine($"Radius => {Radius}");
-                }
-                if (printMask?.MinHeight ?? true)
-                {
-                    fg.AppendLine($"MinHeight => {MinHeight}");
-                }
-                if (printMask?.MaxHeight ?? true)
-                {
-                    fg.AppendLine($"MaxHeight => {MaxHeight}");
-                }
-                if (printMask?.Sink ?? true)
-                {
-                    fg.AppendLine($"Sink => {Sink}");
-                }
-                if (printMask?.SinkVariance ?? true)
-                {
-                    fg.AppendLine($"SinkVariance => {SinkVariance}");
-                }
-                if (printMask?.SizeVariance ?? true)
-                {
-                    fg.AppendLine($"SizeVariance => {SizeVariance}");
-                }
-                if (printMask?.AngleVariance ?? true)
-                {
-                    fg.AppendLine($"AngleVariance => {AngleVariance}");
-                }
-                if (printMask?.Unknown2 ?? true)
-                {
-                    fg.AppendLine($"Unknown2 => {Unknown2}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class RegionDataObject_ErrorMask : IErrorMask, IErrorMask<RegionDataObject_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Object;
-        public Exception? ParentIndex;
-        public Exception? Unknown1;
-        public Exception? Density;
-        public Exception? Clustering;
-        public Exception? MinSlope;
-        public Exception? MaxSlope;
-        public Exception? Flags;
-        public Exception? RadiusWrtPercent;
-        public Exception? Radius;
-        public Exception? MinHeight;
-        public Exception? MaxHeight;
-        public Exception? Sink;
-        public Exception? SinkVariance;
-        public Exception? SizeVariance;
-        public Exception? AngleVariance;
-        public Exception? Unknown2;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    return Object;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    return ParentIndex;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    return Unknown1;
-                case RegionDataObject_FieldIndex.Density:
-                    return Density;
-                case RegionDataObject_FieldIndex.Clustering:
-                    return Clustering;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    return MinSlope;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    return MaxSlope;
-                case RegionDataObject_FieldIndex.Flags:
-                    return Flags;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    return RadiusWrtPercent;
-                case RegionDataObject_FieldIndex.Radius:
-                    return Radius;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    return MinHeight;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    return MaxHeight;
-                case RegionDataObject_FieldIndex.Sink:
-                    return Sink;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    return SinkVariance;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    return SizeVariance;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    return AngleVariance;
-                case RegionDataObject_FieldIndex.Unknown2:
-                    return Unknown2;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    this.Object = ex;
-                    break;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    this.ParentIndex = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    this.Unknown1 = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Density:
-                    this.Density = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Clustering:
-                    this.Clustering = ex;
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    this.MinSlope = ex;
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    this.MaxSlope = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    this.RadiusWrtPercent = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    this.Radius = ex;
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    this.MinHeight = ex;
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    this.MaxHeight = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    this.Sink = ex;
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    this.SinkVariance = ex;
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    this.SizeVariance = ex;
-                    break;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    this.AngleVariance = ex;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown2:
-                    this.Unknown2 = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            RegionDataObject_FieldIndex enu = (RegionDataObject_FieldIndex)index;
-            switch (enu)
-            {
-                case RegionDataObject_FieldIndex.Object:
-                    this.Object = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.ParentIndex:
-                    this.ParentIndex = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown1:
-                    this.Unknown1 = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Density:
-                    this.Density = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Clustering:
-                    this.Clustering = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MinSlope:
-                    this.MinSlope = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MaxSlope:
-                    this.MaxSlope = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.RadiusWrtPercent:
-                    this.RadiusWrtPercent = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Radius:
-                    this.Radius = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MinHeight:
-                    this.MinHeight = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.MaxHeight:
-                    this.MaxHeight = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Sink:
-                    this.Sink = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.SinkVariance:
-                    this.SinkVariance = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.SizeVariance:
-                    this.SizeVariance = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.AngleVariance:
-                    this.AngleVariance = (Exception)obj;
-                    break;
-                case RegionDataObject_FieldIndex.Unknown2:
-                    this.Unknown2 = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Object != null) return true;
-            if (ParentIndex != null) return true;
-            if (Unknown1 != null) return true;
-            if (Density != null) return true;
-            if (Clustering != null) return true;
-            if (MinSlope != null) return true;
-            if (MaxSlope != null) return true;
-            if (Flags != null) return true;
-            if (RadiusWrtPercent != null) return true;
-            if (Radius != null) return true;
-            if (MinHeight != null) return true;
-            if (MaxHeight != null) return true;
-            if (Sink != null) return true;
-            if (SinkVariance != null) return true;
-            if (SizeVariance != null) return true;
-            if (AngleVariance != null) return true;
-            if (Unknown2 != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("RegionDataObject_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Object => {Object}");
-            fg.AppendLine($"ParentIndex => {ParentIndex}");
-            fg.AppendLine($"Unknown1 => {Unknown1}");
-            fg.AppendLine($"Density => {Density}");
-            fg.AppendLine($"Clustering => {Clustering}");
-            fg.AppendLine($"MinSlope => {MinSlope}");
-            fg.AppendLine($"MaxSlope => {MaxSlope}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine($"RadiusWrtPercent => {RadiusWrtPercent}");
-            fg.AppendLine($"Radius => {Radius}");
-            fg.AppendLine($"MinHeight => {MinHeight}");
-            fg.AppendLine($"MaxHeight => {MaxHeight}");
-            fg.AppendLine($"Sink => {Sink}");
-            fg.AppendLine($"SinkVariance => {SinkVariance}");
-            fg.AppendLine($"SizeVariance => {SizeVariance}");
-            fg.AppendLine($"AngleVariance => {AngleVariance}");
-            fg.AppendLine($"Unknown2 => {Unknown2}");
-        }
-        #endregion
-
-        #region Combine
-        public RegionDataObject_ErrorMask Combine(RegionDataObject_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new RegionDataObject_ErrorMask();
-            ret.Object = this.Object.Combine(rhs.Object);
-            ret.ParentIndex = this.ParentIndex.Combine(rhs.ParentIndex);
-            ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-            ret.Density = this.Density.Combine(rhs.Density);
-            ret.Clustering = this.Clustering.Combine(rhs.Clustering);
-            ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
-            ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.RadiusWrtPercent = this.RadiusWrtPercent.Combine(rhs.RadiusWrtPercent);
-            ret.Radius = this.Radius.Combine(rhs.Radius);
-            ret.MinHeight = this.MinHeight.Combine(rhs.MinHeight);
-            ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight);
-            ret.Sink = this.Sink.Combine(rhs.Sink);
-            ret.SinkVariance = this.SinkVariance.Combine(rhs.SinkVariance);
-            ret.SizeVariance = this.SizeVariance.Combine(rhs.SizeVariance);
-            ret.AngleVariance = this.AngleVariance.Combine(rhs.AngleVariance);
-            ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-            return ret;
-        }
-        public static RegionDataObject_ErrorMask? Combine(RegionDataObject_ErrorMask? lhs, RegionDataObject_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static RegionDataObject_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new RegionDataObject_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class RegionDataObject_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Object;
-        public bool ParentIndex;
-        public bool Unknown1;
-        public bool Density;
-        public bool Clustering;
-        public bool MinSlope;
-        public bool MaxSlope;
-        public bool Flags;
-        public bool RadiusWrtPercent;
-        public bool Radius;
-        public bool MinHeight;
-        public bool MaxHeight;
-        public bool Sink;
-        public bool SinkVariance;
-        public bool SizeVariance;
-        public bool AngleVariance;
-        public bool Unknown2;
-        #endregion
-
-        #region Ctors
-        public RegionDataObject_TranslationMask(bool defaultOn)
-        {
-            this.Object = defaultOn;
-            this.ParentIndex = defaultOn;
-            this.Unknown1 = defaultOn;
-            this.Density = defaultOn;
-            this.Clustering = defaultOn;
-            this.MinSlope = defaultOn;
-            this.MaxSlope = defaultOn;
-            this.Flags = defaultOn;
-            this.RadiusWrtPercent = defaultOn;
-            this.Radius = defaultOn;
-            this.MinHeight = defaultOn;
-            this.MaxHeight = defaultOn;
-            this.Sink = defaultOn;
-            this.SinkVariance = defaultOn;
-            this.SizeVariance = defaultOn;
-            this.AngleVariance = defaultOn;
-            this.Unknown2 = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Object, null));
-            ret.Add((ParentIndex, null));
-            ret.Add((Unknown1, null));
-            ret.Add((Density, null));
-            ret.Add((Clustering, null));
-            ret.Add((MinSlope, null));
-            ret.Add((MaxSlope, null));
-            ret.Add((Flags, null));
-            ret.Add((RadiusWrtPercent, null));
-            ret.Add((Radius, null));
-            ret.Add((MinHeight, null));
-            ret.Add((MaxHeight, null));
-            ret.Add((Sink, null));
-            ret.Add((SinkVariance, null));
-            ret.Add((SizeVariance, null));
-            ret.Add((AngleVariance, null));
-            ret.Add((Unknown2, null));
-        }
-    }
 }
 #endregion
 

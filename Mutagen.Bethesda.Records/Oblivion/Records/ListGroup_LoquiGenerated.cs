@@ -124,8 +124,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ListGroup<T> CreateFromXml<T_TranslMask>(
             XElement node,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             return CreateFromXml(
                 node: node,
@@ -136,17 +136,17 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             XElement node,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ListGroup<T> CreateFromXml<T_TranslMask>(
             string path,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,10 +177,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -192,9 +192,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             string path,
             ErrorMaskBuilder? errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -205,8 +205,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ListGroup<T> CreateFromXml<T_TranslMask>(
             Stream stream,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,10 +216,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -231,9 +231,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ListGroup_Mask<bool> GetEqualsMask<T>(
+        public static ListGroup.Mask<bool> GetEqualsMask<T>(
             this IListGroupGetter<T> item,
             IListGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString<T>(
             this IListGroupGetter<T> item,
             string? name = null,
-            ListGroup_Mask<bool>? printMask = null)
+            ListGroup.Mask<bool>? printMask = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).ToString(
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            ListGroup_Mask<bool>? printMask = null)
+            ListGroup.Mask<bool>? printMask = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
             ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).ToString(
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet<T>(
             this IListGroupGetter<T> item,
-            ListGroup_Mask<bool?> checkMask)
+            ListGroup.Mask<bool?> checkMask)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).HasBeenSet(
@@ -415,10 +415,10 @@ namespace Mutagen.Bethesda.Oblivion
                 checkMask: checkMask);
         }
 
-        public static ListGroup_Mask<bool> GetHasBeenSetMask<T>(this IListGroupGetter<T> item)
+        public static ListGroup.Mask<bool> GetHasBeenSetMask<T>(this IListGroupGetter<T> item)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
-            var ret = new ListGroup_Mask<bool>(false);
+            var ret = new ListGroup.Mask<bool>(false);
             ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -438,10 +438,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
-            ListGroup_TranslationMask<T_TranslMask>? copyMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
@@ -453,12 +453,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? copyMask = null)
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -486,10 +486,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IListGroupGetter<TGetter> item,
-            ListGroup_TranslationMask<T_TranslMask>? copyMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
@@ -498,12 +498,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ListGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
             this IListGroupGetter<TGetter> item,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? copyMask = null)
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
                 item: item,
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,
@@ -530,9 +530,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml<T, T_TranslMask>(
             this IListGroup<T> item,
             XElement node,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             CopyInFromXml(
                 item: item,
@@ -545,11 +545,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
             this IListGroup<T> item,
             XElement node,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml<T>(
@@ -577,9 +577,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml<T, T_TranslMask>(
             this IListGroup<T> item,
             string path,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -591,11 +591,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
             this IListGroup<T> item,
             string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -609,10 +609,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -625,9 +625,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml<T, T_TranslMask>(
             this IListGroup<T> item,
             Stream stream,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -639,11 +639,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
             this IListGroup<T> item,
             Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -657,10 +657,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -770,9 +770,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ListGroup_Mask<>);
+        public static readonly Type MaskType = typeof(ListGroup.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ListGroup_ErrorMask<>);
+        public static readonly Type ErrorMaskType = typeof(ListGroup.ErrorMask<>);
 
         public static readonly Type ClassType = typeof(ListGroup<>);
 
@@ -1093,12 +1093,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly ListGroupCommon<T> Instance = new ListGroupCommon<T>();
 
-        public ListGroup_Mask<bool> GetEqualsMask(
+        public ListGroup.Mask<bool> GetEqualsMask(
             IListGroupGetter<T> item,
             IListGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ListGroup_Mask<bool>(false);
+            var ret = new ListGroup.Mask<bool>(false);
             ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             IListGroupGetter<T> item,
             IListGroupGetter<T> rhs,
-            ListGroup_Mask<bool> ret,
+            ListGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             IListGroupGetter<T> item,
             string? name = null,
-            ListGroup_Mask<bool>? printMask = null)
+            ListGroup.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroupGetter<T> item,
             FileGeneration fg,
             string? name = null,
-            ListGroup_Mask<bool>? printMask = null)
+            ListGroup.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             IListGroupGetter<T> item,
             FileGeneration fg,
-            ListGroup_Mask<bool>? printMask = null)
+            ListGroup.Mask<bool>? printMask = null)
         {
             if (printMask?.GroupType ?? true)
             {
@@ -1196,18 +1196,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             IListGroupGetter<T> item,
-            ListGroup_Mask<bool?> checkMask)
+            ListGroup.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
             IListGroupGetter<T> item,
-            ListGroup_Mask<bool> mask)
+            ListGroup.Mask<bool> mask)
         {
             mask.GroupType = true;
             mask.LastModified = true;
-            mask.Records = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CellBlock_Mask<bool>?>>>(true, item.Records.WithIndex().Select((i) => new MaskItemIndexed<bool, CellBlock_Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.Records = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CellBlock.Mask<bool>?>>>(true, item.Records.WithIndex().Select((i) => new MaskItemIndexed<bool, CellBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1342,10 +1342,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             IListGroupGetter<TGetter> item,
-            ListGroup_TranslationMask<T_TranslMask>? copyMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
             ret.DeepCopyIn<T, TGetter, T_TranslMask>(
@@ -1356,12 +1356,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ListGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
             IListGroupGetter<TGetter> item,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? copyMask = null)
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
             ret.DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
@@ -1657,12 +1657,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IListGroupGetter<T> item,
             XElement node,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null,
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null,
             string? name = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1671,18 +1671,18 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IListGroupGetter<T> item,
             string path,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null,
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null,
             string? name = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1715,12 +1715,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
             this IListGroupGetter<T> item,
             Stream stream,
-            out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null,
+            out ListGroup.ErrorMask<T_ErrMask> errorMask,
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null,
             string? name = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = new XElement("topnode");
             WriteToXml(
@@ -1770,10 +1770,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<T> item,
             XElement node,
             string? name = null,
-            ListGroup_TranslationMask<T_TranslMask>? translationMask = null)
+            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             string? name = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = new XElement("topnode");
             ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             string? name = null)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             var node = new XElement("topnode");
             ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
@@ -1821,396 +1821,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class ListGroup_Mask<T> :
-        IMask<T>,
-        IEquatable<ListGroup_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public ListGroup_Mask(T initialValue)
-        {
-            this.GroupType = initialValue;
-            this.LastModified = initialValue;
-            this.Records = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CellBlock_Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, CellBlock_Mask<T>?>>());
-        }
-
-        public ListGroup_Mask(
-            T GroupType,
-            T LastModified,
-            T Records)
-        {
-            this.GroupType = GroupType;
-            this.LastModified = LastModified;
-            this.Records = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CellBlock_Mask<T>?>>>(Records, Enumerable.Empty<MaskItemIndexed<T, CellBlock_Mask<T>?>>());
-        }
-
-        #pragma warning disable CS8618
-        protected ListGroup_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T GroupType;
-        public T LastModified;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<T, CellBlock_Mask<T>?>>>? Records;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ListGroup_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(ListGroup_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
-            if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
-            if (!object.Equals(this.Records, rhs.Records)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
-            ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
-            ret = ret.CombineHashCode(this.Records?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.GroupType)) return false;
-            if (!eval(this.LastModified)) return false;
-            if (this.Records != null)
-            {
-                if (!eval(this.Records.Overall)) return false;
-                if (this.Records.Specific != null)
-                {
-                    foreach (var item in this.Records.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public ListGroup_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new ListGroup_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(ListGroup_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.GroupType = eval(this.GroupType);
-            obj.LastModified = eval(this.LastModified);
-            if (Records != null)
-            {
-                obj.Records = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellBlock_Mask<R>?>>>(eval(this.Records.Overall), Enumerable.Empty<MaskItemIndexed<R, CellBlock_Mask<R>?>>());
-                if (Records.Specific != null)
-                {
-                    var l = new List<MaskItemIndexed<R, CellBlock_Mask<R>?>>();
-                    obj.Records.Specific = l;
-                    foreach (var item in Records.Specific.WithIndex())
-                    {
-                        MaskItemIndexed<R, CellBlock_Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CellBlock_Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                        if (mask == null) continue;
-                        l.Add(mask);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(ListGroup_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, ListGroup_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(ListGroup_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.GroupType ?? true)
-                {
-                    fg.AppendLine($"GroupType => {GroupType}");
-                }
-                if (printMask?.LastModified ?? true)
-                {
-                    fg.AppendLine($"LastModified => {LastModified}");
-                }
-                if (printMask?.Records?.Overall ?? true)
-                {
-                    fg.AppendLine("Records =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Records != null)
-                        {
-                            if (Records.Overall != null)
-                            {
-                                fg.AppendLine(Records.Overall.ToString());
-                            }
-                            if (Records.Specific != null)
-                            {
-                                foreach (var subItem in Records.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class ListGroup_ErrorMask<T_ErrMask> : IErrorMask, IErrorMask<ListGroup_ErrorMask<T_ErrMask>>
-        where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? GroupType;
-        public Exception? LastModified;
-        public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>? Records;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    return GroupType;
-                case ListGroup_FieldIndex.LastModified:
-                    return LastModified;
-                case ListGroup_FieldIndex.Records:
-                    return Records;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    this.GroupType = ex;
-                    break;
-                case ListGroup_FieldIndex.LastModified:
-                    this.LastModified = ex;
-                    break;
-                case ListGroup_FieldIndex.Records:
-                    this.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ex, null);
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case ListGroup_FieldIndex.GroupType:
-                    this.GroupType = (Exception)obj;
-                    break;
-                case ListGroup_FieldIndex.LastModified:
-                    this.LastModified = (Exception)obj;
-                    break;
-                case ListGroup_FieldIndex.Records:
-                    this.Records = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (GroupType != null) return true;
-            if (LastModified != null) return true;
-            if (Records != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("ListGroup_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"GroupType => {GroupType}");
-            fg.AppendLine($"LastModified => {LastModified}");
-            fg.AppendLine("Records =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Records != null)
-                {
-                    if (Records.Overall != null)
-                    {
-                        fg.AppendLine(Records.Overall.ToString());
-                    }
-                    if (Records.Specific != null)
-                    {
-                        foreach (var subItem in Records.Specific)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg);
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-        #region Combine
-        public ListGroup_ErrorMask<T_ErrMask> Combine(ListGroup_ErrorMask<T_ErrMask>? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new ListGroup_ErrorMask<T_ErrMask>();
-            ret.GroupType = this.GroupType.Combine(rhs.GroupType);
-            ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-            ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
-            return ret;
-        }
-        public static ListGroup_ErrorMask<T_ErrMask>? Combine(ListGroup_ErrorMask<T_ErrMask>? lhs, ListGroup_ErrorMask<T_ErrMask>? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static ListGroup_ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
-        {
-            return new ListGroup_ErrorMask<T_ErrMask>();
-        }
-        #endregion
-
-    }
-    public class ListGroup_TranslationMask<T_TranslMask> : ITranslationMask
-        where T_TranslMask : CellBlock_TranslationMask, ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool GroupType;
-        public bool LastModified;
-        public MaskItem<bool, T_TranslMask?> Records;
-        #endregion
-
-        #region Ctors
-        public ListGroup_TranslationMask(bool defaultOn)
-        {
-            this.GroupType = defaultOn;
-            this.LastModified = defaultOn;
-            this.Records = new MaskItem<bool, T_TranslMask?>(defaultOn, null);
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((GroupType, null));
-            ret.Add((LastModified, null));
-            ret.Add((Records?.Overall ?? true, Records?.Specific?.GetCrystal()));
-        }
-    }
 }
 #endregion
 
@@ -2351,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2498,3 +2108,395 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 #endregion
 
+namespace Mutagen.Bethesda.Oblivion
+{
+    public static class ListGroup
+    {
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.GroupType = initialValue;
+                this.LastModified = initialValue;
+                this.Records = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CellBlock.Mask<T>?>>>(initialValue, Enumerable.Empty<MaskItemIndexed<T, CellBlock.Mask<T>?>>());
+            }
+        
+            public Mask(
+                T GroupType,
+                T LastModified,
+                T Records)
+            {
+                this.GroupType = GroupType;
+                this.LastModified = LastModified;
+                this.Records = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CellBlock.Mask<T>?>>>(Records, Enumerable.Empty<MaskItemIndexed<T, CellBlock.Mask<T>?>>());
+            }
+        
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+        
+            #endregion
+        
+            #region Members
+            public T GroupType;
+            public T LastModified;
+            public MaskItem<T, IEnumerable<MaskItemIndexed<T, CellBlock.Mask<T>?>>>? Records;
+            #endregion
+        
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+        
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
+                if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
+                if (!object.Equals(this.Records, rhs.Records)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
+                ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
+                ret = ret.CombineHashCode(this.Records?.GetHashCode());
+                return ret;
+            }
+        
+            #endregion
+        
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.GroupType)) return false;
+                if (!eval(this.LastModified)) return false;
+                if (this.Records != null)
+                {
+                    if (!eval(this.Records.Overall)) return false;
+                    if (this.Records.Specific != null)
+                    {
+                        foreach (var item in this.Records.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            #endregion
+        
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new ListGroup.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+        
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.GroupType = eval(this.GroupType);
+                obj.LastModified = eval(this.LastModified);
+                if (Records != null)
+                {
+                    obj.Records = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellBlock.Mask<R>?>>>(eval(this.Records.Overall), Enumerable.Empty<MaskItemIndexed<R, CellBlock.Mask<R>?>>());
+                    if (Records.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, CellBlock.Mask<R>?>>();
+                        obj.Records.Specific = l;
+                        foreach (var item in Records.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, CellBlock.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CellBlock.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+            }
+            #endregion
+        
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+        
+            public string ToString(ListGroup.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+        
+            public void ToString(FileGeneration fg, ListGroup.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(ListGroup.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.GroupType ?? true)
+                    {
+                        fg.AppendLine($"GroupType => {GroupType}");
+                    }
+                    if (printMask?.LastModified ?? true)
+                    {
+                        fg.AppendLine($"LastModified => {LastModified}");
+                    }
+                    if (printMask?.Records?.Overall ?? true)
+                    {
+                        fg.AppendLine("Records =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Records != null)
+                            {
+                                if (Records.Overall != null)
+                                {
+                                    fg.AppendLine(Records.Overall.ToString());
+                                }
+                                if (Records.Specific != null)
+                                {
+                                    foreach (var subItem in Records.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            subItem?.ToString(fg);
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+        
+        }
+        
+        public class ErrorMask<T_ErrMask> :
+            IErrorMask,
+            IErrorMask<ErrorMask<T_ErrMask>>
+            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? GroupType;
+            public Exception? LastModified;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>? Records;
+            #endregion
+        
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+                switch (enu)
+                {
+                    case ListGroup_FieldIndex.GroupType:
+                        return GroupType;
+                    case ListGroup_FieldIndex.LastModified:
+                        return LastModified;
+                    case ListGroup_FieldIndex.Records:
+                        return Records;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+        
+            public void SetNthException(int index, Exception ex)
+            {
+                ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+                switch (enu)
+                {
+                    case ListGroup_FieldIndex.GroupType:
+                        this.GroupType = ex;
+                        break;
+                    case ListGroup_FieldIndex.LastModified:
+                        this.LastModified = ex;
+                        break;
+                    case ListGroup_FieldIndex.Records:
+                        this.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ex, null);
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+        
+            public void SetNthMask(int index, object obj)
+            {
+                ListGroup_FieldIndex enu = (ListGroup_FieldIndex)index;
+                switch (enu)
+                {
+                    case ListGroup_FieldIndex.GroupType:
+                        this.GroupType = (Exception)obj;
+                        break;
+                    case ListGroup_FieldIndex.LastModified:
+                        this.LastModified = (Exception)obj;
+                        break;
+                    case ListGroup_FieldIndex.Records:
+                        this.Records = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+        
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (GroupType != null) return true;
+                if (LastModified != null) return true;
+                if (Records != null) return true;
+                return false;
+            }
+            #endregion
+        
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+        
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"GroupType => {GroupType}");
+                fg.AppendLine($"LastModified => {LastModified}");
+                fg.AppendLine("Records =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Records != null)
+                    {
+                        if (Records.Overall != null)
+                        {
+                            fg.AppendLine(Records.Overall.ToString());
+                        }
+                        if (Records.Specific != null)
+                        {
+                            foreach (var subItem in Records.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+        
+            #region Combine
+            public ErrorMask<T_ErrMask> Combine(ErrorMask<T_ErrMask>? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask<T_ErrMask>();
+                ret.GroupType = this.GroupType.Combine(rhs.GroupType);
+                ret.LastModified = this.LastModified.Combine(rhs.LastModified);
+                ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
+                return ret;
+            }
+            public static ErrorMask<T_ErrMask>? Combine(ErrorMask<T_ErrMask>? lhs, ErrorMask<T_ErrMask>? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+        
+            #region Factory
+            public static ErrorMask<T_ErrMask> Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask<T_ErrMask>();
+            }
+            #endregion
+        
+        }
+        public class TranslationMask<T_TranslMask> : ITranslationMask
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool GroupType;
+            public bool LastModified;
+            public MaskItem<bool, T_TranslMask?> Records;
+            #endregion
+        
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.GroupType = defaultOn;
+                this.LastModified = defaultOn;
+                this.Records = new MaskItem<bool, T_TranslMask?>(defaultOn, null);
+            }
+        
+            #endregion
+        
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+        
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((GroupType, null));
+                ret.Add((LastModified, null));
+                ret.Add((Records?.Overall ?? true, Records?.Specific?.GetCrystal()));
+            }
+        }
+    }
+}

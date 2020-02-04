@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SoundItem CreateFromXml(
             XElement node,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,15 +128,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static SoundItem CreateFromXml(
             XElement node,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundItem_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundItem CreateFromXml(
             string path,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundItem CreateFromXml(
             string path,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundItem CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundItem CreateFromXml(
             Stream stream,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,8 +200,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundItem CreateFromXml(
             Stream stream,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundItem CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,6 +224,293 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #endregion
+
+        #region Mask
+        public class Mask<T> :
+            IMask<T>,
+            IEquatable<Mask<T>>
+            where T : notnull
+        {
+            #region Ctors
+            public Mask(T initialValue)
+            {
+                this.Sound = initialValue;
+                this.Chance = initialValue;
+            }
+
+            public Mask(
+                T Sound,
+                T Chance)
+            {
+                this.Sound = Sound;
+                this.Chance = Chance;
+            }
+
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+
+            #endregion
+
+            #region Members
+            public T Sound;
+            public T Chance;
+            #endregion
+
+            #region Equals
+            public override bool Equals(object obj)
+            {
+                if (!(obj is Mask<T> rhs)) return false;
+                return Equals(rhs);
+            }
+
+            public bool Equals(Mask<T> rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Chance, rhs.Chance)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                int ret = 0;
+                ret = ret.CombineHashCode(this.Sound?.GetHashCode());
+                ret = ret.CombineHashCode(this.Chance?.GetHashCode());
+                return ret;
+            }
+
+            #endregion
+
+            #region All Equal
+            public bool AllEqual(Func<T, bool> eval)
+            {
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.Chance)) return false;
+                return true;
+            }
+            #endregion
+
+            #region Translate
+            public Mask<R> Translate<R>(Func<T, R> eval)
+            {
+                var ret = new SoundItem.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<T, R> eval)
+            {
+                obj.Sound = eval(this.Sound);
+                obj.Chance = eval(this.Chance);
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                return ToString(printMask: null);
+            }
+
+            public string ToString(SoundItem.Mask<bool>? printMask = null)
+            {
+                var fg = new FileGeneration();
+                ToString(fg, printMask);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg, SoundItem.Mask<bool>? printMask = null)
+            {
+                fg.AppendLine($"{nameof(SoundItem.Mask<T>)} =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (printMask?.Sound ?? true)
+                    {
+                        fg.AppendLine($"Sound => {Sound}");
+                    }
+                    if (printMask?.Chance ?? true)
+                    {
+                        fg.AppendLine($"Chance => {Chance}");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            #endregion
+
+        }
+
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Sound;
+            public Exception? Chance;
+            #endregion
+
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundItem_FieldIndex.Sound:
+                        return Sound;
+                    case SoundItem_FieldIndex.Chance:
+                        return Chance;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthException(int index, Exception ex)
+            {
+                SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundItem_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case SoundItem_FieldIndex.Chance:
+                        this.Chance = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public void SetNthMask(int index, object obj)
+            {
+                SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
+                switch (enu)
+                {
+                    case SoundItem_FieldIndex.Sound:
+                        this.Sound = (Exception)obj;
+                        break;
+                    case SoundItem_FieldIndex.Chance:
+                        this.Chance = (Exception)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Sound != null) return true;
+                if (Chance != null) return true;
+                return false;
+            }
+            #endregion
+
+            #region To String
+            public override string ToString()
+            {
+                var fg = new FileGeneration();
+                ToString(fg);
+                return fg.ToString();
+            }
+
+            public void ToString(FileGeneration fg)
+            {
+                fg.AppendLine("ErrorMask =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (this.Overall != null)
+                    {
+                        fg.AppendLine("Overall =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"{this.Overall}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                    ToString_FillInternal(fg);
+                }
+                fg.AppendLine("]");
+            }
+            protected void ToString_FillInternal(FileGeneration fg)
+            {
+                fg.AppendLine($"Sound => {Sound}");
+                fg.AppendLine($"Chance => {Chance}");
+            }
+            #endregion
+
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.Chance = this.Chance.Combine(rhs.Chance);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public bool Sound;
+            public bool Chance;
+            #endregion
+
+            #region Ctors
+            public TranslationMask(bool defaultOn)
+            {
+                this.Sound = defaultOn;
+                this.Chance = defaultOn;
+            }
+
+            #endregion
+
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Sound, null));
+                ret.Add((Chance, null));
+            }
+        }
         #endregion
 
         #region Mutagen
@@ -331,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundItemSetterCommon)((ISoundItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SoundItem_Mask<bool> GetEqualsMask(
+        public static SoundItem.Mask<bool> GetEqualsMask(
             this ISoundItemGetter item,
             ISoundItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
@@ -345,7 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static string ToString(
             this ISoundItemGetter item,
             string? name = null,
-            SoundItem_Mask<bool>? printMask = null)
+            SoundItem.Mask<bool>? printMask = null)
         {
             return ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -357,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItemGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundItem_Mask<bool>? printMask = null)
+            SoundItem.Mask<bool>? printMask = null)
         {
             ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).ToString(
                 item: item,
@@ -368,16 +655,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool HasBeenSet(
             this ISoundItemGetter item,
-            SoundItem_Mask<bool?> checkMask)
+            SoundItem.Mask<bool?> checkMask)
         {
             return ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SoundItem_Mask<bool> GetHasBeenSetMask(this ISoundItemGetter item)
+        public static SoundItem.Mask<bool> GetHasBeenSetMask(this ISoundItemGetter item)
         {
-            var ret = new SoundItem_Mask<bool>(false);
+            var ret = new SoundItem.Mask<bool>(false);
             ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
@@ -396,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISoundItem lhs,
             ISoundItemGetter rhs,
-            SoundItem_TranslationMask? copyMask = null)
+            SoundItem.TranslationMask? copyMask = null)
         {
             ((SoundItemSetterTranslationCommon)((ISoundItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -408,8 +695,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn(
             this ISoundItem lhs,
             ISoundItemGetter rhs,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? copyMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundItemSetterTranslationCommon)((ISoundItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -417,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SoundItem_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
@@ -435,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundItem DeepCopy(
             this ISoundItemGetter item,
-            SoundItem_TranslationMask? copyMask = null)
+            SoundItem.TranslationMask? copyMask = null)
         {
             return ((SoundItemSetterTranslationCommon)((ISoundItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -444,8 +731,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static SoundItem DeepCopy(
             this ISoundItemGetter item,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? copyMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? copyMask = null)
         {
             return ((SoundItemSetterTranslationCommon)((ISoundItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
@@ -469,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundItem item,
             XElement node,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -482,8 +769,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundItem item,
             XElement node,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -491,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundItem_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
@@ -510,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundItem item,
             string path,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -522,8 +809,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundItem item,
             string path,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -537,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItem item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -550,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundItem item,
             Stream stream,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -562,8 +849,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromXml(
             this ISoundItem item,
             Stream stream,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -577,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItem item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -651,9 +938,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(SoundItem_Mask<>);
+        public static readonly Type MaskType = typeof(SoundItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SoundItem_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SoundItem.ErrorMask);
 
         public static readonly Type ClassType = typeof(SoundItem);
 
@@ -937,12 +1224,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly SoundItemCommon Instance = new SoundItemCommon();
 
-        public SoundItem_Mask<bool> GetEqualsMask(
+        public SoundItem.Mask<bool> GetEqualsMask(
             ISoundItemGetter item,
             ISoundItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SoundItem_Mask<bool>(false);
+            var ret = new SoundItem.Mask<bool>(false);
             ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
@@ -954,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void FillEqualsMask(
             ISoundItemGetter item,
             ISoundItemGetter rhs,
-            SoundItem_Mask<bool> ret,
+            SoundItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -965,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public string ToString(
             ISoundItemGetter item,
             string? name = null,
-            SoundItem_Mask<bool>? printMask = null)
+            SoundItem.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -980,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItemGetter item,
             FileGeneration fg,
             string? name = null,
-            SoundItem_Mask<bool>? printMask = null)
+            SoundItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
@@ -1004,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void ToStringFields(
             ISoundItemGetter item,
             FileGeneration fg,
-            SoundItem_Mask<bool>? printMask = null)
+            SoundItem.Mask<bool>? printMask = null)
         {
             if (printMask?.Sound ?? true)
             {
@@ -1018,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public bool HasBeenSet(
             ISoundItemGetter item,
-            SoundItem_Mask<bool?> checkMask)
+            SoundItem.Mask<bool?> checkMask)
         {
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound.HasBeenSet) return false;
             if (checkMask.Chance.HasValue && checkMask.Chance.Value != (item.Chance != null)) return false;
@@ -1027,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public void FillHasBeenSetMask(
             ISoundItemGetter item,
-            SoundItem_Mask<bool> mask)
+            SoundItem.Mask<bool> mask)
         {
             mask.Sound = item.Sound.HasBeenSet;
             mask.Chance = (item.Chance != null);
@@ -1102,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundItem DeepCopy(
             ISoundItemGetter item,
-            SoundItem_TranslationMask? copyMask = null)
+            SoundItem.TranslationMask? copyMask = null)
         {
             SoundItem ret = (SoundItem)((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1113,8 +1400,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundItem DeepCopy(
             ISoundItemGetter item,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? copyMask = null)
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? copyMask = null)
         {
             SoundItem ret = (SoundItem)((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
@@ -1364,8 +1651,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISoundItemGetter item,
             XElement node,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null,
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
@@ -1375,14 +1662,14 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SoundItem_ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
             this ISoundItemGetter item,
             string path,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null,
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1415,8 +1702,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToXml(
             this ISoundItemGetter item,
             Stream stream,
-            out SoundItem_ErrorMask errorMask,
-            SoundItem_TranslationMask? translationMask = null,
+            out SoundItem.ErrorMask errorMask,
+            SoundItem.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1465,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItemGetter item,
             XElement node,
             string? name = null,
-            SoundItem_TranslationMask? translationMask = null)
+            SoundItem.TranslationMask? translationMask = null)
         {
             ((SoundItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1509,294 +1796,6 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
 
-}
-#endregion
-
-#region Mask
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public class SoundItem_Mask<T> :
-        IMask<T>,
-        IEquatable<SoundItem_Mask<T>>
-        where T : notnull
-    {
-        #region Ctors
-        public SoundItem_Mask(T initialValue)
-        {
-            this.Sound = initialValue;
-            this.Chance = initialValue;
-        }
-
-        public SoundItem_Mask(
-            T Sound,
-            T Chance)
-        {
-            this.Sound = Sound;
-            this.Chance = Chance;
-        }
-
-        #pragma warning disable CS8618
-        protected SoundItem_Mask()
-        {
-        }
-        #pragma warning restore CS8618
-
-        #endregion
-
-        #region Members
-        public T Sound;
-        public T Chance;
-        #endregion
-
-        #region Equals
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SoundItem_Mask<T> rhs)) return false;
-            return Equals(rhs);
-        }
-
-        public bool Equals(SoundItem_Mask<T> rhs)
-        {
-            if (rhs == null) return false;
-            if (!object.Equals(this.Sound, rhs.Sound)) return false;
-            if (!object.Equals(this.Chance, rhs.Chance)) return false;
-            return true;
-        }
-        public override int GetHashCode()
-        {
-            int ret = 0;
-            ret = ret.CombineHashCode(this.Sound?.GetHashCode());
-            ret = ret.CombineHashCode(this.Chance?.GetHashCode());
-            return ret;
-        }
-
-        #endregion
-
-        #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
-        {
-            if (!eval(this.Sound)) return false;
-            if (!eval(this.Chance)) return false;
-            return true;
-        }
-        #endregion
-
-        #region Translate
-        public SoundItem_Mask<R> Translate<R>(Func<T, R> eval)
-        {
-            var ret = new SoundItem_Mask<R>();
-            this.Translate_InternalFill(ret, eval);
-            return ret;
-        }
-
-        protected void Translate_InternalFill<R>(SoundItem_Mask<R> obj, Func<T, R> eval)
-        {
-            obj.Sound = eval(this.Sound);
-            obj.Chance = eval(this.Chance);
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            return ToString(printMask: null);
-        }
-
-        public string ToString(SoundItem_Mask<bool>? printMask = null)
-        {
-            var fg = new FileGeneration();
-            ToString(fg, printMask);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg, SoundItem_Mask<bool>? printMask = null)
-        {
-            fg.AppendLine($"{nameof(SoundItem_Mask<T>)} =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (printMask?.Sound ?? true)
-                {
-                    fg.AppendLine($"Sound => {Sound}");
-                }
-                if (printMask?.Chance ?? true)
-                {
-                    fg.AppendLine($"Chance => {Chance}");
-                }
-            }
-            fg.AppendLine("]");
-        }
-        #endregion
-
-    }
-
-    public class SoundItem_ErrorMask : IErrorMask, IErrorMask<SoundItem_ErrorMask>
-    {
-        #region Members
-        public Exception? Overall { get; set; }
-        private List<string>? _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception? Sound;
-        public Exception? Chance;
-        #endregion
-
-        #region IErrorMask
-        public object? GetNthMask(int index)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                    return Sound;
-                case SoundItem_FieldIndex.Chance:
-                    return Chance;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthException(int index, Exception ex)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                    this.Sound = ex;
-                    break;
-                case SoundItem_FieldIndex.Chance:
-                    this.Chance = ex;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public void SetNthMask(int index, object obj)
-        {
-            SoundItem_FieldIndex enu = (SoundItem_FieldIndex)index;
-            switch (enu)
-            {
-                case SoundItem_FieldIndex.Sound:
-                    this.Sound = (Exception)obj;
-                    break;
-                case SoundItem_FieldIndex.Chance:
-                    this.Chance = (Exception)obj;
-                    break;
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
-
-        public bool IsInError()
-        {
-            if (Overall != null) return true;
-            if (Sound != null) return true;
-            if (Chance != null) return true;
-            return false;
-        }
-        #endregion
-
-        #region To String
-        public override string ToString()
-        {
-            var fg = new FileGeneration();
-            ToString(fg);
-            return fg.ToString();
-        }
-
-        public void ToString(FileGeneration fg)
-        {
-            fg.AppendLine("SoundItem_ErrorMask =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (this.Overall != null)
-                {
-                    fg.AppendLine("Overall =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"{this.Overall}");
-                    }
-                    fg.AppendLine("]");
-                }
-                ToString_FillInternal(fg);
-            }
-            fg.AppendLine("]");
-        }
-        protected void ToString_FillInternal(FileGeneration fg)
-        {
-            fg.AppendLine($"Sound => {Sound}");
-            fg.AppendLine($"Chance => {Chance}");
-        }
-        #endregion
-
-        #region Combine
-        public SoundItem_ErrorMask Combine(SoundItem_ErrorMask? rhs)
-        {
-            if (rhs == null) return this;
-            var ret = new SoundItem_ErrorMask();
-            ret.Sound = this.Sound.Combine(rhs.Sound);
-            ret.Chance = this.Chance.Combine(rhs.Chance);
-            return ret;
-        }
-        public static SoundItem_ErrorMask? Combine(SoundItem_ErrorMask? lhs, SoundItem_ErrorMask? rhs)
-        {
-            if (lhs != null && rhs != null) return lhs.Combine(rhs);
-            return lhs ?? rhs;
-        }
-        #endregion
-
-        #region Factory
-        public static SoundItem_ErrorMask Factory(ErrorMaskBuilder errorMask)
-        {
-            return new SoundItem_ErrorMask();
-        }
-        #endregion
-
-    }
-    public class SoundItem_TranslationMask : ITranslationMask
-    {
-        #region Members
-        private TranslationCrystal? _crystal;
-        public bool Sound;
-        public bool Chance;
-        #endregion
-
-        #region Ctors
-        public SoundItem_TranslationMask(bool defaultOn)
-        {
-            this.Sound = defaultOn;
-            this.Chance = defaultOn;
-        }
-
-        #endregion
-
-        public TranslationCrystal GetCrystal()
-        {
-            if (_crystal != null) return _crystal;
-            var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-            GetCrystal(ret);
-            _crystal = new TranslationCrystal(ret.ToArray());
-            return _crystal;
-        }
-
-        protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-        {
-            ret.Add((Sound, null));
-            ret.Add((Chance, null));
-        }
-    }
 }
 #endregion
 
