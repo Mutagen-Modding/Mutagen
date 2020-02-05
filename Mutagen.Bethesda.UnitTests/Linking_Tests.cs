@@ -17,8 +17,8 @@ namespace Mutagen.Bethesda.UnitTests
     public class Linking_Tests
     {
         public static FormKey UnusedFormKey = new FormKey(ModKey.Dummy, 123456);
-        public static string PathToTestFile = "../../test.esp";
-        public static string PathToOverrideFile = "../../override.esp";
+        public static string PathToTestFile = "../../../test.esp";
+        public static string PathToOverrideFile = "../../../override.esp";
         public static FormKey TestFileFormKey = new FormKey(ModKey.Factory("test.esp"), 0xD62);
         public static FormKey TestFileFormKey2 = new FormKey(ModKey.Factory("test.esp"), 0xD63);
 
