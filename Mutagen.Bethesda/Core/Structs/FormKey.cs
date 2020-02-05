@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return $"{IDString()}{this.ModKey}";
+            return $"{IDString()}:{this.ModKey}";
         }
 
         public string IDString()
