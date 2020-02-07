@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             if (frame.Complete) return;
             item.Count = frame.ReadInt16();
             if (frame.Complete) return;
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

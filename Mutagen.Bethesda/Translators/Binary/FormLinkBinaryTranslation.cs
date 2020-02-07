@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Binary
                 item = id;
                 return true;
             }
-            item = FormKey.NULL;
+            item = FormKey.Null;
             return false;
         }
 
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 return id;
             }
-            return FormKey.NULL;
+            return FormKey.Null;
         }
 
         public FormKey Parse(

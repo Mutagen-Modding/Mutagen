@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Parent.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
                 case 0x4D414E43: // CNAM
@@ -2137,7 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Climate.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
                 case 0x324D414E: // NAM2
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Water.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
                 case 0x4E4F4349: // ICON
@@ -3486,7 +3486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Parent.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3505,7 +3505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Climate.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3524,7 +3524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Water.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

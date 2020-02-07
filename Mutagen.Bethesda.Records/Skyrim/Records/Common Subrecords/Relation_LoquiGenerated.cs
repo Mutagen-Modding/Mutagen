@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.Modifier = frame.ReadInt32();
             item.GroupCombatReaction = EnumBinaryTranslation<Combat>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

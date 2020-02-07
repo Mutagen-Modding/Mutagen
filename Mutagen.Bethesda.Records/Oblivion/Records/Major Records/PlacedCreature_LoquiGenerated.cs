@@ -1660,7 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Base.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Base);
                 }
                 case 0x4E574F58: // XOWN
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Owner.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.GlobalVariable.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.GlobalVariable);
                 }
                 case 0x50534558: // XESP
@@ -2539,7 +2539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Base.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2558,7 +2558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Owner.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2595,7 +2595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.GlobalVariable.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

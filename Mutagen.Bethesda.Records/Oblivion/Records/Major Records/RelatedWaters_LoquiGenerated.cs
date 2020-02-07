@@ -1202,15 +1202,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterDaytime.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.RelatedWaterNighttime.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.RelatedWaterUnderwater.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
         }
         
         public void CopyInFromBinary(
@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.RelatedWaterDaytime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.RelatedWaterNighttime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1670,7 +1670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.RelatedWaterUnderwater.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

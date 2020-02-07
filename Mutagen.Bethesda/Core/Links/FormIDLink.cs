@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
     {
         public static readonly IFormIDLinkGetter<TMajor> Empty = new FormIDLink<TMajor>();
 
-        public virtual FormKey FormKey { get; set; } = FormKey.NULL;
+        public virtual FormKey FormKey { get; set; } = FormKey.Null;
         Type ILinkGetter.TargetType => typeof(TMajor);
 
         public FormIDLink()
@@ -33,12 +33,12 @@ namespace Mutagen.Bethesda
 
         public virtual void Set(TMajor value)
         {
-            this.FormKey = value?.FormKey ?? FormKey.NULL;
+            this.FormKey = value?.FormKey ?? FormKey.Null;
         }
 
         public virtual void Unset()
         {
-            this.FormKey = FormKey.NULL;
+            this.FormKey = FormKey.Null;
         }
 
         public static bool operator ==(FormIDLink<TMajor> lhs, IFormIDLink<TMajor> rhs)
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
         public bool TryResolve<M>(ILinkCache<M> package, [MaybeNullWhen(false)] out TMajor major)
             where M : IModGetter
         {
-            if (this.FormKey.Equals(FormKey.NULL))
+            if (this.FormKey.Equals(FormKey.Null))
             {
                 major = default!;
                 return false;

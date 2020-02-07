@@ -2660,7 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Climate.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
                 }
                 case 0x54574358: // XCWT
@@ -2669,7 +2669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Water.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 }
                 case 0x4E574F58: // XOWN
@@ -2678,7 +2678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Owner.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
@@ -2693,7 +2693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.GlobalVariable.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.GlobalVariable);
                 }
                 default:
@@ -4384,7 +4384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Climate.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4403,7 +4403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Water.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4422,7 +4422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Owner.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4459,7 +4459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.GlobalVariable.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1357,12 +1357,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Parameter3.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.Unknown3 = frame.ReadInt32();
         }
         
@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.Parameter3.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

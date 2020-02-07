@@ -3024,7 +3024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
                 case 0x41544144: // DATA
@@ -4491,7 +4491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

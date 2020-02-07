@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Script);
                 }
                 case 0x4F544E43: // CNTO
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.OpenSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
                 }
                 case 0x4D414E51: // QNAM
@@ -1738,7 +1738,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CloseSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
                 }
                 default:
@@ -2614,7 +2614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2698,7 +2698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.OpenSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2717,7 +2717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.CloseSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

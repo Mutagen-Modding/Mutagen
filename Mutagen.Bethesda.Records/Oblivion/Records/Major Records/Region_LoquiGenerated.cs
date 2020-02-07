@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Worldspace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
                 case 0x494C5052: // RPLI
@@ -2766,7 +2766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Worldspace.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

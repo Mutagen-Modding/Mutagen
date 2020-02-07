@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Internals
 {
     public class MasterReferences
     {
-        public static MasterReferences Empty { get; } = new MasterReferences(ModKey.NULL);
+        public static MasterReferences Empty { get; } = new MasterReferences(ModKey.Null);
 
         public readonly IList<IMasterReferenceGetter> Masters = new List<IMasterReferenceGetter>();
         public readonly ModKey CurrentMod;

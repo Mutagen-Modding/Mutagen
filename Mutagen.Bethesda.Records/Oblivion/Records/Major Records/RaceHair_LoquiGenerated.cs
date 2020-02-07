@@ -1153,11 +1153,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Male.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.Female.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
         }
         
         public void CopyInFromBinary(
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Male.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Female.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

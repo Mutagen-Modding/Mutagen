@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.Radius = frame.ReadUInt32();
         }
         
@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
     ///  - Use the Dummy singleton only when it is unknown, and no record cross pollination is planned to occur.
     public struct ModKey : IEquatable<ModKey>
     {
-        public static readonly ModKey NULL = new ModKey(string.Empty, master: false);
+        public static readonly ModKey Null = new ModKey(string.Empty, master: false);
         public string Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
                 if (cache_.TryGetValue(modString, out keyItem))
                 {
                     modKey = keyItem[keyIndex];
-                    if (modKey != NULL)
+                    if (modKey != Null)
                     {
                         return true;
                     }
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda
                 else
                 {
                     keyItem = new ModKey[2];
-                    keyItem[master ? 1 : 0] = NULL;
+                    keyItem[master ? 1 : 0] = Null;
                     cache_[modString] = keyItem;
                 }
             }

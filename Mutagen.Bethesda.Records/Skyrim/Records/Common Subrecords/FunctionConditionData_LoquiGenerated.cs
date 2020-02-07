@@ -2273,7 +2273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.ParameterOneRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2328,7 +2328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.ParameterTwoRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

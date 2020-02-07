@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
                 }
                 case 0x47494650: // PFIG
@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Ingredient.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
                 case 0x43504650: // PFPC
@@ -2455,7 +2455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2474,7 +2474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Ingredient.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

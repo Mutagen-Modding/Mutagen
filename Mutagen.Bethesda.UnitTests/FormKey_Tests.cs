@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.UnitTests
         public void Import_Null()
         {
             Assert.True(
-                FormKey.TryFactory(FormKey.NULL_STR, out FormKey id));
+                FormKey.TryFactory(FormKey.NullStr, out FormKey id));
             Assert.Equal(
-                FormKey.NULL,
+                FormKey.Null,
                 id);
         }
 
@@ -58,13 +58,13 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Null_Equality()
         {
-            Assert.Equal(FormKey.NULL, new FormKey());
+            Assert.Equal(FormKey.Null, new FormKey());
         }
 
         [Fact]
         public void Null_Hash()
         {
-            Assert.Equal(0, FormKey.NULL.GetHashCode());
+            Assert.Equal(0, FormKey.Null.GetHashCode());
         }
 
         #region BinaryTranslation

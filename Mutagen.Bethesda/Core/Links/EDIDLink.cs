@@ -13,8 +13,8 @@ namespace Mutagen.Bethesda
     {
         public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
 
-        public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
-        public virtual RecordType EDID { get; set; } = UNLINKED;
+        public static readonly RecordType Null = new RecordType("\0\0\0\0");
+        public virtual RecordType EDID { get; set; } = Null;
         Type ILinkGetter.TargetType => typeof(TMajor);
 
         public EDIDLink()
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda
         {
             if (value?.EditorID == null)
             {
-                this.EDID = UNLINKED;
+                this.EDID = Null;
             }
             else
             {
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda
             IModGetter mod,
             [MaybeNullWhen(false)]out TMajor item)
         {
-            if (this.EDID == UNLINKED)
+            if (this.EDID == Null)
             {
                 item = default!;
                 return false;
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda
         public bool TryResolve<M>(ILinkCache<M> package, out TMajor major)
             where M : IModGetter
         {
-            if (this.EDID == UNLINKED)
+            if (this.EDID == Null)
             {
                 major = default!;
                 return false;
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Unset()
         {
-            this.EDID = UNLINKED;
+            this.EDID = Null;
         }
     }
 }

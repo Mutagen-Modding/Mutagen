@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda
         {
             if (value?.EditorID == null)
             {
-                this.EDID = UNLINKED;
+                this.EDID = Null;
                 this.HasBeenSet = hasBeenSet;
             }
             else
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
         public override void Unset()
         {
             this.HasBeenSet = false;
-            base.EDID = UNLINKED;
+            base.EDID = Null;
         }
 
         public override bool Equals(object obj)

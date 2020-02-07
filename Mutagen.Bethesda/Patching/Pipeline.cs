@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
                     .Select(l =>
                     {
                         if (l.TryResolveFormKey(linkCache, out var form)) return form;
-                        return FormKey.NULL;
+                        return FormKey.Null;
                     })
                     .Where(fk => !fk.IsNull)
                     .Select(s => s.ModKey)

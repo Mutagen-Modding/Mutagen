@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda
             }
             errorMask.ReportExceptionOrThrow(
                 new ArgumentException($"Could not convert to {ElementName}: {str}"));
-            value = FormKey.NULL;
+            value = FormKey.Null;
             return false;
         }
     }

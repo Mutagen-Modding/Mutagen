@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     item.MagicEffect.EDID = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        defaultVal: RecordType.NULL);
+                        defaultVal: RecordType.Null);
                     item.Magnitude = dataFrame.ReadUInt32();
                     item.Area = dataFrame.ReadUInt32();
                     item.Duration = dataFrame.ReadUInt32();
@@ -2106,7 +2106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.MagicEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: RecordType.NULL);
+                            defaultVal: RecordType.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

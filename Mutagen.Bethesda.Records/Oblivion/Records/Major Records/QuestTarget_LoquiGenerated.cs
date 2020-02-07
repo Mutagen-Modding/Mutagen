@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Target.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     item.Flags = EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
                 }
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Target.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

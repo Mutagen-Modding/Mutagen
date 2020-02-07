@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weather.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             item.Chance = frame.ReadInt32();
         }
         
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Weather.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -20,12 +20,12 @@ namespace Mutagen.Bethesda
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
             {
-                return ModKey.NULL;
+                return ModKey.Null;
             }
 
             if (!ModKey.TryFactory(str, out var item))
             {
-                return ModKey.NULL;
+                return ModKey.Null;
             }
             return item;
         }

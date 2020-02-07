@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
 
         public void Set(T value, bool hasBeenSet)
         {
-            this.Set(value?.FormKey ?? FormKey.NULL, hasBeenSet);
+            this.Set(value?.FormKey ?? FormKey.Null, hasBeenSet);
         }
 
         public void Set(FormKey value, bool hasBeenSet)
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
 
         public override void Unset()
         {
-            base.FormKey = FormKey.NULL;
+            base.FormKey = FormKey.Null;
             this.HasBeenSet = false;
         }
 

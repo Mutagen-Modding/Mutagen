@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Script);
                 }
                 case 0x4D414E45: // ENAM
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Enchantment.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Enchantment);
                 }
                 case 0x4D414E41: // ANAM
@@ -3034,7 +3034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3053,7 +3053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Enchantment.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

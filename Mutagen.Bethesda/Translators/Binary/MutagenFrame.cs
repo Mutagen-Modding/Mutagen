@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public bool TryCheckUpcomingRead(long length, [MaybeNullWhen(false)]out Exception ex)
+        public bool TryCheckUpcomingRead(long length, [MaybeNullWhen(true)]out Exception ex)
         {
             if (!TryCheckUpcomingRead(length))
             {

@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        item.EDID = EDIDLink<T>.UNLINKED;
+                        item.EDID = EDIDLink<T>.Null;
                     }
                 }
                 catch (Exception ex)
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        item.EDID = EDIDLink<T>.UNLINKED;
+                        item.EDID = EDIDLink<T>.Null;
                     }
                 }
                 catch (Exception ex)

@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Generation
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     TypeOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
-                    DefaultOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey.NULL" : "RecordType.NULL",
+                    DefaultOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
                     ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}"
                         .Single()
                         .AndWhen("masterReferences: masterReferences", () => linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal)

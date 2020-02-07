@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     if (dataFrame.Complete)
                     {
                         item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.VisualEffect.EDID = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        defaultVal: RecordType.NULL);
+                        defaultVal: RecordType.Null);
                     if (dataFrame.Complete)
                     {
                         item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.VisualEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: RecordType.NULL);
+                            defaultVal: RecordType.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -30,15 +30,15 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<INPCGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<INPCGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<INPCGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<NPC>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<NPC>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<NPC>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -50,15 +50,15 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<INPCGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<INPCGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<INPCGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<NPC>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<NPC>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<NPC>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -133,11 +133,11 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -151,11 +151,11 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]

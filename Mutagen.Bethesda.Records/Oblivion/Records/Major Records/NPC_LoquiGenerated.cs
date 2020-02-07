@@ -5331,7 +5331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DeathItem.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.DeathItem);
                 }
                 case 0x4D414E52: // RNAM
@@ -5340,7 +5340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Race.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Race);
                 }
                 case 0x4F4C5053: // SPLO
@@ -5360,7 +5360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Script);
                 }
                 case 0x4F544E43: // CNTO
@@ -5429,7 +5429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Class.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Class);
                 }
                 case 0x41544144: // DATA
@@ -5478,7 +5478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Hair.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.Hair);
                 }
                 case 0x4D414E4C: // LNAM
@@ -5511,7 +5511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CombatStyle.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NPC_FieldIndex.CombatStyle);
                 }
                 case 0x53474746: // FGGS
@@ -8306,7 +8306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DeathItem.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -8325,7 +8325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Race.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -8372,7 +8372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -8621,7 +8621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Class.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -9181,7 +9181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Hair.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -9264,7 +9264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.CombatStyle.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

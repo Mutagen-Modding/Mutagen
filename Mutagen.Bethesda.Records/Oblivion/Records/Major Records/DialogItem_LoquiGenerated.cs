@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Quest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
                 case 0x4D414E50: // PNAM
@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PreviousTopic.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
                 case 0x454D414E: // NAME
@@ -3320,7 +3320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Quest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3339,7 +3339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.PreviousTopic.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

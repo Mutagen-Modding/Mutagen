@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Texture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     item.Quadrant = EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     item.LayerNumber = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Texture.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -27,12 +27,12 @@ namespace Mutagen.Bethesda.Binary
         {
             if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
             {
-                return ModKey.NULL;
+                return ModKey.Null;
             }
 
             if (!ModKey.TryFactory(str, out var item))
             {
-                return ModKey.NULL;
+                return ModKey.Null;
             }
 
             return item;

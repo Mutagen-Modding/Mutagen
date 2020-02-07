@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Enchantment.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
                 }
                 case 0x4D414E41: // ANAM
@@ -2717,7 +2717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Enchantment.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

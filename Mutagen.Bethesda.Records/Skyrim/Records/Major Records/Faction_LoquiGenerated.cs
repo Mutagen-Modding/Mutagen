@@ -2782,7 +2782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PrisonMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PrisonMarker);
                 }
                 case 0x54494157: // WAIT
@@ -2791,7 +2791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FollowerWaitMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
                 }
                 case 0x4C4F5453: // STOL
@@ -2800,7 +2800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EvidenceChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.EvidenceChest);
                 }
                 case 0x4E434C50: // PLCN
@@ -2809,7 +2809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PlayerBelongingsChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerBelongingsChest);
                 }
                 case 0x52475243: // CRGR
@@ -2818,7 +2818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CrimeGroup.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGroup);
                 }
                 case 0x54554F4A: // JOUT
@@ -2827,7 +2827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.JailOutfit.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
                 }
                 case 0x41565243: // CRVA
@@ -2884,7 +2884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VendorList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorList);
                 }
                 case 0x434E4556: // VENC
@@ -2893,7 +2893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VendorChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorChest);
                 }
                 case 0x564E4556: // VENV
@@ -4387,7 +4387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.PrisonMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4406,7 +4406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.FollowerWaitMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4425,7 +4425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.EvidenceChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4444,7 +4444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.PlayerBelongingsChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4463,7 +4463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.CrimeGroup.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4482,7 +4482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.JailOutfit.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4712,7 +4712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.VendorList.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4731,7 +4731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.VendorChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

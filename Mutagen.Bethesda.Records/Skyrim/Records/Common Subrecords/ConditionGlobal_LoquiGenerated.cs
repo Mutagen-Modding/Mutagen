@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ComparisonValue.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                defaultVal: FormKey.NULL);
+                defaultVal: FormKey.Null);
             ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustomPublic(
                 frame: frame,
                 item: item,
@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.ComparisonValue.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

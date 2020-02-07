@@ -10,11 +10,11 @@ namespace Mutagen.Bethesda
 {
     public struct FormKey : IEquatable<FormKey>
     {
-        public const string NULL_STR = "NULL";
-        public static readonly FormKey NULL = new FormKey(ModKey.NULL, 0);
+        public const string NullStr = "NULL";
+        public static readonly FormKey Null = new FormKey(ModKey.Null, 0);
         public readonly uint ID;
         public readonly ModKey ModKey;
-        public bool IsNull => this.Equals(NULL);
+        public bool IsNull => this.Equals(Null);
 
         public FormKey(ModKey modKey, uint id)
         {
@@ -41,9 +41,9 @@ namespace Mutagen.Bethesda
 
         public static bool TryFactory(string str, out FormKey formKey)
         {
-            if (NULL_STR.Equals(str))
+            if (NullStr.Equals(str))
             {
-                formKey = NULL;
+                formKey = Null;
                 return true;
             }
             if (string.IsNullOrWhiteSpace(str))

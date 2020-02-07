@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Base.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MerchantContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
                 }
                 case 0x53524858: // XHRS
@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Horse.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        defaultVal: FormKey.NULL);
+                        defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
                 }
                 case 0x44475258: // XRGD
@@ -2769,7 +2769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Base.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2862,7 +2862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.MerchantContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2881,7 +2881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.Horse.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            defaultVal: FormKey.NULL);
+                            defaultVal: FormKey.Null);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>209357f59ce3cfec2b90466b93f64f59352e65b4</Sha>
+         <Sha>b5ec1e551bb521133070df3a36d710af6d982e0a</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-02-2020 23:43:35</CommitDate>
-         <Description>Fixes for unit tests not running</Description>
+         <CommitDate>02-08-2020 00:33:26</CommitDate>
+         <Description>Percent updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e9e9dd8aea37d070dea9074a642adfd657f52052</Sha>
+         <Sha>14bbbb2e2c9916f6d82f86b8ec1654c24c0e0a2b</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-03-2020 23:28:17</CommitDate>
-         <Description>Object_Mask -&gt; Object.Mask</Description>
+         <CommitDate>02-06-2020 23:17:40</CommitDate>
+         <Description>TranslationGeneration wrap generic</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
