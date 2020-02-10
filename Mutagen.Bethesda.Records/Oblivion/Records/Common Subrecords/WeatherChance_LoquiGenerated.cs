@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Weather),
-                    item: item.Weather?.FormKey,
+                    item: item.Weather.FormKey,
                     fieldIndex: (int)WeatherChance_FieldIndex.Weather,
                     errorMask: errorMask);
             }
@@ -1542,8 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
                         item.Weather.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

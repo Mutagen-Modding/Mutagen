@@ -2531,7 +2531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Worldspace),
-                    item: item.Worldspace?.FormKey,
+                    item: item.Worldspace.FormKey,
                     fieldIndex: (int)Region_FieldIndex.Worldspace,
                     errorMask: errorMask);
             }
@@ -2765,8 +2765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                         item.Worldspace.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Faction),
-                    item: item.Faction?.FormKey,
+                    item: item.Faction.FormKey,
                     fieldIndex: (int)Relation_FieldIndex.Faction,
                     errorMask: errorMask);
             }
@@ -1615,8 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Relation_FieldIndex.Faction);
                         item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

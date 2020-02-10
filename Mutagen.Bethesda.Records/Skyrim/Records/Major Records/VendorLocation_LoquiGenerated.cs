@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Reference),
-                    item: item.Reference?.FormKey,
+                    item: item.Reference.FormKey,
                     fieldIndex: (int)VendorLocation_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1633,8 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)VendorLocation_FieldIndex.Reference);
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

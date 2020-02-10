@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LocationReference),
-                    item: item.LocationReference?.FormKey,
+                    item: item.LocationReference.FormKey,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
                     errorMask: errorMask);
             }
@@ -1633,8 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                         item.LocationReference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     RecordTypeXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.MagicEffect),
-                        item: item.MagicEffect?.EDID,
+                        item: item.MagicEffect.EDID,
                         fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                         errorMask: errorMask);
                 }
@@ -2105,8 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Effect_FieldIndex.MagicEffect);
                         item.MagicEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: RecordType.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

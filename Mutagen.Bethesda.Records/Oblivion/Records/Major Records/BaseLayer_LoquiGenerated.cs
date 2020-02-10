@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     FormKeyXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.Texture),
-                        item: item.Texture?.FormKey,
+                        item: item.Texture.FormKey,
                         fieldIndex: (int)BaseLayer_FieldIndex.Texture,
                         errorMask: errorMask);
                 }
@@ -1812,8 +1812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
                         item.Texture.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

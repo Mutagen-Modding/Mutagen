@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: null,
-                            item: subItem?.FormKey,
+                            item: subItem.FormKey,
                             errorMask: listSubMask);
                     });
             }

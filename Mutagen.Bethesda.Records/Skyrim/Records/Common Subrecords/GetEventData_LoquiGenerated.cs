@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Parameter3),
-                    item: item.Parameter3?.FormKey,
+                    item: item.Parameter3.FormKey,
                     fieldIndex: (int)GetEventData_FieldIndex.Parameter3,
                     errorMask: errorMask);
             }
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Reference),
-                    item: item.Reference?.FormKey,
+                    item: item.Reference.FormKey,
                     fieldIndex: (int)GetEventData_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1963,8 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.Parameter3);
                         item.Parameter3.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2000,8 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.Reference);
                         item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

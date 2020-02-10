@@ -1481,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Destination),
-                    item: item.Destination?.FormKey,
+                    item: item.Destination.FormKey,
                     fieldIndex: (int)TeleportDestination_FieldIndex.Destination,
                     errorMask: errorMask);
             }
@@ -1615,8 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                         item.Destination.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ParameterOneRecord),
-                    item: item.ParameterOneRecord?.FormKey,
+                    item: item.ParameterOneRecord.FormKey,
                     fieldIndex: (int)FunctionConditionData_FieldIndex.ParameterOneRecord,
                     errorMask: errorMask);
             }
@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ParameterTwoRecord),
-                    item: item.ParameterTwoRecord?.FormKey,
+                    item: item.ParameterTwoRecord.FormKey,
                     fieldIndex: (int)FunctionConditionData_FieldIndex.ParameterTwoRecord,
                     errorMask: errorMask);
             }
@@ -2272,8 +2272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneRecord);
                         item.ParameterOneRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2327,8 +2326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoRecord);
                         item.ParameterTwoRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

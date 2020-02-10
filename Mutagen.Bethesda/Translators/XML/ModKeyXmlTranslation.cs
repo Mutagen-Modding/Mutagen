@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
             return ModKey.TryFactory(str, out item!);
         }
 
-        public void Write(XElement node, string name, ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
+        public void Write(XElement node, string? name, ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
         {
             StringXmlTranslation.Instance.Write(
                 node,

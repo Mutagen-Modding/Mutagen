@@ -1431,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Male),
-                    item: item.Male?.FormKey,
+                    item: item.Male.FormKey,
                     fieldIndex: (int)RaceHair_FieldIndex.Male,
                     errorMask: errorMask);
             }
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Female),
-                    item: item.Female?.FormKey,
+                    item: item.Female.FormKey,
                     fieldIndex: (int)RaceHair_FieldIndex.Female,
                     errorMask: errorMask);
             }
@@ -1556,8 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RaceHair_FieldIndex.Male);
                         item.Male.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1575,8 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RaceHair_FieldIndex.Female);
                         item.Female.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

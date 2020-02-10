@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>b5ec1e551bb521133070df3a36d710af6d982e0a</Sha>
+         <Sha>cc97afeb5c043a6610e1721383ada6e7bbc3819f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-08-2020 00:33:26</CommitDate>
-         <Description>Percent updates</Description>
+         <CommitDate>02-11-2020 00:31:28</CommitDate>
+         <Description>Bugfix for MemorySlice</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>14bbbb2e2c9916f6d82f86b8ec1654c24c0e0a2b</Sha>
+         <Sha>96ad76fc90f8901932b331c08de43902d16e8130</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-06-2020 23:17:40</CommitDate>
-         <Description>TranslationGeneration wrap generic</Description>
+         <CommitDate>02-11-2020 00:37:53</CommitDate>
+         <Description>XmlTranslation nullability improvements</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

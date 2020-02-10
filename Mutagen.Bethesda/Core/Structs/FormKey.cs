@@ -2,13 +2,14 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public struct FormKey : IEquatable<FormKey>
+    public class FormKey : IEquatable<FormKey>
     {
         public const string NullStr = "NULL";
         public static readonly FormKey Null = new FormKey(ModKey.Null, 0);
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda
                 id);
         }
 
-        public static bool TryFactory(string str, out FormKey formKey)
+        public static bool TryFactory(string str, [MaybeNullWhen(false)]out FormKey formKey)
         {
             if (NullStr.Equals(str))
             {
@@ -48,13 +49,13 @@ namespace Mutagen.Bethesda
             }
             if (string.IsNullOrWhiteSpace(str))
             {
-                formKey = default(FormKey);
+                formKey = default!;
                 return false;
             }
 
             if (str.Length < 6)
             {
-                formKey = default(FormKey);
+                formKey = default!;
                 return false;
             }
 
@@ -65,7 +66,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception)
             {
-                formKey = default(FormKey);
+                formKey = default!;
                 return false;
             }
 
@@ -74,13 +75,13 @@ namespace Mutagen.Bethesda
                 .Split('.');
             if (split.Length != 2)
             {
-                formKey = default(FormKey);
+                formKey = default!;
                 return false;
             }
 
             if (!ModKey.TryFactory(str.Substring(6), out var modKey))
             {
-                formKey = default(FormKey);
+                formKey = default!;
                 return false;
             }
             

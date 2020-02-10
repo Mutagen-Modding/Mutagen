@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Generation
             switch (type.FormIDType)
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
-                    return $"{itemAccessor.PropertyOrDirectAccess}?.FormKey";
+                    return $"{itemAccessor.PropertyOrDirectAccess}.FormKey";
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
-                    return $"{itemAccessor.PropertyOrDirectAccess}?.EDID";
+                    return $"{itemAccessor.PropertyOrDirectAccess}.EDID";
                 default:
                     throw new NotImplementedException();
             }
@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
                     TypeOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
-                    DefaultOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = $"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {frameAccessor}".Single(),
                 });

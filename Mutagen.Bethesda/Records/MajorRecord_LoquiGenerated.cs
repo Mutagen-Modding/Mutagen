@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda
         public Int32 MajorRecordFlagsRaw { get; set; } = default;
         #endregion
         #region FormKey
-        public FormKey FormKey { get; protected set; } = default;
+        public FormKey FormKey { get; protected set; } = FormKey.Null;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormKey IMajorRecordInternal.FormKey
         {

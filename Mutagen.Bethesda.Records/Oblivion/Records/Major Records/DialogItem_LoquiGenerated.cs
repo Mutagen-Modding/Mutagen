@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Quest),
-                    item: item.Quest?.FormKey,
+                    item: item.Quest.FormKey,
                     fieldIndex: (int)DialogItem_FieldIndex.Quest,
                     errorMask: errorMask);
             }
@@ -3045,7 +3045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PreviousTopic),
-                    item: item.PreviousTopic?.FormKey,
+                    item: item.PreviousTopic.FormKey,
                     fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
                     errorMask: errorMask);
             }
@@ -3064,7 +3064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: null,
-                            item: subItem?.FormKey,
+                            item: subItem.FormKey,
                             errorMask: listSubMask);
                     });
             }
@@ -3125,7 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: null,
-                            item: subItem?.FormKey,
+                            item: subItem.FormKey,
                             errorMask: listSubMask);
                     });
             }
@@ -3144,7 +3144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
                             name: null,
-                            item: subItem?.FormKey,
+                            item: subItem.FormKey,
                             errorMask: listSubMask);
                     });
             }
@@ -3319,8 +3319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.Quest);
                         item.Quest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3338,8 +3337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.PreviousTopic);
                         item.PreviousTopic.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

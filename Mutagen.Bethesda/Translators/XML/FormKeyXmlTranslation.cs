@@ -2,6 +2,7 @@
 using Loqui.Xml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Mutagen.Bethesda
 {
-    public class FormKeyXmlTranslation : PrimitiveXmlTranslation<FormKey>
+    public class FormKeyXmlTranslation : TypicalXmlTranslation<FormKey>
     {
         public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
 
@@ -19,13 +20,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
-            if (Parse(node, out FormKey id, errorMask))
-            {
-                item = new FormIDLink<T>(id);
-                return true;
-            }
-            item = new FormIDLink<T>();
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool Parse<T>(
@@ -35,10 +30,7 @@ namespace Mutagen.Bethesda
             TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter
         {
-            return this.Parse(
-                node: node,
-                item: out item,
-                errorMask: errorMask);
+            throw new NotImplementedException();
         }
 
         public bool Parse<T>(
@@ -47,13 +39,7 @@ namespace Mutagen.Bethesda
             ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
-            if (Parse(node, out FormKey id, errorMask))
-            {
-                item = new FormIDSetLink<T>(id);
-                return true;
-            }
-            item = new FormIDSetLink<T>();
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool Parse<T>(
@@ -63,23 +49,17 @@ namespace Mutagen.Bethesda
             TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter
         {
-            return this.Parse(
-                node: node,
-                item: out item,
-                errorMask: errorMask);
+            throw new NotImplementedException();
         }
 
-        protected override bool Parse(string str, out FormKey value, ErrorMaskBuilder? errorMask)
+        protected override FormKey Parse(string str)
         {
-            if (FormKey.TryFactory(str, out FormKey parsed))
-            {
-                value = parsed;
-                return true;
-            }
-            errorMask.ReportExceptionOrThrow(
-                new ArgumentException($"Could not convert to {ElementName}: {str}"));
-            value = FormKey.Null;
-            return false;
+            throw new NotImplementedException();
+        }
+
+        public FormKey Parse(XElement node, ErrorMaskBuilder? errorMask)
+        {
+            throw new NotImplementedException();
         }
     }
 }

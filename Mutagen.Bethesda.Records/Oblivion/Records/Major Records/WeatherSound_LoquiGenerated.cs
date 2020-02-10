@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Sound),
-                    item: item.Sound?.FormKey,
+                    item: item.Sound.FormKey,
                     fieldIndex: (int)WeatherSound_FieldIndex.Sound,
                     errorMask: errorMask);
             }
@@ -1548,8 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
                         item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

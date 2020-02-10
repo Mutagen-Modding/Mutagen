@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script?.FormKey,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Template),
-                    item: item.Template?.FormKey,
+                    item: item.Template.FormKey,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                     errorMask: errorMask);
             }
@@ -2352,8 +2352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2371,8 +2370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                         item.Template.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

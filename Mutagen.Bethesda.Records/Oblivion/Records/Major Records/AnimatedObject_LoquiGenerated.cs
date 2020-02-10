@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.IdleAnimation),
-                    item: item.IdleAnimation?.FormKey,
+                    item: item.IdleAnimation.FormKey,
                     fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
                     errorMask: errorMask);
             }
@@ -1865,8 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
                         item.IdleAnimation.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

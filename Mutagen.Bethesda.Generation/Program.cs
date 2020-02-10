@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ublic static async Task WriteToXmlFolder<T, T_ErrMask>(";
+            string testString = "FormKeyXmlTranslation.Instance.Write(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

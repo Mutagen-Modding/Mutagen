@@ -3957,7 +3957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PrisonMarker),
-                    item: item.PrisonMarker?.FormKey,
+                    item: item.PrisonMarker.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.PrisonMarker,
                     errorMask: errorMask);
             }
@@ -3967,7 +3967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FollowerWaitMarker),
-                    item: item.FollowerWaitMarker?.FormKey,
+                    item: item.FollowerWaitMarker.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.FollowerWaitMarker,
                     errorMask: errorMask);
             }
@@ -3977,7 +3977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EvidenceChest),
-                    item: item.EvidenceChest?.FormKey,
+                    item: item.EvidenceChest.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.EvidenceChest,
                     errorMask: errorMask);
             }
@@ -3987,7 +3987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PlayerBelongingsChest),
-                    item: item.PlayerBelongingsChest?.FormKey,
+                    item: item.PlayerBelongingsChest.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.PlayerBelongingsChest,
                     errorMask: errorMask);
             }
@@ -3997,7 +3997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CrimeGroup),
-                    item: item.CrimeGroup?.FormKey,
+                    item: item.CrimeGroup.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.CrimeGroup,
                     errorMask: errorMask);
             }
@@ -4007,7 +4007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.JailOutfit),
-                    item: item.JailOutfit?.FormKey,
+                    item: item.JailOutfit.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.JailOutfit,
                     errorMask: errorMask);
             }
@@ -4141,7 +4141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VendorList),
-                    item: item.VendorList?.FormKey,
+                    item: item.VendorList.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.VendorList,
                     errorMask: errorMask);
             }
@@ -4151,7 +4151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VendorChest),
-                    item: item.VendorChest?.FormKey,
+                    item: item.VendorChest.FormKey,
                     fieldIndex: (int)Faction_FieldIndex.VendorChest,
                     errorMask: errorMask);
             }
@@ -4386,8 +4386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.PrisonMarker);
                         item.PrisonMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4405,8 +4404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
                         item.FollowerWaitMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4424,8 +4422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.EvidenceChest);
                         item.EvidenceChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4443,8 +4440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.PlayerBelongingsChest);
                         item.PlayerBelongingsChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4462,8 +4458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGroup);
                         item.CrimeGroup.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4481,8 +4476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
                         item.JailOutfit.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4711,8 +4705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.VendorList);
                         item.VendorList.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4730,8 +4723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)Faction_FieldIndex.VendorChest);
                         item.VendorChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base?.FormKey,
+                    item: item.Base.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -2591,7 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer?.FormKey,
+                    item: item.MerchantContainer.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                     errorMask: errorMask);
             }
@@ -2601,7 +2601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Horse),
-                    item: item.Horse?.FormKey,
+                    item: item.Horse.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                     errorMask: errorMask);
             }
@@ -2768,8 +2768,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                         item.Base.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2861,8 +2860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                         item.MerchantContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2880,8 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                         item.Horse.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

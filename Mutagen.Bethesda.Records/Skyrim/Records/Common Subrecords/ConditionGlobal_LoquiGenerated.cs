@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ComparisonValue),
-                    item: item.ComparisonValue?.FormKey,
+                    item: item.ComparisonValue.FormKey,
                     fieldIndex: (int)ConditionGlobal_FieldIndex.ComparisonValue,
                     errorMask: errorMask);
             }
@@ -1626,8 +1626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PushIndex((int)ConditionGlobal_FieldIndex.ComparisonValue);
                         item.ComparisonValue.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

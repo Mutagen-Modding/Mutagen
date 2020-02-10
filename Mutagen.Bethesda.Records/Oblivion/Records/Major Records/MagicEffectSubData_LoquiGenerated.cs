@@ -1739,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EnchantEffect),
-                    item: item.EnchantEffect?.FormKey,
+                    item: item.EnchantEffect.FormKey,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                     errorMask: errorMask);
             }
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CastingSound),
-                    item: item.CastingSound?.FormKey,
+                    item: item.CastingSound.FormKey,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                     errorMask: errorMask);
             }
@@ -1757,7 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.BoltSound),
-                    item: item.BoltSound?.FormKey,
+                    item: item.BoltSound.FormKey,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                     errorMask: errorMask);
             }
@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.HitSound),
-                    item: item.HitSound?.FormKey,
+                    item: item.HitSound.FormKey,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                     errorMask: errorMask);
             }
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.AreaSound),
-                    item: item.AreaSound?.FormKey,
+                    item: item.AreaSound.FormKey,
                     fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                     errorMask: errorMask);
             }
@@ -1909,8 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
                         item.EnchantEffect.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1928,8 +1927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
                         item.CastingSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1947,8 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
                         item.BoltSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1966,8 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
                         item.HitSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1985,8 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
                         item.AreaSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

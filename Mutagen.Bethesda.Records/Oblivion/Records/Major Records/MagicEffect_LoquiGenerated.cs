@@ -2950,7 +2950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     FormKeyXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.Light),
-                        item: item.Light?.FormKey,
+                        item: item.Light.FormKey,
                         fieldIndex: (int)MagicEffect_FieldIndex.Light,
                         errorMask: errorMask);
                 }
@@ -2968,7 +2968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     FormKeyXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.EffectShader),
-                        item: item.EffectShader?.FormKey,
+                        item: item.EffectShader.FormKey,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                         errorMask: errorMask);
                 }
@@ -3006,7 +3006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         RecordTypeXmlTranslation.Instance.Write(
                             node: subNode,
                             name: null,
-                            item: subItem?.EDID,
+                            item: subItem.EDID,
                             errorMask: listSubMask);
                     });
             }
@@ -3315,8 +3315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.Light);
                         item.Light.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3352,8 +3351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)MagicEffect_FieldIndex.EffectShader);
                         item.EffectShader.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

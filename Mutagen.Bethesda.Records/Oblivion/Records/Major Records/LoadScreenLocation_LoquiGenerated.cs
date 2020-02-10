@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Direct),
-                    item: item.Direct?.FormKey,
+                    item: item.Direct.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                     errorMask: errorMask);
             }
@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Indirect),
-                    item: item.Indirect?.FormKey,
+                    item: item.Indirect.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                     errorMask: errorMask);
             }
@@ -1623,8 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
                         item.Direct.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1642,8 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
                         item.Indirect.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

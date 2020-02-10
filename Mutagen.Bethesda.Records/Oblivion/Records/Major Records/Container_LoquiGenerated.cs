@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script?.FormKey,
+                    item: item.Script.FormKey,
                     fieldIndex: (int)Container_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -2440,7 +2440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.OpenSound),
-                    item: item.OpenSound?.FormKey,
+                    item: item.OpenSound.FormKey,
                     fieldIndex: (int)Container_FieldIndex.OpenSound,
                     errorMask: errorMask);
             }
@@ -2450,7 +2450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CloseSound),
-                    item: item.CloseSound?.FormKey,
+                    item: item.CloseSound.FormKey,
                     fieldIndex: (int)Container_FieldIndex.CloseSound,
                     errorMask: errorMask);
             }
@@ -2613,8 +2613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Container_FieldIndex.Script);
                         item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2697,8 +2696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Container_FieldIndex.OpenSound);
                         item.OpenSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2716,8 +2714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Container_FieldIndex.CloseSound);
                         item.CloseSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

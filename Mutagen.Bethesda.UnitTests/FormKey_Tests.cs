@@ -56,12 +56,6 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void Null_Equality()
-        {
-            Assert.Equal(FormKey.Null, new FormKey());
-        }
-
-        [Fact]
         public void Null_Hash()
         {
             Assert.Equal(0, FormKey.Null.GetHashCode());

@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedWaterDaytime),
-                    item: item.RelatedWaterDaytime?.FormKey,
+                    item: item.RelatedWaterDaytime.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                     errorMask: errorMask);
             }
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedWaterNighttime),
-                    item: item.RelatedWaterNighttime?.FormKey,
+                    item: item.RelatedWaterNighttime.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                     errorMask: errorMask);
             }
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedWaterUnderwater),
-                    item: item.RelatedWaterUnderwater?.FormKey,
+                    item: item.RelatedWaterUnderwater.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                     errorMask: errorMask);
             }
@@ -1631,8 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                         item.RelatedWaterDaytime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1650,8 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                         item.RelatedWaterNighttime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1669,8 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                         item.RelatedWaterUnderwater.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            defaultVal: FormKey.Null);
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
